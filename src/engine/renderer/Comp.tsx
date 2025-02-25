@@ -1,16 +1,21 @@
-import Renderer from "./index.tsx";
+import Renderer from "./index";
 import {useEffect, useRef} from "react";
 
-type RendererComponentProps = {}
-const RendererComponent: FC.props<> = (props: RendererComponentProps) => {
-  
+export const RendererComponent: React.FC<{ data: string }> = ({data}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
   useEffect(() => {
-    const render = Renderer()
-  })
+    if (canvasRef.current) {
+      const renderer = new Renderer({canvas: canvasRef.current});
 
-  return <div>
-    <canvas ref={canvasRef}></canvas>
-  </div>
-}
+      renderer.render(data)
+      // console.log(renderer)
+    }
+  }, [data]);
 
-export default Renderer
+  return (
+    <div style={{boxShadow: '0px 0px 5px 0px #000'}}>
+      <canvas ref={canvasRef}></canvas>
+    </div>
+  );
+};

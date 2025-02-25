@@ -4,13 +4,16 @@ type RendererProps = {
   canvas: HTMLCanvasElement;
 }
 
-type StructuredRendererDataBase = {
-  key: string,
-  value?: JSONValue,
-  type: 'string' | 'number' | 'boolean' | 'object' | 'null' | 'array',
-  rect?: RectSizeBase,
-  children?: StructuredRendererDataBase[]
+type FlattenRendererDataBase = {
+  id: number
+  key: string
+  value: JSONPrimitiveValue
+  type: JSONStandardType
+  parentId?: number,
+  children: number[]
 }
+type FlattenRendererData = Record<number, FlattenRendererDataBase>
+
 
 class Renderer {
   private readonly canvas_ctx: CanvasRenderingContext2D;
@@ -18,6 +21,47 @@ class Renderer {
   constructor({canvas}: RendererProps) {
     this.canvas_ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     // console.log(this.canvas_ctx)
+  }
+
+  static convertJsonToFlattenRendererData(input: JSONValue): FlattenRendererData {
+    const result: FlattenRendererData = {};
+    let idCounter = 0;
+
+    const traverse = (key: string, value: JSONValue, parentId?: number): FlattenRendererDataBase => {
+      const nodeId = idCounter++;
+      const nodeType = typeCheck(value);
+      const isComplexType = nodeType === 'object' || nodeType === 'array';
+
+      const node: FlattenRendererDataBase = {
+        id: nodeId,
+        key,
+        value: isComplexType ? null : value as JSONPrimitiveValue,
+        type: nodeType,
+        parentId,
+        children: []
+      }
+
+      result[nodeId] = node
+
+      if (nodeType === 'object' && value !== null) {
+        Object.entries(value).forEach(([childKey, childValue]) => {
+          const child = traverse(childKey, childValue, nodeId);
+          node.children.push(child.id);
+          // result[child.id] = node
+        });
+      } else if (nodeType === 'array') {
+        (value as JSONArray).forEach((childValue, index) => {
+          const child = traverse(String(index), childValue, nodeId);
+          node.children.push(child.id);
+        });
+      }
+
+      return node;
+    };
+
+    traverse('root', input);
+
+    return result;
   }
 
   static calcSize(data: JSONValue): RectSizeBase {
@@ -30,52 +74,6 @@ class Renderer {
     }
   }
 
-  static structureData(data: JSONValue, keyName?: string): StructuredRendererDataBase {
-    const T: JSONStandardType = typeCheck(data)
-    console.log(data)
-    switch (T) {
-      case 'string':
-      case 'number':
-      case 'boolean':
-      case 'null':
-        return {type: T, value: data, rect: this.calcSize(data)};
-
-      case 'array':
-        return {type: 'array', children: (data as Array<JSONValue>).map((sub) => this.structureData(sub))}
-
-      case 'object':
-        return {
-          keyName,
-          type: 'object', children: Object.entries(data as JSONObject).map(([key, value]) => this.structureData(value,key))
-        };
-
-      default:
-        throw new Error(`Unsupported type: ${T}`);
-    }
-  }
-
-  static renderFn(data: StructuredRendererDataBase, ctx: CanvasRenderingContext2D): void {
-    console.log(data)
-    const T = data.type
-
-    ctx.save()
-
-    switch (T) {
-      case 'string':
-      case 'number':
-      case 'boolean':
-      case 'null':
-
-        break
-    }
-
-    data.children?.map(value => this.renderFn(value, ctx))
-
-    ctx.restore()
-    // ctx.moveTo(0, 0)
-    // ctx.strokeText('error', 0, 0)
-  }
-
   render(data: string): void {
     const CTX = this.canvas_ctx
 
@@ -86,9 +84,9 @@ class Renderer {
 
     try {
       const PARSED_JSON = JSON.parse(data)
-      const STRUCTURED_DATA: StructuredRendererDataBase = Renderer.structureData(PARSED_JSON)
+      const flattenRendererData: FlattenRendererData = Renderer.convertJsonToFlattenRendererData(PARSED_JSON)
 
-      Renderer.renderFn(STRUCTURED_DATA, CTX)
+      Renderer.calcSize(flattenRendererData)
     } catch (e) {
       console.log(e)
     }

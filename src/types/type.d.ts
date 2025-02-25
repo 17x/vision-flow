@@ -10,6 +10,8 @@ declare  global {
   type JSONObject = { [key: string]: JSONValue };
 
   type RectSizeBase = {
+    x: number;
+    y: number;
     width: number;
     height: number;
   }

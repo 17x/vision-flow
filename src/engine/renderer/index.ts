@@ -1,4 +1,5 @@
 import typeCheck from "../../utilities/typeCheck.ts";
+import drawGrid from "./Grid.ts";
 
 type RendererProps = {
   canvas: HTMLCanvasElement;
@@ -122,10 +123,16 @@ class Renderer {
 
     const PARSED_JSON = JSON.parse(data)
     const flattenData: FlattenDataRecord = Renderer.convertJsonToFlattenRendererData(PARSED_JSON)
-    const sizedData = Renderer.calcSize(flattenData, CTX)
+    const sizedData: SizedDataRecord = Renderer.calcSize(flattenData, CTX)
 
     console.log(sizedData)
+    drawGrid(CTX,100,100,)
+    Object.values(sizedData).forEach(node => {
+      CTX.strokeRect(node.rect.x + 5, node.rect.y + 5, node.rect.width, node.rect.height);
 
+      const text = node.key + ': ' + (node.value ?? node.type);
+      CTX.fillText(text, node.rect.x, node.rect.y);
+    });
   }
 }
 

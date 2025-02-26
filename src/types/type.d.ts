@@ -7,11 +7,19 @@ declare  global {
   type JSONPrimitiveValue = string | number | boolean | null;
   type JSONValue = JSONPrimitiveValue | JSONObject | JSONArray
   type JSONArray = JSONValue[];
-  type JSONObject = { [key: string]: JSONValue };
 
-  type RectSizeBase = {
+  interface JSONObject {
+    [key: string]: JSONValue
+  }
+
+  interface RectSizeBase {
     x: number;
     y: number;
+    width: number;
+    height: number;
+  }
+
+  interface Resolution {
     width: number;
     height: number;
   }

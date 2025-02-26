@@ -1,4 +1,4 @@
-const defaultTheme = {
+const defaultTheme: ThemeShape = {
   "background": "#1e1e1e",
   "foreground": "#ffffff",
   "grid": {

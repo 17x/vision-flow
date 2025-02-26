@@ -1,9 +1,13 @@
 import typeCheck from "../../utilities/typeCheck.ts";
 import drawGrid from "./Grid.ts";
 
-type RendererProps = {
-  canvas: HTMLCanvasElement;
+export interface RendererProps {
+  canvas: HTMLCanvasElement
+  theme: ThemeShape
+  logicResolution: Resolution
+  physicalResolution: Resolution
 }
+
 
 type FlattenDataBase = {
   id: number
@@ -18,11 +22,21 @@ type SizedDataBase = { rect: RectSizeBase } & FlattenDataBase;
 type SizedDataRecord = Record<number, SizedDataBase>
 
 class Renderer {
+  private readonly logicResolution: Resolution;
+  private readonly physicalResolution: Resolution;
+  private readonly canvas: HTMLCanvasElement;
   private readonly canvas_ctx: CanvasRenderingContext2D;
+  private readonly theme: ThemeShape;
 
-  constructor({canvas}: RendererProps) {
+  constructor({canvas, theme, physicalResolution, logicResolution}: RendererProps) {
+    this.canvas = canvas
     this.canvas_ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-    // console.log(this.canvas_ctx)
+    this.theme = theme
+    this.physicalResolution = physicalResolution
+    this.logicResolution = logicResolution
+
+    canvas.width = physicalResolution.width
+    canvas.height = physicalResolution.height
   }
 
   static convertJsonToFlattenRendererData(input: JSONValue): FlattenDataRecord {
@@ -67,11 +81,7 @@ class Renderer {
 
   /**
    * Calculates the width and height of each node in the flatten data record
-   * using the provided CanvasRenderingContext2D. This function is designed to
-   * be decoupled from the data flattening process, aligning with the principle of
-   * separation of concerns. By detaching calculation from data flattening, we
-   * achieve a more modular and maintainable system.
-   *
+   * decoupled from the data flattening process
    * @param data - The FlattenDataRecord containing flattened JSON nodes to calculate sizes for.
    * @param ctx - The CanvasRenderingContext2D used to measure text metrics.
    * @returns SizedDataRecord - The updated data record with calculated size information.
@@ -115,7 +125,9 @@ class Renderer {
 
   render(data: string): void {
     const CTX = this.canvas_ctx
+    const {width, height} = this.physicalResolution
 
+    CTX.clearRect(0, 0, width, height);
     CTX.textAlign = 'start'
     CTX.textBaseline = 'top'
     CTX.strokeStyle = 'red'
@@ -124,9 +136,18 @@ class Renderer {
     const PARSED_JSON = JSON.parse(data)
     const flattenData: FlattenDataRecord = Renderer.convertJsonToFlattenRendererData(PARSED_JSON)
     const sizedData: SizedDataRecord = Renderer.calcSize(flattenData, CTX)
+    const currentTheme = this.theme
 
-    console.log(sizedData)
-    drawGrid(CTX,100,100,)
+
+    drawGrid({
+      ctx: CTX,
+      width,
+      height,
+      gridSize: 20,
+      lineWidth: currentTheme.grid.lineWidth,
+      strokeStyle: currentTheme.grid.color
+    })
+
     Object.values(sizedData).forEach(node => {
       CTX.strokeRect(node.rect.x + 5, node.rect.y + 5, node.rect.width, node.rect.height);
 

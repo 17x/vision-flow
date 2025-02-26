@@ -1,3 +1,12 @@
+interface DrawGridParams {
+  ctx: CanvasRenderingContext2D;
+  width: number;
+  height: number;
+  gridSize?: number;
+  lineWidth: number;
+  strokeStyle?: string;
+}
+
 /**
  * Draws a grid on the given canvas context.
  *
@@ -6,9 +15,9 @@
  * @param height The height of the canvas.
  * @param gridSize The size of each grid cell. Defaults to 50.
  */
-function drawGrid(ctx: CanvasRenderingContext2D, width: number, height: number, gridSize: number = 50, strokeStyle = '#444'): void {
+function drawGrid({ctx, width, height, gridSize = 50, lineWidth = 0.5, strokeStyle = '#444'}: DrawGridParams): void {
   ctx.strokeStyle = strokeStyle;
-  ctx.lineWidth = 0.5;
+  ctx.lineWidth = lineWidth;
 
   for (let x = 0; x < width; x += gridSize) {
     ctx.beginPath();

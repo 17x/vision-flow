@@ -1,5 +1,8 @@
 import './App.css'
 import {RendererComponent} from "./engine/renderer/Comp.tsx"
+import {ThemeSelect} from "./theme/Comp.tsx";
+import {useEffect, useMemo, useState} from "react";
+import themeMap from "./theme";
 
 const MOCK_DATA1: JSONValue = [
   {
@@ -20,7 +23,7 @@ const MOCK_DATA1: JSONValue = [
   }
 ]
 
-const MOCK_DATA2: JSONValue = [
+/*const MOCK_DATA2: JSONValue = [
   {
     a: 5
   },
@@ -37,13 +40,30 @@ const MOCK_DATA2: JSONValue = [
       },
     ]
   }
-]
+]*/
 
 function App() {
+  const [currentTheme, setCurrentTheme] = useState<ThemeShape>();
+  const keyList = useMemo<ThemeSpecKey[]>(() => Object.keys(themeMap), []);
+  const physicalResolution: Resolution = {width: window.outerWidth, height: window.outerHeight};
+  const LogicResolution: Resolution = {width: window.outerWidth, height: window.outerHeight};
+
+  useEffect(() => {
+    setCurrentTheme(themeMap[keyList[0]])
+  }, [themeMap])
+
   return (
     <div>
-      <RendererComponent data={JSON.stringify(MOCK_DATA1)} />
-      <RendererComponent data={JSON.stringify(MOCK_DATA2)} />
+      <ThemeSelect list={keyList} onChange={(themeKey) => {
+        setCurrentTheme(themeMap[themeKey])
+      }} />
+      {
+        currentTheme &&
+        <RendererComponent data={JSON.stringify(MOCK_DATA1)}
+                           theme={currentTheme as ThemeShape}
+                           physicalResolution={physicalResolution}
+                           logicResolution={LogicResolution}
+        />}
     </div>
   )
 }

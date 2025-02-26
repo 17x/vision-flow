@@ -12,11 +12,14 @@ declare  global {
     [key: string]: JSONValue
   }
 
-  interface RectSizeBase {
-    x: number;
-    y: number;
+  interface SizeBase {
     width: number;
     height: number;
+  }
+
+  interface PositionBase {
+    x: number;
+    y: number;
   }
 
   interface Resolution {

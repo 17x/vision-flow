@@ -15,7 +15,7 @@ interface DrawGridParams {
  * @param height The height of the canvas.
  * @param gridSize The size of each grid cell. Defaults to 50.
  */
-function drawGrid({ctx, width, height, gridSize = 50, lineWidth = 0.5, strokeStyle = '#444'}: DrawGridParams): void {
+function drawGrid({ctx, width, height, gridSize = 50, lineWidth, strokeStyle = '#444'}: DrawGridParams): void {
   ctx.strokeStyle = strokeStyle;
   ctx.lineWidth = lineWidth;
 

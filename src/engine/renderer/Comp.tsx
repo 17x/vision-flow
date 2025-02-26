@@ -22,7 +22,7 @@ export const RendererComponent: React.FC<RendererComponentProps> = ({data, ...re
   }, [data, rest]);
 
   return (
-    <div style={{boxShadow: '0px 0px 5px 0px #000'}}>
+    <div style={{boxShadow: '0px 0px 5px 0px #000', fontSize: '0px'}}>
       <canvas ref={canvasRef}
               style={{
                 width: rest.physicalResolution.width / 2,

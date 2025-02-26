@@ -1,5 +1,6 @@
 import typeCheck from "../../utilities/typeCheck.ts";
 import drawGrid from "./Grid.ts";
+import theme from "../../theme";
 
 export interface RendererProps {
   canvas: HTMLCanvasElement
@@ -8,17 +9,15 @@ export interface RendererProps {
   physicalResolution: Resolution
 }
 
-
 type FlattenDataBase = {
   id: number
-  key: string
   value: JSONPrimitiveValue
   type: JSONStandardType
   parentId?: number,
   children: number[]
 }
 type FlattenDataRecord = Record<number, FlattenDataBase>
-type SizedDataBase = { rect: RectSizeBase } & FlattenDataBase;
+type SizedDataBase = { selfSize: SizeBase, WholeSize: SizeBase } & FlattenDataBase;
 type SizedDataRecord = Record<number, SizedDataBase>
 
 class Renderer {
@@ -43,53 +42,88 @@ class Renderer {
     const result: FlattenDataRecord = {};
     let idCounter = 0;
 
-    const traverse = (key: string, value: JSONValue, parentId?: number): FlattenDataBase => {
-      const nodeId = idCounter++;
+    const traverse = (id: number, value: JSONValue, parentId?: number): FlattenDataBase => {
       const nodeType = typeCheck(value);
       const isComplexType = nodeType === 'object' || nodeType === 'array';
 
       const node: FlattenDataBase = {
-        id: nodeId,
-        key,
+        id,
         value: isComplexType ? null : value as JSONPrimitiveValue,
         type: nodeType,
         parentId,
         children: []
       }
-
-      result[nodeId] = node
+      result[id] = node
 
       if (nodeType === 'object' && value !== null) {
-        Object.entries(value).forEach(([childKey, childValue]) => {
-          const child = traverse(childKey, childValue, nodeId);
-          node.children.push(child.id);
+        Object.entries(value as JSONObject).forEach(([, childValue]) => {
+          const newId = ++idCounter
+
+          traverse(newId, childValue, id);
+
+          node.children.push(newId);
         });
       } else if (nodeType === 'array') {
-        (value as JSONArray).forEach((childValue, index) => {
-          const child = traverse(String(index), childValue, nodeId);
-          node.children.push(child.id);
+        (value as JSONArray).forEach((childValue) => {
+          const newId = ++idCounter
+          traverse(newId, childValue, id);
+          node.children.push(newId);
         });
       }
 
       return node;
     };
 
-    traverse('root', input);
+    traverse(0, input);
 
     return result;
+  }
+
+  static calcHeight(data: FlattenDataRecord, ctx: CanvasRenderingContext2D): SizedDataBase {
+    /*if(node.children.length > 1) {
+
+    }*/
+    const calculated: { [key: FlattenDataBase["id"]]: true } = {}
+    const max = Object.values(data).length
+    let _i = 0
+    console.log(data)
+    const calc = (node: FlattenDataBase) => {
+      return node.children.map(child => {
+        console.log(child)
+
+        selfSize
+      })
+    }
+
+    while (true) {
+      calc(data['root'])
+
+      if (++_i === max) {
+        break
+      }
+    }
+
+    Object.values(data).forEach((node: FlattenDataBase) => {
+
+      console.log(node)
+    })
+
+    // Renderer.calcHeight()
   }
 
   /**
    * Calculates the width and height of each node in the flatten data record
    * decoupled from the data flattening process
    * @param data - The FlattenDataRecord containing flattened JSON nodes to calculate sizes for.
-   * @param ctx - The CanvasRenderingContext2D used to measure text metrics.
+   * @param ctx - The CanvasRenderingContext2D used to measure sizes.
+   * @param theme - The theme used to calculate rects
    * @returns SizedDataRecord - The updated data record with calculated size information.
    */
-  static calcSize(data: FlattenDataRecord, ctx: CanvasRenderingContext2D): SizedDataRecord {
+  static calcSizeByTheme(data: FlattenDataRecord, ctx: CanvasRenderingContext2D, theme: ThemeShape): SizedDataRecord {
     const newRecord: SizedDataRecord = {}
 
-    ctx.font = '12px mono sans-serif'
+    ctx.save()
+    ctx.font = theme.typography.fontSize + 'px mono sans-serif'
 
     for (const dataKey in data) {
       const node = data[dataKey];
@@ -105,13 +139,13 @@ class Renderer {
       if (parentId > 0) {
         const parentNode: SizedDataBase = newRecord[parentId]
 
-        x = parentNode.rect.x + parentNode.rect.width
-        y = parentNode.rect.y + parentNode.rect.height / 2
+        x = parentNode.selfSize.x + parentNode.selfSize.width
+        y = parentNode.selfSize.y + parentNode.selfSize.height / 2
       }
 
       newRecord[dataKey] = {
         ...node,
-        rect: {
+        selfSize: {
           x,
           y,
           width,
@@ -120,40 +154,44 @@ class Renderer {
       }
     }
 
+    ctx.restore()
+
     return newRecord
   }
 
   render(data: string): void {
-    const CTX = this.canvas_ctx
+    const {canvas_ctx: ctx, theme: currentTheme} = this
     const {width, height} = this.physicalResolution
 
-    CTX.clearRect(0, 0, width, height);
-    CTX.textAlign = 'start'
-    CTX.textBaseline = 'top'
-    CTX.strokeStyle = 'red'
-    CTX.font = '16px mono sans-serif'
+    ctx.clearRect(0, 0, width, height);
+    ctx.textAlign = 'start'
+    ctx.textBaseline = 'top'
+    ctx.fillStyle = 'red'
+    ctx.font = '36px sans-serif';
 
     const PARSED_JSON = JSON.parse(data)
     const flattenData: FlattenDataRecord = Renderer.convertJsonToFlattenRendererData(PARSED_JSON)
-    const sizedData: SizedDataRecord = Renderer.calcSize(flattenData, CTX)
-    const currentTheme = this.theme
+    // const sizedData: SizedDataRecord = Renderer.calcSizeByTheme(flattenData, ctx, currentTheme)
 
+    Renderer.calcHeight(flattenData, ctx)
 
     drawGrid({
-      ctx: CTX,
+      ctx,
       width,
       height,
-      gridSize: 20,
+      gridSize: 50,
       lineWidth: currentTheme.grid.lineWidth,
       strokeStyle: currentTheme.grid.color
     })
 
-    Object.values(sizedData).forEach(node => {
-      CTX.strokeRect(node.rect.x + 5, node.rect.y + 5, node.rect.width, node.rect.height);
+    /* Object.values(sizedData).forEach(node => {
+       const text = node.key === 'root' ? node.key : String(node.value)
+       const {width, height, x, y} = node.rect
 
-      const text = node.key + ': ' + (node.value ?? node.type);
-      CTX.fillText(text, node.rect.x, node.rect.y);
-    });
+       // CTX.strokeRect(x + 5, y + 5, width, height);
+
+       ctx.fillText(text, x, y);
+     });*/
   }
 }
 

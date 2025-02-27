@@ -1,11 +1,6 @@
 import Renderer, {RendererProps} from "./index";
 import {useEffect, useRef} from "react";
 
-/*export interface RendererComponentProps {
-  data: string
-  theme: ThemeShape
-}*/
-
 interface RendererComponentProps extends Omit<RendererProps, 'canvas'> {
   data: string
 }

@@ -26,5 +26,22 @@ declare  global {
     width: number;
     height: number;
   }
+
+  interface FlattenDataBase {
+    id: number
+    keyName?: string
+    value: JSONPrimitiveValue
+    type: JSONStandardType
+    parentId?: number
+    prev?: number
+    next?: number
+    children: number[]
+  }
+
+  type FlattenDataRecord = Record<number, FlattenDataBase>
+
+  type SizedDataBase = { selfSize: SizeBase, WholeSize: SizeBase } & FlattenDataBase;
+  type SizedDataRecord = Record<number, SizedDataBase>
+
 }
 export {};

@@ -1,6 +1,6 @@
-import typeCheck from "../../utilities/typeCheck.ts";
 import drawGrid from "./Grid.ts";
-import theme from "../../theme";
+import flatData from "../core/flatten.ts";
+import connectNode from "../core/connect.ts";
 
 export interface RendererProps {
   canvas: HTMLCanvasElement
@@ -8,17 +8,6 @@ export interface RendererProps {
   logicResolution: Resolution
   physicalResolution: Resolution
 }
-
-type FlattenDataBase = {
-  id: number
-  value: JSONPrimitiveValue
-  type: JSONStandardType
-  parentId?: number,
-  children: number[]
-}
-type FlattenDataRecord = Record<number, FlattenDataBase>
-type SizedDataBase = { selfSize: SizeBase, WholeSize: SizeBase } & FlattenDataBase;
-type SizedDataRecord = Record<number, SizedDataBase>
 
 class Renderer {
   private readonly logicResolution: Resolution;
@@ -38,47 +27,6 @@ class Renderer {
     canvas.height = physicalResolution.height
   }
 
-  static convertJsonToFlattenRendererData(input: JSONValue): FlattenDataRecord {
-    const result: FlattenDataRecord = {};
-    let idCounter = 0;
-
-    const traverse = (id: number, value: JSONValue, parentId?: number): FlattenDataBase => {
-      const nodeType = typeCheck(value);
-      const isComplexType = nodeType === 'object' || nodeType === 'array';
-
-      const node: FlattenDataBase = {
-        id,
-        value: isComplexType ? null : value as JSONPrimitiveValue,
-        type: nodeType,
-        parentId,
-        children: []
-      }
-      result[id] = node
-
-      if (nodeType === 'object' && value !== null) {
-        Object.entries(value as JSONObject).forEach(([, childValue]) => {
-          const newId = ++idCounter
-
-          traverse(newId, childValue, id);
-
-          node.children.push(newId);
-        });
-      } else if (nodeType === 'array') {
-        (value as JSONArray).forEach((childValue) => {
-          const newId = ++idCounter
-          traverse(newId, childValue, id);
-          node.children.push(newId);
-        });
-      }
-
-      return node;
-    };
-
-    traverse(0, input);
-
-    return result;
-  }
-
   static calcHeight(data: FlattenDataRecord, ctx: CanvasRenderingContext2D): SizedDataBase {
     /*if(node.children.length > 1) {
 
@@ -86,7 +34,7 @@ class Renderer {
     const calculated: { [key: FlattenDataBase["id"]]: true } = {}
     const max = Object.values(data).length
     let _i = 0
-    console.log(data)
+
     const calc = (node: FlattenDataBase) => {
       return node.children.map(child => {
         console.log(child)
@@ -96,7 +44,7 @@ class Renderer {
     }
 
     while (true) {
-      calc(data['root'])
+      // calc(data['root'])
 
       if (++_i === max) {
         break
@@ -105,7 +53,7 @@ class Renderer {
 
     Object.values(data).forEach((node: FlattenDataBase) => {
 
-      console.log(node)
+      // console.log(node)
     })
 
     // Renderer.calcHeight()
@@ -119,45 +67,6 @@ class Renderer {
    * @param theme - The theme used to calculate rects
    * @returns SizedDataRecord - The updated data record with calculated size information.
    */
-  static calcSizeByTheme(data: FlattenDataRecord, ctx: CanvasRenderingContext2D, theme: ThemeShape): SizedDataRecord {
-    const newRecord: SizedDataRecord = {}
-
-    ctx.save()
-    ctx.font = theme.typography.fontSize + 'px mono sans-serif'
-
-    for (const dataKey in data) {
-      const node = data[dataKey];
-      const isComplexType = node.type === 'object' || node.type === 'array';
-      const metrics = ctx.measureText(isComplexType ? node.type : String(node.value));
-      const width = metrics.width;
-      const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
-      const parentId: number = node.parentId ?? -1;
-      let x = 0
-      let y = 0
-
-      // root
-      if (parentId > 0) {
-        const parentNode: SizedDataBase = newRecord[parentId]
-
-        x = parentNode.selfSize.x + parentNode.selfSize.width
-        y = parentNode.selfSize.y + parentNode.selfSize.height / 2
-      }
-
-      newRecord[dataKey] = {
-        ...node,
-        selfSize: {
-          x,
-          y,
-          width,
-          height,
-        }
-      }
-    }
-
-    ctx.restore()
-
-    return newRecord
-  }
 
   render(data: string): void {
     const {canvas_ctx: ctx, theme: currentTheme} = this
@@ -170,9 +79,12 @@ class Renderer {
     ctx.font = '36px sans-serif';
 
     const PARSED_JSON = JSON.parse(data)
-    const flattenData: FlattenDataRecord = Renderer.convertJsonToFlattenRendererData(PARSED_JSON)
-    // const sizedData: SizedDataRecord = Renderer.calcSizeByTheme(flattenData, ctx, currentTheme)
+    const flattenData: FlattenDataRecord = flatData(PARSED_JSON)
+    const connectedData: FlattenDataRecord = connectNode(flattenData)
+    // const sizedData: SizedDataRecord = calcSizeByTheme(flattenData, ctx, currentTheme)
 
+    // console.log(flattenData)
+    console.log(connectedData)
     Renderer.calcHeight(flattenData, ctx)
 
     drawGrid({

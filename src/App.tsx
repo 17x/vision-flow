@@ -17,7 +17,9 @@ const MOCK_DATA1: JSONValue = [
         c1: 3
       },
       {
-        c2: 4
+        c2: 4,
+        c3: 5,
+        c4: 6,
       },
     ]
   }

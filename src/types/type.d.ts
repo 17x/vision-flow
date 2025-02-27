@@ -30,7 +30,6 @@ declare  global {
     height: number;
   }
 
-
   interface PositionBase {
     x: number;
     y: number;
@@ -43,7 +42,7 @@ declare  global {
     height: number;
   }
 
-  type SizedDataBase = { rect: Rect } & FlattenDataBase;
+  type SizedDataBase = { selfRect: Rect, rect: Rect } & FlattenDataBase;
   type SizedDataRecord = Record<number, SizedDataBase>
 
 }

@@ -94,14 +94,14 @@ class Renderer {
       strokeStyle: currentTheme.grid.color
     })
 
-    /* Object.values(sizedData).forEach(node => {
+     Object.values(sizedData).forEach(node => {
        const text = node.key === 'root' ? node.key : String(node.value)
        const {width, height, x, y} = node.rect
 
        // CTX.strokeRect(x + 5, y + 5, width, height);
 
        ctx.fillText(text, x, y);
-     });*/
+     });
   }
 }
 

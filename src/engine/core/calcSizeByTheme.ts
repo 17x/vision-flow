@@ -1,6 +1,6 @@
 const calcNodeSelfSize = (node: FlattenDataBase, ctx: CanvasRenderingContext2D): SizeBase => {
   const isComplexType = node.type === 'object' || node.type === 'array';
-  const metrics = ctx.measureText(isComplexType ? node.type : String(node.value));
+  const metrics = ctx.measureText(isComplexType ? node.keyName as string : String(node.value));
   const width = metrics.width;
   const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
 
@@ -11,9 +11,9 @@ const calcNodeSelfSize = (node: FlattenDataBase, ctx: CanvasRenderingContext2D):
 
 const calcSizeByTheme = (data: FlattenDataRecord, ctx: CanvasRenderingContext2D, theme: ThemeShape): SizedDataRecord => {
   const newRecord: SizedDataRecord = {}
-  const maxWidth = ctx.canvas.width
+  // const maxWidth = ctx.canvas.width
   const maxHeight = ctx.canvas.height
-  const startPoint: PositionBase = {
+  const firstPoint: PositionBase = {
     x: 0,
     y: maxHeight / 2
   }
@@ -21,25 +21,44 @@ const calcSizeByTheme = (data: FlattenDataRecord, ctx: CanvasRenderingContext2D,
   ctx.save()
   ctx.font = theme.typography.fontSize + 'px mono sans-serif'
 
-  for (const key in data) {
-    const node = data[key]
+  const calcNodeRect = (node: FlattenDataBase, startPoint: PositionBase): SizedDataBase => {
     const {width, height} = calcNodeSelfSize(node, ctx)
-
-    newRecord[key] = {
-      ...node,
-      rect: {
-        x: 0,
-        y: 0,
-        width,
-        height,
-      }
+    const selfRect: Rect = {
+      x: startPoint.x,
+      y: startPoint.y,
+      width,
+      height,
     }
+    const rect: Rect = {...selfRect}
+    const newNode: SizedDataBase = {
+      ...node,
+      selfRect,
+      rect,
+    }
+    let maxWidth: number = width
+    let maxHeight: number = height
+    let _height = 0
+
+    newRecord[node.id] = newNode
+
+    node.children.map(childId => {
+      const childNode = calcNodeRect(data[childId], {x: rect.x + rect.width, y: rect.y + _height})
+
+      maxWidth = Math.max(maxWidth, rect.height)
+      _height += rect.height
+      console.log(childNode)
+    })
+
+    maxHeight = Math.max(maxHeight, _height)
+    newNode.rect.height = maxHeight
+
+    return newNode
   }
 
+  calcNodeRect(data[0], firstPoint)
+
+  // console.log(newRecord)
   ctx.restore()
-
-
-
 
   return newRecord
 }

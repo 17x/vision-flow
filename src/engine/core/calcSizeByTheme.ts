@@ -21,26 +21,15 @@ const calcSizeByTheme = (data: FlattenDataRecord, ctx: CanvasRenderingContext2D,
   ctx.save()
   ctx.font = theme.typography.fontSize + 'px mono sans-serif'
 
-  for (const dataKey in data) {
-    const node = data[dataKey];
-    const parentId: number = node.parentId ?? -1;
+  for (const key in data) {
+    const node = data[key]
     const {width, height} = calcNodeSelfSize(node, ctx)
-    let x = 0
-    let y = 0
 
-    // root
-    if (parentId > 0) {
-      const parentNode: SizedDataBase = newRecord[parentId]
-
-      x = parentNode.rect.x + parentNode.rect.width
-      y = parentNode.rect.y + parentNode.rect.height / 2
-    }
-
-    newRecord[dataKey] = {
+    newRecord[key] = {
       ...node,
       rect: {
-        x,
-        y,
+        x: 0,
+        y: 0,
         width,
         height,
       }
@@ -48,6 +37,9 @@ const calcSizeByTheme = (data: FlattenDataRecord, ctx: CanvasRenderingContext2D,
   }
 
   ctx.restore()
+
+
+
 
   return newRecord
 }

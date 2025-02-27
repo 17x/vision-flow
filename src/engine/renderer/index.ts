@@ -1,6 +1,6 @@
 import drawGrid from "./Grid.ts";
 import flatData from "../core/flatten.ts";
-import connectNode from "../core/connect.ts";
+import calcSizeByTheme from "../core/calcSizeByTheme.ts";
 
 export interface RendererProps {
   canvas: HTMLCanvasElement
@@ -80,11 +80,9 @@ class Renderer {
 
     const PARSED_JSON = JSON.parse(data)
     const flattenData: FlattenDataRecord = flatData(PARSED_JSON)
-    const connectedData: FlattenDataRecord = connectNode(flattenData)
-    // const sizedData: SizedDataRecord = calcSizeByTheme(flattenData, ctx, currentTheme)
+    const sizedData: SizedDataRecord = calcSizeByTheme(flattenData, ctx, currentTheme)
 
-    // console.log(flattenData)
-    console.log(connectedData)
+    console.log(sizedData)
     Renderer.calcHeight(flattenData, ctx)
 
     drawGrid({

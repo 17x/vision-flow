@@ -12,21 +12,6 @@ declare  global {
     [key: string]: JSONValue
   }
 
-  interface SizeBase {
-    width: number;
-    height: number;
-  }
-
-  interface PositionBase {
-    x: number;
-    y: number;
-  }
-
-  interface Resolution {
-    width: number;
-    height: number;
-  }
-
   interface FlattenDataBase {
     id: number
     keyName?: string
@@ -40,7 +25,25 @@ declare  global {
 
   type FlattenDataRecord = Record<number, FlattenDataBase>
 
-  type SizedDataBase = { selfSize: SizeBase, WholeSize: SizeBase } & FlattenDataBase;
+  interface SizeBase {
+    width: number;
+    height: number;
+  }
+
+
+  interface PositionBase {
+    x: number;
+    y: number;
+  }
+
+  type Rect = SizeBase & PositionBase
+
+  interface Resolution {
+    width: number;
+    height: number;
+  }
+
+  type SizedDataBase = { rect: Rect } & FlattenDataBase;
   type SizedDataRecord = Record<number, SizedDataBase>
 
 }

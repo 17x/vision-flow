@@ -7,7 +7,7 @@ interface RendererComponentProps extends Omit<RendererProps, 'canvas'> {
 
 export const RendererComponent: React.FC<RendererComponentProps> = ({data, ...rest}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  console.log(rest)
+  // console.log(rest)
   useEffect(() => {
     if (canvasRef.current) {
       const renderer = new Renderer({canvas: canvasRef.current, ...rest});

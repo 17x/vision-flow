@@ -1,4 +1,5 @@
 import typeCheck from "../../utilities/typeCheck.ts";
+import connectNode from "./connect.ts";
 
 const flatData = (entry: JSONValue): FlattenDataRecord => {
   const result: FlattenDataRecord = {};
@@ -40,7 +41,7 @@ const flatData = (entry: JSONValue): FlattenDataRecord => {
 
   traverse(0, entry);
 
-  return result;
+  return connectNode(result)
 }
 
 

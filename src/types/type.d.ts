@@ -7,43 +7,45 @@ declare  global {
   type JSONPrimitiveValue = string | number | boolean | null;
   type JSONValue = JSONPrimitiveValue | JSONObject | JSONArray
   type JSONArray = JSONValue[];
+  type JSONObject = Map<string, JSONValue>
 
-  interface JSONObject {
-    [key: string]: JSONValue
-  }
+  type TreeNode = {
+    id: number;
+    parentId: number | null;
+  };
 
-  interface FlattenDataBase {
-    id: number
+  interface FlattenedTreeNode extends TreeNode {
     keyName?: string
     value: JSONPrimitiveValue
     type: JSONStandardType
-    parentId?: number
     prev?: number
     next?: number
     children: number[]
   }
 
-  type FlattenDataRecord = Record<number, FlattenDataBase>
+  type FlattenedTreeNodeMap = Map<number, FlattenedTreeNode>
 
-  interface SizeBase {
+  interface Size {
     width: number;
     height: number;
   }
 
-  interface PositionBase {
+  interface Position {
     x: number;
     y: number;
   }
 
-  type Rect = SizeBase & PositionBase
+  type Rect = Size & Position
 
-  interface Resolution {
-    width: number;
-    height: number;
-  }
+  type Resolution = Size
 
-  type SizedDataBase = { selfRect: Rect, rect: Rect } & FlattenDataBase;
-  type SizedDataRecord = Record<number, SizedDataBase>
+  type Positions = Map<TreeNode["id"], Rect>
+
+  type MeasuredDataRecord = Size & Positions
+
+  type DPR = number
+
+  type ZoomRatio = number
 
 }
 export {};

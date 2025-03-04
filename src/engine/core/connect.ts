@@ -1,4 +1,4 @@
-const connectNode = (data: FlattenDataRecord) => {
+const connectNode = (data: FlattenedTreeNodeMap) => {
   const nodes = Object.values(data)
   const len = nodes.length
 

@@ -60,8 +60,12 @@ class Editor {
 
     canvas.width = data.size.width
     canvas.height = data.size.height
+    wrapper.style.width = '100%';
+    wrapper.style.height = '100%';
 
     container.innerHTML = ''
+    container.setAttribute('editor-container', '')
+    container.dataset['name'] = 'editor-container-' + this.id
     wrapper.append(canvas)
     container.append(wrapper)
 

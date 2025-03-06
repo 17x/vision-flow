@@ -38,8 +38,8 @@ class CrossLine {
   private handleMouseMove(e: MouseEvent) {
     const x = e.clientX - this.canvas.offsetLeft;
     const y = e.clientY - this.canvas.offsetTop;
-    console.log(x, y)
-    this.render({x, y});
+    // console.log(x, y)
+    // this.render({x, y});
   }
 
   private update() {

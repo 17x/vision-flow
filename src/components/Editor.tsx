@@ -1,7 +1,11 @@
 import {useEffect, useRef} from "react";
 import Editor, {EditorDataProps} from "../engine/editor";
-import {Sidebar} from "./Sidebar.tsx";
-import Toolbar from "./toolbar/Toolbar.tsx";
+import {ModulePanel} from "./ModulePanel.tsx";
+import Toolbar from "./menu/Toolbar.tsx";
+import {StatusBar} from "./StatusBar/StatusBar.tsx";
+import {Menu} from "./menu/Menu.tsx";
+import {PropertyPanel} from "./PropertyPanel.tsx";
+import Panable from "./Panable.tsx";
 
 interface EditorComponentProps {
   data?: EditorDataProps
@@ -10,8 +14,8 @@ interface EditorComponentProps {
 export const EditorComponent: React.FC<EditorComponentProps> = ({data}) => {
   const divRef = useRef<HTMLDivElement>(null)
   const dpr = window.devicePixelRatio
-  const screenResolution: Resolution = {width: window.outerWidth, height: window.outerHeight};
-  const physicalResolution: Resolution = {...screenResolution};
+  // const screenResolution: Resolution = {width: window.outerWidth, height: window.outerHeight};
+  // const physicalResolution: Resolution = {...screenResolution};
   // const logicResolution: Resolution = {width: physicalResolution.width * dpr, height: physicalResolution.height * dpr};
 
   useEffect(() => {
@@ -36,17 +40,21 @@ export const EditorComponent: React.FC<EditorComponentProps> = ({data}) => {
     }
   }, []);
 
-  return <div>
-    <Toolbar />
-    <div style={{display: "flex", flexDirection: "row", alignItems: "center", height: "100%"}}>
-      <Sidebar style={{flex: 1}} open />
+  return <div className={'w-full h-full flex flex-col'}>
+    <Menu />
 
-      <div ref={divRef} style={{
-        boxShadow: '0px 0px 5px 0px #000',
-        width: physicalResolution.width / 2,
-        height: physicalResolution.height / 2,
-      }}></div>
-    </div>
+    <main className={'flex flex-row overflow-hidden'}>
+      <ModulePanel />
+
+      <div className={'flex flex-col w-full h-full overflow-hidden'}>
+        <Panable>
+          <div ref={divRef} className={'flex h-full overflow-auto scrollbar-custom'}></div>
+        </Panable>
+          <StatusBar />
+      </div>
+
+      <PropertyPanel />
+    </main>
+
   </div>
-
 };

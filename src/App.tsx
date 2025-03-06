@@ -1,4 +1,3 @@
-import './App.css'
 import './components/comp.css'
 import {useEffect} from "react";
 import themeMap from "./theme";

@@ -1,6 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../redux/ store.ts";
 import {closeMenu, toggleMenu} from "../../redux/menuSlice.ts";
+import {FC} from "react";
 
 const menuItems = {
   File: ["New", "Open", "Save", "Exit"],
@@ -8,15 +9,19 @@ const menuItems = {
   View: ["Zoom In", "Zoom Out", "Full Screen"]
 };
 
-const Toolbar = () => {
+interface ToolbarProps {
+  className?: string;
+}
+
+const Toolbar: FC<ToolbarProps> = () => {
   const dispatch = useDispatch();
   const openMenu = useSelector((state: RootState) => state.menu.openMenu);
 
   return (
-    <nav className="menu-bar" onClick={() => dispatch(closeMenu())}>
+    <nav className="menu-bar h-10" onClick={() => dispatch(closeMenu())}>
       {Object.keys(menuItems).map((menu) => (
         <div key={menu} className="menu-item" onClick={(e) => {
-          e.stopPropagation(); // Prevent closing immediately
+          e.stopPropagation();
           dispatch(toggleMenu(menu));
         }}>
           <button>{menu}</button>

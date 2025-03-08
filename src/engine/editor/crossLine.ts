@@ -17,10 +17,10 @@ class CrossLine {
     this.canvas = canvas
     this.ctx = ctx
 
-    canvas.style.position = 'fixed'
+    canvas.style.position = 'absolute'
     canvas.style.zIndex = '100'
     canvas.style.pointerEvents = 'none';
-    canvas.dataset['name'] = 'CrossLine-' + this.editor.id;
+    canvas.setAttribute('cross-line', '')
     editor.canvas.parentNode!.append(this.canvas)
 
     this.update()

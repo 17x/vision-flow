@@ -11,11 +11,7 @@ class Rectangle extends Shape {
     super(rest);
   }
 
-  static render(ctx, module) {
-    // ctx.fillStyle = module.getFillStyle(module.getFillStyle());
-  }
-
-  protected getDetails() {
+  public getDetails() {
     return {
       ...super.getDetails(),
       /*lineColor: this.lineColor,

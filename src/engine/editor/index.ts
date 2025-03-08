@@ -2,29 +2,30 @@ import uid from "../../utilities/Uid.ts";
 import generatorModuleByType from "./generator.ts";
 import render from "../core/renderer.ts";
 import SelectionManager from "./selectionManager.ts";
-import CrossLine from "./CrossLine.ts";
+import CrossLine from "./crossLine.ts";
 import {BasicEditorAreaSize} from "./editor";
+import PanableContainer from "./panableContainer";
 
 export interface EditorDataProps {
-  id: UID
-  size: Size
-  modules: ModuleTypeMap[keyof ModuleTypeMap][]
+  id: UID;
+  size: Size;
+  modules: ModuleTypeMap[keyof ModuleTypeMap][];
 }
 
 export const basicEditorAreaSize: BasicEditorAreaSize = {
   width: 1000,
-  height: 1000
-}
+  height: 1000,
+};
 
 export interface EditorProps {
   // canvas: HTMLCanvasElement
-  container: HTMLDivElement
-  data: EditorDataProps
+  container: HTMLDivElement;
+  data: EditorDataProps;
   // theme: ThemeShape
-  dpr?: DPR
-  zoom?: ZoomRatio
-  logicResolution?: Resolution
-  physicalResolution?: Resolution
+  dpr?: DPR;
+  zoom?: ZoomRatio;
+  logicResolution?: Resolution;
+  physicalResolution?: Resolution;
 }
 
 class Editor {
@@ -39,58 +40,93 @@ class Editor {
   private readonly wrapper: HTMLDivElement;
   private readonly zoom: ZoomRatio;
   private readonly canvas_ctx: CanvasRenderingContext2D;
-  private readonly selectionManager: SelectionManager
-  private readonly crossLine: CrossLine
+  private readonly selectionManager: SelectionManager;
+  private readonly crossLine: CrossLine;
+  private readonly panableContainer: PanableContainer;
 
-  constructor({container, data, dpr = 4, zoom = 1}: EditorProps) {
+  constructor({container, data, dpr = 2, zoom = 1}: EditorProps) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     const wrapper = document.createElement("div");
 
-    // this.theme = theme
-    this.canvas = canvas
-    this.canvas_ctx = ctx as CanvasRenderingContext2D
-    // this.physicalResolution = physicalResolution
-    // this.logicResolution = {width: logicResolution.width * dpr, height: logicResolution.height * dpr};
-    this.dpr = dpr
-    this.zoom = zoom
-    this.modules = data.modules
+    this.container = container;
+    this.canvas = canvas;
+    this.canvas_ctx = ctx as CanvasRenderingContext2D;
+    this.dpr = dpr;
+    this.zoom = zoom;
+    this.modules = data.modules;
     this.id = data.id;
     this.size = data.size;
+    this.wrapper = wrapper;
 
-    canvas.width = data.size.width
-    canvas.height = data.size.height
-    wrapper.style.width = '100%';
-    wrapper.style.height = '100%';
+    // canvas.width = data.size.width
+    // canvas.height = data.size.height
+    canvas.width = window.outerWidth * dpr;
+    canvas.height = window.outerHeight * dpr;
+    container.innerHTML = "";
+    container.style.overflow = "hidden";
+    container.style.position = "relative";
+    container.style.display = "flex";
+    container.style.height = "100%";
+    container.style.width = "100%";
+    container.setAttribute("editor-container", "");
 
-    container.innerHTML = ''
-    container.setAttribute('editor-container', '')
-    container.dataset['name'] = 'editor-container-' + this.id
-    wrapper.append(canvas)
-    container.append(wrapper)
+    wrapper.append(canvas);
+    container.append(wrapper);
 
-    render({
-      ctx: this.canvas_ctx,
-      modules: this.modules,
-    })
+    this.selectionManager = new SelectionManager(this);
+    this.crossLine = new CrossLine(this);
+    this.panableContainer = new PanableContainer({
+      element: wrapper,
+      onPan: () => {
+        console.log(9);
+      },
+    });
 
-    this.selectionManager = new SelectionManager(this)
-    this.crossLine = new CrossLine(this)
+    this.render()
   }
 
   static createInstance(container: HTMLDivElement): Editor {
-    const newUID = uid()
+    const newUID = uid();
 
     return new Editor({
       container,
       data: {
         id: newUID,
         size: basicEditorAreaSize,
-        modules: [
-          generatorModuleByType('1', 'rectangle')
-        ]
-      }
-    })
+        modules: Array.from({length: 10}, (_, index) => {
+            console.log(index)
+            return generatorModuleByType(index + 1 + "", "rectangle", {
+              x: (index + 1) * 10,
+              y: (index + 1) * 10,
+              width: 100,
+              height: 100
+            });
+          }
+        ),
+        // modules: [
+        //   generatorModuleByType('1', 'rectangle')
+        // ]
+      },
+    });
+  }
+
+  draw() {
+    render({
+      ctx: this.canvas_ctx,
+      modules: this.modules,
+    });
+  }
+
+  render() {
+    const animate = () => {
+      console.time();
+      this.draw()
+      // requestAnimationFrame(animate);
+      console.timeEnd();
+    }
+
+    requestAnimationFrame(animate);
   }
 
   /*
@@ -140,4 +176,4 @@ class Editor {
     }*/
 }
 
-export default Editor
+export default Editor;

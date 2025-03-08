@@ -11,7 +11,7 @@ class RoundedRectangle extends Shape {
     super(rest);
   }
 
-  protected getDetails() {
+  public getDetails() {
     return {
       ...super.getDetails(),
     };

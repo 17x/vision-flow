@@ -1,11 +1,10 @@
 import {useEffect, useRef} from "react";
 import Editor, {EditorDataProps} from "../engine/editor";
 import {ModulePanel} from "./ModulePanel.tsx";
-import Toolbar from "./menu/Toolbar.tsx";
+// import Toolbar from "./menu/Toolbar.tsx";
 import {StatusBar} from "./StatusBar/StatusBar.tsx";
 import {Menu} from "./menu/Menu.tsx";
 import {PropertyPanel} from "./PropertyPanel.tsx";
-import Panable from "./Panable.tsx";
 
 interface EditorComponentProps {
   data?: EditorDataProps
@@ -47,10 +46,8 @@ export const EditorComponent: React.FC<EditorComponentProps> = ({data}) => {
       <ModulePanel />
 
       <div className={'flex flex-col w-full h-full overflow-hidden'}>
-        <Panable>
-          <div ref={divRef} className={'flex h-full overflow-auto scrollbar-custom'}></div>
-        </Panable>
-          <StatusBar />
+        <div ref={divRef}></div>
+        <StatusBar />
       </div>
 
       <PropertyPanel />

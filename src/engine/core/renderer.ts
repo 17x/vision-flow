@@ -1,15 +1,16 @@
 import {BasicModuleProps} from "./modules/base.ts";
+import {Modules} from "./modules/modules";
 // import Rectangle from "./modules/shapes/Rectangle.ts";
 // import Renderer from "../renderer";
 
-type Module = BasicModuleProps;
+// type Module = BasicModuleProps;
 
 interface RenderProps {
   ctx: CanvasRenderingContext2D
-  modules: Module[]
+  modules: Modules[]
 }
 
-type RenderTypes = 'line' | 'curve' | 'text'
+type RenderTypes = 'line' | 'curve' | 'text' | 'rect'
 
 interface RenderItem<T extends RenderTypes> {
   type: T
@@ -19,24 +20,36 @@ interface RenderItem<T extends RenderTypes> {
 const render = ({ctx, modules}: RenderProps): void => {
   // console.log(ctx, modules)
   const lineQueue: RenderItem<'line'>[] = []
+  const rectQueue: RenderItem<'rect'>[] = []
   const curveQueue: RenderItem<'curve'>[] = []
   const textQueue: RenderItem<'text'>[] = []
 
-  modules.forEach((module: Module) => {
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+  modules.forEach((module) => {
     // console.log(module.type)
 
     if (module.type === 'rectangle') {
-      lineQueue.push({
-        type: 'line',
-        data: 1
+      // console.log(module)
+      const {x, y, width, height} = module
+      // const data = [x, y, x + width, y, x + width, y + height, x, y + height];
+
+      rectQueue.push({
+        type: 'rect',
+        data: {x, y, width, height}
       })
 
-
-      textQueue.push({type: 'text', data: '998'})
+      // textQueue.push({type: 'text', data: '998'})
     }
   })
 
-  ctx.fillStyle = '#000'
+  rectQueue.forEach((item) => {
+    const {x, y, width, height} = item.data
+
+    ctx.strokeRect(x, y, width, height)
+  })
+
+  /*ctx.fillStyle = '#000'
   // line
   lineQueue.forEach(item => {
     ctx.moveTo(100, 100)
@@ -50,10 +63,8 @@ const render = ({ctx, modules}: RenderProps): void => {
 
   ctx.font = '24px sans-serif'
   textQueue.forEach((item) => {
-    ctx.fillText('14567890abcdefg', 100, 50, 200)
-  })
-
-
+    ctx.fillText('14567890abcdefg', Math.random() * 1000, Math.random() * 500, 200)
+  })*/
 }
 
 const a1: ModuleNames = 1

@@ -36,6 +36,12 @@ declare  global {
   }
 
   type Rect = Size & Position
+  type BoundingRect = Size & Position & {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+  }
 
   type Resolution = Size
 
@@ -46,6 +52,6 @@ declare  global {
   type DPR = number
 
   type ZoomRatio = number
-
 }
+
 export {};

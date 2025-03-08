@@ -2,6 +2,7 @@ import './components/comp.css'
 import {useEffect} from "react";
 import themeMap from "./theme";
 import {EditorComponent} from "./components/Editor.tsx";
+// import PanableVirtualScrollCanvas from "./components/VS.tsx";
 
 /*
 const MOCK_DATA1: JSONValue = [
@@ -34,7 +35,9 @@ function App() {
     // setCurrentTheme(themeMap[keyList[0]])
   }, [themeMap])
 
+  // return <PanableVirtualScrollCanvas />
   return <EditorComponent />
+
   /*    <>
         <ThemeSelect list={keyList} onChange={(themeKey) => {
           setCurrentTheme(themeMap[themeKey])

@@ -10,6 +10,7 @@ export interface BasicModuleProps {
 }
 
 class Base {
+  readonly id: UID;
   private readonly lineColor: HexColor;
   private readonly showLine: boolean;
   private readonly opacity: Opacity;
@@ -19,6 +20,7 @@ class Base {
   private readonly type: ModuleNames
 
   constructor({
+                id,
                 type,
                 lineColor,
                 opacity,
@@ -27,6 +29,7 @@ class Base {
                 shadow = false,
                 showLine = true,
               }: BasicModuleProps) {
+    this.id = id
     this.type = type
     this.lineColor = lineColor;
     this.opacity = opacity!;
@@ -38,6 +41,7 @@ class Base {
 
   protected getDetails() {
     return {
+      id: this.id,
       type: this.type,
       lineColor: this.lineColor,
       opacity: this.opacity,

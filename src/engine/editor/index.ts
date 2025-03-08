@@ -14,8 +14,7 @@ export interface EditorDataProps {
 }
 
 export const basicEditorAreaSize: BasicEditorAreaSize = {
-  width: 1000,
-  height: 1000,
+  width: 1000, height: 1000,
 };
 
 export interface EditorProps {
@@ -39,12 +38,12 @@ class Editor {
   readonly dpr: DPR;
   readonly container: HTMLDivElement;
   readonly shortcut: Shortcut;
+  readonly panableContainer: PanableContainer;
   private readonly wrapper: HTMLDivElement;
   private readonly zoom: ZoomRatio;
   private readonly canvas_ctx: CanvasRenderingContext2D;
   private readonly selectionManager: SelectionManager;
   private readonly crossLine: CrossLine;
-  readonly panableContainer: PanableContainer;
 
   constructor({container, data, dpr = 2, zoom = 1}: EditorProps) {
     const canvas = document.createElement("canvas");
@@ -80,9 +79,9 @@ class Editor {
     this.selectionManager = new SelectionManager(this);
     this.crossLine = new CrossLine(this);
     this.panableContainer = new PanableContainer({
-      element: wrapper,
-      onPan: () => {
-        console.log(9);
+      element: wrapper, onPan: (deltaX, deltaY) => {
+        // console.log(9);
+        // console.log(deltaX, deltaY);
       },
     });
     this.render()
@@ -92,21 +91,13 @@ class Editor {
     const newUID = uid();
 
     return new Editor({
-      container,
-      data: {
-        id: newUID,
-        size: basicEditorAreaSize,
-        modules: Array.from({length: 1000}, (_, index) => {
-            // console.log(index)
-            return generatorModuleByType(index + 1 + "", "rectangle", {
-              x: (index + 1) * 10,
-              y: (index + 1) * 10,
-              width: 100,
-              height: 100
-            });
-          }
-        ),
-        // modules: [
+      container, data: {
+        id: newUID, size: basicEditorAreaSize, modules: Array.from({length: 1000}, (_, index) => {
+          // console.log(index)
+          return generatorModuleByType(index + 1 + "", "rectangle", {
+            x: (index + 1) * 10, y: (index + 1) * 10, width: 100, height: 100
+          });
+        }), // modules: [
         //   generatorModuleByType('1', 'rectangle')
         // ]
       },
@@ -115,8 +106,7 @@ class Editor {
 
   draw() {
     render({
-      ctx: this.canvas_ctx,
-      modules: this.modules,
+      ctx: this.canvas_ctx, modules: this.modules,
     });
   }
 

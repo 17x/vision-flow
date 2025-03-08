@@ -31,7 +31,7 @@ class PanableContainer {
     // Mouse events
     this.containerElement.removeEventListener('mousedown', this.handleDragStart);
     window.removeEventListener('mousemove', this.handleMouseMove);
-    window.removeEventListener('mouseup', this.handleMouseUp);
+    window.removeEventListener('mouseup', this.handleDragEnd);
   }
 
   private initializeContainer() {

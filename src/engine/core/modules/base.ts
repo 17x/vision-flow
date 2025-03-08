@@ -11,13 +11,13 @@ export interface BasicModuleProps {
 
 class Base {
   readonly id: UID;
+  readonly type: ModuleNames
   private readonly lineColor: HexColor;
   private readonly showLine: boolean;
   private readonly opacity: Opacity;
   private readonly position: Position;
   private readonly rotation: Rotation;
   private readonly shadow: Shadow;
-  private readonly type: ModuleNames
 
   constructor({
                 id,

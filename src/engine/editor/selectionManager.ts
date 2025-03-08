@@ -1,6 +1,5 @@
 import Editor from "./index.ts";
 import coordinator from "./coordinator.ts";
-import {Position} from "../type";
 
 class SelectionManager {
   private canvas: HTMLCanvasElement;
@@ -27,8 +26,21 @@ class SelectionManager {
     canvas.setAttribute("selection-manager", "");
     editor.canvas.parentNode!.append(this.canvas);
 
+    this.bindShortcuts()
     this.update();
     this.setupEventListeners();
+  }
+
+  private bindShortcuts() {
+    this.editor.shortcut.subscribe('select-all', this.selectAll.bind(this));
+  }
+
+  private selectAll(): void {
+    this.selectedItems.clear()
+    this.editor.modules.forEach((module) => {
+      this.selectedItems.add(module.id);
+    })
+    this.update();
   }
 
   private setupEventListeners(): void {
@@ -38,18 +50,14 @@ class SelectionManager {
   }
 
   private removeEventListeners(): void {
-    this.canvas.removeEventListener(
-      "mousedown",
-      this.handleMouseDown.bind(this)
-    );
-    this.canvas.removeEventListener(
-      "mousemove",
-      this.handleMouseMove.bind(this)
-    );
+    this.canvas.removeEventListener("mousedown", this.handleMouseDown.bind(this));
+    this.canvas.removeEventListener("mousemove", this.handleMouseMove.bind(this));
     this.canvas.removeEventListener("mouseup", this.handleMouseUp.bind(this));
   }
 
   private handleMouseDown(e: MouseEvent): void {
+    if (this.editor.panableContainer.isSpaceKeyPressed) return
+
     const mouseX = e.offsetX;
     const mouseY = e.offsetY;
     const mousePointX = mouseX
@@ -60,10 +68,11 @@ class SelectionManager {
     const possibleModules = this.editor.modules.filter((item) => {
       const {top, right, bottom, left} = item.getBoundingRect()
 
-      return !(mousePointX > right || mousePointX < left || mousePointY > bottom || mousePointY < top)
+      return mouseX > left && mouseY > top && mousePointX < right && mousePointY < bottom
     })
 
     if (!possibleModules.length) {
+      this.selectedItems.clear();
       return
     }
 
@@ -87,15 +96,7 @@ class SelectionManager {
       const mouseY = e.offsetY;
 
       // Calculate the new size based on the mouse position
-      const newSize = Math.max(
-        20,
-        Math.min(
-          this.canvas.width,
-          this.canvas.height,
-          mouseX - this.activeResizeHandle.x,
-          mouseY - this.activeResizeHandle.y
-        )
-      );
+      const newSize = Math.max(20, Math.min(this.canvas.width, this.canvas.height, mouseX - this.activeResizeHandle.x, mouseY - this.activeResizeHandle.y));
 
       // Apply the resize effect
       this.activeResizeHandle.size = newSize;
@@ -131,31 +132,21 @@ class SelectionManager {
 
       // Draw resize handle at the center
       if (this.selectedItems.has(item.id)) {
-        console.log(item)
+        // console.log(item.type)
         const {x, y, width, height} = item.getBoundingRect()
         const handleSize = this.resizeHandleSize / 2
-        const handlePoints: Position[] = [
-          {x, y},
-          {x: x + width / 2, y},
-          {x: x + width, y},
-          {x: x + width, y: y + height / 2},
-          {x: x + width, y: y + height},
-          {x: x + width / 2, y: y + height},
-          {x: x + width / 2, y: y + height},
-          {x: x, y: y + height},
-          {x: x, y: y + height / 2},
-        ]
+        const handlePoints: Position[] = [{x, y}, {x: x + width / 2, y}, {x: x + width, y}, {
+          x: x + width, y: y + height / 2
+        }, {x: x + width, y: y + height}, {x: x + width / 2, y: y + height}, {x: x + width / 2, y: y + height}, {
+          x: x, y: y + height
+        }, {x: x, y: y + height / 2},]
 
         ctx.strokeStyle = "#ff0000";
-        ctx.strokeRect(
-          x, y, width, height,
-        );
+        ctx.strokeRect(x, y, width, height,);
 
         handlePoints.forEach(({x, y}) => {
           ctx.beginPath();
-          ctx.ellipse(
-            x, y, handleSize, handleSize, 0, 0, 360
-          );
+          ctx.ellipse(x, y, handleSize, handleSize, 0, 0, 360);
           ctx.fill();
         })
       }
@@ -171,6 +162,7 @@ class SelectionManager {
   private destroy(): void {
     if (this.isDestroyed) return;
 
+    this.editor.shortcut.unsubscribe('select-all', this.selectAll.bind(this));
     this.removeEventListeners();
     this.selectedItems.clear();
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);

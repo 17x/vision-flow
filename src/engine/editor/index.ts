@@ -5,6 +5,7 @@ import SelectionManager from "./selectionManager.ts";
 import CrossLine from "./crossLine.ts";
 import {BasicEditorAreaSize} from "./editor";
 import PanableContainer from "./panableContainer";
+import Shortcut from "./shortcut.ts";
 
 export interface EditorDataProps {
   id: UID;
@@ -36,13 +37,14 @@ class Editor {
   // readonly logicResolution: Resolution;
   // readonly physicalResolution: Resolution;
   readonly dpr: DPR;
-  private readonly container: HTMLDivElement;
+  readonly container: HTMLDivElement;
+  readonly shortcut: Shortcut;
   private readonly wrapper: HTMLDivElement;
   private readonly zoom: ZoomRatio;
   private readonly canvas_ctx: CanvasRenderingContext2D;
   private readonly selectionManager: SelectionManager;
   private readonly crossLine: CrossLine;
-  private readonly panableContainer: PanableContainer;
+  readonly panableContainer: PanableContainer;
 
   constructor({container, data, dpr = 2, zoom = 1}: EditorProps) {
     const canvas = document.createElement("canvas");
@@ -74,6 +76,7 @@ class Editor {
     wrapper.append(canvas);
     container.append(wrapper);
 
+    this.shortcut = new Shortcut(this)
     this.selectionManager = new SelectionManager(this);
     this.crossLine = new CrossLine(this);
     this.panableContainer = new PanableContainer({
@@ -82,7 +85,6 @@ class Editor {
         console.log(9);
       },
     });
-
     this.render()
   }
 
@@ -94,8 +96,8 @@ class Editor {
       data: {
         id: newUID,
         size: basicEditorAreaSize,
-        modules: Array.from({length: 10}, (_, index) => {
-            console.log(index)
+        modules: Array.from({length: 1000}, (_, index) => {
+            // console.log(index)
             return generatorModuleByType(index + 1 + "", "rectangle", {
               x: (index + 1) * 10,
               y: (index + 1) * 10,

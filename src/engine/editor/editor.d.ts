@@ -10,3 +10,4 @@ export interface Line {
   end: Position
 }
 
+export type ShortcutCode = 'select-all' | 'copy'

@@ -4,25 +4,34 @@ export interface PanableContainerProps {
 }
 
 class PanableContainer {
+  // State
+  public isPanning: boolean = false;
+  public isSpaceKeyPressed: boolean = false;
   // DOM element
   private readonly containerElement: HTMLElement;
   private readonly onPanCallback?: (deltaX: number, deltaY: number) => void;
-
-  // State
-  private isPanning: boolean = false;
-  private isSpaceKeyPressed: boolean = false;
-
   // Position tracking
   private pointerPosition = {
-    start: { x: 0, y: 0 },
-    last: { x: 0, y: 0 }
+    start: {x: 0, y: 0}, last: {x: 0, y: 0}
   };
 
-  constructor({ element, onPan }: PanableContainerProps) {
+  constructor({element, onPan}: PanableContainerProps) {
     this.containerElement = element;
     this.onPanCallback = onPan;
     this.initializeContainer();
     this.initializeEventListeners();
+  }
+
+  // Cleanup
+  public destroy() {
+    // Keyboard events
+    window.removeEventListener('keydown', this.handleSpaceKeyDown);
+    window.removeEventListener('keyup', this.handleSpaceKeyUp);
+
+    // Mouse events
+    this.containerElement.removeEventListener('mousedown', this.handleDragStart);
+    window.removeEventListener('mousemove', this.handleMouseMove);
+    window.removeEventListener('mouseup', this.handleMouseUp);
   }
 
   private initializeContainer() {
@@ -32,8 +41,7 @@ class PanableContainer {
     this.containerElement.style.userSelect = 'none';
     this.containerElement.style.scrollbarWidth = 'thin';
     this.containerElement.style.scrollbarColor = 'rgba(0, 0, 0, 0.3) transparent';
-    this.containerElement.setAttribute('panable-container','')
-    // For Webkit browsers (Chrome, Safari, etc)
+    this.containerElement.setAttribute('panable-container', '')
     this.containerElement.style.cssText += `
       ::-webkit-scrollbar {
         width: 8px;
@@ -53,7 +61,6 @@ class PanableContainer {
   private initializeEventListeners() {
     this.initializeKeyboardEvents();
     this.initializeMouseEvents();
-    this.initializeTouchEvents();
   }
 
   private initializeKeyboardEvents() {
@@ -65,12 +72,6 @@ class PanableContainer {
     this.containerElement.addEventListener('mousedown', this.handleDragStart);
     window.addEventListener('mousemove', this.handleMouseMove);
     window.addEventListener('mouseup', this.handleDragEnd);
-  }
-
-  private initializeTouchEvents() {
-    this.containerElement.addEventListener('touchstart', this.handleTouchStart);
-    window.addEventListener('touchmove', this.handleTouchMove);
-    window.addEventListener('touchend', this.handleDragEnd);
   }
 
   // Keyboard Event Handlers
@@ -93,30 +94,17 @@ class PanableContainer {
   // Mouse Event Handlers
   private handleDragStart = (e: MouseEvent) => {
     if (!this.isSpaceKeyPressed) return;
-    
+
     this.isPanning = true;
     this.updatePointerPosition(e.clientX, e.clientY);
     this.updateCursor('grabbing');
+    e.preventDefault();
+    e.stopPropagation();
   };
 
   private handleMouseMove = (e: MouseEvent) => {
     if (!this.isPanning) return;
     this.handlePanMove(e.clientX, e.clientY);
-  };
-
-  // Touch Event Handlers
-  private handleTouchStart = (e: TouchEvent) => {
-    if (!this.isSpaceKeyPressed || e.touches.length !== 1) return;
-    
-    this.isPanning = true;
-    const touch = e.touches[0];
-    this.updatePointerPosition(touch.clientX, touch.clientY);
-  };
-
-  private handleTouchMove = (e: TouchEvent) => {
-    if (!this.isPanning || e.touches.length !== 1) return;
-    const touch = e.touches[0];
-    this.handlePanMove(touch.clientX, touch.clientY);
   };
 
   // Common Event Handlers
@@ -125,18 +113,17 @@ class PanableContainer {
     this.updateCursor(this.isSpaceKeyPressed ? 'grab' : 'default');
   };
 
-  // Pan Logic
   private handlePanMove(currentX: number, currentY: number) {
     const deltaX = currentX - this.pointerPosition.last.x;
     const deltaY = currentY - this.pointerPosition.last.y;
 
     this.updateScrollPosition(deltaX, deltaY);
-    this.pointerPosition.last = { x: currentX, y: currentY };
+    this.pointerPosition.last = {x: currentX, y: currentY};
   }
 
   private updatePointerPosition(x: number, y: number) {
-    this.pointerPosition.start = { x, y };
-    this.pointerPosition.last = { x, y };
+    this.pointerPosition.start = {x, y};
+    this.pointerPosition.last = {x, y};
   }
 
   private updateScrollPosition(deltaX: number, deltaY: number) {
@@ -147,23 +134,6 @@ class PanableContainer {
 
   private updateCursor(cursorType: 'default' | 'grab' | 'grabbing') {
     this.containerElement.style.cursor = cursorType;
-  }
-
-  // Cleanup
-  public destroy() {
-    // Keyboard events
-    window.removeEventListener('keydown', this.handleSpaceKeyDown);
-    window.removeEventListener('keyup', this.handleSpaceKeyUp);
-
-    // Mouse events
-    this.containerElement.removeEventListener('mousedown', this.handleDragStart);
-    window.removeEventListener('mousemove', this.handleMouseMove);
-    window.removeEventListener('mouseup', this.handleDragEnd);
-
-    // Touch events
-    this.containerElement.removeEventListener('touchstart', this.handleTouchStart);
-    window.removeEventListener('touchmove', this.handleTouchMove);
-    window.removeEventListener('touchend', this.handleDragEnd);
   }
 }
 

@@ -1,5 +1,5 @@
 import Editor from "../index.ts";
-import HistoryDoublyLinkedList, {HistoryNode, HistoryValue} from "./HistoryDoublyLinkedList.ts";
+import HistoryDoublyLinkedList from "./HistoryDoublyLinkedList.ts";
 
 class History extends HistoryDoublyLinkedList {
   private editor: Editor;
@@ -26,22 +26,8 @@ class History extends HistoryDoublyLinkedList {
   }
 
   private undo(): void {
-    console.log(this.current)
-    this.current = this.current!.prev
-    this.action()
-  }
-
-  private redo(): void {
-    this.current = this.current!.next
-    this.action()
-  }
-
-  private action(): void {
-    if (!this.current) return
-    console.log(this.current)
+    if (!this.current!.prev) return
     const {type, modules} = this.current!.value
-
-    console.log(type)
 
     // Delete pasted modules
     if (type === 'paste-modules') {
@@ -57,8 +43,32 @@ class History extends HistoryDoublyLinkedList {
     if (type === 'init') {
       this.editor.removeModules('all')
     }
+
+    this.current = this.current!.prev
   }
 
+  private redo(): void {
+    if (!this.current!.next) return
+    console.log('redo', this.current!.next)
+    const {type, modules} = this.current!.value
+
+    // Delete pasted modules
+    if (type === 'paste-modules') {
+      this.editor.addModules(modules!)
+    }
+
+    // Delete added modules
+    if (type === 'add-modules') {
+      this.editor.addModules(modules!)
+    }
+
+    // Clear all modules
+    if (type === 'init') {
+      this.editor.removeModules('all')
+    }
+
+    this.current = this.current!.next
+  }
 
   private destroy(): void {
     this.unBindShortcuts()

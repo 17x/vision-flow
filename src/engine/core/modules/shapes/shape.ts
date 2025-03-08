@@ -14,28 +14,46 @@ export interface ShapeProps extends BasicModuleProps {
 class Shape extends Base {
   private x: number;
   private y: number;
-  private width: number;
-  private height: number;
+  // private width: number;
+  // private height: number;
 
-  constructor({x, y, width, height, ...rest}: ShapeProps) {
+  constructor({
+                x,
+                y,
+                ...rest
+              }: ShapeProps) {
     super(rest);
 
     this.x = x!;
     this.y = y!;
-    this.width = width!;
-    this.height = height!;
+    // this.width = width!;
+    // this.height = height!;
   }
 
-  public getDetails() {
+  public getDetails(): ShapeProps {
     return {
+      ...this.getSize(),
       x: this.x,
-      y: this.y,
-      ...super.getDetails(),
+      y: this.y, ...super.getDetails(),
     };
   }
 
+  public getSize(): Size {
+    return {
+      width: 100,
+      height: 100,
+    }
+  }
+
   public getBoundingRect(): BoundingRect {
-    const {x, y, width, height} = this;
+    const {
+      x,
+      y
+    } = this;
+    const {
+      width,
+      height
+    } = this.getSize()
 
     return {
       x,
@@ -47,22 +65,6 @@ class Shape extends Base {
       right: x + width,
       bottom: y + height,
     }
-  }
-
-  protected getArea(): Size {
-    return {
-      width: this.width,
-      height: this.height
-    }
-
-    /* switch (this.shapeType) {
-       case "rectangle":
-         return this.size.width * this.size.height; // Area of a rectangle
-       case "circle":
-         return Math.PI * Math.pow(this.size.width / 2, 2); // Area of a circle (width as diameter)
-       default:
-         return 0; // Default case for unsupported shape types
-     }*/
   }
 }
 

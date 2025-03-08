@@ -12,6 +12,7 @@ class SelectionManager {
   private activeResizeHandle: Item | null = null;
   private isDestroyed: boolean = false;
   private editor: Editor;
+  private copiedItems: Modules = new Set();
 
   constructor(editor: Editor) {
     const canvas = document.createElement("canvas") as HTMLCanvasElement;
@@ -33,6 +34,12 @@ class SelectionManager {
 
   private bindShortcuts() {
     this.editor.shortcut.subscribe('select-all', this.selectAll.bind(this));
+    this.editor.shortcut.subscribe('copy', this.selectAll.bind(this));
+  }
+
+  private unBindShortcuts() {
+    this.editor.shortcut.unsubscribe('select-all', this.selectAll.bind(this));
+    this.editor.shortcut.subscribe('copy', this.selectAll.bind(this));
   }
 
   private selectAll(): void {
@@ -41,6 +48,10 @@ class SelectionManager {
       this.selectedItems.add(module.id);
     })
     this.update();
+  }
+
+  private copy(): void {
+    // this.copiedItems = {}
   }
 
   private setupEventListeners(): void {
@@ -162,7 +173,8 @@ class SelectionManager {
   private destroy(): void {
     if (this.isDestroyed) return;
 
-    this.editor.shortcut.unsubscribe('select-all', this.selectAll.bind(this));
+    this.unBindShortcuts()
+
     this.removeEventListeners();
     this.selectedItems.clear();
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);

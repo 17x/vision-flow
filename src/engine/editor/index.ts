@@ -70,7 +70,8 @@ class Editor {
     container.style.display = "flex";
     container.style.height = "100%";
     container.style.width = "100%";
-    container.setAttribute("editor-container", "");
+    container.setAttribute("editor-container",
+      "");
 
     wrapper.append(canvas);
     container.append(wrapper);
@@ -92,14 +93,16 @@ class Editor {
 
     return new Editor({
       container, data: {
-        id: newUID, size: basicEditorAreaSize, modules: Array.from({length: 1000}, (_, index) => {
-          // console.log(index)
-          return generatorModuleByType(index + 1 + "", "rectangle", {
-            x: (index + 1) * 10, y: (index + 1) * 10, width: 100, height: 100
-          });
-        }), // modules: [
-        //   generatorModuleByType('1', 'rectangle')
-        // ]
+        id: newUID,
+        size: basicEditorAreaSize,
+        modules: Array.from({length: 1000},
+          (_, index) => {
+            return generatorModuleByType(newUID + '-' + (index + 1),
+              "rectangle",
+              {
+                x: (index + 1) * 10, y: (index + 1) * 10, width: 100, height: 100
+              });
+          }),
       },
     });
   }

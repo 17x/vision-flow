@@ -39,7 +39,7 @@ class Base {
     this.showLine = showLine;
   }
 
-  protected getDetails() {
+  protected getDetails():BasicModuleProps {
     return {
       id: this.id,
       type: this.type,

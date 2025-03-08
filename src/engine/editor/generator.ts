@@ -1,18 +1,15 @@
 import Rectangle from "../core/modules/shapes/Rectangle.ts";
 
-const generatorModuleByType = <T extends ModuleNames>(
-  id: string,
-  type: T,
-  {x, y, width, height}: { x: number, y: number, width: number, height: number }
-): ModuleTypeMap[T] => {
+const generatorModuleByType = <T extends ModuleNames>(id: string, type: T, {x, y, width, height}: {
+  x: number,
+  y: number,
+  width: number,
+  height: number
+}): ModuleTypeMap[T] => {
   if (type === "rectangle") {
     return new Rectangle({
       type,
       id,
-      /* x: Math.random() * 100,
-       y: Math.random() * 50,
-       width: Math.random() * 100,
-       height: Math.random() * 50,*/
       x,
       y,
       width,

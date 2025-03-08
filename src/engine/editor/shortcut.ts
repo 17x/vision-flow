@@ -56,6 +56,10 @@ class Shortcut {
       shortcutCode = 'copy'
     }
 
+    if (event.key === 'v' && (event.ctrlKey || event.metaKey)) {
+      shortcutCode = 'paste'
+    }
+
     if (!shortcutCode) return
 
     if (this.eventsMap.has(shortcutCode)) {

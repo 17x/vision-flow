@@ -6,20 +6,23 @@ export interface RectangleProps extends ShapeProps {
 }
 
 class Rectangle extends Shape {
+  readonly width: number;
+  readonly height: number;
 
-  constructor({...rest}: RectangleProps) {
+  constructor({
+                width,
+                height,
+                ...rest
+              }: RectangleProps) {
     super(rest);
+    this.width = width!;
+    this.height = height!;
   }
 
-  public getDetails() {
+  public getDetails(): RectangleProps {
     return {
-      ...super.getDetails(),
-      /*lineColor: this.lineColor,
-      opacity: this.opacity,
-      position: this.position,
-      rotation: this.rotation,
-      shadow: this.shadow,
-      showLine: this.showLine,*/
+      width: this.width,
+      height: this.height, ...super.getDetails()
     };
   }
 }

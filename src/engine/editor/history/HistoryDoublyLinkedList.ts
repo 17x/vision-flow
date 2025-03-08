@@ -24,11 +24,13 @@ class HistoryNode {
 class HistoryDoublyLinkedList {
   head: HistoryNode | null;
   tail: HistoryNode | null;
+  current: HistoryNode | null;
   length: number;
 
   constructor() {
     this.head = null;
     this.tail = null;
+    this.current = null;
     this.length = 0;
   }
 
@@ -45,6 +47,8 @@ class HistoryDoublyLinkedList {
       newNode.prev = this.tail;
       this.tail = newNode;
     }
+
+    this.current = newNode;
 
     return newNode;
   }

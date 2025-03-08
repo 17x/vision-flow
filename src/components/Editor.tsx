@@ -61,8 +61,6 @@ export const EditorComponent: React.FC<EditorComponentProps> = ({data}) => {
           }
         })
 
-        console.log(data)
-
         editor.addModules(
           data,
           "add-modules"

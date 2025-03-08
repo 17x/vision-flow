@@ -89,9 +89,7 @@ class Editor {
     this.shortcut = new Shortcut(this)
     this.selectionManager = new SelectionManager(this);
     this.crossLine = new CrossLine(this);
-
     this.history = new History(this);
-
     this.render()
   }
 
@@ -117,38 +115,55 @@ class Editor {
         modules: newModulesData,
         selectedItems: []
       })
+
+      // console.log(this.history);
     }
 
     this.render()
   }
 
-  removeModules(modulesData: ModuleProps[], historyCode?: ManipulationTypes) {
+  removeModules(modulesData: ModuleProps[] | 'all', historyCode?: ManipulationTypes) {
     if (!modulesData) return
 
-    modulesData.forEach((item) => {
-      const len = this.modules.length
+    if (modulesData === 'all') {
+      const backup = this.modules
+      this.modules.length = 0
 
-      for (let i = 0; i < len; i++) {
-        const module = this.modules[i];
-        // console.log(i)
-        if (module.id === item.id) {
-          this.modules.splice(i, 1);
-          --i
-          break
-        }
+      if (historyCode) {
+        this.history.add({
+          type: historyCode,
+          modules: backup.map(module => module.getDetails()) as ModuleProps[],
+          selectedItems: []
+        })
       }
-    })
 
-    if (historyCode) {
-      this.history.add({
-        type: historyCode,
-        modules: modulesData,
-        selectedItems: []
+    } else {
+      modulesData.forEach((item) => {
+        const len = this.modules.length
+
+        for (let i = 0; i < len; i++) {
+          const module = this.modules[i];
+          // console.log(i)
+          if (module.id === item.id) {
+            this.modules.splice(i, 1);
+            --i
+            break
+          }
+        }
       })
+
+      if (historyCode) {
+        this.history.add({
+          type: historyCode,
+          modules: modulesData,
+          selectedItems: []
+        })
+      }
     }
 
     this.render()
   }
+
 
   render() {
     const animate = () => {

@@ -71,9 +71,9 @@ class Shortcut {
     if (!shortcutCode) return
 
     if (this.eventsMap.has(shortcutCode)) {
-      console.log(this.eventsMap.get(shortcutCode))
+      // console.log(this.eventsMap.get(shortcutCode))
       this.eventsMap.get(shortcutCode)!.forEach((cb) => {
-        console.log(9)
+        // console.log(9)
         cb()
       })
 

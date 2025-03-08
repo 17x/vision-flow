@@ -2,13 +2,17 @@ import Editor from "../index.ts";
 import HistoryDoublyLinkedList, {HistoryNode, HistoryValue} from "./HistoryDoublyLinkedList.ts";
 
 class History extends HistoryDoublyLinkedList {
-  // private history: HistoryDoublyLinkedList = new HistoryDoublyLinkedList();
   private editor: Editor;
 
   constructor(editor: Editor) {
     super();
     this.editor = editor;
     this.bindShortcuts()
+    this.add({
+      type: 'init',
+      modules: [],
+      selectedItems: []
+    })
   }
 
   private bindShortcuts() {
@@ -22,45 +26,43 @@ class History extends HistoryDoublyLinkedList {
   }
 
   private undo(): void {
-    if (!this.head) {
-      // console.warn('there is no history');
-      return
-    }
+    console.log(this.current)
+    this.current = this.current!.prev
+    this.action()
+  }
 
-    console.log(this.head)
-    console.log(this.head.value)
-    const {type, modules} = this.head.value
+  private redo(): void {
+    this.current = this.current!.next
+    this.action()
+  }
+
+  private action(): void {
+    if (!this.current) return
+    console.log(this.current)
+    const {type, modules} = this.current!.value
+
+    console.log(type)
 
     // Delete pasted modules
     if (type === 'paste-modules') {
       this.editor.removeModules(modules!)
     }
 
+    // Delete added modules
     if (type === 'add-modules') {
       this.editor.removeModules(modules!)
     }
 
-    if (this.head.prev) {
-      this.head = this.head.prev
+    // Clear all modules
+    if (type === 'init') {
+      this.editor.removeModules('all')
     }
   }
 
-  private redo(): void {
-    this.editor.modules.filter((module) => {
-
-    })
-  }
 
   private destroy(): void {
     this.unBindShortcuts()
   }
-
-  /*
-    add(value: HistoryValue) {
-      const n = this.history.add(value)
-      console.log(n)
-      // return this
-    }*/
 }
 
 export default History;

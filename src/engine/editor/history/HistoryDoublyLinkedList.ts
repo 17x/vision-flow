@@ -5,7 +5,7 @@ type Next = Prev
 
 export interface HistoryValue {
   type: ManipulationTypes,
-  modules?: Modules[],
+  modules?: ModuleProps[],
   selectedItems: UID[]
 }
 

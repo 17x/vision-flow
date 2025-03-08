@@ -64,7 +64,7 @@ class Shortcut {
       shortcutCode = 'undo'
     }
 
-    if (event.key === 'z' && (event.ctrlKey && event.shiftKey)) {
+    if (event.key === 'z' && event.shiftKey && (event.ctrlKey || event.metaKey)) {
       shortcutCode = 'redo'
     }
 

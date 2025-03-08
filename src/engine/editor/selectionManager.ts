@@ -78,13 +78,13 @@ class SelectionManager {
   }
 
   private paste(): void {
-    const newModules = this.copiedItems.map((data) => {
-      return new Rectangle({
-                             ...data, id: this.editor.createModuleId()
-                           })
-    })
+    /*  const newModules = this.copiedItems.map((data) => {
+        return new Rectangle({
+                               ...data, id: this.editor.createModuleId()
+                             })
+      })*/
 
-    this.editor.addModules(newModules, 'paste-modules')
+    this.editor.addModules(this.copiedItems, 'paste-modules')
     this.updateCopiedItemsPosition()
   }
 
@@ -113,6 +113,12 @@ class SelectionManager {
     };
 
     const possibleModules = this.editor.modules.filter((item) => {
+      try {
+        item.getBoundingRect()
+      } catch (e) {
+        debugger
+      }
+
       const {
         top, right, bottom, left
       } = item.getBoundingRect()
@@ -146,12 +152,12 @@ class SelectionManager {
 
       // Calculate the new size based on the mouse position
       const newSize = Math.max(20,
-                               Math.min(
-                                 this.canvas.width,
-                                 this.canvas.height,
-                                 mouseX - this.activeResizeHandle.x,
-                                 mouseY - this.activeResizeHandle.y
-                               )
+        Math.min(
+          this.canvas.width,
+          this.canvas.height,
+          mouseX - this.activeResizeHandle.x,
+          mouseY - this.activeResizeHandle.y
+        )
       );
 
       // Apply the resize effect

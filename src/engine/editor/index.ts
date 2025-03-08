@@ -7,6 +7,8 @@ import {BasicEditorAreaSize, ManipulationTypes} from "./editor";
 import PanableContainer from "./panableContainer";
 import Shortcut from "./shortcut.ts";
 import History from "./history/history.ts";
+import {ModuleProps} from "../core/modules/modules";
+import Rectangle from "../core/modules/shapes/rectangle.ts";
 
 export interface EditorDataProps {
   id: UID;
@@ -93,31 +95,59 @@ class Editor {
     this.render()
   }
 
-  static createInstance(container: HTMLDivElement): Editor {
-    const newUID = uid();
-
-    return new Editor({
-      container, data: {
-        id: newUID, size: basicEditorAreaSize, modules: Array.from({length: 1000}, (_, index) => {
-          return generatorModuleByType(newUID + '-' + (index + 1), "rectangle", {
-            x: (index + 1) * 10, y: (index + 1) * 20, width: 100, height: 100
-          });
-        }),
-      },
-    });
-  }
-
   createModuleId(): UID {
-    return '' + (++this.moduleCounter)
+    return this.id + '-' + (++this.moduleCounter)
   }
 
-  addModules(modules: Modules[], historyCode: ManipulationTypes) {
-    // this.his
-    this.modules.push(...modules);
-    this.render()
+  addModules(modulesData: ModuleProps[], historyCode?: ManipulationTypes) {
+    const newModulesData = modulesData.map((data) => ({
+      ...data,
+      id: this.createModuleId()
+    }))
 
-    // this.history.add
-    // console.log(this)
+    const newModules = newModulesData.map((data) => {
+      return new Rectangle(data)
+    })
+
+    this.modules.push(...newModules);
+
+    if (historyCode) {
+      this.history.add({
+        type: historyCode,
+        modules: newModulesData,
+        selectedItems: []
+      })
+    }
+
+    this.render()
+  }
+
+  removeModules(modulesData: ModuleProps[], historyCode?: ManipulationTypes) {
+    if (!modulesData) return
+
+    modulesData.forEach((item) => {
+      const len = this.modules.length
+
+      for (let i = 0; i < len; i++) {
+        const module = this.modules[i];
+        // console.log(i)
+        if (module.id === item.id) {
+          this.modules.splice(i, 1);
+          --i
+          break
+        }
+      }
+    })
+
+    if (historyCode) {
+      this.history.add({
+        type: historyCode,
+        modules: modulesData,
+        selectedItems: []
+      })
+    }
+
+    this.render()
   }
 
   render() {

@@ -11,3 +11,5 @@ export interface Line {
 }
 
 export type ShortcutCode = 'select-all' | 'copy' | 'paste' | 'redo' | 'undo'
+
+type ManipulationTypes = 'add-modules' | 'delete-modules' | 'paste-modules'

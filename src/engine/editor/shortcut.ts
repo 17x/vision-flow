@@ -18,8 +18,7 @@ class Shortcut {
     if (this.eventsMap.has(eventName)) {
       this.eventsMap.get(eventName)!.push(callback);
     } else {
-      this.eventsMap.set(eventName,
-        [callback])
+      this.eventsMap.set(eventName, [callback])
     }
   }
 
@@ -29,8 +28,7 @@ class Shortcut {
 
       for (let i = arr.length - 1; i >= 0; i--) {
         if (arr[i] === callback) {
-          arr.splice(i,
-            1)
+          arr.splice(i, 1)
           return 'deleted'
         }
       }
@@ -40,15 +38,11 @@ class Shortcut {
   }
 
   private setupEventListeners(): void {
-    window.addEventListener("keydown",
-      this.handleKeyDown.bind(this),
-      {capture: false});
+    window.addEventListener("keydown", this.handleKeyDown.bind(this));
   }
 
   private removeEventListeners(): void {
-    window.removeEventListener("keydown",
-      this.handleKeyDown.bind(this),
-      {capture: false});
+    window.removeEventListener("keydown", this.handleKeyDown.bind(this));
   }
 
   private handleKeyDown(event: KeyboardEvent) {
@@ -66,10 +60,20 @@ class Shortcut {
       shortcutCode = 'paste'
     }
 
+    if (event.key === 'z' && (event.ctrlKey || event.metaKey)) {
+      shortcutCode = 'undo'
+    }
+
+    if (event.key === 'z' && (event.ctrlKey && event.shiftKey)) {
+      shortcutCode = 'redo'
+    }
+
     if (!shortcutCode) return
 
     if (this.eventsMap.has(shortcutCode)) {
+      console.log(this.eventsMap.get(shortcutCode))
       this.eventsMap.get(shortcutCode)!.forEach((cb) => {
+        console.log(9)
         cb()
       })
 

@@ -3,19 +3,19 @@ import generatorModuleByType from "./generator.ts";
 import render from "../core/renderer.ts";
 import SelectionManager from "./selectionManager.ts";
 import CrossLine from "./crossLine.ts";
-import {BasicEditorAreaSize} from "./editor";
+import {BasicEditorAreaSize, ManipulationTypes} from "./editor";
 import PanableContainer from "./panableContainer";
 import Shortcut from "./shortcut.ts";
+import History from "./history/history.ts";
 
 export interface EditorDataProps {
   id: UID;
   size: Size;
-  modules: Modules;
+  modules: Modules[];
 }
 
 export const basicEditorAreaSize: BasicEditorAreaSize = {
-  width: 1000,
-  height: 1000,
+  width: 1000, height: 1000,
 };
 
 export interface EditorProps {
@@ -40,18 +40,16 @@ class Editor {
   readonly dpr: DPR;
   readonly container: HTMLDivElement;
   readonly shortcut: Shortcut;
+  readonly history: History;
   readonly panableContainer: PanableContainer;
+  readonly selectionManager: SelectionManager;
   private readonly wrapper: HTMLDivElement;
   private readonly zoom: ZoomRatio;
   private readonly canvas_ctx: CanvasRenderingContext2D;
-  private readonly selectionManager: SelectionManager;
   private readonly crossLine: CrossLine;
 
   constructor({
-                container,
-                data,
-                dpr = 2,
-                zoom = 1
+                container, data, dpr = 2, zoom = 1
               }: EditorProps) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -67,32 +65,31 @@ class Editor {
     this.size = data.size;
     this.wrapper = wrapper;
 
-    // canvas.width = data.size.width
-    // canvas.height = data.size.height
     canvas.width = window.outerWidth * dpr;
     canvas.height = window.outerHeight * dpr;
+
     container.innerHTML = "";
     container.style.overflow = "hidden";
     container.style.position = "relative";
     container.style.display = "flex";
     container.style.height = "100%";
     container.style.width = "100%";
-    container.setAttribute("editor-container",
-      "");
+    container.setAttribute("editor-container", "");
 
     wrapper.append(canvas);
     container.append(wrapper);
 
+    this.panableContainer = new PanableContainer({
+      element: wrapper, onPan: (deltaX, deltaY) => {
+
+      },
+    });
     this.shortcut = new Shortcut(this)
     this.selectionManager = new SelectionManager(this);
     this.crossLine = new CrossLine(this);
-    this.panableContainer = new PanableContainer({
-      element: wrapper,
-      onPan: (deltaX, deltaY) => {
-        // console.log(9);
-        // console.log(deltaX, deltaY);
-      },
-    });
+
+    this.history = new History(this);
+
     this.render()
   }
 
@@ -100,21 +97,12 @@ class Editor {
     const newUID = uid();
 
     return new Editor({
-      container,
-      data: {
-        id: newUID,
-        size: basicEditorAreaSize,
-        modules: Array.from({length: 1000},
-          (_, index) => {
-            return generatorModuleByType(newUID + '-' + (index + 1),
-              "rectangle",
-              {
-                x: (index + 1) * 10,
-                y: (index + 1) * 20,
-                width: 100,
-                height: 100
-              });
-          }),
+      container, data: {
+        id: newUID, size: basicEditorAreaSize, modules: Array.from({length: 1000}, (_, index) => {
+          return generatorModuleByType(newUID + '-' + (index + 1), "rectangle", {
+            x: (index + 1) * 10, y: (index + 1) * 20, width: 100, height: 100
+          });
+        }),
       },
     });
   }
@@ -123,25 +111,23 @@ class Editor {
     return '' + (++this.moduleCounter)
   }
 
-  addModules(modules: Modules[]) {
+  addModules(modules: Modules[], historyCode: ManipulationTypes) {
+    // this.his
     this.modules.push(...modules);
     this.render()
-    console.log(this)
-  }
 
-  draw() {
-    render({
-      ctx: this.canvas_ctx,
-      modules: this.modules,
-    });
+    // this.history.add
+    // console.log(this)
   }
 
   render() {
     const animate = () => {
-      console.time();
-      this.draw()
+      // console.time();
+      render({
+        ctx: this.canvas_ctx, modules: this.modules,
+      });
       // requestAnimationFrame(animate);
-      console.timeEnd();
+      // console.timeEnd();
     }
 
     requestAnimationFrame(animate);

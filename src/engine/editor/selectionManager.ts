@@ -6,15 +6,13 @@ import Rectangle from "../core/modules/shapes/rectangle.ts";
 class SelectionManager {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
-  private selectedItems: Set<UID> = new Set();
+  private selectedModules: Set<UID> = new Set();
   private isDragging: boolean = false;
   private isResizing: boolean = false;
   private dragStart: {
-    x: number;
-    y: number
+    x: number; y: number
   } = {
-    x: 0,
-    y: 0
+    x: 0, y: 0
   };
   private resizeHandleSize: number = 10;
   private activeResizeHandle: Item | null = null;
@@ -32,8 +30,7 @@ class SelectionManager {
     canvas.style.top = "0";
     canvas.style.bottom = "0";
     canvas.style.pointerEvents = "none";
-    canvas.setAttribute("selection-manager",
-      "");
+    canvas.setAttribute("selection-manager", "");
     editor.canvas.parentNode!.append(this.canvas);
 
     this.bindShortcuts()
@@ -42,27 +39,21 @@ class SelectionManager {
   }
 
   private bindShortcuts() {
-    this.editor.shortcut.subscribe('select-all',
-      this.selectAll.bind(this));
-    this.editor.shortcut.subscribe('copy',
-      this.copy.bind(this));
-    this.editor.shortcut.subscribe('paste',
-      this.paste.bind(this));
+    this.editor.shortcut.subscribe('select-all', this.selectAll.bind(this));
+    this.editor.shortcut.subscribe('copy', this.copy.bind(this));
+    this.editor.shortcut.subscribe('paste', this.paste.bind(this));
   }
 
   private unBindShortcuts() {
-    this.editor.shortcut.unsubscribe('select-all',
-      this.selectAll.bind(this));
-    this.editor.shortcut.subscribe('copy',
-      this.copy.bind(this));
-    this.editor.shortcut.subscribe('paste',
-      this.paste.bind(this));
+    this.editor.shortcut.unsubscribe('select-all', this.selectAll.bind(this));
+    this.editor.shortcut.unsubscribe('copy', this.copy.bind(this));
+    this.editor.shortcut.unsubscribe('paste', this.paste.bind(this));
   }
 
   private selectAll(): void {
-    this.selectedItems.clear()
+    this.selectedModules.clear()
     this.editor.modules.forEach((module) => {
-      this.selectedItems.add(module.id);
+      this.selectedModules.add(module.id);
     })
     this.update();
   }
@@ -71,7 +62,7 @@ class SelectionManager {
     this.copiedItems = []
 
     this.editor.modules.filter((module) => {
-      if (this.selectedItems.has(module.id)) {
+      if (this.selectedModules.has(module.id)) {
         this.copiedItems.push(module.getDetails())
       }
     })
@@ -89,31 +80,24 @@ class SelectionManager {
   private paste(): void {
     const newModules = this.copiedItems.map((data) => {
       return new Rectangle({
-        ...data,
-        id: this.editor.createModuleId()
-      })
+                             ...data, id: this.editor.createModuleId()
+                           })
     })
 
-    this.editor.addModules(newModules)
+    this.editor.addModules(newModules, 'paste-modules')
     this.updateCopiedItemsPosition()
   }
 
   private setupEventListeners(): void {
-    this.editor.canvas.addEventListener("mousedown",
-      this.handleMouseDown.bind(this));
-    this.editor.canvas.addEventListener("mousemove",
-      this.handleMouseMove.bind(this));
-    this.editor.canvas.addEventListener("mouseup",
-      this.handleMouseUp.bind(this));
+    this.editor.canvas.addEventListener("mousedown", this.handleMouseDown.bind(this));
+    this.editor.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this));
+    this.editor.canvas.addEventListener("mouseup", this.handleMouseUp.bind(this));
   }
 
   private removeEventListeners(): void {
-    this.canvas.removeEventListener("mousedown",
-      this.handleMouseDown.bind(this));
-    this.canvas.removeEventListener("mousemove",
-      this.handleMouseMove.bind(this));
-    this.canvas.removeEventListener("mouseup",
-      this.handleMouseUp.bind(this));
+    this.canvas.removeEventListener("mousedown", this.handleMouseDown.bind(this));
+    this.canvas.removeEventListener("mousemove", this.handleMouseMove.bind(this));
+    this.canvas.removeEventListener("mouseup", this.handleMouseUp.bind(this));
   }
 
   private handleMouseDown(e: MouseEvent): void {
@@ -125,36 +109,32 @@ class SelectionManager {
     const mousePointY = mouseY
     this.isDragging = true;
     this.dragStart = {
-      x: mouseX,
-      y: mouseY
+      x: mouseX, y: mouseY
     };
 
     const possibleModules = this.editor.modules.filter((item) => {
       const {
-        top,
-        right,
-        bottom,
-        left
+        top, right, bottom, left
       } = item.getBoundingRect()
 
       return mouseX > left && mouseY > top && mousePointX < right && mousePointY < bottom
     })
 
     if (!possibleModules.length) {
-      this.selectedItems.clear();
+      this.selectedModules.clear();
       return
     }
 
     const lastOne = possibleModules[possibleModules.length - 1];
     const id = lastOne.id
 
-    if (this.selectedItems.has(id)) {
-      this.selectedItems.delete(id)
+    if (this.selectedModules.has(id)) {
+      this.selectedModules.delete(id)
     } else {
-      this.selectedItems.add(id)
+      this.selectedModules.add(id)
     }
 
-    // console.log(this.selectedItems)
+    // console.log(this.selectedModules)
 
     this.render();
   }
@@ -166,10 +146,13 @@ class SelectionManager {
 
       // Calculate the new size based on the mouse position
       const newSize = Math.max(20,
-        Math.min(this.canvas.width,
-          this.canvas.height,
-          mouseX - this.activeResizeHandle.x,
-          mouseY - this.activeResizeHandle.y));
+                               Math.min(
+                                 this.canvas.width,
+                                 this.canvas.height,
+                                 mouseX - this.activeResizeHandle.x,
+                                 mouseY - this.activeResizeHandle.y
+                               )
+      );
 
       // Apply the resize effect
       this.activeResizeHandle.size = newSize;
@@ -185,14 +168,11 @@ class SelectionManager {
   }
 
   private render(): void {
-    const enableRotationHandle = this.selectedItems.size === 1
+    const enableRotationHandle = this.selectedModules.size === 1
     const {ctx} = this
 
-    ctx.clearRect(0,
-      0,
-      this.canvas.width,
-      this.canvas.height);
-    // console.log(this.selectedItems);
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    // console.log(this.selectedModules);
 
 
     this.editor.modules.forEach((item) => {
@@ -203,66 +183,44 @@ class SelectionManager {
         // this.ctx.rotate(item.rotation); // Apply rotation
       }
 
-      // this.ctx.fillStyle = this.selectedItems.has(item.id) ? "green" : "blue";
+      // this.ctx.fillStyle = this.selectedModules.has(item.id) ? "green" : "blue";
       // this.ctx.fillRect(-item.size / 2, -item.size / 2, item.size, item.size);
 
       // Draw resize handle at the center
-      if (this.selectedItems.has(item.id)) {
+      if (this.selectedModules.has(item.id)) {
         // console.log(item.type)
         const {
-          x,
-          y,
-          width,
-          height
+          x, y, width, height
         } = item.getBoundingRect()
         const handleSize = this.resizeHandleSize / 2
         const handlePoints: Position[] = [{
-          x,
-          y
+          x, y
         }, {
-          x: x + width / 2,
-          y
+          x: x + width / 2, y
         }, {
-          x: x + width,
-          y
+          x: x + width, y
         }, {
-          x: x + width,
-          y: y + height / 2
+          x: x + width, y: y + height / 2
         }, {
-          x: x + width,
-          y: y + height
+          x: x + width, y: y + height
         }, {
-          x: x + width / 2,
-          y: y + height
+          x: x + width / 2, y: y + height
         }, {
-          x: x + width / 2,
-          y: y + height
+          x: x + width / 2, y: y + height
         }, {
-          x: x,
-          y: y + height
+          x: x, y: y + height
         }, {
-          x: x,
-          y: y + height / 2
+          x: x, y: y + height / 2
         },]
 
         ctx.strokeStyle = "#ff0000";
-        ctx.strokeRect(x,
-          y,
-          width,
-          height,);
+        ctx.strokeRect(x, y, width, height,);
 
         handlePoints.forEach(({
-                                x,
-                                y
+                                x, y
                               }) => {
           ctx.beginPath();
-          ctx.ellipse(x,
-            y,
-            handleSize,
-            handleSize,
-            0,
-            0,
-            360);
+          ctx.ellipse(x, y, handleSize, handleSize, 0, 0, 360);
           ctx.fill();
         })
       }
@@ -271,9 +229,20 @@ class SelectionManager {
   }
 
   private update() {
-    coordinator(this.editor.canvas,
-      this.canvas);
+    coordinator(this.editor.canvas, this.canvas);
     this.render();
+  }
+
+  public clearSelectedItems(): void {
+    this.selectedModules.clear();
+  }
+
+  public setSelectedItems(modulesIdList: SelectionManager['selectedModules']): void {
+    this.selectedModules.clear();
+
+    modulesIdList.forEach((moduleId) => {
+      this.selectedModules.add(moduleId)
+    })
   }
 
   private destroy(): void {
@@ -282,11 +251,8 @@ class SelectionManager {
     this.unBindShortcuts()
 
     this.removeEventListeners();
-    this.selectedItems.clear();
-    this.ctx.clearRect(0,
-      0,
-      this.canvas.width,
-      this.canvas.height);
+    this.selectedModules.clear();
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.isDestroyed = true;
     console.log("SelectionModule destroyed.");
   }

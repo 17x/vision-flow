@@ -48,9 +48,9 @@ class History extends HistoryDoublyLinkedList {
   }
 
   private redo(): void {
+    console.log(this.current)
     if (!this.current!.next) return
-    console.log('redo', this.current!.next)
-    const {type, modules} = this.current!.value
+    const {type, modules} = this.current!.next.value
 
     // Delete pasted modules
     if (type === 'paste-modules') {

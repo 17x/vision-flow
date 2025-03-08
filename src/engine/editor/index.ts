@@ -97,7 +97,7 @@ class Editor {
     return this.id + '-' + (++this.moduleCounter)
   }
 
-  addModules(modulesData: ModuleProps[], historyCode?: ManipulationTypes) {
+  addModules(modulesData: ModuleProps[], historyCode?: ManipulationTypes): Modules[] {
     const newModulesData = modulesData.map((data) => ({
       ...data,
       id: this.createModuleId()
@@ -115,11 +115,11 @@ class Editor {
         modules: newModulesData,
         selectedItems: []
       })
-
-      // console.log(this.history);
     }
 
     this.render()
+
+    return newModules
   }
 
   removeModules(modulesData: ModuleProps[] | 'all', historyCode?: ManipulationTypes) {

@@ -50,7 +50,8 @@ class SelectionManager {
     this.editor.shortcut.unsubscribe('paste', this.paste.bind(this));
   }
 
-  public repleceSelectModules(ids: UID[]) {
+  public replaceSelectModules(ids: UID[]) {
+    this.selectedModules.clear()
     ids.forEach((id) => {
       this.selectedModules.add(id);
     })
@@ -92,8 +93,8 @@ class SelectionManager {
                              })
       })*/
 
-    this.editor.addModules(this.copiedItems, 'paste-modules')
-    this.editor.selectionManager.repleceSelectModules(this.copiedItems.map(item => item.id))
+    const newModules = this.editor.addModules(this.copiedItems, 'paste-modules')
+    this.editor.selectionManager.replaceSelectModules(newModules.map(module => module.id))
     this.updateCopiedItemsPosition()
   }
 

@@ -1,5 +1,7 @@
 import Editor from "./index.ts";
 import coordinator from "./coordinator.ts";
+import {ModuleProps} from "../core/modules/modules";
+import Rectangle from "../core/modules/shapes/rectangle.ts";
 
 class SelectionManager {
   private canvas: HTMLCanvasElement;
@@ -7,12 +9,18 @@ class SelectionManager {
   private selectedItems: Set<UID> = new Set();
   private isDragging: boolean = false;
   private isResizing: boolean = false;
-  private dragStart: { x: number; y: number } = {x: 0, y: 0};
+  private dragStart: {
+    x: number;
+    y: number
+  } = {
+    x: 0,
+    y: 0
+  };
   private resizeHandleSize: number = 10;
   private activeResizeHandle: Item | null = null;
   private isDestroyed: boolean = false;
   private editor: Editor;
-  private copiedItems: Modules = new Set();
+  private copiedItems: ModuleProps[] = []
 
   constructor(editor: Editor) {
     const canvas = document.createElement("canvas") as HTMLCanvasElement;
@@ -24,7 +32,8 @@ class SelectionManager {
     canvas.style.top = "0";
     canvas.style.bottom = "0";
     canvas.style.pointerEvents = "none";
-    canvas.setAttribute("selection-manager", "");
+    canvas.setAttribute("selection-manager",
+      "");
     editor.canvas.parentNode!.append(this.canvas);
 
     this.bindShortcuts()
@@ -33,13 +42,21 @@ class SelectionManager {
   }
 
   private bindShortcuts() {
-    this.editor.shortcut.subscribe('select-all', this.selectAll.bind(this));
-    this.editor.shortcut.subscribe('copy', this.selectAll.bind(this));
+    this.editor.shortcut.subscribe('select-all',
+      this.selectAll.bind(this));
+    this.editor.shortcut.subscribe('copy',
+      this.copy.bind(this));
+    this.editor.shortcut.subscribe('paste',
+      this.paste.bind(this));
   }
 
   private unBindShortcuts() {
-    this.editor.shortcut.unsubscribe('select-all', this.selectAll.bind(this));
-    this.editor.shortcut.subscribe('copy', this.selectAll.bind(this));
+    this.editor.shortcut.unsubscribe('select-all',
+      this.selectAll.bind(this));
+    this.editor.shortcut.subscribe('copy',
+      this.copy.bind(this));
+    this.editor.shortcut.subscribe('paste',
+      this.paste.bind(this));
   }
 
   private selectAll(): void {
@@ -51,19 +68,52 @@ class SelectionManager {
   }
 
   private copy(): void {
-    // this.copiedItems = {}
+    this.copiedItems = []
+
+    this.editor.modules.filter((module) => {
+      if (this.selectedItems.has(module.id)) {
+        this.copiedItems.push(module.getDetails())
+      }
+    })
+
+    this.updateCopiedItemsPosition()
+  }
+
+  private updateCopiedItemsPosition(): void {
+    this.copiedItems.forEach(copiedItem => {
+      copiedItem.x += 10
+      copiedItem.y += 10
+    })
+  }
+
+  private paste(): void {
+    const newModules = this.copiedItems.map((data) => {
+      return new Rectangle({
+        ...data,
+        id: this.editor.createModuleId()
+      })
+    })
+
+    this.editor.addModules(newModules)
+    this.updateCopiedItemsPosition()
   }
 
   private setupEventListeners(): void {
-    this.editor.canvas.addEventListener("mousedown", this.handleMouseDown.bind(this));
-    this.editor.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this));
-    this.editor.canvas.addEventListener("mouseup", this.handleMouseUp.bind(this));
+    this.editor.canvas.addEventListener("mousedown",
+      this.handleMouseDown.bind(this));
+    this.editor.canvas.addEventListener("mousemove",
+      this.handleMouseMove.bind(this));
+    this.editor.canvas.addEventListener("mouseup",
+      this.handleMouseUp.bind(this));
   }
 
   private removeEventListeners(): void {
-    this.canvas.removeEventListener("mousedown", this.handleMouseDown.bind(this));
-    this.canvas.removeEventListener("mousemove", this.handleMouseMove.bind(this));
-    this.canvas.removeEventListener("mouseup", this.handleMouseUp.bind(this));
+    this.canvas.removeEventListener("mousedown",
+      this.handleMouseDown.bind(this));
+    this.canvas.removeEventListener("mousemove",
+      this.handleMouseMove.bind(this));
+    this.canvas.removeEventListener("mouseup",
+      this.handleMouseUp.bind(this));
   }
 
   private handleMouseDown(e: MouseEvent): void {
@@ -74,10 +124,18 @@ class SelectionManager {
     const mousePointX = mouseX
     const mousePointY = mouseY
     this.isDragging = true;
-    this.dragStart = {x: mouseX, y: mouseY};
+    this.dragStart = {
+      x: mouseX,
+      y: mouseY
+    };
 
     const possibleModules = this.editor.modules.filter((item) => {
-      const {top, right, bottom, left} = item.getBoundingRect()
+      const {
+        top,
+        right,
+        bottom,
+        left
+      } = item.getBoundingRect()
 
       return mouseX > left && mouseY > top && mousePointX < right && mousePointY < bottom
     })
@@ -107,7 +165,11 @@ class SelectionManager {
       const mouseY = e.offsetY;
 
       // Calculate the new size based on the mouse position
-      const newSize = Math.max(20, Math.min(this.canvas.width, this.canvas.height, mouseX - this.activeResizeHandle.x, mouseY - this.activeResizeHandle.y));
+      const newSize = Math.max(20,
+        Math.min(this.canvas.width,
+          this.canvas.height,
+          mouseX - this.activeResizeHandle.x,
+          mouseY - this.activeResizeHandle.y));
 
       // Apply the resize effect
       this.activeResizeHandle.size = newSize;
@@ -126,7 +188,10 @@ class SelectionManager {
     const enableRotationHandle = this.selectedItems.size === 1
     const {ctx} = this
 
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.clearRect(0,
+      0,
+      this.canvas.width,
+      this.canvas.height);
     // console.log(this.selectedItems);
 
 
@@ -144,20 +209,60 @@ class SelectionManager {
       // Draw resize handle at the center
       if (this.selectedItems.has(item.id)) {
         // console.log(item.type)
-        const {x, y, width, height} = item.getBoundingRect()
+        const {
+          x,
+          y,
+          width,
+          height
+        } = item.getBoundingRect()
         const handleSize = this.resizeHandleSize / 2
-        const handlePoints: Position[] = [{x, y}, {x: x + width / 2, y}, {x: x + width, y}, {
-          x: x + width, y: y + height / 2
-        }, {x: x + width, y: y + height}, {x: x + width / 2, y: y + height}, {x: x + width / 2, y: y + height}, {
-          x: x, y: y + height
-        }, {x: x, y: y + height / 2},]
+        const handlePoints: Position[] = [{
+          x,
+          y
+        }, {
+          x: x + width / 2,
+          y
+        }, {
+          x: x + width,
+          y
+        }, {
+          x: x + width,
+          y: y + height / 2
+        }, {
+          x: x + width,
+          y: y + height
+        }, {
+          x: x + width / 2,
+          y: y + height
+        }, {
+          x: x + width / 2,
+          y: y + height
+        }, {
+          x: x,
+          y: y + height
+        }, {
+          x: x,
+          y: y + height / 2
+        },]
 
         ctx.strokeStyle = "#ff0000";
-        ctx.strokeRect(x, y, width, height,);
+        ctx.strokeRect(x,
+          y,
+          width,
+          height,);
 
-        handlePoints.forEach(({x, y}) => {
+        handlePoints.forEach(({
+                                x,
+                                y
+                              }) => {
           ctx.beginPath();
-          ctx.ellipse(x, y, handleSize, handleSize, 0, 0, 360);
+          ctx.ellipse(x,
+            y,
+            handleSize,
+            handleSize,
+            0,
+            0,
+            360);
           ctx.fill();
         })
       }
@@ -166,7 +271,8 @@ class SelectionManager {
   }
 
   private update() {
-    coordinator(this.editor.canvas, this.canvas);
+    coordinator(this.editor.canvas,
+      this.canvas);
     this.render();
   }
 
@@ -177,7 +283,10 @@ class SelectionManager {
 
     this.removeEventListeners();
     this.selectedItems.clear();
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.clearRect(0,
+      0,
+      this.canvas.width,
+      this.canvas.height);
     this.isDestroyed = true;
     console.log("SelectionModule destroyed.");
   }

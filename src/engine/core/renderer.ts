@@ -55,7 +55,7 @@ const render = ({ctx, modules}: RenderProps): void => {
     // console.log(module.type)
 
     if (module.type === 'rectangle') {
-      console.log(module)
+      // console.log(module)
       const {x, y, width, height} = module
       // const data = [x, y, x + width, y, x + width, y + height, x, y + height];
 
@@ -69,7 +69,7 @@ const render = ({ctx, modules}: RenderProps): void => {
 
   rectQueue.forEach((item) => {
     const {x, y, width, height} = item.data
-  console.log(item)
+  // console.log(item)
 
     ctx.strokeRect(x,
       y,

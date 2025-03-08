@@ -1,5 +1,5 @@
-import Rectangle from "./shapes/Rectangle.ts";
-import RoundedRectangle from "./shapes/RoundedRectangle.ts";
+import Rectangle, {RectangleProps} from "./shapes/Rectangle.ts";
+import RoundedRectangle, {RoundedRectangleProps} from "./shapes/RoundedRectangle.ts";
 
 declare global {
   type ModuleTypeMap = {
@@ -7,9 +7,10 @@ declare global {
     'roundedRectangle': RoundedRectangle
   }
 
+  type ModuleProps = RectangleProps | RoundedRectangleProps
+
   type ModuleNames = keyof ModuleTypeMap
   // type ModuleNameList = ModuleNames[]
-  type Modules = ModuleMap[keyof ModuleMap]
-  // type ModuleList = Modules[]
+  type Modules = Rectangle | RoundedRectangle
 }
 export {}

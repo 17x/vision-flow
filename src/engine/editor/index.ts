@@ -10,11 +10,12 @@ import Shortcut from "./shortcut.ts";
 export interface EditorDataProps {
   id: UID;
   size: Size;
-  modules: ModuleTypeMap[keyof ModuleTypeMap][];
+  modules: Modules;
 }
 
 export const basicEditorAreaSize: BasicEditorAreaSize = {
-  width: 1000, height: 1000,
+  width: 1000,
+  height: 1000,
 };
 
 export interface EditorProps {
@@ -29,7 +30,8 @@ export interface EditorProps {
 }
 
 class Editor {
-  readonly modules: EditorDataProps["modules"];
+  moduleCounter = 0
+  readonly modules: Modules[];
   readonly canvas: HTMLCanvasElement;
   readonly id: UID;
   readonly size: Size;
@@ -45,7 +47,12 @@ class Editor {
   private readonly selectionManager: SelectionManager;
   private readonly crossLine: CrossLine;
 
-  constructor({container, data, dpr = 2, zoom = 1}: EditorProps) {
+  constructor({
+                container,
+                data,
+                dpr = 2,
+                zoom = 1
+              }: EditorProps) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     const wrapper = document.createElement("div");
@@ -80,7 +87,8 @@ class Editor {
     this.selectionManager = new SelectionManager(this);
     this.crossLine = new CrossLine(this);
     this.panableContainer = new PanableContainer({
-      element: wrapper, onPan: (deltaX, deltaY) => {
+      element: wrapper,
+      onPan: (deltaX, deltaY) => {
         // console.log(9);
         // console.log(deltaX, deltaY);
       },
@@ -92,7 +100,8 @@ class Editor {
     const newUID = uid();
 
     return new Editor({
-      container, data: {
+      container,
+      data: {
         id: newUID,
         size: basicEditorAreaSize,
         modules: Array.from({length: 1000},
@@ -100,16 +109,30 @@ class Editor {
             return generatorModuleByType(newUID + '-' + (index + 1),
               "rectangle",
               {
-                x: (index + 1) * 10, y: (index + 1) * 10, width: 100, height: 100
+                x: (index + 1) * 10,
+                y: (index + 1) * 20,
+                width: 100,
+                height: 100
               });
           }),
       },
     });
   }
 
+  createModuleId(): UID {
+    return '' + (++this.moduleCounter)
+  }
+
+  addModules(modules: Modules[]) {
+    this.modules.push(...modules);
+    this.render()
+    console.log(this)
+  }
+
   draw() {
     render({
-      ctx: this.canvas_ctx, modules: this.modules,
+      ctx: this.canvas_ctx,
+      modules: this.modules,
     });
   }
 

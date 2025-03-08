@@ -3,8 +3,8 @@ import Base, {BasicModuleProps} from "../base.ts";
 export interface ShapeProps extends BasicModuleProps {
   x?: number
   y?: number
-  width?: number
-  height?: number
+  // width?: number
+  // height?: number
   gradient?: Gradient
   enableGradient?: boolean
   fillColor?: HexColor

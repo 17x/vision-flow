@@ -68,12 +68,12 @@ class Editor {
     this.size = data.size;
     this.wrapper = wrapper;
 
-    // canvas.style.width = window.outerWidth + 'px';
-    // canvas.style.height = window.outerHeight + 'px';
+    canvas.style.width = window.outerWidth + 'px';
+    canvas.style.height = window.outerHeight + 'px';
     canvas.width = window.outerWidth * dpr;
     canvas.height = window.outerHeight * dpr;
 
-    // ctx!.scale(dpr, dpr);
+    ctx!.scale(dpr, dpr);
 
     container.innerHTML = "";
     container.style.overflow = "hidden";

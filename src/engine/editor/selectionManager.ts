@@ -27,7 +27,7 @@ class SelectionManager {
     this.canvas = canvas;
 
     coordinator(this.editor.canvas, this.canvas);
-    // this.ctx.scale(this.editor.dpr, this.editor.dpr)
+    this.ctx.scale(this.editor.dpr, this.editor.dpr)
 
     canvas.style.position = "absolute";
     canvas.style.top = "0";

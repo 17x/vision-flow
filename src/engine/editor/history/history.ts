@@ -8,7 +8,7 @@ class History extends HistoryDoublyLinkedList {
     super();
     this.editor = editor;
     this.bindShortcuts()
-    this.add({
+    this.replaceNext({
       type: 'init',
       modules: [],
       selectedItems: []
@@ -26,48 +26,51 @@ class History extends HistoryDoublyLinkedList {
   }
 
   private undo(): void {
-    if (!this.current!.prev) return
+    if (!this.current) return
+
     const {type, modules} = this.current!.value
 
-    // Delete pasted modules
     if (type === 'paste-modules') {
       this.editor.removeModules(modules!)
     }
 
-    // Delete added modules
     if (type === 'add-modules') {
       this.editor.removeModules(modules!)
     }
+    /*
 
-    // Clear all modules
-    if (type === 'init') {
-      this.editor.removeModules('all')
-    }
+        if (type === 'init') {
+          this.editor.removeModules('all')
+        }
+    */
 
-    this.current = this.current!.prev
+    this.editor.selectionManager.clearSelectedItems()
+
+    this.back()
+    // this.onHistoryChange && this.onHistoryChange(this.head)
+    // console.log(this.current)
   }
 
   private redo(): void {
-    console.log(this.current)
     if (!this.current!.next) return
+
     const {type, modules} = this.current!.next.value
 
-    // Delete pasted modules
     if (type === 'paste-modules') {
       this.editor.addModules(modules!)
     }
 
-    // Delete added modules
     if (type === 'add-modules') {
       this.editor.addModules(modules!)
     }
 
-    // Clear all modules
     if (type === 'init') {
       this.editor.removeModules('all')
     }
 
-    this.current = this.current!.next
+    this.editor.selectionManager.clearSelectedItems()
+    // console.log(this.current)
+    this.forward()
   }
 
   private destroy(): void {

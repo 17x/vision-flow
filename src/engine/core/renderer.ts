@@ -1,10 +1,3 @@
-import {BasicModuleProps} from "./modules/base.ts";
-import {Modules} from "./modules/modules";
-// import Rectangle from "./modules/shapes/Rectangle.ts";
-// import Renderer from "../renderer";
-
-// type Module = BasicModuleProps;
-
 interface RenderProps {
   ctx: CanvasRenderingContext2D
   modules: Modules[]
@@ -52,24 +45,17 @@ const render = ({ctx, modules}: RenderProps): void => {
     ctx.canvas.height);
 
   modules.forEach((module) => {
-    // console.log(module.type)
-
     if (module.type === 'rectangle') {
-      // console.log(module)
       const {x, y, width, height} = module
-      // const data = [x, y, x + width, y, x + width, y + height, x, y + height];
 
       rectQueue.push({
         type: 'rect', data: {x, y, width, height}
       })
-
-      // textQueue.push({type: 'text', data: '998'})
     }
   })
 
   rectQueue.forEach((item) => {
     const {x, y, width, height} = item.data
-  // console.log(item)
 
     ctx.strokeRect(x,
       y,

@@ -1,7 +1,7 @@
 import Editor from "./index.ts";
 import coordinator from "./coordinator.ts";
-import {ModuleProps} from "../core/modules/modules";
-import Rectangle from "../core/modules/shapes/rectangle.ts";
+
+type CopiedModuleProps = Omit<ModuleProps, 'id'>
 
 class SelectionManager {
   private canvas: HTMLCanvasElement;
@@ -18,7 +18,7 @@ class SelectionManager {
   private activeResizeHandle: Item | null = null;
   private isDestroyed: boolean = false;
   private editor: Editor;
-  private copiedItems: ModuleProps[] = []
+  private copiedItems: CopiedModuleProps[] = []
 
   constructor(editor: Editor) {
     const canvas = document.createElement("canvas") as HTMLCanvasElement;
@@ -55,7 +55,7 @@ class SelectionManager {
     ids.forEach((id) => {
       this.selectedModules.add(id);
     })
-    console.log(this.selectedModules);
+    // console.log(this.selectedModules);
     this.update();
   }
 
@@ -72,30 +72,29 @@ class SelectionManager {
 
     this.editor.modules.filter((module) => {
       if (this.selectedModules.has(module.id)) {
-        this.copiedItems.push(module.getDetails())
+        const copiedModuleData: CopiedModuleProps = module.getDetails()
+
+        // @ts-ignore
+        delete copiedModuleData.id
+        // console.log(copiedModuleData)
+        this.copiedItems.push(copiedModuleData)
       }
     })
 
     this.updateCopiedItemsPosition()
   }
 
-  private updateCopiedItemsPosition(): void {
-    this.copiedItems.forEach(copiedItem => {
-      copiedItem.x += 10
-      copiedItem.y += 10
-    })
-  }
-
   private paste(): void {
-    /*  const newModules = this.copiedItems.map((data) => {
-        return new Rectangle({
-                               ...data, id: this.editor.createModuleId()
-                             })
-      })*/
-
     const newModules = this.editor.addModules(this.copiedItems, 'paste-modules')
     this.editor.selectionManager.replaceSelectModules(newModules.map(module => module.id))
     this.updateCopiedItemsPosition()
+  }
+
+  private updateCopiedItemsPosition(): void {
+    this.copiedItems.forEach(copiedItem => {
+      copiedItem.x += Math.floor(Math.random() * 10)
+      copiedItem.y += Math.floor(Math.random() * 20)
+    })
   }
 
   private setupEventListeners(): void {
@@ -245,6 +244,7 @@ class SelectionManager {
 
   public clearSelectedItems(): void {
     this.selectedModules.clear();
+    this.update()
   }
 
   public setSelectedItems(modulesIdList: SelectionManager['selectedModules']): void {

@@ -9,6 +9,7 @@ import Shortcut from "./shortcut.ts";
 import History from "./history/history.ts";
 import {ModuleProps} from "../core/modules/modules";
 import Rectangle from "../core/modules/shapes/rectangle.ts";
+import deepClone from "../../utilities/deepClone.ts";
 
 export interface EditorDataProps {
   id: UID;
@@ -33,7 +34,7 @@ export interface EditorProps {
 
 class Editor {
   moduleCounter = 0
-  readonly modules: Modules[];
+  modules: Modules[];
   readonly canvas: HTMLCanvasElement;
   readonly id: UID;
   readonly size: Size;
@@ -51,7 +52,7 @@ class Editor {
   private readonly crossLine: CrossLine;
 
   constructor({
-                container, data, dpr = 2, zoom = 1
+                container, data, dpr = 2, zoom = 1,
               }: EditorProps) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -80,7 +81,7 @@ class Editor {
 
     wrapper.append(canvas);
     container.append(wrapper);
-
+    console.log(this)
     this.panableContainer = new PanableContainer({
       element: wrapper, onPan: (deltaX, deltaY) => {
 
@@ -98,19 +99,23 @@ class Editor {
   }
 
   addModules(modulesData: ModuleProps[], historyCode?: ManipulationTypes): Modules[] {
-    const newModulesData = modulesData.map((data) => ({
-      ...data,
-      id: this.createModuleId()
-    }))
+    const newModulesData = deepClone(modulesData).map((data) => {
+      if (!data.id) {
+        data.id = this.createModuleId()
+      }
+
+      return data
+    })
 
     const newModules = newModulesData.map((data) => {
       return new Rectangle(data)
     })
 
-    this.modules.push(...newModules);
+    // this.modules.push(...newModules);
+    this.modules = this.modules.concat(newModules)
 
     if (historyCode) {
-      this.history.add({
+      this.history.replaceNext({
         type: historyCode,
         modules: newModulesData,
         selectedItems: []
@@ -130,7 +135,7 @@ class Editor {
       this.modules.length = 0
 
       if (historyCode) {
-        this.history.add({
+        this.history.replaceNext({
           type: historyCode,
           modules: backup.map(module => module.getDetails()) as ModuleProps[],
           selectedItems: []
@@ -153,7 +158,7 @@ class Editor {
       })
 
       if (historyCode) {
-        this.history.add({
+        this.history.replaceNext({
           type: historyCode,
           modules: modulesData,
           selectedItems: []

@@ -19,21 +19,22 @@ export const EditorComponent: React.FC<EditorComponentProps> = ({data}) => {
   // const screenResolution: Resolution = {width: window.outerWidth, height: window.outerHeight};
   // const physicalResolution: Resolution = {...screenResolution};
   // const logicResolution: Resolution = {width: physicalResolution.width * dpr, height: physicalResolution.height * dpr};
+  const editorRef = useRef<Editor>(null)
 
   useEffect(() => {
     if (divRef.current) {
       const container = divRef!.current
       let editor: Editor
-
+      console.log(editorRef)
       if (data) {
-        editor = new Editor({
+        editorRef.current = new Editor({
           container,
-          data,
+          data
         })
       } else {
         const newUID = uid();
 
-        editor = new Editor({
+        editorRef.current = new Editor({
           container, data: {
             id: newUID,
             size: basicEditorAreaSize,
@@ -61,7 +62,7 @@ export const EditorComponent: React.FC<EditorComponentProps> = ({data}) => {
           }
         })
 
-        editor.addModules(
+        editorRef.current.addModules(
           data,
           "add-modules"
         )
@@ -69,11 +70,12 @@ export const EditorComponent: React.FC<EditorComponentProps> = ({data}) => {
     }
   }, []);
 
+
   return <div className={'w-full h-full flex flex-col'}>
     <Menu/>
 
     <main className={'flex flex-row overflow-hidden'}>
-      <ModulePanel/>
+      <ModulePanel />
 
       <div className={'flex flex-col w-full h-full overflow-hidden'}>
         <div ref={divRef}></div>

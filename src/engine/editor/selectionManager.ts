@@ -25,8 +25,9 @@ class SelectionManager {
     this.ctx = canvas.getContext("2d")!;
     this.editor = editor;
     this.canvas = canvas;
-    // this.ctx.scale(4,4)
-    this.ctx.scale(this.editor.dpr, this.editor.dpr)
+
+    coordinator(this.editor.canvas, this.canvas);
+    // this.ctx.scale(this.editor.dpr, this.editor.dpr)
 
     canvas.style.position = "absolute";
     canvas.style.top = "0";
@@ -34,7 +35,6 @@ class SelectionManager {
     canvas.style.pointerEvents = "none";
     canvas.setAttribute("selection-manager", "");
     editor.canvas.parentNode!.append(this.canvas);
-    coordinator(this.editor.canvas, this.canvas);
 
     this.bindShortcuts()
     this.update();
@@ -257,9 +257,14 @@ class SelectionManager {
       // Draw resize handle at the center
       if (this.selectedModules.has(item.id)) {
         // console.log(item.type)
-        const {
+        let {
           x, y, width, height
         } = item.getBoundingRect()
+        // const dpr = this.editor.dpr
+
+        // x *= dpr
+        // y *= dpr
+
         const handleSize = this.resizeHandleSize / 2
         const handlePoints: Position[] = [{
           x, y

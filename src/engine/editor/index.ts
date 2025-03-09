@@ -73,7 +73,7 @@ class Editor {
     canvas.width = window.outerWidth * dpr;
     canvas.height = window.outerHeight * dpr;
 
-    ctx!.scale(dpr, dpr);
+    // ctx!.scale(dpr, dpr);
 
     container.innerHTML = "";
     container.style.overflow = "hidden";

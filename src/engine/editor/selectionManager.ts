@@ -286,8 +286,10 @@ class SelectionManager {
           x: x, y: y + height / 2
         }]
 
-        ctx.strokeStyle = "#ff0000";
-        ctx.strokeRect(x, y, width, height,);
+        ctx.strokeStyle = "#5491f8";
+        ctx.lineWidth = 1; // Set the line width to 5 pixels
+        ctx.strokeRect(x, y, width, height);
+        ctx.fillStyle = "#5491f8";
 
         handlePoints.forEach(({
                                 x, y

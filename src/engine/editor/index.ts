@@ -48,8 +48,12 @@ class Editor {
   readonly selectionManager: SelectionManager;
   private readonly wrapper: HTMLDivElement;
   private readonly zoom: ZoomRatio;
-  private readonly canvas_ctx: CanvasRenderingContext2D;
+  private readonly ctx: CanvasRenderingContext2D;
   private readonly crossLine: CrossLine;
+  scale: number = 1;
+  private minScale: number = 0.5;
+  private maxScale: number = 10;
+  private zoomSpeed: number = 0.1;
 
   constructor({
                 container, data, dpr = 2, zoom = 1,
@@ -60,20 +64,21 @@ class Editor {
 
     this.container = container;
     this.canvas = canvas;
-    this.canvas_ctx = ctx as CanvasRenderingContext2D;
+    this.ctx = ctx as CanvasRenderingContext2D;
     this.dpr = dpr;
     this.zoom = zoom;
     this.modules = data.modules;
     this.id = data.id;
     this.size = data.size;
     this.wrapper = wrapper;
+    this.scale = dpr
 
     canvas.style.width = window.outerWidth + 'px';
     canvas.style.height = window.outerHeight + 'px';
     canvas.width = window.outerWidth * dpr;
     canvas.height = window.outerHeight * dpr;
 
-    ctx!.scale(dpr, dpr);
+    // ctx!.scale(dpr, dpr);
 
     container.innerHTML = "";
     container.style.overflow = "hidden";
@@ -85,7 +90,7 @@ class Editor {
 
     wrapper.append(canvas);
     container.append(wrapper);
-    console.log(this)
+    this.setupEventListeners()
     this.panableContainer = new PanableContainer({
       element: wrapper, onPan: (deltaX, deltaY) => {
 
@@ -173,12 +178,13 @@ class Editor {
     this.render()
   }
 
-
   render() {
+    this.ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0);
+
     const animate = () => {
       // console.time();
       render({
-        ctx: this.canvas_ctx, modules: this.modules,
+        ctx: this.ctx, modules: this.modules,
       });
       // requestAnimationFrame(animate);
       // console.timeEnd();
@@ -186,6 +192,66 @@ class Editor {
 
     requestAnimationFrame(animate);
   }
+
+  private setupEventListeners() {
+    window.addEventListener("wheel", (event) => this.handleWheelZoom(event), {passive: false});
+    window.addEventListener("keydown", (event) => this.handleKeyboardZoom(event));
+    this.canvas.addEventListener("gesturestart", (event) => event.preventDefault());
+    this.canvas.addEventListener("gesturechange", (event) => this.handleTouchpadZoom(event as unknown));
+    this.canvas.addEventListener("touchstart", (event) => {
+      console.log(event, 'touchmove');
+    });
+  }
+
+  private handleWheelZoom(event: WheelEvent) {
+    console.log('wheel',event.deltaX, event.deltaY);
+    console.log(event);
+    if (event.altKey) {
+      const zoomFactor = event.deltaY < 0 ? 1 + this.zoomSpeed : 1 - this.zoomSpeed;
+      event.preventDefault();
+      this.applyZoom(zoomFactor);
+    }
+  }
+
+  private handleKeyboardZoom(event: KeyboardEvent) {
+    if (!event.ctrlKey && !event.metaKey) return;
+
+    let r = this.scale
+
+    if (event.key === "=" || event.key === "+") {
+      r = r + this.zoomSpeed
+    } else if (event.key === "-") {
+      r = r - this.zoomSpeed
+    } else if (event.key === "0") {
+      r = this.dpr
+    }
+
+    console.log(r)
+
+    if (r !== this.scale) {
+      this.applyZoom(r);
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
+  private handleTouchpadZoom(event: unknown) {
+    console.log(9)
+    event.preventDefault();
+    const zoomFactor = event.scale > 1 ? 1 + this.zoomSpeed : 1 - this.zoomSpeed;
+    this.applyZoom(zoomFactor);
+  }
+
+  private applyZoom(factor: number) {
+    const newScale = this.scale * factor;
+
+    if (newScale < this.minScale || newScale > this.maxScale) return;
+
+    this.scale = newScale;
+    this.render();
+    this.selectionManager.render()
+  }
+
 
   /*
     render(data: string): void {

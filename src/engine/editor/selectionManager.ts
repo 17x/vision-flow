@@ -37,7 +37,7 @@ class SelectionManager {
     editor.canvas.parentNode!.append(this.canvas);
 
     this.bindShortcuts()
-    this.update();
+    this.render();
     this.setupEventListeners();
   }
 
@@ -65,7 +65,7 @@ class SelectionManager {
       this.selectedModules.add(id);
     })
     // console.log(this.selectedModules);
-    this.update();
+    this.render();
   }
 
   private selectAll(): void {
@@ -73,7 +73,7 @@ class SelectionManager {
     this.editor.modules.forEach((module) => {
       this.selectedModules.add(module.id);
     })
-    this.update();
+    this.render();
   }
 
   private copy(): void {
@@ -235,12 +235,13 @@ class SelectionManager {
     this.render();
   }
 
-  private render(): void {
+  public render(): void {
     const enableRotationHandle = this.selectedModules.size === 1
     const {ctx} = this
 
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     // console.log(this.selectedModules);
+    this.ctx.setTransform(this.editor.scale, 0, 0, this.editor.scale, 0, 0);
 
 
     this.editor.modules.forEach((item) => {
@@ -287,7 +288,7 @@ class SelectionManager {
         }]
 
         ctx.strokeStyle = "#5491f8";
-        ctx.lineWidth = 1; // Set the line width to 5 pixels
+        ctx.lineWidth = 1;
         ctx.strokeRect(x, y, width, height);
         ctx.fillStyle = "#5491f8";
 
@@ -304,13 +305,9 @@ class SelectionManager {
     });
   }
 
-  private update() {
-    this.render();
-  }
-
   public clearSelectedItems(): void {
     this.selectedModules.clear();
-    this.update()
+    this.render()
   }
 
   public setSelectedItems(modulesIdList: SelectionManager['selectedModules']): void {

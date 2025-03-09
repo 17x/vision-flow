@@ -10,6 +10,6 @@ export interface Line {
   end: Position
 }
 
-export type ShortcutCode = 'select-all' | 'copy' | 'paste' | 'redo' | 'undo' | 'duplicate' | 'delete'
+export type ShortcutCode = 'select-all' | 'copy' | 'paste' | 'redo' | 'undo' | 'duplicate' | 'delete' | 'escape'
 
 export type ManipulationTypes = 'init' | 'add-modules' | 'delete-modules' | 'paste-modules' | 'duplicate-modules'

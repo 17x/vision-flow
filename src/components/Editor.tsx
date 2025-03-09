@@ -52,7 +52,7 @@ export const EditorComponent: React.FC<EditorComponentProps> = ({data}) => {
           shadow: false,
         }
 
-        const data = Array.from({length: 1}, (_, index) => {
+        const data = Array.from({length: 10}, (_, index) => {
           return {
             ...dataBase,
             x: (index + 1) * 10,

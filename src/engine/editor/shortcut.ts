@@ -42,8 +42,6 @@ class Shortcut {
   private setupEventListeners(): void {
     window.addEventListener("keydown", this.handleKeyDown.bind(this));
     // window.addEventListener("keyup", this.handleKeyUp.bind(this));
-
-
   }
 
   private removeEventListeners(): void {
@@ -75,6 +73,10 @@ class Shortcut {
 
     if (key === 'Delete' || key === 'Backspace') {
       shortcutCode = 'delete'
+    }
+    if (key === 'Escape') {
+      console.log('Escape')
+      shortcutCode = 'escape'
     }
 
     if (key === 'z' && (ctrlKey || metaKey)) {

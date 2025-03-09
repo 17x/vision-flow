@@ -55,7 +55,6 @@ class Shortcut {
     let shortcutCode: ShortcutCode | null = null
     const {key, ctrlKey, metaKey, shiftKey} = event
 
-    console.log(event)
     // this.pressedKeys.add(key)
 
     if (key === 'a' && (ctrlKey || metaKey)) {

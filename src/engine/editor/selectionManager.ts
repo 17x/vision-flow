@@ -43,6 +43,7 @@ class SelectionManager {
     this.editor.shortcut.subscribe('copy', this.copy.bind(this));
     this.editor.shortcut.subscribe('paste', this.paste.bind(this));
     this.editor.shortcut.subscribe('duplicate', this.duplicate.bind(this));
+    this.editor.shortcut.subscribe('delete', this.delete.bind(this));
   }
 
   private unBindShortcuts() {
@@ -50,6 +51,7 @@ class SelectionManager {
     this.editor.shortcut.unsubscribe('copy', this.copy.bind(this));
     this.editor.shortcut.unsubscribe('paste', this.paste.bind(this));
     this.editor.shortcut.unsubscribe('duplicate', this.duplicate.bind(this));
+    this.editor.shortcut.unsubscribe('delete', this.delete.bind(this));
   }
 
   public replaceSelectModules(ids: UID[]) {
@@ -110,6 +112,19 @@ class SelectionManager {
     const newModules = this.editor.addModules(temp, 'duplicate-modules')
     this.editor.selectionManager.replaceSelectModules(newModules.map(module => module.id))
     this.updateCopiedItemsPosition()
+  }
+
+  private delete(): void {
+    const temp = []
+
+    this.editor.modules.filter((module) => {
+      if (this.selectedModules.has(module.id)) {
+        temp.push(module.getDetails())
+      }
+    })
+
+    this.editor.removeModules(temp, 'delete-modules')
+    this.editor.selectionManager.clearSelectedItems()
   }
 
   private updateCopiedItemsPosition(): void {

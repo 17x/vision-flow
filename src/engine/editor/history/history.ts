@@ -36,6 +36,8 @@ class History extends HistoryDoublyLinkedList {
       || type === 'duplicate-modules'
     ) {
       this.editor.removeModules(modules!)
+    } else if (type === 'delete-modules') {
+      this.editor.addModules(modules!)
     }
 
     this.editor.selectionManager.clearSelectedItems()
@@ -56,11 +58,13 @@ class History extends HistoryDoublyLinkedList {
       || type === 'duplicate-modules'
     ) {
       this.editor.addModules(modules!)
+    } else if (type === 'delete-modules') {
+      this.editor.removeModules(modules!)
     }
-/*
-    if (type === 'init') {
-      this.editor.removeModules('all')
-    }*/
+    /*
+        if (type === 'init') {
+          this.editor.removeModules('all')
+        }*/
 
     this.editor.selectionManager.clearSelectedItems()
     // console.log(this.current)

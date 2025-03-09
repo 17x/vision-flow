@@ -55,6 +55,7 @@ class Shortcut {
     let shortcutCode: ShortcutCode | null = null
     const {key, ctrlKey, metaKey, shiftKey} = event
 
+    console.log(event)
     // this.pressedKeys.add(key)
 
     if (key === 'a' && (ctrlKey || metaKey)) {
@@ -71,6 +72,10 @@ class Shortcut {
 
     if (key === 'd' && (ctrlKey || metaKey)) {
       shortcutCode = 'duplicate'
+    }
+
+    if (key === 'Delete' || key === 'Backspace') {
+      shortcutCode = 'delete'
     }
 
     if (key === 'z' && (ctrlKey || metaKey)) {

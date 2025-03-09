@@ -42,12 +42,14 @@ class SelectionManager {
     this.editor.shortcut.subscribe('select-all', this.selectAll.bind(this));
     this.editor.shortcut.subscribe('copy', this.copy.bind(this));
     this.editor.shortcut.subscribe('paste', this.paste.bind(this));
+    this.editor.shortcut.subscribe('duplicate', this.duplicate.bind(this));
   }
 
   private unBindShortcuts() {
     this.editor.shortcut.unsubscribe('select-all', this.selectAll.bind(this));
     this.editor.shortcut.unsubscribe('copy', this.copy.bind(this));
     this.editor.shortcut.unsubscribe('paste', this.paste.bind(this));
+    this.editor.shortcut.unsubscribe('duplicate', this.duplicate.bind(this));
   }
 
   public replaceSelectModules(ids: UID[]) {
@@ -86,6 +88,26 @@ class SelectionManager {
 
   private paste(): void {
     const newModules = this.editor.addModules(this.copiedItems, 'paste-modules')
+    this.editor.selectionManager.replaceSelectModules(newModules.map(module => module.id))
+    this.updateCopiedItemsPosition()
+  }
+
+  private duplicate(): void {
+    const temp = []
+
+    this.editor.modules.filter((module) => {
+      if (this.selectedModules.has(module.id)) {
+        const copiedModuleData: unknown = module.getDetails()
+        copiedModuleData.x += 10
+        copiedModuleData.y += 10
+
+        // @ts-ignore
+        delete copiedModuleData.id
+        // console.log(copiedModuleData)
+        temp.push(copiedModuleData)
+      }
+    })
+    const newModules = this.editor.addModules(temp, 'duplicate-modules')
     this.editor.selectionManager.replaceSelectModules(newModules.map(module => module.id))
     this.updateCopiedItemsPosition()
   }
@@ -149,10 +171,11 @@ class SelectionManager {
   }
 
   private handleMouseMove(e: MouseEvent): void {
-    if (this.isResizing && this.activeResizeHandle) {
-      const mouseX = e.offsetX;
-      const mouseY = e.offsetY;
+    const mouseX = e.offsetX;
+    const mouseY = e.offsetY;
 
+    // Drag logic
+    if (this.isResizing && this.activeResizeHandle) {
       // Calculate the new size based on the mouse position
       const newSize = Math.max(20,
         Math.min(
@@ -166,7 +189,20 @@ class SelectionManager {
       // Apply the resize effect
       this.activeResizeHandle.size = newSize;
       this.render();
+
+      return
     }
+
+
+    // hover logic
+    const filtered = this.editor.modules.filter((module) => {
+      const {top, right, bottom, left} = module.getBoundingRect()
+
+      return mouseX > left && mouseY > top && mouseX < right && mouseY < bottom
+    })
+    // console.log(filtered);
+
+    this.canvas.style.cursor = filtered.length > 0 ? "move" : 'default';
   }
 
   private handleMouseUp(): void {

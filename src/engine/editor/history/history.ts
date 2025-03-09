@@ -30,19 +30,13 @@ class History extends HistoryDoublyLinkedList {
 
     const {type, modules} = this.current!.value
 
-    if (type === 'paste-modules') {
+    if (
+      type === 'paste-modules'
+      || type === 'add-modules'
+      || type === 'duplicate-modules'
+    ) {
       this.editor.removeModules(modules!)
     }
-
-    if (type === 'add-modules') {
-      this.editor.removeModules(modules!)
-    }
-    /*
-
-        if (type === 'init') {
-          this.editor.removeModules('all')
-        }
-    */
 
     this.editor.selectionManager.clearSelectedItems()
 
@@ -56,17 +50,17 @@ class History extends HistoryDoublyLinkedList {
 
     const {type, modules} = this.current!.next.value
 
-    if (type === 'paste-modules') {
+    if (
+      type === 'paste-modules'
+      || type === 'add-modules'
+      || type === 'duplicate-modules'
+    ) {
       this.editor.addModules(modules!)
     }
-
-    if (type === 'add-modules') {
-      this.editor.addModules(modules!)
-    }
-
+/*
     if (type === 'init') {
       this.editor.removeModules('all')
-    }
+    }*/
 
     this.editor.selectionManager.clearSelectedItems()
     // console.log(this.current)

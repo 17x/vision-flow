@@ -5,6 +5,8 @@ class Shortcut {
   readonly editor: Editor
   readonly eventsMap: Map<ShortcutCode, VoidFunction[]> = new Map()
 
+  // readonly pressedKeys: Set<KeyboardEvent['key']> = new Set();
+
   constructor(editor: Editor) {
     this.editor = editor
     this.setupEventListeners();
@@ -39,51 +41,64 @@ class Shortcut {
 
   private setupEventListeners(): void {
     window.addEventListener("keydown", this.handleKeyDown.bind(this));
+    // window.addEventListener("keyup", this.handleKeyUp.bind(this));
+
+
   }
 
   private removeEventListeners(): void {
     window.removeEventListener("keydown", this.handleKeyDown.bind(this));
+    // window.removeEventListener("keyup", this.handleKeyUp.bind(this));
   }
 
   private handleKeyDown(event: KeyboardEvent) {
     let shortcutCode: ShortcutCode | null = null
+    const {key, ctrlKey, metaKey, shiftKey} = event
 
-    if (event.key === 'a' && (event.ctrlKey || event.metaKey)) {
+    // this.pressedKeys.add(key)
+
+    if (key === 'a' && (ctrlKey || metaKey)) {
       shortcutCode = 'select-all'
     }
 
-    if (event.key === 'c' && (event.ctrlKey || event.metaKey)) {
+    if (key === 'c' && (ctrlKey || metaKey)) {
       shortcutCode = 'copy'
     }
 
-    if (event.key === 'v' && (event.ctrlKey || event.metaKey)) {
+    if (key === 'v' && (ctrlKey || metaKey)) {
       shortcutCode = 'paste'
     }
 
-    if (event.key === 'z' && (event.ctrlKey || event.metaKey)) {
+    if (key === 'd' && (ctrlKey || metaKey)) {
+      shortcutCode = 'duplicate'
+    }
+
+    if (key === 'z' && (ctrlKey || metaKey)) {
       shortcutCode = 'undo'
     }
 
-    if (event.key === 'z' && event.shiftKey && (event.ctrlKey || event.metaKey)) {
+    if (key === 'z' && shiftKey && (ctrlKey || metaKey)) {
       shortcutCode = 'redo'
     }
+
 
     if (!shortcutCode) return
 
     if (this.eventsMap.has(shortcutCode)) {
-      // console.log(this.eventsMap.get(shortcutCode))
       this.eventsMap.get(shortcutCode)!.forEach((cb) => {
-        // console.log(9)
         cb()
       })
 
       event.preventDefault()
     }
 
-
-    // event.stopPropagation()
-    // event.preventDefault()
   }
+
+  /*
+    private handleKeyUp(event: KeyboardEvent) {
+      this.pressedKeys.delete(event.key)
+    }
+    */
 }
 
 export default Shortcut;

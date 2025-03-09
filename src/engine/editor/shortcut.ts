@@ -5,7 +5,7 @@ class Shortcut {
   readonly editor: Editor
   readonly eventsMap: Map<ShortcutCode, VoidFunction[]> = new Map()
 
-  // readonly pressedKeys: Set<KeyboardEvent['key']> = new Set();
+  readonly pressedKeys: Set<KeyboardEvent['key']> = new Set();
 
   constructor(editor: Editor) {
     this.editor = editor
@@ -41,7 +41,7 @@ class Shortcut {
 
   private setupEventListeners(): void {
     window.addEventListener("keydown", this.handleKeyDown.bind(this));
-    // window.addEventListener("keyup", this.handleKeyUp.bind(this));
+    window.addEventListener("keyup", this.handleKeyUp.bind(this));
   }
 
   private removeEventListeners(): void {
@@ -53,13 +53,14 @@ class Shortcut {
     let shortcutCode: ShortcutCode | null = null
     const {key, ctrlKey, metaKey, shiftKey} = event
 
-    // this.pressedKeys.add(key)
-
+    this.pressedKeys.add(key)
+    // console.log(this.pressedKeys)
+    // console.log(event)
     if (key === 'a' && (ctrlKey || metaKey)) {
       shortcutCode = 'select-all'
     }
 
-    if (key === 'c' && (ctrlKey || metaKey)) {
+    if (key === 'c' && (ctrlKey || metaKey) && !shiftKey) {
       shortcutCode = 'copy'
     }
 
@@ -98,13 +99,14 @@ class Shortcut {
       event.preventDefault()
     }
 
+    event.stopPropagation()
   }
 
-  /*
-    private handleKeyUp(event: KeyboardEvent) {
-      this.pressedKeys.delete(event.key)
-    }
-    */
+  private handleKeyUp(event: KeyboardEvent) {
+    console.log(event)
+    console.log(this.pressedKeys)
+    this.pressedKeys.delete(event.key)
+  }
 }
 
 export default Shortcut;

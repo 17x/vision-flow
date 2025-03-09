@@ -25,6 +25,8 @@ class SelectionManager {
     this.ctx = canvas.getContext("2d")!;
     this.editor = editor;
     this.canvas = canvas;
+    // this.ctx.scale(4,4)
+    this.ctx.scale(this.editor.dpr, this.editor.dpr)
 
     canvas.style.position = "absolute";
     canvas.style.top = "0";
@@ -32,6 +34,7 @@ class SelectionManager {
     canvas.style.pointerEvents = "none";
     canvas.setAttribute("selection-manager", "");
     editor.canvas.parentNode!.append(this.canvas);
+    coordinator(this.editor.canvas, this.canvas);
 
     this.bindShortcuts()
     this.update();
@@ -214,7 +217,6 @@ class SelectionManager {
       return
     }
 
-
     // hover logic
     const filtered = this.editor.modules.filter((module) => {
       const {top, right, bottom, left} = module.getBoundingRect()
@@ -277,7 +279,7 @@ class SelectionManager {
           x: x, y: y + height
         }, {
           x: x, y: y + height / 2
-        },]
+        }]
 
         ctx.strokeStyle = "#ff0000";
         ctx.strokeRect(x, y, width, height,);
@@ -290,12 +292,12 @@ class SelectionManager {
           ctx.fill();
         })
       }
+
       this.ctx.restore();
     });
   }
 
   private update() {
-    coordinator(this.editor.canvas, this.canvas);
     this.render();
   }
 

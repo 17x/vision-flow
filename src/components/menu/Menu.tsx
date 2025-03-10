@@ -7,7 +7,7 @@ interface MenuProps {
 export const Menu: React.FC<MenuProps> = ({className = ''}) => {
   return (
     <header className={' ' + className}>
-      <Toolbar />
+      <Toolbar/>
     </header>
   );
 };

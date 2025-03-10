@@ -199,13 +199,13 @@ class Editor {
     this.canvas.addEventListener("gesturestart", (event) => event.preventDefault());
     this.canvas.addEventListener("gesturechange", (event) => this.handleTouchpadZoom(event as unknown));
     this.canvas.addEventListener("touchstart", (event) => {
-      console.log(event, 'touchmove');
-    });
+      // console.log(event, 'touchmove');
+    },{passive: true});
   }
 
   private handleWheelZoom(event: WheelEvent) {
-    console.log('wheel',event.deltaX, event.deltaY);
-    console.log(event);
+    // console.log('wheel',event.deltaX, event.deltaY);
+    // console.log(event);
     if (event.altKey) {
       const zoomFactor = event.deltaY < 0 ? 1 + this.zoomSpeed : 1 - this.zoomSpeed;
       event.preventDefault();

@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import menuReducer from "./menuSlice";
+import statusBarReducer from "./statusBarSlice";
 
 export const store = configureStore({
   reducer: {
     menu: menuReducer,
+    statusBar: statusBarReducer,
   }
 });
 

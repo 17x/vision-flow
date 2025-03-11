@@ -28,10 +28,6 @@ interface RenderItem<T extends RenderTypes> {
 }
 
 const render = ({ctx, modules}: RenderProps): void => {
-  // const rectQueue: RenderItem<'rect'>[] = []
-  // const textQueue: RenderItem<'text'>[] = []
-  // const lineQueue: RenderItem<'line'>[] = []
-  // const curveQueue: RenderItem<'curve'>[] = []
   const rects: RectangleRenderProps[] = []
   const fillStyle = "#5491f8";
   const strokeStyle = "#000";
@@ -51,32 +47,6 @@ const render = ({ctx, modules}: RenderProps): void => {
   })
 
   rectRender(ctx, rects)
-  /*
-  rectQueue.forEach((item) => {
-    const {x, y, width, height} = item.data
-
-    ctx.strokeRect(x,
-      y,
-      width,
-      height)
-  })*/
-
-  /*ctx.fillStyle = '#000'
-  // line
-  lineQueue.forEach(item => {
-    ctx.moveTo(100, 100)
-    ctx.lineTo(200, 100)
-    ctx.lineTo(200, 200)
-    ctx.lineTo(100, 200)
-    ctx.lineTo(100, 100)
-    // ctx.lineTo(100, 100)
-    ctx.stroke()
-  })
-
-  ctx.font = '24px sans-serif'
-  textQueue.forEach((item) => {
-    ctx.fillText('14567890abcdefg', Math.random() * 1000, Math.random() * 500, 200)
-  })*/
 }
 
 export interface RectangleRenderProps extends Rect {

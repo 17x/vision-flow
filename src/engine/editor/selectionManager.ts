@@ -1,7 +1,7 @@
 import Editor from "./index.ts";
 import coordinator from "./coordinator.ts";
 import {ModifyModuleMap} from "./editor";
-import {rectRender} from "../core/renderer.ts";
+import {RectangleRenderProps, rectRender} from "../core/renderer.ts";
 
 type CopiedModuleProps = Omit<ModuleProps, 'id'>
 type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
@@ -242,9 +242,14 @@ class SelectionManager {
     const lastOne = possibleModules[possibleModules.length - 1];
     const id = lastOne.id
 
-    if (this.selectedModules.has(id)) {
-      this.selectedModules.delete(id)
+    if (e.metaKey || e.ctrlKey || e.shiftKey) {
+      if (this.selectedModules.has(id)) {
+        this.selectedModules.delete(id)
+      } else {
+        this.selectedModules.add(id)
+      }
     } else {
+      this.selectedModules.clear()
       this.selectedModules.add(id)
     }
 
@@ -304,9 +309,9 @@ class SelectionManager {
 
     const BatchDrawer = (modules: Modules[]) => {
       const handlesQueue: Set<string> = new Set()
-      const rectQueue: Set<string> = new Set()
+      // const rectQueue: Set<string> = new Set()
       const l = this.resizeHandleSize / 2
-      const rects = []
+      const rects: RectangleRenderProps[] = []
       const fillStyle = "#5491f8";
       const strokeStyle = "#5491f8";
       const lineWidth = 1;
@@ -353,19 +358,19 @@ class SelectionManager {
         ctx.fill();
       })
 
-      rectRender(ctx,rects)
-/*
+      rectRender(ctx, rects)
+      /*
 
-      rectQueue.forEach((s) => {
-        const arr = s.split('-');
-        const x = parseFloat(arr[0]);
-        const y = parseFloat(arr[1]);
-        const width = parseFloat(arr[2]);
-        const height = parseFloat(arr[3]);
+            rectQueue.forEach((s) => {
+              const arr = s.split('-');
+              const x = parseFloat(arr[0]);
+              const y = parseFloat(arr[1]);
+              const width = parseFloat(arr[2]);
+              const height = parseFloat(arr[3]);
 
-        ctx.strokeRect(x, y, width, height);
-      })
-*/
+              ctx.strokeRect(x, y, width, height);
+            })
+      */
 
       this.ctx.restore();
     }

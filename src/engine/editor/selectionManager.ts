@@ -1,6 +1,7 @@
 import Editor from "./index.ts";
 import coordinator from "./coordinator.ts";
 import {ModifyModuleMap} from "./editor";
+import {rectRender} from "../core/renderer.ts";
 
 type CopiedModuleProps = Omit<ModuleProps, 'id'>
 type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
@@ -89,16 +90,19 @@ class SelectionManager {
       this.copiedItems = this.editor.modules.map(value => value.getDetails())
     }
 
-    this.editor.modules.filter((module) => {
-      if (this.selectedModules.has(module.id)) {
-        const copiedModuleData: CopiedModuleProps = module.getDetails()
+    this.selectedModules.forEach(id => {
+      this.editor.modules.filter((module) => {
+        if (module.id === id) {
+          const copiedModuleData: CopiedModuleProps = module.getDetails()
 
-        // @ts-ignore
-        delete copiedModuleData.id
-        // console.log(copiedModuleData)
-        this.copiedItems.push(copiedModuleData)
-      }
+          // @ts-ignore
+          delete copiedModuleData.id
+          // console.log(copiedModuleData)
+          this.copiedItems.push(copiedModuleData)
+        }
+      })
     })
+
 
     this.updateCopiedItemsPosition()
   }
@@ -110,21 +114,32 @@ class SelectionManager {
   }
 
   private duplicate(): void {
-    const temp = []
+    let temp = []
 
-    this.editor.modules.filter((module) => {
-      if (this.selectedModules.has(module.id)) {
-        const copiedModuleData: unknown = module.getDetails()
-        copiedModuleData.x += 10
-        copiedModuleData.y += 10
+    if (this.isSelectAll) {
+      temp = this.editor.modules.map(module => {
+        const data = module.getDetails()
 
-        // @ts-ignore
-        delete copiedModuleData.id
-        // console.log(copiedModuleData)
-        temp.push(copiedModuleData)
-      }
-    })
+        delete data.id
+
+        return {...data, x: data.x + 10, y: data.y + 10};
+      })
+    } else {
+      this.selectedModules.forEach(id => {
+        this.editor.modules.forEach((module) => {
+          if (module.id === id) {
+            const data = module.getDetails()
+
+            delete data.id
+
+            temp.push({...data, x: data.x + 10, y: data.y + 10})
+          }
+        })
+      })
+    }
+
     const newModules = this.editor.addModules(temp, 'duplicate-modules')
+    this.isSelectAll = false
     this.replaceSelectModules(newModules.map(module => module.id))
     this.updateCopiedItemsPosition()
   }
@@ -143,6 +158,7 @@ class SelectionManager {
   }
 
   private escape(): void {
+    this.isSelectAll = false
     this.clearSelectedItems()
   }
 
@@ -282,75 +298,63 @@ class SelectionManager {
   public render(): void {
     const enableRotationHandle = this.selectedModules.size === 1
     const {ctx} = this
-    let manipulationModules: Modules[] = []
 
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    // console.log(this.selectedModules);
     this.ctx.setTransform(this.editor.scale, 0, 0, this.editor.scale, 0, 0);
 
-    if (this.isSelectAll) {
-      manipulationModules = this.editor.modules
-    } else {
-      this.selectedModules.forEach(id => {
-        this.editor.modules.forEach((module) => {
-          if (module.id === id) {
-            manipulationModules.push(module)
-          }
-        })
-      })
-    }
-
-
-    manipulationModules.forEach((item) => {
-      // Drawing selected items
+    const BatchDrawer = (modules: Modules[]) => {
+      const handlesQueue: Set<string> = new Set()
+      const rectQueue: Set<string> = new Set()
+      const l = this.resizeHandleSize / 2
+      const rects = []
+      const fillStyle = "#5491f8";
+      const strokeStyle = "#5491f8";
+      const lineWidth = 1;
       ctx.save();
+
       if (enableRotationHandle) {
         // this.ctx.translate(item.x + item.size / 2, item.y + item.size / 2); // Move origin to center of item
         // this.ctx.rotate(item.rotation); // Apply rotation
       }
 
-      // this.ctx.fillStyle = this.selectedModules.has(item.id) ? "green" : "blue";
-      // this.ctx.fillRect(-item.size / 2, -item.size / 2, item.size, item.size);
-      const handlesQueue: Set<string> = new Set()
-      const rectQueue: Set<string> = new Set()
-      // d[{x: 2}] = true
-      // Draw resize handle at the center
-      // console.log(item.type)
-      const {
-        x, y, width, height
-      } = item.getBoundingRect()
-      // const dpr = this.editor.dpr
+      modules.forEach((module) => {
+        const {
+          x, y, width, height
+        } = module.getBoundingRect()
 
-      // x *= dpr
-      // y *= dpr
+        handlesQueue.add(`${x}-${y}`);
+        handlesQueue.add(`${x + width / 2}-${y}`);
+        handlesQueue.add(`${x + width}-${y}`);
+        handlesQueue.add(`${x + width}-${y + height / 2}`);
+        handlesQueue.add(`${x + width}-${y + height}`);
+        handlesQueue.add(`${x + width / 2}-${y + height}`);
+        handlesQueue.add(`${x}-${y + height}`);
+        handlesQueue.add(`${x}-${y + height / 2}`);
 
-      const handleSize = this.resizeHandleSize / 2
+        rects.push({
+          x, y, width, height, fillStyle,
+          strokeStyle,
+          lineWidth
+        })
+        // rectQueue.add(`${x}-${y}-${width}-${height}`);
+      });
 
-      handlesQueue.add(`${x}-${y}-${handleSize}`);
-      handlesQueue.add(`${x + width / 2}-${y}-${handleSize}`);
-      handlesQueue.add(`${x + width}-${y}-${handleSize}`);
-      handlesQueue.add(`${x + width}-${y + height / 2}-${handleSize}`);
-      handlesQueue.add(`${x + width}-${y + height}-${handleSize}`);
-      handlesQueue.add(`${x + width / 2}-${y + height}-${handleSize}`);
-      handlesQueue.add(`${x}-${y + height}-${handleSize}`);
-      handlesQueue.add(`${x}-${y + height / 2}-${handleSize}`);
-
-      rectQueue.add(`${x}-${y}-${width}-${height}`);
-
-      ctx.fillStyle = "#5491f8";
-      ctx.strokeStyle = "#5491f8";
-      ctx.lineWidth = 1;
-
+      // ctx.fillStyle = "#5491f8";
+      // ctx.strokeStyle = "#5491f8";
+      // ctx.lineWidth = 1;
       handlesQueue.forEach((s) => {
         const arr = s.split('-');
         const x = parseFloat(arr[0]);
         const y = parseFloat(arr[1]);
-        const l = parseFloat(arr[2]);
+
 
         ctx.beginPath();
         ctx.ellipse(x, y, l, l, 0, 0, 360);
         ctx.fill();
       })
+
+      rectRender(ctx,rects)
+/*
 
       rectQueue.forEach((s) => {
         const arr = s.split('-');
@@ -361,9 +365,26 @@ class SelectionManager {
 
         ctx.strokeRect(x, y, width, height);
       })
+*/
 
       this.ctx.restore();
-    });
+    }
+
+    if (this.isSelectAll) {
+      BatchDrawer(this.editor.modules)
+    } else {
+      const manipulationModules: Modules[] = [];
+
+      this.selectedModules.forEach(id => {
+        this.editor.modules.forEach((module) => {
+          if (module.id === id) {
+            manipulationModules.push(module)
+          }
+        })
+      })
+
+      BatchDrawer(manipulationModules)
+    }
   }
 
   public clearSelectedItems(): void {

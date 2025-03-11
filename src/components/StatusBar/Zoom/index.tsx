@@ -13,14 +13,21 @@ const ZoomSelect: React.FC<unknown> = () => {
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleBlur = () => {
+  const handleBlur = (event) => {
     calcNewZoomValue(inputRef.current!.value)
+    // inputRef.current!.focus();
+    inputRef.current!.blur();
+    event.preventDefault();
+    event.stopPropagation();
+
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       calcNewZoomValue(inputRef.current!.value)
+      inputRef.current!.blur();
       event.preventDefault();
+      event.stopPropagation();
     }
   }
 
@@ -28,14 +35,15 @@ const ZoomSelect: React.FC<unknown> = () => {
     const match = value.match(/\d+/)
 
     if (match) {
-      dispatch(setZoom(parseFloat(match[0])));
+      const v = parseFloat(match[0])
 
-      updateInput(match[0]);
+      dispatch(setZoom(v));
+      updateInput(v);
     }
   }
 
-  const updateInput = (newValue: string) => {
-    inputRef.current!.value = newValue
+  const updateInput = (newValue: number) => {
+    inputRef.current!.value = newValue * 100 + '%'
   }
   return (
     <div
@@ -74,12 +82,12 @@ const ZoomSelect: React.FC<unknown> = () => {
                 let v = level
 
                 if (v === "fit window") {
-                  v = 100
+                  v = 1
                 }
 
                 dispatch(setZoom(v));
                 setIsOpen(false);
-                updateInput(v.toString())
+                updateInput(v)
               }}
               className="text-sm align-middle p-1 text-center hover:bg-blue-500 hover:text-white transition"
             >

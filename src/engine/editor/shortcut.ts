@@ -1,9 +1,12 @@
 import Editor from "./index.ts";
 import {ShortcutCode} from "./editor";
 
+type EventsFunction = (e: KeyboardEvent, additionalInformation?: unknown) => unknown
+
 class Shortcut {
   readonly editor: Editor
-  readonly eventsMap: Map<ShortcutCode, VoidFunction[]> = new Map()
+  readonly eventsMap: Map<ShortcutCode, EventsFunction[]> = new Map()
+  private lock = false
 
   // readonly pressedKeys: Set<KeyboardEvent['key']> = new Set();
 
@@ -16,7 +19,7 @@ class Shortcut {
     this.removeEventListeners()
   }
 
-  public subscribe(eventName: ShortcutCode, callback: VoidFunction) {
+  public subscribe(eventName: ShortcutCode, callback: EventsFunction) {
     if (this.eventsMap.has(eventName)) {
       this.eventsMap.get(eventName)!.push(callback);
     } else {
@@ -24,7 +27,7 @@ class Shortcut {
     }
   }
 
-  public unsubscribe(eventName: ShortcutCode, callback: VoidFunction) {
+  public unsubscribe(eventName: ShortcutCode, callback: EventsFunction) {
     if (this.eventsMap.has(eventName)) {
       const arr = this.eventsMap.get(eventName)!
 
@@ -87,23 +90,32 @@ class Shortcut {
       shortcutCode = 'redo'
     }
 
+    if (key === 'ArrowUp' || key === 'ArrowDown' || key === 'ArrowLeft' || key === 'ArrowRight') {
+      shortcutCode = 'modify-modules'
+    }
 
-    if (!shortcutCode) return
+    if (!shortcutCode || this.lock) return
+
+    this.lock = true
 
     if (this.eventsMap.has(shortcutCode)) {
       this.eventsMap.get(shortcutCode)!.forEach((cb) => {
-        cb()
+
+        cb(event, key)
       })
 
       event.preventDefault()
     }
 
+    this.lock = false
+
     event.stopPropagation()
   }
-/*
-  private handleKeyUp(event: KeyboardEvent) {
-    this.pressedKeys.delete(event.key)
-  }*/
+
+  /*
+    private handleKeyUp(event: KeyboardEvent) {
+      this.pressedKeys.delete(event.key)
+    }*/
 }
 
 export default Shortcut;

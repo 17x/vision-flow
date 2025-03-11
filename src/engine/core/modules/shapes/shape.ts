@@ -12,8 +12,8 @@ export interface ShapeProps extends BasicModuleProps {
 }
 
 class Shape extends Base {
-  private x: number;
-  private y: number;
+  readonly x: number;
+  readonly y: number;
   // private width: number;
   // private height: number;
 

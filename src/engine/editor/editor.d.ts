@@ -1,3 +1,5 @@
+import {ModuleProps} from "../core/modules/modules";
+
 export type EditorCoordinates = Position
 
 export type BasicEditorAreaSize = {
@@ -10,6 +12,18 @@ export interface Line {
   end: Position
 }
 
-export type ShortcutCode = 'select-all' | 'copy' | 'paste' | 'redo' | 'undo' | 'duplicate' | 'delete' | 'escape'
+export type ShortcutCode =
+  'select-all'
+  | 'copy'
+  | 'paste'
+  | 'redo'
+  | 'undo'
+  | 'duplicate'
+  | 'delete'
+  | 'escape'
+  | 'modify-modules'
 
 export type ManipulationTypes = 'init' | 'add-modules' | 'delete-modules' | 'paste-modules' | 'duplicate-modules'
+
+export type ModifyModule = Partial<ModuleProps>
+export type ModifyModuleMap = Map<UID, ModifyModule>

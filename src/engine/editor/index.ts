@@ -3,7 +3,7 @@ import generatorModuleByType from "./generator.ts";
 import render from "../core/renderer.ts";
 import SelectionManager from "./selectionManager.ts";
 import CrossLine from "./crossLine.ts";
-import {BasicEditorAreaSize, ManipulationTypes} from "./editor";
+import {BasicEditorAreaSize, ManipulationTypes, ModifyModuleMap} from "./editor";
 import PanableContainer from "./panableContainer";
 import Shortcut from "./shortcut.ts";
 import History from "./history/history.ts";
@@ -101,6 +101,8 @@ class Editor {
     this.crossLine = new CrossLine(this);
     this.history = new History(this);
     this.render()
+
+    window['editor'] = this
   }
 
   createModuleId(): UID {
@@ -178,6 +180,34 @@ class Editor {
     this.render()
   }
 
+  modifyModules(modifyMap: ModifyModuleMap, historyCode?: ManipulationTypes) {
+    [...modifyMap.keys()].map(id => {
+      // console.log(id)
+      this.modules.map(module => {
+        if (module.id === id) {
+          const modifyData: Partial<ModuleProps> = modifyMap.get(id)
+
+          for (const modifyDataKey in modifyData) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            module[modifyDataKey] = modifyData[modifyDataKey]
+          }
+        }
+      })
+      // this.modules[id]
+    })
+
+    if (historyCode) {
+      this.history.replaceNext({
+        type: historyCode,
+        modules: backup.map(module => module.getDetails()) as ModuleProps[],
+        selectedItems: []
+      })
+    }
+
+    this.render()
+  }
+
   render() {
     this.ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0);
 
@@ -200,7 +230,7 @@ class Editor {
     this.canvas.addEventListener("gesturechange", (event) => this.handleTouchpadZoom(event as unknown));
     this.canvas.addEventListener("touchstart", (event) => {
       // console.log(event, 'touchmove');
-    },{passive: true});
+    }, {passive: true});
   }
 
   private handleWheelZoom(event: WheelEvent) {
@@ -226,7 +256,7 @@ class Editor {
       r = this.dpr
     }
 
-    console.log(r)
+    // console.log(r)
 
     if (r !== this.scale) {
       this.applyZoom(r);

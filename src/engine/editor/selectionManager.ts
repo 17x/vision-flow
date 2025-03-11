@@ -1,7 +1,9 @@
 import Editor from "./index.ts";
 import coordinator from "./coordinator.ts";
+import {ModifyModuleMap} from "./editor";
 
 type CopiedModuleProps = Omit<ModuleProps, 'id'>
+type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
 
 class SelectionManager {
   private canvas: HTMLCanvasElement;
@@ -48,6 +50,7 @@ class SelectionManager {
     this.editor.shortcut.subscribe('duplicate', this.duplicate.bind(this));
     this.editor.shortcut.subscribe('delete', this.delete.bind(this));
     this.editor.shortcut.subscribe('escape', this.escape.bind(this));
+    this.editor.shortcut.subscribe('modify-modules', this.modifyModules.bind(this));
   }
 
   private unBindShortcuts() {
@@ -57,6 +60,7 @@ class SelectionManager {
     this.editor.shortcut.unsubscribe('duplicate', this.duplicate.bind(this));
     this.editor.shortcut.unsubscribe('delete', this.delete.bind(this));
     this.editor.shortcut.unsubscribe('escape', this.escape.bind(this));
+    this.editor.shortcut.unsubscribe('modify-modules', this.modifyModules.bind(this));
   }
 
   public replaceSelectModules(ids: UID[]) {
@@ -120,7 +124,7 @@ class SelectionManager {
   }
 
   private delete(): void {
-    const temp = []
+    const temp: ModuleProps[] = []
 
     this.editor.modules.filter((module) => {
       if (this.selectedModules.has(module.id)) {
@@ -134,6 +138,39 @@ class SelectionManager {
 
   private escape(): void {
     this.clearSelectedItems()
+  }
+
+  private modifyModules(e, i: KeyboardDirectionKeys): void {
+    const modifyModulesData: ModifyModuleMap = new Map()
+
+    this.selectedModules.forEach(id => {
+      this.editor.modules.map((value) => {
+        const currData: Partial<Position> = {}
+
+        if (i === 'ArrowUp') {
+          currData.y = value.y - 10
+        }
+
+        if (i === 'ArrowDown') {
+          currData.y = value.y + 10
+        }
+        if (i === 'ArrowLeft') {
+          currData.x = value.x - 10
+        }
+
+        if (i === 'ArrowRight') {
+          currData.x = value.x + 10
+        }
+
+        if (value.id === id) {
+          modifyModulesData.set(id, currData)
+        }
+      })
+    })
+
+    this.editor.modifyModules(modifyModulesData)
+    this.render()
+    e.preventDefault()
   }
 
   private updateCopiedItemsPosition(): void {
@@ -234,6 +271,7 @@ class SelectionManager {
     this.activeResizeHandle = null; // Reset active resize handle
     this.render();
   }
+
 
   public render(): void {
     const enableRotationHandle = this.selectedModules.size === 1

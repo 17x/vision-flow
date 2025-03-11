@@ -21,6 +21,7 @@ class SelectionManager {
   private isDestroyed: boolean = false;
   private editor: Editor;
   private copiedItems: CopiedModuleProps[] = []
+  private isSelectAll: boolean = false
 
   constructor(editor: Editor) {
     const canvas = document.createElement("canvas") as HTMLCanvasElement;
@@ -54,7 +55,7 @@ class SelectionManager {
   }
 
   private unBindShortcuts() {
-    this.editor.shortcut.unsubscribe('select-all', this.selectAll.bind(this));
+    this.editor.shortcut.unsubscribe('select-all', this.isSelectAll.bind(this));
     this.editor.shortcut.unsubscribe('copy', this.copy.bind(this));
     this.editor.shortcut.unsubscribe('paste', this.paste.bind(this));
     this.editor.shortcut.unsubscribe('duplicate', this.duplicate.bind(this));
@@ -74,14 +75,19 @@ class SelectionManager {
 
   private selectAll(): void {
     this.selectedModules.clear()
-    this.editor.modules.forEach((module) => {
+    this.isSelectAll = true
+    /*this.editor.modules.forEach((module) => {
       this.selectedModules.add(module.id);
-    })
+    })*/
     this.render();
   }
 
   private copy(): void {
     this.copiedItems = []
+
+    if (this.isSelectAll) {
+      this.copiedItems = this.editor.modules.map(value => value.getDetails())
+    }
 
     this.editor.modules.filter((module) => {
       if (this.selectedModules.has(module.id)) {
@@ -266,23 +272,36 @@ class SelectionManager {
   }
 
   private handleMouseUp(): void {
+    this.isSelectAll = false;
     this.isDragging = false;
     this.isResizing = false;
     this.activeResizeHandle = null; // Reset active resize handle
     this.render();
   }
 
-
   public render(): void {
     const enableRotationHandle = this.selectedModules.size === 1
     const {ctx} = this
+    let manipulationModules: Modules[] = []
 
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     // console.log(this.selectedModules);
     this.ctx.setTransform(this.editor.scale, 0, 0, this.editor.scale, 0, 0);
 
+    if (this.isSelectAll) {
+      manipulationModules = this.editor.modules
+    } else {
+      this.selectedModules.forEach(id => {
+        this.editor.modules.forEach((module) => {
+          if (module.id === id) {
+            manipulationModules.push(module)
+          }
+        })
+      })
+    }
 
-    this.editor.modules.forEach((item) => {
+
+    manipulationModules.forEach((item) => {
       // Drawing selected items
       ctx.save();
       if (enableRotationHandle) {
@@ -292,52 +311,56 @@ class SelectionManager {
 
       // this.ctx.fillStyle = this.selectedModules.has(item.id) ? "green" : "blue";
       // this.ctx.fillRect(-item.size / 2, -item.size / 2, item.size, item.size);
-
+      const handlesQueue: Set<string> = new Set()
+      const rectQueue: Set<string> = new Set()
+      // d[{x: 2}] = true
       // Draw resize handle at the center
-      if (this.selectedModules.has(item.id)) {
-        // console.log(item.type)
-        let {
-          x, y, width, height
-        } = item.getBoundingRect()
-        // const dpr = this.editor.dpr
+      // console.log(item.type)
+      const {
+        x, y, width, height
+      } = item.getBoundingRect()
+      // const dpr = this.editor.dpr
 
-        // x *= dpr
-        // y *= dpr
+      // x *= dpr
+      // y *= dpr
 
-        const handleSize = this.resizeHandleSize / 2
-        const handlePoints: Position[] = [{
-          x, y
-        }, {
-          x: x + width / 2, y
-        }, {
-          x: x + width, y
-        }, {
-          x: x + width, y: y + height / 2
-        }, {
-          x: x + width, y: y + height
-        }, {
-          x: x + width / 2, y: y + height
-        }, {
-          x: x + width / 2, y: y + height
-        }, {
-          x: x, y: y + height
-        }, {
-          x: x, y: y + height / 2
-        }]
+      const handleSize = this.resizeHandleSize / 2
 
-        ctx.strokeStyle = "#5491f8";
-        ctx.lineWidth = 1;
+      handlesQueue.add(`${x}-${y}-${handleSize}`);
+      handlesQueue.add(`${x + width / 2}-${y}-${handleSize}`);
+      handlesQueue.add(`${x + width}-${y}-${handleSize}`);
+      handlesQueue.add(`${x + width}-${y + height / 2}-${handleSize}`);
+      handlesQueue.add(`${x + width}-${y + height}-${handleSize}`);
+      handlesQueue.add(`${x + width / 2}-${y + height}-${handleSize}`);
+      handlesQueue.add(`${x}-${y + height}-${handleSize}`);
+      handlesQueue.add(`${x}-${y + height / 2}-${handleSize}`);
+
+      rectQueue.add(`${x}-${y}-${width}-${height}`);
+
+      ctx.fillStyle = "#5491f8";
+      ctx.strokeStyle = "#5491f8";
+      ctx.lineWidth = 1;
+
+      handlesQueue.forEach((s) => {
+        const arr = s.split('-');
+        const x = parseFloat(arr[0]);
+        const y = parseFloat(arr[1]);
+        const l = parseFloat(arr[2]);
+
+        ctx.beginPath();
+        ctx.ellipse(x, y, l, l, 0, 0, 360);
+        ctx.fill();
+      })
+
+      rectQueue.forEach((s) => {
+        const arr = s.split('-');
+        const x = parseFloat(arr[0]);
+        const y = parseFloat(arr[1]);
+        const width = parseFloat(arr[2]);
+        const height = parseFloat(arr[3]);
+
         ctx.strokeRect(x, y, width, height);
-        ctx.fillStyle = "#5491f8";
-
-        handlePoints.forEach(({
-                                x, y
-                              }) => {
-          ctx.beginPath();
-          ctx.ellipse(x, y, handleSize, handleSize, 0, 0, 360);
-          ctx.fill();
-        })
-      }
+      })
 
       this.ctx.restore();
     });
@@ -348,13 +371,13 @@ class SelectionManager {
     this.render()
   }
 
-  public setSelectedItems(modulesIdList: SelectionManager['selectedModules']): void {
-    this.selectedModules.clear();
+  /*  public setSelectedItems(modulesIdList: SelectionManager['selectedModules']): void {
+      this.selectedModules.clear();
 
-    modulesIdList.forEach((moduleId) => {
-      this.selectedModules.add(moduleId)
-    })
-  }
+      modulesIdList.forEach((moduleId) => {
+        this.selectedModules.add(moduleId)
+      })
+    }*/
 
   private destroy(): void {
     if (this.isDestroyed) return;

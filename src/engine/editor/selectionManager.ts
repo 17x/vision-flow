@@ -1,10 +1,19 @@
 import Editor from "./index.ts";
 import coordinator from "./coordinator.ts";
-import {ModifyModuleMap} from "./editor";
+import {ActionCode, ModifyModuleMap} from "./editor";
 import {RectangleRenderProps, rectRender} from "../core/renderer.ts";
 
 type CopiedModuleProps = Omit<ModuleProps, 'id'>
 type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
+const actions: ActionCode[] = [
+  'select-all',
+  'copy',
+  'paste',
+  'duplicate',
+  'delete',
+  'escape',
+  'modify-modules'
+];
 
 class SelectionManager {
   private canvas: HTMLCanvasElement;
@@ -21,7 +30,7 @@ class SelectionManager {
   private activeResizeHandle: Item | null = null;
   private isDestroyed: boolean = false;
   private editor: Editor;
-  private copiedItems: CopiedModuleProps[] = []
+  private copiedItems: ModuleProps[] = []
   private isSelectAll: boolean = false
 
   constructor(editor: Editor) {
@@ -40,29 +49,25 @@ class SelectionManager {
     canvas.setAttribute("selection-manager", "");
     editor.canvas.parentNode!.append(this.canvas);
 
-    this.bindShortcuts()
+    this.watchActions()
     this.render();
     this.setupEventListeners();
   }
 
-  private bindShortcuts() {
-    this.editor.shortcut.subscribe('select-all', this.selectAll.bind(this));
-    this.editor.shortcut.subscribe('copy', this.copy.bind(this));
-    this.editor.shortcut.subscribe('paste', this.paste.bind(this));
-    this.editor.shortcut.subscribe('duplicate', this.duplicate.bind(this));
-    this.editor.shortcut.subscribe('delete', this.delete.bind(this));
-    this.editor.shortcut.subscribe('escape', this.escape.bind(this));
-    this.editor.shortcut.subscribe('modify-modules', this.modifyModules.bind(this));
+  private watchActions() {
+    actions.forEach(action => {
+      // this.editor.action.subscribe(action, this[action].bind(this));
+    });
   }
 
   private unBindShortcuts() {
-    this.editor.shortcut.unsubscribe('select-all', this.isSelectAll.bind(this));
-    this.editor.shortcut.unsubscribe('copy', this.copy.bind(this));
-    this.editor.shortcut.unsubscribe('paste', this.paste.bind(this));
-    this.editor.shortcut.unsubscribe('duplicate', this.duplicate.bind(this));
-    this.editor.shortcut.unsubscribe('delete', this.delete.bind(this));
-    this.editor.shortcut.unsubscribe('escape', this.escape.bind(this));
-    this.editor.shortcut.unsubscribe('modify-modules', this.modifyModules.bind(this));
+    this.editor.action.unsubscribe('select-all', this.selectAll.bind(this));
+    this.editor.action.unsubscribe('copy', this.copy.bind(this));
+    this.editor.action.unsubscribe('paste', this.paste.bind(this));
+    this.editor.action.unsubscribe('duplicate', this.duplicate.bind(this));
+    this.editor.action.unsubscribe('delete', this.delete.bind(this));
+    this.editor.action.unsubscribe('escape', this.escape.bind(this));
+    this.editor.action.unsubscribe('modify-modules', this.modifyModules.bind(this));
   }
 
   public replaceSelectModules(ids: UID[]) {
@@ -70,34 +75,33 @@ class SelectionManager {
     ids.forEach((id) => {
       this.selectedModules.add(id);
     })
-    // console.log(this.selectedModules);
     this.render();
   }
 
-  private selectAll(): void {
+  public selectAll(): void {
     this.selectedModules.clear()
     this.isSelectAll = true
-    /*this.editor.modules.forEach((module) => {
-      this.selectedModules.add(module.id);
-    })*/
     this.render();
   }
 
-  private copy(): void {
+  public copy(): void {
     this.copiedItems = []
 
     this.copiedItems = this.editor.batchCopy(this.isSelectAll ? 'all' : this.selectedModules, true)
-    this.updateCopiedItemsPosition()
+    this.updateCopiedItemsPosition(10, 10)
   }
 
-  private paste(): void {
-    const newModules = this.editor.addModules(this.copiedItems, 'paste-modules')
-    this.replaceSelectModules(newModules.map(module => module.id))
-    this.updateCopiedItemsPosition()
+  paste(): void {
+    console.log(this.copiedItems)
+    const newModules = this.editor.batchCreate(this.copiedItems)
+    console.log(newModules)
+    this.editor.batchAdd(newModules, 'paste-modules')
+    this.replaceSelectModules([...newModules.keys()])
+    this.updateCopiedItemsPosition(10, 10)
   }
 
-  private duplicate(): void {
-    let temp: Map<UID, Modules>
+  duplicate(): void {
+    let temp: ModuleProps[]
     const offsetX = 10
     const offsetY = 10
 
@@ -114,23 +118,23 @@ class SelectionManager {
 
     this.editor.batchAdd(temp, 'duplicate-modules')
     this.isSelectAll = false
-    this.replaceSelectModules(Array.from(temp.keys()))
-    this.updateCopiedItemsPosition()
+    this.replaceSelectModules(temp.map(module => module.id))
+    this.updateCopiedItemsPosition(x, y)
   }
 
-  private delete(): void {
+  public delete(): void {
     if (this.isSelectAll) {
       this.editor.batchDelete('all', 'delete-modules')
     } else {
       this.editor.batchDelete(this.selectedModules, 'delete-modules')
     }
 
-    this.editor.selectionManager.clearSelectedItems()
+    this.editor.selectionManager.clear()
   }
 
   private escape(): void {
     this.isSelectAll = false
-    this.clearSelectedItems()
+    this.clear()
   }
 
   private modifyModules(e: KeyboardEvent, i?: KeyboardDirectionKeys): void {
@@ -168,10 +172,10 @@ class SelectionManager {
     this.render()
   }
 
-  private updateCopiedItemsPosition(): void {
+  private updateCopiedItemsPosition(x: number, y: number): void {
     this.copiedItems.forEach(copiedItem => {
-      copiedItem!.x += Math.floor(Math.random() * 10)
-      copiedItem!.y += Math.floor(Math.random() * 20)
+      copiedItem!.x += x
+      copiedItem!.y += y
     })
   }
 
@@ -364,7 +368,7 @@ class SelectionManager {
     }
   }
 
-  public clearSelectedItems(): void {
+  public clear(): void {
     this.selectedModules.clear();
     this.render()
   }

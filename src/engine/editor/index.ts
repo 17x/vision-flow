@@ -1,7 +1,7 @@
 import render from "../core/renderer.ts";
 import SelectionManager from "./selectionManager.ts";
 import CrossLine from "./crossLine.ts";
-import {BasicEditorAreaSize, ManipulationTypes} from "./editor";
+import {BasicEditorAreaSize, ActionTypeType} from "./editor";
 import PanableContainer from "./panableContainer";
 import Shortcut from "./shortcut.ts";
 import History from "./history/history.ts";
@@ -9,6 +9,7 @@ import Rectangle from "../core/modules/shapes/rectangle.ts";
 import deepClone from "../../utilities/deepClone.ts";
 import typeCheck from "../../utilities/typeCheck.ts";
 import TypeCheck from "../../utilities/typeCheck.ts";
+import Action, {doIt} from "./actions";
 
 export interface EditorDataProps {
   id: UID;
@@ -37,11 +38,10 @@ class Editor {
   readonly canvas: HTMLCanvasElement;
   readonly id: UID;
   readonly size: Size;
-  // readonly logicResolution: Resolution;
-  // readonly physicalResolution: Resolution;
   readonly dpr: DPR;
   readonly container: HTMLDivElement;
   readonly shortcut: Shortcut;
+  readonly action: Action;
   readonly history: History;
   readonly panableContainer: PanableContainer;
   readonly selectionManager: SelectionManager;
@@ -100,12 +100,17 @@ class Editor {
       },
     });
     this.shortcut = new Shortcut(this)
+    this.action = new Action(this)
     this.selectionManager = new SelectionManager(this);
     this.crossLine = new CrossLine(this);
     this.history = new History(this);
     this.render()
 
     window['editor'] = this
+  }
+
+  private init() {
+
   }
 
   createModuleId(): UID {
@@ -115,7 +120,11 @@ class Editor {
   batchCreate(moduleDataList: ModuleProps[]) {
     const newMap = new Map<UID, Modules>();
 
-    moduleDataList.forEach(data => {
+    deepClone(moduleDataList).forEach(data => {
+      if (!data.id) {
+        data.id = this.createModuleId()
+      }
+
       if (data.type === 'rectangle') {
         newMap.set(data.id, new Rectangle(data));
       }
@@ -124,7 +133,7 @@ class Editor {
     return newMap;
   }
 
-  batchAdd(modules: Map<UID, Modules>, historyCode?: ManipulationTypes) {
+  batchAdd(modules: Map<UID, Modules>, historyCode?: ActionTypeType) {
     modules.forEach(mod => {
       this.moduleMap.set(mod.id, mod);
     })
@@ -171,7 +180,7 @@ class Editor {
     return result
   }
 
-  batchDelete(from: 'all' | Set<UID>, historyCode?: ManipulationTypes) {
+  batchDelete(from: 'all' | Set<UID>, historyCode?: ActionTypeType) {
     let backup: ModuleProps[] = []
 
     if (from === 'all') {
@@ -195,7 +204,7 @@ class Editor {
     return backup
   }
 
-  batchModify(from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: ManipulationTypes) {
+  batchModify(from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: ActionTypeType) {
     let modulesMap = null;
 
     if (from === 'all') {
@@ -225,30 +234,6 @@ class Editor {
     }
   }
 
-  addModules(modulesData: ModuleProps[], historyCode?: ManipulationTypes): Modules[] {
-    const newModules = deepClone(modulesData)
-      .map((data) => {
-        if (!data.id) {
-          data.id = this.createModuleId()
-        }
-        const newModule = new Rectangle(data)
-        this.moduleMap.set(newModule.id, newModule)
-
-        return newModule
-      })
-
-    if (historyCode) {
-      this.history.replaceNext({
-        type: historyCode,
-        modules: newModules
-      })
-    }
-
-    this.render()
-
-    return newModules
-  }
-
   getModulesByIdSet(idSet: Set<UID>): Map<UID, Modules> {
     const result: Map<UID, Modules> = new Map()
 
@@ -260,25 +245,6 @@ class Editor {
     })
 
     return result
-  }
-
-  handleHistory() {
-
-  }
-
-  render() {
-    this.ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0);
-
-    const animate = () => {
-      // console.time();
-      render({
-        ctx: this.ctx, modules: this.moduleMap,
-      });
-      // requestAnimationFrame(animate);
-      // console.timeEnd();
-    }
-
-    requestAnimationFrame(animate);
   }
 
   private setupEventListeners() {
@@ -340,52 +306,20 @@ class Editor {
     this.selectionManager.render()
   }
 
+  render() {
+    this.ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0);
 
-  /*
-    render(data: string): void {
-      const {canvas_ctx: ctx, /!*theme: currentTheme*!/} = this
-      const {width, height} = this.physicalResolution
-
-      ctx.clearRect(0, 0, width, height);
-      ctx.textAlign = 'start'
-      ctx.textBaseline = 'top'
-      ctx.fillStyle = 'red'
-      ctx.font = '36px sans-serif';
-
-      // const PARSED_JSON = JSON.parse(data)
-      // const flattenedTree: FlattenedTreeNodeMap = flatData(PARSED_JSON)
-      // const nodesSelfRect = calcNodeSelfSize(flattenedTree, ctx)
-      // const measuredData: MeasuredDataRecord = calculateBoundingRect(flattenedTree, ctx, currentTheme)
-
-      // console.log(flattenedTree)
-      // Renderer.calcHeight(flattenData, ctx)
-
-      /!*    drawGrid({
-            ctx,
-            width,
-            height,
-            gridSize: 50,
-            lineWidth: currentTheme.grid.lineWidth,
-            strokeStyle: currentTheme.grid.color
-          })*!/
-      /!*
-          Object.values(measuredData).forEach(node => {
-            const text = node.key === 'root' ? node.key : String(node.value)
-            // const {width, height, x, y} = node.rect
-
-            // CTX.strokeRect(x + 5, y + 5, width, height);
-
-            // ctx.fillText(text, x, y);
-          });*!/
+    const animate = () => {
+      // console.time();
+      render({
+        ctx: this.ctx, modules: this.moduleMap,
+      });
+      // requestAnimationFrame(animate);
+      // console.timeEnd();
     }
 
-    private initialize() {
-      // Selection box
-      //    box and rotate
-      // axis lines
-      // align lines
-      // side panel
-    }*/
+    requestAnimationFrame(animate);
+  }
 }
 
 export default Editor;

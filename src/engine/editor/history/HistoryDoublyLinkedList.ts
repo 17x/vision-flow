@@ -1,10 +1,10 @@
-import {ManipulationTypes} from "../editor";
+import {ActionTypeType} from "../editor";
 
 type Prev = HistoryNode | null;
 type Next = Prev
 
 export interface HistoryValue {
-  type: ManipulationTypes,
+  type: ActionTypeType,
   modules?: ModuleProps[],
   selectedItems?: UID[]
 }

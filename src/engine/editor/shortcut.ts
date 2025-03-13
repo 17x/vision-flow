@@ -1,11 +1,10 @@
 import Editor from "./index.ts";
-import {ShortcutCode} from "./editor";
+import {ActionCode} from "./editor";
 
 type EventsFunction = (e: KeyboardEvent, additionalInformation?: unknown) => unknown
 
 class Shortcut {
   readonly editor: Editor
-  readonly eventsMap: Map<ShortcutCode, EventsFunction[]> = new Map()
   private lock = false
 
   // readonly pressedKeys: Set<KeyboardEvent['key']> = new Set();
@@ -19,29 +18,6 @@ class Shortcut {
     this.removeEventListeners()
   }
 
-  public subscribe(eventName: ShortcutCode, callback: EventsFunction) {
-    if (this.eventsMap.has(eventName)) {
-      this.eventsMap.get(eventName)!.push(callback);
-    } else {
-      this.eventsMap.set(eventName, [callback])
-    }
-  }
-
-  public unsubscribe(eventName: ShortcutCode, callback: EventsFunction) {
-    if (this.eventsMap.has(eventName)) {
-      const arr = this.eventsMap.get(eventName)!
-
-      for (let i = arr.length - 1; i >= 0; i--) {
-        if (arr[i] === callback) {
-          arr.splice(i, 1)
-          return 'deleted'
-        }
-      }
-
-      return 'Cannot find event or function'
-    }
-  }
-
   private setupEventListeners(): void {
     window.addEventListener("keydown", this.handleKeyDown.bind(this));
     // window.addEventListener("keyup", this.handleKeyUp.bind(this));
@@ -53,7 +29,7 @@ class Shortcut {
   }
 
   private handleKeyDown(event: KeyboardEvent) {
-    let shortcutCode: ShortcutCode | null = null
+    let shortcutCode: ActionCode | null = null
     const {key, ctrlKey, metaKey, shiftKey} = event
     const arrowKeys = new Set(
       [
@@ -99,21 +75,13 @@ class Shortcut {
       shortcutCode = 'modify-modules'
     }
 
-    if (!shortcutCode || this.lock) return
+    if (!shortcutCode) return
 
-    this.lock = true
+    this.editor.action.dispatcher(shortcutCode)
 
-    if (this.eventsMap.has(shortcutCode)) {
-      this.eventsMap.get(shortcutCode)!.forEach((cb) => {
-        cb(event, key)
-      })
-
-      if (shortcutCode !== 'modify-modules') {
-        event.preventDefault()
-      }
+    if (shortcutCode !== 'modify-modules') {
+      event.preventDefault()
     }
-
-    this.lock = false
 
     event.stopPropagation()
   }

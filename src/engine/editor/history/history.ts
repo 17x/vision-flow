@@ -17,16 +17,16 @@ class History extends HistoryDoublyLinkedList {
   }
 
   private bindShortcuts() {
-    this.editor.shortcut.subscribe('undo', this.undo.bind(this));
-    this.editor.shortcut.subscribe('redo', this.redo.bind(this));
+    this.editor.action.subscribe('undo', this.undo.bind(this));
+    this.editor.action.subscribe('redo', this.redo.bind(this));
   }
 
   private unBindShortcuts() {
-    this.editor.shortcut.unsubscribe('undo', this.undo.bind(this));
-    this.editor.shortcut.unsubscribe('redo', this.redo.bind(this));
+    this.editor.action.unsubscribe('undo', this.undo.bind(this));
+    this.editor.action.unsubscribe('redo', this.redo.bind(this));
   }
 
-  private undo(): void {
+  undo(): void {
     if (!this.current) return
 
     // get current history node data
@@ -43,14 +43,14 @@ class History extends HistoryDoublyLinkedList {
       this.editor.batchAdd(this.editor.batchCreate(modules!))
     }
 
-    this.editor.selectionManager.clearSelectedItems()
+    this.editor.selectionManager.clear()
 
     this.back()
     // this.onHistoryChange && this.onHistoryChange(this.head)
     // console.log(this.current)
   }
 
-  private redo(): void {
+  redo(): void {
     if (!this.current!.next) return
 
     const type = this.current!.next.value.type;
@@ -67,7 +67,7 @@ class History extends HistoryDoublyLinkedList {
       this.editor.batchDelete(modules!)
     }
 
-    this.editor.selectionManager.clearSelectedItems()
+    this.editor.selectionManager.clear()
     this.forward()
   }
 

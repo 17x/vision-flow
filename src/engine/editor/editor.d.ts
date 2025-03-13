@@ -12,7 +12,7 @@ export interface Line {
   end: Position
 }
 
-export type ShortcutCode =
+export type ActionCode =
   'select-all'
   | 'copy'
   | 'paste'
@@ -23,7 +23,7 @@ export type ShortcutCode =
   | 'escape'
   | 'modify-modules'
 
-export type ManipulationTypes =
+export type ActionTypeType =
   'init'
   | 'add-modules'
   | 'delete-modules'

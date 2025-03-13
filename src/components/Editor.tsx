@@ -40,7 +40,7 @@ export const EditorComponent: React.FC<EditorComponentProps> = ({data}) => {
           },
         });
 
-        const dataBase: Omit<RectangleProps, 'id'> = {
+        const dataBase: Omit<ModuleProps, 'id'> = {
           type: "rectangle",
           x: 0,
           y: 0,
@@ -60,8 +60,10 @@ export const EditorComponent: React.FC<EditorComponentProps> = ({data}) => {
           }
         })
 
-        editorRef.current.addModules(
-          data,
+        const modules = editorRef.current.batchCreate(data)
+
+        editorRef.current.batchAdd(
+          modules,
           "add-modules"
         )
       }

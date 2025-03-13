@@ -1,5 +1,6 @@
 import Editor from "../index.ts";
 import HistoryDoublyLinkedList from "./HistoryDoublyLinkedList.ts";
+import {arrayToMap, arrayToSet} from "../../core/convert.ts";
 
 class History extends HistoryDoublyLinkedList {
   private editor: Editor;
@@ -28,16 +29,18 @@ class History extends HistoryDoublyLinkedList {
   private undo(): void {
     if (!this.current) return
 
-    const {type, modules} = this.current!.value
+    // get current history node data
+    const type = this.current.value.type;
+    const modules = this.current.value.modules || []
 
     if (
       type === 'paste-modules'
       || type === 'add-modules'
       || type === 'duplicate-modules'
     ) {
-      this.editor.removeModules(modules!)
+      this.editor.batchDelete(arrayToSet(modules!))
     } else if (type === 'delete-modules') {
-      this.editor.addModules(modules!)
+      this.editor.batchAdd(this.editor.batchCreate(modules!))
     }
 
     this.editor.selectionManager.clearSelectedItems()
@@ -50,24 +53,21 @@ class History extends HistoryDoublyLinkedList {
   private redo(): void {
     if (!this.current!.next) return
 
-    const {type, modules} = this.current!.next.value
+    const type = this.current!.next.value.type;
+    const modules = this.current!.next.value.modules || []
 
     if (
       type === 'paste-modules'
       || type === 'add-modules'
       || type === 'duplicate-modules'
     ) {
-      this.editor.addModules(modules!)
+      console.log(this.editor.batchCreate(modules!))
+      this.editor.batchAdd(this.editor.batchCreate(modules!))
     } else if (type === 'delete-modules') {
-      this.editor.removeModules(modules!)
+      this.editor.batchDelete(modules!)
     }
-    /*
-        if (type === 'init') {
-          this.editor.removeModules('all')
-        }*/
 
     this.editor.selectionManager.clearSelectedItems()
-    // console.log(this.current)
     this.forward()
   }
 

@@ -140,6 +140,8 @@ class SelectionManager {
 
     if (this.selectedModules.size > 0 || this.isSelectAll) {
       e.preventDefault()
+    } else {
+      return
     }
 
     if (i === 'ArrowUp') {
@@ -159,7 +161,7 @@ class SelectionManager {
 
     if (this.isSelectAll) {
       this.editor.batchModify('all', modifyData, 'modify-modules')
-    } else {
+    } else if (this.selectedModules.size > 0) {
       this.editor.batchModify(this.selectedModules, modifyData, 'modify-modules')
     }
 
@@ -168,8 +170,8 @@ class SelectionManager {
 
   private updateCopiedItemsPosition(): void {
     this.copiedItems.forEach(copiedItem => {
-      copiedItem.x += Math.floor(Math.random() * 10)
-      copiedItem.y += Math.floor(Math.random() * 20)
+      copiedItem!.x += Math.floor(Math.random() * 10)
+      copiedItem!.y += Math.floor(Math.random() * 20)
     })
   }
 
@@ -197,7 +199,7 @@ class SelectionManager {
       x: mouseX, y: mouseY
     };
 
-    const possibleModules = Array.from(this.editor.modules.values()).filter((item) => {
+    const possibleModules = Array.from(this.editor.moduleMap.values()).filter((item) => {
       const {
         top, right, bottom, left
       } = item.getBoundingRect()
@@ -252,7 +254,7 @@ class SelectionManager {
 
     // console.log(this.editor.modules.entries())
     // hover logic
-    const filtered = this.editor.modules.values().filter((module) => {
+    const filtered = this.editor.moduleMap.values().filter((module) => {
       const {top, right, bottom, left} = module.getBoundingRect()
 
       return mouseX > left && mouseY > top && mouseX < right && mouseY < bottom
@@ -346,12 +348,12 @@ class SelectionManager {
     }
 
     if (this.isSelectAll) {
-      BatchDrawer(this.editor.modules)
+      BatchDrawer(this.editor.moduleMap)
     } else {
       const manipulationModules: Modules[] = [];
 
       this.selectedModules.forEach(id => {
-        this.editor.modules.forEach((module) => {
+        this.editor.moduleMap.forEach((module) => {
           if (module.id === id) {
             manipulationModules.push(module)
           }

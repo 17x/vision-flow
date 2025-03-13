@@ -6,7 +6,7 @@ type Next = Prev
 export interface HistoryValue {
   type: ManipulationTypes,
   modules?: ModuleProps[],
-  selectedItems: UID[]
+  selectedItems?: UID[]
 }
 
 class HistoryNode {
@@ -25,6 +25,7 @@ class HistoryDoublyLinkedList {
   head: HistoryNode | null;
   tail: HistoryNode | null;
   current: HistoryNode | null;
+
   // length: number;
 
   constructor() {

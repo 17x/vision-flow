@@ -1,13 +1,10 @@
-import uid from "../../utilities/Uid.ts";
-import generatorModuleByType from "./generator.ts";
 import render from "../core/renderer.ts";
 import SelectionManager from "./selectionManager.ts";
 import CrossLine from "./crossLine.ts";
-import {BasicEditorAreaSize, ManipulationTypes, ModifyModuleMap} from "./editor";
+import {BasicEditorAreaSize, ManipulationTypes} from "./editor";
 import PanableContainer from "./panableContainer";
 import Shortcut from "./shortcut.ts";
 import History from "./history/history.ts";
-import {ModuleProps} from "../core/modules/modules";
 import Rectangle from "../core/modules/shapes/rectangle.ts";
 import deepClone from "../../utilities/deepClone.ts";
 import typeCheck from "../../utilities/typeCheck.ts";
@@ -36,7 +33,7 @@ export interface EditorProps {
 
 class Editor {
   moduleCounter = 0
-  readonly modules: Map<UID, Modules>;
+  readonly moduleMap: Map<UID, Modules>;
   readonly canvas: HTMLCanvasElement;
   readonly id: UID;
   readonly size: Size;
@@ -69,7 +66,7 @@ class Editor {
     this.ctx = ctx as CanvasRenderingContext2D;
     this.dpr = dpr;
     this.zoom = zoom;
-    this.modules = data.modules.reduce((previousValue, currentValue) => {
+    this.moduleMap = data.modules.reduce((previousValue, currentValue) => {
       previousValue.set(currentValue.id, currentValue)
 
       return previousValue
@@ -115,21 +112,31 @@ class Editor {
     return this.id + '-' + (++this.moduleCounter)
   }
 
-  batchCreate() {
+  batchCreate(moduleDataList: ModuleProps[]) {
+    const newMap = new Map<UID, Modules>();
+
+    moduleDataList.forEach(data => {
+      if (data.type === 'rectangle') {
+        newMap.set(data.id, new Rectangle(data));
+      }
+    })
+
+    return newMap;
   }
 
   batchAdd(modules: Map<UID, Modules>, historyCode?: ManipulationTypes) {
     modules.forEach(mod => {
-      this.modules.set(mod.id, mod);
+      this.moduleMap.set(mod.id, mod);
     })
 
     if (historyCode) {
       this.history.replaceNext({
         type: historyCode,
-        modules,
-        selectedItems: []
+        modules
       })
     }
+
+    this.render()
   }
 
   batchCopy(from: 'all' | Set<UID>, removeId = false, addOn?: { string: unknown }): ModuleProps[] {
@@ -137,14 +144,13 @@ class Editor {
     let modulesMap = new Map<UID, ModuleProps>();
 
     if (from === 'all') {
-      modulesMap = this.modules
+      modulesMap = this.moduleMap
     } else if (typeCheck(from) === 'set') {
       from.forEach(id => {
-        this.modules.forEach(mod => {
-          if (mod.id === id) {
-            modulesMap.set(id, mod)
-          }
-        })
+        const mod = this.moduleMap.get(id);
+        if (mod) {
+          modulesMap.set(id, mod);
+        }
       })
     }
 
@@ -165,119 +171,23 @@ class Editor {
     return result
   }
 
-  addModules(modulesData: ModuleProps[], historyCode?: ManipulationTypes): Modules[] {
-    const newModules = deepClone(modulesData)
-      .map((data) => {
-        if (!data.id) {
-          data.id = this.createModuleId()
-        }
-        const newModule = new Rectangle(data)
-        this.modules.set(newModule.id, newModule)
-
-        return newModule
-      })
-
-    if (historyCode) {
-      this.history.replaceNext({
-        type: historyCode,
-        modules: newModules,
-        selectedItems: []
-      })
-    }
-
-    this.render()
-
-    return newModules
-  }
-
-  removeModules(modulesData: ModuleProps[] | 'all', historyCode?: ManipulationTypes) {
-    if (!modulesData) return
-
-    if (modulesData === 'all') {
-      const backup = this.modules
-      this.modules.length = 0
-
-      if (historyCode) {
-        this.history.replaceNext({
-          type: historyCode,
-          modules: backup.map(module => module.getDetails()) as ModuleProps[],
-          selectedItems: []
-        })
-      }
-
-    } else {
-      modulesData.forEach((item) => {
-        const len = this.modules.length
-
-        for (let i = 0; i < len; i++) {
-          const module = this.modules[i];
-          // console.log(i)
-          if (module.id === item.id) {
-            this.modules.splice(i, 1);
-            --i
-            break
-          }
-        }
-      })
-
-      if (historyCode) {
-        this.history.replaceNext({
-          type: historyCode,
-          modules: modulesData,
-          selectedItems: []
-        })
-      }
-    }
-
-    this.render()
-  }
-
-  modifyModules(modifyMap: ModifyModuleMap, historyCode?: ManipulationTypes) {
-    [...modifyMap.keys()].map(id => {
-      // console.log(id)
-      this.modules.map(module => {
-        if (module.id === id) {
-          const modifyData: Partial<ModuleProps> = modifyMap.get(id)
-
-          for (const modifyDataKey in modifyData) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            module[modifyDataKey] = modifyData[modifyDataKey]
-          }
-        }
-      })
-      // this.modules[id]
-    })
-
-    if (historyCode) {
-      this.history.replaceNext({
-        type: historyCode,
-        modules: backup.map(module => module.getDetails()) as ModuleProps[],
-        selectedItems: []
-      })
-    }
-
-    this.render()
-  }
-
   batchDelete(from: 'all' | Set<UID>, historyCode?: ManipulationTypes) {
     let backup: ModuleProps[] = []
 
     if (from === 'all') {
       backup = this.batchCopy('all')
-      this.modules.clear()
+      this.moduleMap.clear()
     } else if (typeCheck(from) === 'set') {
       backup = this.batchCopy(from)
-      backup.forEach(id => {
-        this.modules.delete(id)
+      backup.forEach(module => {
+        this.moduleMap.delete(module.id)
       })
     }
 
     if (historyCode) {
       this.history.replaceNext({
         type: historyCode,
-        modules: backup,
-        selectedItems: []
+        modules: backup
       })
     }
 
@@ -285,8 +195,18 @@ class Editor {
     return backup
   }
 
-  batchModify(from: 'all' | Set<UID, Modules>, data: Partial<ModuleProps>, historyCode?: ManipulationTypes) {
-    this.modules.forEach(module => {
+  batchModify(from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: ManipulationTypes) {
+    let modulesMap = null;
+
+    if (from === 'all') {
+      modulesMap = this.moduleMap
+    } else if (typeCheck(from) === 'set') {
+      modulesMap = this.getModulesByIdSet(from)
+    } else {
+      return false
+    }
+
+    modulesMap.forEach(module => {
       Object.keys(data).forEach((key) => {
         const value = data[key]
 
@@ -299,6 +219,51 @@ class Editor {
     })
 
     this.render()
+
+    if (historyCode) {
+
+    }
+  }
+
+  addModules(modulesData: ModuleProps[], historyCode?: ManipulationTypes): Modules[] {
+    const newModules = deepClone(modulesData)
+      .map((data) => {
+        if (!data.id) {
+          data.id = this.createModuleId()
+        }
+        const newModule = new Rectangle(data)
+        this.moduleMap.set(newModule.id, newModule)
+
+        return newModule
+      })
+
+    if (historyCode) {
+      this.history.replaceNext({
+        type: historyCode,
+        modules: newModules
+      })
+    }
+
+    this.render()
+
+    return newModules
+  }
+
+  getModulesByIdSet(idSet: Set<UID>): Map<UID, Modules> {
+    const result: Map<UID, Modules> = new Map()
+
+    idSet.forEach(id => {
+      const mod = this.moduleMap.get(id);
+      if (mod) {
+        result.set(id, mod);
+      }
+    })
+
+    return result
+  }
+
+  handleHistory() {
+
   }
 
   render() {
@@ -307,7 +272,7 @@ class Editor {
     const animate = () => {
       // console.time();
       render({
-        ctx: this.ctx, modules: this.modules,
+        ctx: this.ctx, modules: this.moduleMap,
       });
       // requestAnimationFrame(animate);
       // console.timeEnd();

@@ -23,7 +23,13 @@ export type ShortcutCode =
   | 'escape'
   | 'modify-modules'
 
-export type ManipulationTypes = 'init' | 'add-modules' | 'delete-modules' | 'paste-modules' | 'duplicate-modules'
+export type ManipulationTypes =
+  'init'
+  | 'add-modules'
+  | 'delete-modules'
+  | 'paste-modules'
+  | 'duplicate-modules'
+  | 'modify-modules'
 
 export type ModifyModule = Partial<ModuleProps>
 export type ModifyModuleMap = Map<UID, ModifyModule>

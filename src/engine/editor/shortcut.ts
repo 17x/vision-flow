@@ -55,10 +55,15 @@ class Shortcut {
   private handleKeyDown(event: KeyboardEvent) {
     let shortcutCode: ShortcutCode | null = null
     const {key, ctrlKey, metaKey, shiftKey} = event
+    const arrowKeys = new Set(
+      [
+        'ArrowUp',
+        'ArrowDown',
+        'ArrowLeft',
+        'ArrowRight'
+      ]
+    )
 
-    // this.pressedKeys.add(key)
-    // console.log(this.pressedKeys)
-    // console.log(event)
     if (key === 'a' && (ctrlKey || metaKey)) {
       shortcutCode = 'select-all'
     }
@@ -90,7 +95,7 @@ class Shortcut {
       shortcutCode = 'redo'
     }
 
-    if (key === 'ArrowUp' || key === 'ArrowDown' || key === 'ArrowLeft' || key === 'ArrowRight') {
+    if (arrowKeys.has(key)) {
       shortcutCode = 'modify-modules'
     }
 
@@ -100,11 +105,12 @@ class Shortcut {
 
     if (this.eventsMap.has(shortcutCode)) {
       this.eventsMap.get(shortcutCode)!.forEach((cb) => {
-
         cb(event, key)
       })
 
-      event.preventDefault()
+      if (shortcutCode !== 'modify-modules') {
+        event.preventDefault()
+      }
     }
 
     this.lock = false

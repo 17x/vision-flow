@@ -69,8 +69,8 @@ export const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRender
   let lastStrokeStyle = ''
   let lastFillStyle = ''
 
-  console.log('rects size: ', arr.length)
-  console.log('rectQueue size: ', rectQueue.size)
+  // console.log('rects size: ', arr.length)
+  // console.log('rectQueue size: ', rectQueue.size)
   rectQueue.forEach((s) => {
     const arr = s.split('-');
     const x = parseFloat(arr[0]);

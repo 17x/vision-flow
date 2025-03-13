@@ -10,6 +10,8 @@ import History from "./history/history.ts";
 import {ModuleProps} from "../core/modules/modules";
 import Rectangle from "../core/modules/shapes/rectangle.ts";
 import deepClone from "../../utilities/deepClone.ts";
+import typeCheck from "../../utilities/typeCheck.ts";
+import TypeCheck from "../../utilities/typeCheck.ts";
 
 export interface EditorDataProps {
   id: UID;
@@ -34,7 +36,7 @@ export interface EditorProps {
 
 class Editor {
   moduleCounter = 0
-  modules: Modules[];
+  readonly modules: Map<UID, Modules>;
   readonly canvas: HTMLCanvasElement;
   readonly id: UID;
   readonly size: Size;
@@ -67,7 +69,11 @@ class Editor {
     this.ctx = ctx as CanvasRenderingContext2D;
     this.dpr = dpr;
     this.zoom = zoom;
-    this.modules = data.modules;
+    this.modules = data.modules.reduce((previousValue, currentValue) => {
+      previousValue.set(currentValue.id, currentValue)
+
+      return previousValue
+    }, new Map<UID, Modules>());
     this.id = data.id;
     this.size = data.size;
     this.wrapper = wrapper;
@@ -109,26 +115,72 @@ class Editor {
     return this.id + '-' + (++this.moduleCounter)
   }
 
-  addModules(modulesData: ModuleProps[], historyCode?: ManipulationTypes): Modules[] {
-    const newModulesData = deepClone(modulesData).map((data) => {
-      if (!data.id) {
-        data.id = this.createModuleId()
-      }
+  batchCreate() {
+  }
 
-      return data
+  batchAdd(modules: Map<UID, Modules>, historyCode?: ManipulationTypes) {
+    modules.forEach(mod => {
+      this.modules.set(mod.id, mod);
     })
-
-    const newModules = newModulesData.map((data) => {
-      return new Rectangle(data)
-    })
-
-    // this.modules.push(...newModules);
-    this.modules = this.modules.concat(newModules)
 
     if (historyCode) {
       this.history.replaceNext({
         type: historyCode,
-        modules: newModulesData,
+        modules,
+        selectedItems: []
+      })
+    }
+  }
+
+  batchCopy(from: 'all' | Set<UID>, removeId = false, addOn?: { string: unknown }): ModuleProps[] {
+    const result: ModuleProps[] = []
+    let modulesMap = new Map<UID, ModuleProps>();
+
+    if (from === 'all') {
+      modulesMap = this.modules
+    } else if (typeCheck(from) === 'set') {
+      from.forEach(id => {
+        this.modules.forEach(mod => {
+          if (mod.id === id) {
+            modulesMap.set(id, mod)
+          }
+        })
+      })
+    }
+
+    modulesMap.forEach(mod => {
+      const data = mod.getDetails()
+
+      if (removeId) {
+        delete data.id
+      }
+
+      if (TypeCheck(addOn) === 'object') {
+        Object.assign(data, addOn)
+      }
+
+      result.push(data);
+    })
+
+    return result
+  }
+
+  addModules(modulesData: ModuleProps[], historyCode?: ManipulationTypes): Modules[] {
+    const newModules = deepClone(modulesData)
+      .map((data) => {
+        if (!data.id) {
+          data.id = this.createModuleId()
+        }
+        const newModule = new Rectangle(data)
+        this.modules.set(newModule.id, newModule)
+
+        return newModule
+      })
+
+    if (historyCode) {
+      this.history.replaceNext({
+        type: historyCode,
+        modules: newModules,
         selectedItems: []
       })
     }
@@ -204,6 +256,47 @@ class Editor {
         selectedItems: []
       })
     }
+
+    this.render()
+  }
+
+  batchDelete(from: 'all' | Set<UID>, historyCode?: ManipulationTypes) {
+    let backup: ModuleProps[] = []
+
+    if (from === 'all') {
+      backup = this.batchCopy('all')
+      this.modules.clear()
+    } else if (typeCheck(from) === 'set') {
+      backup = this.batchCopy(from)
+      backup.forEach(id => {
+        this.modules.delete(id)
+      })
+    }
+
+    if (historyCode) {
+      this.history.replaceNext({
+        type: historyCode,
+        modules: backup,
+        selectedItems: []
+      })
+    }
+
+    this.render()
+    return backup
+  }
+
+  batchModify(from: 'all' | Set<UID, Modules>, data: Partial<ModuleProps>, historyCode?: ManipulationTypes) {
+    this.modules.forEach(module => {
+      Object.keys(data).forEach((key) => {
+        const value = data[key]
+
+        if (typeof value === 'string') {
+          module[key] = value
+        } else if (typeof value === 'number') {
+          module[key] += data[key]
+        }
+      })
+    })
 
     this.render()
   }

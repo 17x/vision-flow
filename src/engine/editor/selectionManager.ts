@@ -86,24 +86,7 @@ class SelectionManager {
   private copy(): void {
     this.copiedItems = []
 
-    if (this.isSelectAll) {
-      this.copiedItems = this.editor.modules.map(value => value.getDetails())
-    }
-
-    this.selectedModules.forEach(id => {
-      this.editor.modules.filter((module) => {
-        if (module.id === id) {
-          const copiedModuleData: CopiedModuleProps = module.getDetails()
-
-          // @ts-ignore
-          delete copiedModuleData.id
-          // console.log(copiedModuleData)
-          this.copiedItems.push(copiedModuleData)
-        }
-      })
-    })
-
-
+    this.copiedItems = this.editor.batchCopy(this.isSelectAll ? 'all' : this.selectedModules, true)
     this.updateCopiedItemsPosition()
   }
 
@@ -114,46 +97,34 @@ class SelectionManager {
   }
 
   private duplicate(): void {
-    let temp = []
+    let temp: Map<UID, Modules>
+    const offsetX = 10
+    const offsetY = 10
 
     if (this.isSelectAll) {
-      temp = this.editor.modules.map(module => {
-        const data = module.getDetails()
-
-        delete data.id
-
-        return {...data, x: data.x + 10, y: data.y + 10};
-      })
+      temp = this.editor.batchCopy('all', true)
     } else {
-      this.selectedModules.forEach(id => {
-        this.editor.modules.forEach((module) => {
-          if (module.id === id) {
-            const data = module.getDetails()
-
-            delete data.id
-
-            temp.push({...data, x: data.x + 10, y: data.y + 10})
-          }
-        })
-      })
+      temp = this.editor.batchCopy(this.selectedModules, true)
     }
 
-    const newModules = this.editor.addModules(temp, 'duplicate-modules')
+    temp.forEach((module: ModuleProps) => {
+      module.x += offsetX
+      module.y += offsetY
+    })
+
+    this.editor.batchAdd(temp, 'duplicate-modules')
     this.isSelectAll = false
-    this.replaceSelectModules(newModules.map(module => module.id))
+    this.replaceSelectModules(Array.from(temp.keys()))
     this.updateCopiedItemsPosition()
   }
 
   private delete(): void {
-    const temp: ModuleProps[] = []
+    if (this.isSelectAll) {
+      this.editor.batchDelete('all', 'delete-modules')
+    } else {
+      this.editor.batchDelete(this.selectedModules, 'delete-modules')
+    }
 
-    this.editor.modules.filter((module) => {
-      if (this.selectedModules.has(module.id)) {
-        temp.push(module.getDetails())
-      }
-    })
-
-    this.editor.removeModules(temp, 'delete-modules')
     this.editor.selectionManager.clearSelectedItems()
   }
 
@@ -162,37 +133,37 @@ class SelectionManager {
     this.clearSelectedItems()
   }
 
-  private modifyModules(e, i: KeyboardDirectionKeys): void {
-    const modifyModulesData: ModifyModuleMap = new Map()
+  private modifyModules(e: KeyboardEvent, i?: KeyboardDirectionKeys): void {
+    const offsetX = 10
+    const offsetY = 10
+    const modifyData: { x?: number, y?: number } = {}
 
-    this.selectedModules.forEach(id => {
-      this.editor.modules.map((value) => {
-        const currData: Partial<Position> = {}
+    if (this.selectedModules.size > 0 || this.isSelectAll) {
+      e.preventDefault()
+    }
 
-        if (i === 'ArrowUp') {
-          currData.y = value.y - 10
-        }
+    if (i === 'ArrowUp') {
+      modifyData.y = -offsetY
+    }
 
-        if (i === 'ArrowDown') {
-          currData.y = value.y + 10
-        }
-        if (i === 'ArrowLeft') {
-          currData.x = value.x - 10
-        }
+    if (i === 'ArrowDown') {
+      modifyData.y = offsetY
+    }
+    if (i === 'ArrowLeft') {
+      modifyData.x = -offsetX
+    }
 
-        if (i === 'ArrowRight') {
-          currData.x = value.x + 10
-        }
+    if (i === 'ArrowRight') {
+      modifyData.x = offsetX
+    }
 
-        if (value.id === id) {
-          modifyModulesData.set(id, currData)
-        }
-      })
-    })
+    if (this.isSelectAll) {
+      this.editor.batchModify('all', modifyData, 'modify-modules')
+    } else {
+      this.editor.batchModify(this.selectedModules, modifyData, 'modify-modules')
+    }
 
-    this.editor.modifyModules(modifyModulesData)
     this.render()
-    e.preventDefault()
   }
 
   private updateCopiedItemsPosition(): void {
@@ -226,7 +197,7 @@ class SelectionManager {
       x: mouseX, y: mouseY
     };
 
-    const possibleModules = this.editor.modules.filter((item) => {
+    const possibleModules = Array.from(this.editor.modules.values()).filter((item) => {
       const {
         top, right, bottom, left
       } = item.getBoundingRect()
@@ -252,8 +223,6 @@ class SelectionManager {
       this.selectedModules.clear()
       this.selectedModules.add(id)
     }
-
-    // console.log(this.selectedModules)
 
     this.render();
   }
@@ -281,8 +250,9 @@ class SelectionManager {
       return
     }
 
+    // console.log(this.editor.modules.entries())
     // hover logic
-    const filtered = this.editor.modules.filter((module) => {
+    const filtered = this.editor.modules.values().filter((module) => {
       const {top, right, bottom, left} = module.getBoundingRect()
 
       return mouseX > left && mouseY > top && mouseX < right && mouseY < bottom

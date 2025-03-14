@@ -139,9 +139,10 @@ class Editor {
     })
 
     if (historyCode) {
+      console.log([...modules.values()].map(mod => mod.getDetails()))
       this.history.replaceNext({
         type: historyCode,
-        modules
+        modules: [...modules.values()].map(mod => mod.getDetails())
       })
     }
 
@@ -150,7 +151,7 @@ class Editor {
 
   batchCopy(from: 'all' | Set<UID>, removeId = false, addOn?: { string: unknown }): ModuleProps[] {
     const result: ModuleProps[] = []
-    let modulesMap = new Map<UID, ModuleProps>();
+    let modulesMap = new Map<UID, Modules>();
 
     if (from === 'all') {
       modulesMap = this.moduleMap

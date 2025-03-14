@@ -14,6 +14,8 @@ const actions: ActionCode[] = [
   'escape',
   'modify-modules'
 ];
+const CopyDeltaX = 10
+const CopyDeltaY = 10
 
 class SelectionManager {
   private canvas: HTMLCanvasElement;
@@ -32,6 +34,8 @@ class SelectionManager {
   private editor: Editor;
   private copiedItems: ModuleProps[] = []
   private isSelectAll: boolean = false
+  private currentCopyDeltaX = CopyDeltaX
+  private currentCopyDeltaY = CopyDeltaY
 
   constructor(editor: Editor) {
     const canvas = document.createElement("canvas") as HTMLCanvasElement;
@@ -88,22 +92,18 @@ class SelectionManager {
     this.copiedItems = []
 
     this.copiedItems = this.editor.batchCopy(this.isSelectAll ? 'all' : this.selectedModules, true)
-    this.updateCopiedItemsPosition(10, 10)
+    this.updateCopiedItemsDelta()
   }
 
   paste(): void {
-    console.log(this.copiedItems)
     const newModules = this.editor.batchCreate(this.copiedItems)
-    console.log(newModules)
     this.editor.batchAdd(newModules, 'paste-modules')
     this.replaceSelectModules([...newModules.keys()])
-    this.updateCopiedItemsPosition(10, 10)
+    this.updateCopiedItemsDelta()
   }
 
   duplicate(): void {
     let temp: ModuleProps[]
-    const offsetX = 10
-    const offsetY = 10
 
     if (this.isSelectAll) {
       temp = this.editor.batchCopy('all', true)
@@ -111,15 +111,11 @@ class SelectionManager {
       temp = this.editor.batchCopy(this.selectedModules, true)
     }
 
-    temp.forEach((module: ModuleProps) => {
-      module.x += offsetX
-      module.y += offsetY
-    })
-
-    this.editor.batchAdd(temp, 'duplicate-modules')
+    this.updateCopiedItemsDelta()
+    this.editor.batchAdd(this.editor.batchCreate(temp), 'duplicate-modules')
     this.isSelectAll = false
     this.replaceSelectModules(temp.map(module => module.id))
-    this.updateCopiedItemsPosition(x, y)
+    // this.updateCopiedItemsDelta()
   }
 
   public delete(): void {
@@ -172,10 +168,10 @@ class SelectionManager {
     this.render()
   }
 
-  private updateCopiedItemsPosition(x: number, y: number): void {
+  private updateCopiedItemsDelta(): void {
     this.copiedItems.forEach(copiedItem => {
-      copiedItem!.x += x
-      copiedItem!.y += y
+      copiedItem!.x += CopyDeltaX
+      copiedItem!.y += CopyDeltaY
     })
   }
 

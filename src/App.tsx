@@ -1,50 +1,33 @@
 import './components/comp.css'
 import {useEffect} from "react";
-import themeMap from "./theme";
 import {EditorComponent} from "./components/Editor.tsx";
-// import PanableVirtualScrollCanvas from "./components/VS.tsx";
-
-/*
-const MOCK_DATA1: JSONValue = [
- {
-   a: 1
- },
- {
-   b: 2
- },
- {
-   c0: [
-     {
-       c1: 3
-     },
-     {
-       c2: 4,
-       c3: 5,
-       c4: 6,
-     },
-   ]
- }
-]*/
-
+import MenuBar from './components/menu/Menu.tsx';
+import {ModulePanel} from './components/ModulePanel.tsx';
+import {PropertyPanel} from './components/PropertyPanel.tsx';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import i18n from "./i18n";
+import ShortcutListener from "./components/ShortcutListener.tsx";
 
 function App() {
-  // const [currentTheme, setCurrentTheme] = useState<ThemeShape>();
-  // const keyList = useMemo<ThemeSpecKey[]>(() => Object.keys(themeMap), []);
-
   useEffect(() => {
-    // setCurrentTheme(themeMap[keyList[0]])
-  }, [themeMap])
 
-  // return <PanableVirtualScrollCanvas />
-  return <EditorComponent />
+  }, [])
 
-  /*    <>
-        <ThemeSelect list={keyList} onChange={(themeKey) => {
-          setCurrentTheme(themeMap[themeKey])
-        }} />
-        <EditorComponent />
-      </>*/
+  return <div className={'w-full h-full flex flex-col'}>
+    <ShortcutListener />
+    <MenuBar/>
 
+    <main className={'flex flex-row overflow-hidden'}>
+      <ModulePanel/>
+
+      <EditorComponent/>
+
+      <PropertyPanel/>
+    </main>
+
+  </div>
 }
 
 export default App

@@ -33,3 +33,9 @@ export type ActionTypeType =
 
 export type ModifyModule = Partial<ModuleProps>
 export type ModifyModuleMap = Map<UID, ModifyModule>
+
+export type EditorAction = {
+  id: string;
+  shortcut?: string;
+  children?: EditorAction[];
+};

@@ -1,12 +1,7 @@
 import {useEffect, useRef} from "react";
 import Editor, {basicEditorAreaSize, EditorDataProps} from "../engine/editor";
-import {ModulePanel} from "./ModulePanel.tsx";
-// import Toolbar from "./menu/Toolbar.tsx";
 import {StatusBar} from "./StatusBar/StatusBar.tsx";
-import {Menu} from "./menu/Menu.tsx";
-import {PropertyPanel} from "./PropertyPanel.tsx";
 import uid from "../utilities/Uid.ts";
-import {RectangleProps} from "../engine/core/modules/shapes/rectangle.ts";
 
 interface EditorComponentProps {
   data?: EditorDataProps
@@ -14,10 +9,6 @@ interface EditorComponentProps {
 
 export const EditorComponent: React.FC<EditorComponentProps> = ({data}) => {
   const divRef = useRef<HTMLDivElement>(null)
-  // const dpr = window.devicePixelRatio
-  // const screenResolution: Resolution = {width: window.outerWidth, height: window.outerHeight};
-  // const physicalResolution: Resolution = {...screenResolution};
-  // const logicResolution: Resolution = {width: physicalResolution.width * dpr, height: physicalResolution.height * dpr};
   const editorRef = useRef<Editor>(null)
 
   useEffect(() => {
@@ -52,7 +43,7 @@ export const EditorComponent: React.FC<EditorComponentProps> = ({data}) => {
           shadow: false,
         }
 
-        const data = Array.from({length: 1}, (_, index) => {
+        const data: ModuleProps[] = Array.from({length: 1}, (_, index) => {
           return {
             ...dataBase,
             x: (index + 1) * 10,
@@ -71,19 +62,8 @@ export const EditorComponent: React.FC<EditorComponentProps> = ({data}) => {
   }, []);
 
 
-  return <div className={'w-full h-full flex flex-col'}>
-    <Menu/>
-
-    <main className={'flex flex-row overflow-hidden'}>
-      <ModulePanel/>
-
-      <div className={'flex flex-col w-full h-full overflow-hidden'}>
-        <div ref={divRef}></div>
-        <StatusBar/>
-      </div>
-
-      <PropertyPanel/>
-    </main>
-
+  return <div className={'flex flex-col w-full h-full overflow-hidden'}>
+    <div ref={divRef}></div>
+    <StatusBar/>
   </div>
 };

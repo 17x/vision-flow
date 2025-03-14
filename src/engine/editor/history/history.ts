@@ -8,7 +8,7 @@ class History extends HistoryDoublyLinkedList {
   constructor(editor: Editor) {
     super();
     this.editor = editor;
-    this.bindShortcuts()
+    // this.bindShortcuts()
     this.replaceNext({
       type: 'init',
       modules: [],
@@ -17,13 +17,13 @@ class History extends HistoryDoublyLinkedList {
   }
 
   private bindShortcuts() {
-    this.editor.action.subscribe('undo', this.undo.bind(this));
-    this.editor.action.subscribe('redo', this.redo.bind(this));
+    // this.editor.action.subscribe('undo', this.undo.bind(this));
+    // this.editor.action.subscribe('redo', this.redo.bind(this));
   }
 
   private unBindShortcuts() {
-    this.editor.action.unsubscribe('undo', this.undo.bind(this));
-    this.editor.action.unsubscribe('redo', this.redo.bind(this));
+    // this.editor.action.unsubscribe('undo', this.undo.bind(this));
+    // this.editor.action.unsubscribe('redo', this.redo.bind(this));
   }
 
   undo(): void {
@@ -38,6 +38,7 @@ class History extends HistoryDoublyLinkedList {
       || type === 'add-modules'
       || type === 'duplicate-modules'
     ) {
+      console.log(modules)
       this.editor.batchDelete(arrayToSet(modules!))
     } else if (type === 'delete-modules') {
       this.editor.batchAdd(this.editor.batchCreate(modules!))
@@ -72,7 +73,7 @@ class History extends HistoryDoublyLinkedList {
   }
 
   private destroy(): void {
-    this.unBindShortcuts()
+    // this.unBindShortcuts()
   }
 }
 

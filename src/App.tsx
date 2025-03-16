@@ -10,13 +10,14 @@ import {PropertyPanel} from './components/PropertyPanel.tsx';
 import i18n from "./i18n";
 import ShortcutListener from "./components/ShortcutListener.tsx";
 
+// console.log(i18n)
 function App() {
   useEffect(() => {
 
   }, [])
 
   return <div className={'w-full h-full flex flex-col'}>
-    <ShortcutListener />
+    <ShortcutListener/>
     <MenuBar/>
 
     <main className={'flex flex-row overflow-hidden'}>

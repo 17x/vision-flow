@@ -1,10 +1,12 @@
 import {configureStore} from "@reduxjs/toolkit";
-import actionReducer from "./editorActionSlice.ts";
+import menuReducer from "./menuSlice.ts";
+import toolbarReducer from "./toolbarSlice.ts";
 import statusBarReducer from "./statusBarSlice";
 
 export const store = configureStore({
   reducer: {
-    action: actionReducer,
+    menu: menuReducer,
+    toolbar: toolbarReducer,
     statusBar: statusBarReducer,
   }
 });

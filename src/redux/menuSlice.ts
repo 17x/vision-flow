@@ -1,19 +1,19 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-export interface ActionType {
+export interface MenuActionType {
   id: string;
   parent: string | null;
   disabled?: boolean;
   shortcut?: string;
 }
 
-export type ActionRecord = Record<string, ActionType>;
+export type MenuActionRecord = Record<string, MenuActionType>;
 
-export interface ActionState {
-  actions: ActionRecord
+export interface MenuActionState {
+  actions: MenuActionRecord
 }
 
-const menuData: ActionType[] = [
+const menuData: MenuActionType[] = [
   {id: "file", parent: null},
   {id: "newFile", parent: "file", shortcut: "Ctrl+N"},
   {id: "openFile", parent: "file", shortcut: "Ctrl+O"},
@@ -88,26 +88,21 @@ const menuData: ActionType[] = [
   {id: "duplicateLayer", parent: "layer"},
   {id: "deleteLayer", parent: "layer"},
   {id: "toggleLayerVisibility", parent: "layer"},
-
+/*
   {id: "collaboration", parent: null},
   {id: "addComment", parent: "collaboration"},
   {id: "editComment", parent: "collaboration"},
   {id: "deleteComment", parent: "collaboration"},
   {id: "shareDocument", parent: "collaboration"},
   {id: "liveCollaboration", parent: "collaboration"},
-
-  {id: "ai", parent: null},
-  {id: "autoLayout", parent: "ai"},
-  {id: "smartSuggest", parent: "ai"},
-  {id: "autoColor", parent: "ai"},
-  {id: "speechToText", parent: "ai"}
+ */
 ];
 
-const initialState: ActionState = {
+const initialState: MenuActionState = {
   actions: Object.fromEntries(menuData.map((item) => [item.id, {...item, disabled: false}]))
 };
 
-const editorActionSlice = createSlice({
+const menuSlice = createSlice({
   name: "menu",
   initialState,
   reducers: {
@@ -127,5 +122,5 @@ const editorActionSlice = createSlice({
   }
 });
 
-export const {setDisabled, triggerAction} = editorActionSlice.actions;
-export default editorActionSlice.reducer;
+export const {setDisabled, triggerAction} = menuSlice.actions;
+export default menuSlice.reducer;

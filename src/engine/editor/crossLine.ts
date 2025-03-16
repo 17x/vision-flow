@@ -18,7 +18,7 @@ class CrossLine {
     this.ctx = ctx
 
     canvas.style.position = 'absolute'
-    canvas.style.zIndex = '100'
+    canvas.style.zIndex = '10'
     canvas.style.pointerEvents = 'none';
     canvas.setAttribute('cross-line', '')
     editor.canvas.parentNode!.append(this.canvas)

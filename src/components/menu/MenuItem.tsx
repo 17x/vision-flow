@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {NestedActions} from "./Menu.tsx";
+// import {ChevronRight} from "lucide-react";
 
 interface MenuItemProps {
   menu: NestedActions
@@ -18,14 +19,19 @@ const MenuItem: React.FC<MenuItemProps> = ({
     setSubOpen(true)
   }
 
-  return <div className={'relative h-8 hover:bg-gray-200 '}
+  const hasChildren = menu.children && menu.children!.length > 0
+
+  return <div className={'relative h-8 hover:bg-gray-200 min-w-50'}
               onClick={() => handleClick()}
               onMouseOver={() => setSubOpen(true)}
               onMouseOut={() => setSubOpen(false)}
   >
-    <div className="px-4 h-full inline-flex items-center whitespace-nowrap"><span>{t(menu.id + '.label')}</span></div>
+    <div className="px-4 h-full flex justify-between items-center whitespace-nowrap">
+      <span>{t(menu.id + '.label')}</span>
+      {/*{hasChildren && <ChevronRight size={18}/>}*/}
+    </div>
     {
-      menu.children!.length > 0 && subOpen &&
+      hasChildren && subOpen &&
         <div className={'absolute z-10 left-full top-0 w-auto border border-gray-200 box-border'}>
           {
             menu.children!.map((subItem) => <MenuItem menu={subItem} key={subItem.id}/>)

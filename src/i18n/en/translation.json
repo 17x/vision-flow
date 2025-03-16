@@ -27,22 +27,20 @@
     "tooltip": "Import a file into the project"
   },
   "exportFile": {
-    "label": "Export File",
-    "tooltip": "Export the current file",
-    "children": {
-      "exportFile_png": {
-        "label": "Export as PNG",
-        "tooltip": "Export the file as a PNG image"
-      },
-      "exportFile_pdf": {
-        "label": "Export as PDF",
-        "tooltip": "Export the file as a PDF document"
-      },
-      "exportFile_csv": {
-        "label": "Export as CSV",
-        "tooltip": "Export the file as a CSV file"
-      }
-    }
+    "label": "Export",
+    "tooltip": "Export the current file"
+  },
+  "exportFile_png": {
+    "label": "Export as PNG",
+    "tooltip": "Export the file as a PNG image"
+  },
+  "exportFile_pdf": {
+    "label": "Export as PDF",
+    "tooltip": "Export the file as a PDF document"
+  },
+  "exportFile_csv": {
+    "label": "Export as CSV",
+    "tooltip": "Export the file as a CSV file"
   },
   "print": {
     "label": "Print",

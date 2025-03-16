@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
-import {ActionRecord, ActionType} from "../../redux/editorActionSlice.ts";
+import {MenuActionRecord, MenuActionType} from "../../redux/menuSlice.ts";
 import MenuItem from "./MenuItem.tsx";
 
 const MenuBar: React.FC = () => {
@@ -10,7 +10,7 @@ const MenuBar: React.FC = () => {
   const [openId, setOpenId] = useState<string | null>(null);
   const {t} = useTranslation()
   const componentRef = useRef<HTMLDivElement>(null);
-  const originActions = useSelector((state: RootState) => state.action.actions);
+  const originActions = useSelector((state: RootState) => state.menu.actions);
   const actions = useMemo(() => flattenedToNested(originActions), [originActions]);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const MenuBar: React.FC = () => {
     }
   })
 
-  return <div className="h-10 text-sm select-none border-b border-gray-200 box-border">
+  return <div className="h-8 text-sm select-none border-b border-gray-200 box-border">
     <div ref={componentRef} className={'pl-2 h-full inline-flex'}>
       {
         actions.map((menu) => {
@@ -69,9 +69,9 @@ const MenuBar: React.FC = () => {
 
 export type NestedActions = {
   children?: NestedActions[]
-} & ActionType
+} & MenuActionType
 
-function flattenedToNested(menuData: ActionRecord): NestedActions[] {
+function flattenedToNested(menuData: MenuActionRecord): NestedActions[] {
   const rootMap: Map<string, NestedActions> = new Map();
 
   // Build a records for all items

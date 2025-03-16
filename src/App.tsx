@@ -6,6 +6,7 @@ import {ModulePanel} from './components/ModulePanel.tsx';
 import {PropertyPanel} from './components/PropertyPanel.tsx';
 import "./i18n/config.ts";
 import ShortcutListener from "./components/ShortcutListener.tsx";
+import Toolbar from "./components/menu/Toolbar.tsx";
 
 function App() {
   useEffect(() => {
@@ -14,7 +15,10 @@ function App() {
 
   return <div className={'w-full h-full flex flex-col'}>
     <ShortcutListener/>
-    <MenuBar/>
+    <header>
+      <MenuBar/>
+      <Toolbar/>
+    </header>
 
     <main className={'flex flex-row overflow-hidden'}>
       <ModulePanel/>

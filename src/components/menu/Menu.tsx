@@ -2,18 +2,17 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
-import {ActionState} from "../../redux/editorActionSlice.ts";
+import {ActionRecord, ActionType} from "../../redux/editorActionSlice.ts";
 import MenuItem from "./MenuItem.tsx";
 
 const MenuBar: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [openId, setOpenId] = useState<string | null>(null);
-  const {t, ready} = useTranslation()
+  const {t} = useTranslation()
   const componentRef = useRef<HTMLDivElement>(null);
   const originActions = useSelector((state: RootState) => state.action.actions);
   const actions = useMemo(() => flattenedToNested(originActions), [originActions]);
 
-  console.log(ready)
   useEffect(() => {
     const detectClose = (e: MouseEvent) => {
       if (!componentRef.current!.contains(e.target as Node)) {
@@ -33,17 +32,24 @@ const MenuBar: React.FC = () => {
     <div ref={componentRef} className={'pl-2 h-full inline-flex'}>
       {
         actions.map((menu) => {
-          console.log(
-            t(menu.id, {returnObjects: true})
-          )
           return <div key={menu.id} className={'relative h-full'}>
             <div className={`h-full inline-flex items-center px-4 ${menu.id === openId ? 'bg-gray-200' : ''}`}
                  onMouseEnter={() => open && setOpenId(menu.id)}
                  onClick={() => {
-                   setOpen(!open)
-                   setOpenId(menu.id)
-                 }}>
-              <span>{t(menu.id)}</span>
+                   if (openId !== menu.id) {
+                     setOpen(true)
+                     setOpenId(menu.id);
+                   } else {
+                     setOpenId(null)
+                     setOpen(false)
+                   }
+
+                   // setOpen(!open)
+                   // setOpenId(menu.id)
+                 }}
+                 title={t(menu.id + '.tooltip')}
+            >
+              <span>{t(menu.id + '.label')}</span>
             </div>
             {
               open && menu.id === openId && menu.children!.length > 0 &&
@@ -63,9 +69,9 @@ const MenuBar: React.FC = () => {
 
 export type NestedActions = {
   children?: NestedActions[]
-} & ActionState
+} & ActionType
 
-function flattenedToNested(menuData: Record<string, ActionState>): NestedActions[] {
+function flattenedToNested(menuData: ActionRecord): NestedActions[] {
   const rootMap: Map<string, NestedActions> = new Map();
 
   // Build a records for all items

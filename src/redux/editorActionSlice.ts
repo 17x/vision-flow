@@ -1,17 +1,19 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-export interface ActionState {
+export interface ActionType {
   id: string;
   parent: string | null;
   disabled?: boolean;
   shortcut?: string;
 }
 
+export type ActionRecord = Record<string, ActionType>;
+
 export interface ActionState {
-  actions: Record<string, ActionState>;
+  actions: ActionRecord
 }
 
-const menuData: ActionState[] = [
+const menuData: ActionType[] = [
   {id: "file", parent: null},
   {id: "newFile", parent: "file", shortcut: "Ctrl+N"},
   {id: "openFile", parent: "file", shortcut: "Ctrl+O"},
@@ -22,9 +24,9 @@ const menuData: ActionState[] = [
   {id: "print", parent: "file"},
   {id: "closeFile", parent: "file"},
 
-  { id: "exportFile_png", parent: "exportFile" },
-  { id: "exportFile_pdf", parent: "exportFile" },
-  { id: "exportFile_csv", parent: "exportFile" },
+  {id: "exportFile_png", parent: "exportFile"},
+  {id: "exportFile_pdf", parent: "exportFile"},
+  {id: "exportFile_csv", parent: "exportFile"},
 
   {id: "edit", parent: null},
   {id: "undo", parent: "edit", shortcut: "Ctrl+Z"},

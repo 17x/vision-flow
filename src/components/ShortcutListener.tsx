@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {ActionState, triggerAction} from "../redux/editorActionSlice.ts";
+import { triggerAction} from "../redux/editorActionSlice.ts";
 import {RootState} from "../redux/store.ts";
 
 const ShortcutListener: React.FC = () => {

@@ -23,7 +23,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
               onMouseOver={() => setSubOpen(true)}
               onMouseOut={() => setSubOpen(false)}
   >
-    <div className="px-4 h-full inline-flex items-center"><span>{t(menu.id)}</span></div>
+    <div className="px-4 h-full inline-flex items-center whitespace-nowrap"><span>{t(menu.id + '.label')}</span></div>
     {
       menu.children!.length > 0 && subOpen &&
         <div className={'absolute z-10 left-full top-0 w-auto border border-gray-200 box-border'}>

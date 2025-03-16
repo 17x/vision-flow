@@ -13,7 +13,7 @@ const ZoomSelect: React.FC<unknown> = () => {
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleBlur = (event) => {
+  const handleBlur = (event: unknown) => {
     calcNewZoomValue(inputRef.current!.value)
     // inputRef.current!.focus();
     inputRef.current!.blur();

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {NestedActions} from "./Menu.tsx";
-// import {ChevronRight} from "lucide-react";
+import {DynamicIcon} from 'lucide-react/dynamic';
 
 interface MenuItemProps {
   menu: NestedActions
@@ -23,12 +23,16 @@ const MenuItem: React.FC<MenuItemProps> = ({
 
   return <div className={'relative h-8 hover:bg-gray-200 min-w-50'}
               onClick={() => handleClick()}
-              onMouseOver={() => setSubOpen(true)}
+              onMouseOver={(e) => {
+                setSubOpen(true);
+                e.preventDefault()
+              }}
               onMouseOut={() => setSubOpen(false)}
   >
-    <div className="px-4 h-full flex justify-between items-center whitespace-nowrap">
+    <div className="px-4 w-full h-full flex justify-between items-center whitespace-nowrap">
       <span>{t(menu.id + '.label')}</span>
-      {/*{hasChildren && <ChevronRight size={18}/>}*/}
+      {hasChildren && <DynamicIcon name={'chevron-right'} size={18}/>}
+
     </div>
     {
       hasChildren && subOpen &&

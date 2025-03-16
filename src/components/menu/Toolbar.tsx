@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../redux/ store.ts";
-import {closeMenu, toggleMenu} from "../../redux/menuSlice.ts";
+import {closeMenu, toggleMenu} from "../../redux/editorActionSlice.ts";
 import {FC} from "react";
 
 const menuItems = {

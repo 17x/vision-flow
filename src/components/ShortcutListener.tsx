@@ -1,10 +1,11 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {triggerAction} from "../redux/editorActionsSlice.ts";
+import {ActionState, triggerAction} from "../redux/editorActionSlice.ts";
+import {RootState} from "../redux/store.ts";
 
 const ShortcutListener: React.FC = () => {
   const dispatch = useDispatch();
-  const actions = useSelector((state: any) => state.editorActions.actions);  // Helper function to check if the pressed key combination matches any action
+  const actions = useSelector((state: RootState) => state.action.actions);
 
   const handleKeyPress = (e: KeyboardEvent) => {
     const pressedShortcut = `${e.ctrlKey ? 'Ctrl+' : ''}${e.key}`;
@@ -12,8 +13,10 @@ const ShortcutListener: React.FC = () => {
       (action: any) => action.shortcut === pressedShortcut && !action.disabled
     );
     console.log(actions)
+    // flattenedToNested(actions)
     if (actionToTrigger) {
       // Dispatch the action to the Redux store
+      console.log(actionToTrigger.id)
       dispatch(triggerAction(actionToTrigger.id));
     }
   };
@@ -30,5 +33,6 @@ const ShortcutListener: React.FC = () => {
 
   return null; // No UI, just functionality
 };
+
 
 export default ShortcutListener;

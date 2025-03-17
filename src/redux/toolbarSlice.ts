@@ -1,8 +1,9 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {IconName} from "lucide-react/dynamic";
 
 export interface ToolbarActionType {
   id: string
-  icon: string
+  icon: IconName
   disabled?: boolean
 }
 
@@ -13,17 +14,19 @@ export interface ToolbarActionState {
 }
 
 const toolbarData: ToolbarActionType[] = [
+  {id: 'save', icon: 'save', disabled: true},
   {id: 'undo', icon: 'undo', disabled: true},
   {id: 'redo', icon: 'redo', disabled: true},
-  {id: 'delete', icon: 'tar', disabled: false},
-  {id: 'add', icon: 'add', disabled: false},
-  {id: 'group', icon: 'group_work', disabled: true},
+  {id: 'delete', icon: 'trash', disabled: false},
+  {id: 'add', icon: 'cross', disabled: false},
+  {id: 'layerUp', icon: 'layers-2', disabled: false},
+  {id: 'layerDown', icon: 'layers-2', disabled: false},
+  {id: 'group', icon: 'group', disabled: true},
   {id: 'ungroup', icon: 'ungroup', disabled: true},
-  {id: 'moveUp', icon: 'arrow_upward', disabled: false},
-  {id: 'moveDown', icon: 'arrow_downward', disabled: false},
+  {id: 'moveUp', icon: 'chevron-up', disabled: false},
+  {id: 'moveDown', icon: 'chevron-down', disabled: false},
   {id: 'lock', icon: 'lock', disabled: false},
-  {id: 'unlock', icon: 'lock_open', disabled: true},
-  {id: 'visibility', icon: 'visibility', disabled: false},
+  {id: 'unlock', icon: 'unlock', disabled: true},
 ];
 
 const initialState: ToolbarActionState = {

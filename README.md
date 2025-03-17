@@ -1,6 +1,6 @@
 # Vision flow
 
-try it to
+Try it 
 ```bash
 git clone https://github.com/17x/vision-flow.git --depth=1
 ```

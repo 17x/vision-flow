@@ -1,7 +1,7 @@
 import render from "../core/renderer.ts";
 import SelectionManager from "./selectionManager.ts";
 import CrossLine from "./crossLine.ts";
-import {BasicEditorAreaSize, ActionTypeType} from "./editor";
+import {BasicEditorAreaSize, ActionTypeType, ActionCode} from "./editor";
 import PanableContainer from "./panableContainer";
 import Shortcut from "./shortcut.ts";
 import History from "./history/history.ts";
@@ -105,8 +105,6 @@ class Editor {
     this.crossLine = new CrossLine(this);
     this.history = new History(this);
     this.render()
-
-    window['editor'] = this
   }
 
   private init() {
@@ -305,6 +303,10 @@ class Editor {
     this.scale = newScale;
     this.render();
     this.selectionManager.render()
+  }
+
+  public execute(code: ActionCode, data: unknown) {
+    this.action.dispatcher(code, data)
   }
 
   render() {

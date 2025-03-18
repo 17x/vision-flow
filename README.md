@@ -12,4 +12,7 @@ npm install && npm run dev
 
 ### Ongoing ......
 
+![Tux, the Linux mascot](./doc/img.png)
+
+
 

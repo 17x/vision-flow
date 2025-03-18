@@ -28,7 +28,8 @@ const Toolbar: React.FC = () => {
           Icon = <LayerToBottom className={'text-black'}/>
         }
 
-        return <button type={'button'} key={id} disabled={disabled} className={'relative disabled:text-gray-200'}>
+        return <button type={'button'} key={id} disabled={disabled}
+                       className={'relative flex items-center justify-center w-8 h-8 hover:bg-gray-400 disabled:text-gray-200'}>
           {Icon}
           {/*{id === 'layerUp' && <DynamicIcon size={18} className={'absolute top-0 right-0 text-black'} color={'#ff0000'} name={'arrow-up'}/>}*/}
           {/*{id === 'layerDown' && <DynamicIcon size={18} className={'absolute top-0 right-0 text-black'} color={'#ff0000'} name={'arrow-down'}/>}*/}

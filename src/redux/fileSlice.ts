@@ -47,6 +47,13 @@ const menuSlice = createSlice({
   reducers: {
     switchFile: (state, action: PayloadAction<FileType['id']>) => {
       state.currentFileId = action.payload
+    },
+    closeFile: (state, action: PayloadAction<FileType['id']>) => {
+      state.currentFileId = action.payload
+      // open next file if exist
+      // otherwise open left
+      // if last file
+      // do
     }
   }
 });

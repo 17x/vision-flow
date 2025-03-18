@@ -5,7 +5,7 @@ import {ModulePanel} from './components/ModulePanel.tsx';
 import {PropertyPanel} from './components/PropertyPanel.tsx';
 import "./i18n/config.ts";
 import ShortcutListener from "./components/ShortcutListener.tsx";
-import Header from "./components/header";
+import Header from "./components/header/Header.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "./redux/store.ts";
 import CreateFile from "./components/createFile.tsx";

@@ -7,7 +7,6 @@ export interface FileType {
   data: unknown
 }
 
-
 export type FileRecord = Record<string, FileType>;
 
 export interface FileState {
@@ -37,7 +36,7 @@ const MOCK_FILES: FileRecord = {
 }
 
 const initialState: FileState = {
-  files: [] || MOCK_FILES,
+  files: MOCK_FILES,
   currentFileId: "998"
 };
 

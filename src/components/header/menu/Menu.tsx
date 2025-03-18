@@ -1,8 +1,8 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
-import {RootState} from "../../redux/store.ts";
-import {MenuActionRecord, MenuActionType} from "../../redux/menuSlice.ts";
+import {RootState} from "../../../redux/store.ts";
+import {MenuActionRecord, MenuActionType} from "../../../redux/menuSlice.ts";
 import MenuItem from "./MenuItem.tsx";
 
 const MenuBar: React.FC = () => {

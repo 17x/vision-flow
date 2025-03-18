@@ -6,36 +6,31 @@ import {LayerDown, LayerToBottom, LayerToTop, LayerUp} from "./Icons/LayerIcons.
 const Toolbar: React.FC = () => {
   const actions = useSelector((state: RootState) => state.toolbar.actions);
 
-  console.log(actions)
-  return <div className={'h-10 flex border-b border-gray-200 box-border'}>
+  return <div className={'h-10 inline-flex pl-4 items-center border-b border-gray-200 box-border'}>
     {
       Object.values(actions).map((action) => {
-        const {id, icon, disabled} = action;
-        let Icon = <DynamicIcon name={icon}/>
-
-        console.log(id)
+        const {id, icon, disabled, divide} = action;
+        let Icon = <DynamicIcon size={20} name={icon}/>
 
         if (id === 'layerUp') {
-          Icon = <LayerUp className={'text-black'}/>
+          Icon = <LayerUp size={20} className={'text-black'}/>
         }
         if (id === 'layerDown') {
-          Icon = <LayerDown className={'text-black'}/>
+          Icon = <LayerDown size={20} className={'text-black'}/>
         }
         if (id === 'layerTop') {
-          Icon = <LayerToTop className={'text-black'}/>
+          Icon = <LayerToTop size={20} className={'text-black'}/>
         }
         if (id === 'layerBottom') {
-          Icon = <LayerToBottom className={'text-black'}/>
+          Icon = <LayerToBottom size={20} className={'text-black'}/>
         }
 
-        return <button type={'button'} key={id} disabled={disabled}
-                       className={'relative flex items-center justify-center w-8 h-8 hover:bg-gray-400 disabled:text-gray-200'}>
-          {Icon}
-          {/*{id === 'layerUp' && <DynamicIcon size={18} className={'absolute top-0 right-0 text-black'} color={'#ff0000'} name={'arrow-up'}/>}*/}
-          {/*{id === 'layerDown' && <DynamicIcon size={18} className={'absolute top-0 right-0 text-black'} color={'#ff0000'} name={'arrow-down'}/>}*/}
-
-
-        </button>
+        return <>
+          <button type={'button'} key={id} disabled={disabled}
+                  className={'relative ml-2 mr-2 flex items-center cursor-pointer justify-center w-6 h-6 opacity-50   hover:bg-gray-200  hover:opacity-100 disabled:text-gray-200 disabled:cursor-default'}>
+            {Icon}
+          </button>
+          {divide && <div className={'w-[1px] h-4 bg-gray-400 mx-2'}></div>}</>
       })
     }
   </div>

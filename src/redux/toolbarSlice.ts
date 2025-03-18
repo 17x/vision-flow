@@ -5,6 +5,7 @@ export interface ToolbarActionType {
   id: string
   icon: IconName
   disabled?: boolean
+  divide?: boolean
 }
 
 export type ActionRecord = Record<string, ToolbarActionType>;
@@ -14,19 +15,17 @@ export interface ToolbarActionState {
 }
 
 const toolbarData: ToolbarActionType[] = [
-  {id: 'save', icon: 'save', disabled: true},
+  {id: 'save', icon: 'save', disabled: true, divide: true},
   {id: 'undo', icon: 'undo', disabled: true},
-  {id: 'redo', icon: 'redo', disabled: true},
+  {id: 'redo', icon: 'redo', disabled: true, divide: true},
   {id: 'delete', icon: 'trash', disabled: false},
-  {id: 'add', icon: 'cross', disabled: false},
+  {id: 'add', icon: 'cross', disabled: false, divide: true},
   {id: 'layerUp', icon: 'layers', disabled: false},
   {id: 'layerDown', icon: 'layers', disabled: false},
   {id: 'layerTop', icon: 'layers', disabled: false},
-  {id: 'layerBottom', icon: 'layers', disabled: false},
+  {id: 'layerBottom', icon: 'layers', disabled: false, divide: true},
   {id: 'group', icon: 'group', disabled: true},
-  {id: 'ungroup', icon: 'ungroup', disabled: true},
-  // {id: 'moveUp', icon: 'chevron-up', disabled: false},
-  // {id: 'moveDown', icon: 'chevron-down', disabled: false},
+  {id: 'ungroup', icon: 'ungroup', disabled: true, divide: true},
   {id: 'lock', icon: 'lock', disabled: false},
   {id: 'unlock', icon: 'unlock', disabled: true},
 ];

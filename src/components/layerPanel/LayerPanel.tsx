@@ -3,7 +3,7 @@ import {EditorContext} from "../EditorContext.tsx";
 import {useTranslation} from "react-i18next";
 import {I18nHistoryDataItem} from "../../i18n/type";
 
-export const HistoryPanel = () => {
+export const LayerPanel = () => {
   const {historyArray, historyCurrent, applyHistoryNode} = useContext(EditorContext);
   const {t} = useTranslation();
   const targetRef = useRef<HTMLDivElement>(null);

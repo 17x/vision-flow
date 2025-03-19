@@ -1,14 +1,20 @@
 import i18n from "i18next";
 import {initReactI18next} from "react-i18next";
-import enTranslations from './en/translation.json'
+import enMenu from './en/menu.json'
+import enHistory from './en/history.json'
+
+const en = {
+  translation: {
+    ...enMenu,
+    ...enHistory,
+  }
+}
 
 i18n
   .use(initReactI18next)
   .init({
     resources: {
-      en: {
-        translation: enTranslations
-      }
+      en
     },
     lng: "en",
     fallbackLng: "en",

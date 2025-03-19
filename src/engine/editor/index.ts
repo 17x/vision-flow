@@ -1,7 +1,7 @@
 import render from "../core/renderer.ts";
 import SelectionManager from "./selectionManager.ts";
 import CrossLine from "./crossLine.ts";
-import {BasicEditorAreaSize, ActionTypeType, ActionCode} from "./editor";
+import {BasicEditorAreaSize, HistoryActionType, ActionCode} from "./editor";
 import PanableContainer from "./panableContainer";
 import Shortcut from "./shortcut.ts";
 import History from "./history/history.ts";
@@ -135,7 +135,7 @@ class Editor {
     return newMap;
   }
 
-  batchAdd(modules: Map<UID, Modules>, historyCode?: ActionTypeType) {
+  batchAdd(modules: Map<UID, Modules>, historyCode?: HistoryActionType) {
     modules.forEach(mod => {
       this.moduleMap.set(mod.id, mod);
     })
@@ -183,7 +183,7 @@ class Editor {
     return result
   }
 
-  batchDelete(from: 'all' | Set<UID>, historyCode?: ActionTypeType) {
+  batchDelete(from: 'all' | Set<UID>, historyCode?: HistoryActionType) {
     let backup: ModuleProps[] = []
 
     if (from === 'all') {
@@ -207,7 +207,7 @@ class Editor {
     return backup
   }
 
-  batchModify(from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: ActionTypeType) {
+  batchModify(from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryActionType) {
     let modulesMap = null;
 
     if (from === 'all') {

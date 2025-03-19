@@ -23,7 +23,7 @@ export type ActionCode =
   | 'escape'
   | 'modify-modules'
 
-export type ActionTypeType =
+export type HistoryActionType =
   'init'
   | 'add-modules'
   | 'delete-modules'

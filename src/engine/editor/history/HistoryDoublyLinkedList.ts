@@ -1,10 +1,10 @@
-import {ActionTypeType} from "../editor";
+import {HistoryActionType} from "../editor";
 
 type Prev = HistoryNode | null;
 type Next = Prev
 
 export interface HistoryValue {
-  type: ActionTypeType,
+  type: HistoryActionType,
   modules?: ModuleProps[],
   selectedItems?: UID[]
 }

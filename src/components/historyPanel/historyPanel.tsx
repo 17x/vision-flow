@@ -1,36 +1,44 @@
-import {ReactNode, useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useRef} from "react";
 import {EditorContext} from "../EditorContext.tsx";
-import {HistoryNode} from "../../engine/editor/history/HistoryDoublyLinkedList.ts";
+import {useTranslation} from "react-i18next";
+import {I18nHistoryDataItem} from "../../i18n/type";
 
-/*interface HistoryPanelProps {
-  // history: unknown[]
-}*/
 
-export const HistoryPanel: React.FC<{}> = () => {
+export const HistoryPanel = () => {
   const {historyArray, historyCurrent, applyHistoryNode} = useContext(EditorContext);
+  const {t} = useTranslation();
+  const scrollEle = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollEle.current) {
+      // Scroll to the element after rendering
+      scrollEle.current.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+  }, []);
 
   return (
-    <div>
+    <div className={'h-30 overflow-auto'}>
       <h1>History</h1>
-      <div className={'flex flex-wrap space-x-2 space-y-2'}>
+      <div className={'flex flex-col space-x-2 space-y-2 p-4 bg-gray-100'}>
         {
           historyArray.map((historyNode, index) => {
               const isCurr = historyNode === historyCurrent
+              const {label, tooltip} = t(historyNode.value.type, {returnObjects: true}) as I18nHistoryDataItem
 
               return <div key={index}
+                          title={tooltip}
+                          ref={isCurr ? scrollEle : null}
                           onClick={() => {
-                            if (isCurr) return
-
-                            console.log('current', historyNode)
+                            if (isCurr) return;
+                            console.log('current', historyNode);
                             return applyHistoryNode(historyNode);
-
-                          }}>
-                {isCurr && <span>!</span>}
-                <span>{historyNode.value.type}</span>
+                          }}
+                          className={`flex p-1 cursor-pointer text-sm hover:bg-blue-200`}>
+                {isCurr && '・'}
+                <span>{label}</span>
               </div>
             }
           )
-
         }
 
       </div>

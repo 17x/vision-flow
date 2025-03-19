@@ -1,11 +1,7 @@
 import './components/comp.css'
 import {useEffect} from "react";
-import {EditorComponent} from "./components/Editor.tsx";
-import {ModulePanel} from './components/modulePanel/ModulePanel.tsx';
-import {PropertyPanel} from './components/PropertyPanel.tsx';
 import "./i18n/config.ts";
-import ShortcutListener from "./components/ShortcutListener.tsx";
-import Header from "./components/header/Header.tsx";
+import {EditorProvider} from "./components/EditorContext.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "./redux/store.ts";
 import CreateFile from "./components/createFile.tsx";
@@ -17,21 +13,17 @@ function App() {
 
   }, []);
 
-  return <div className={'w-full h-full flex flex-col'}>
-    <ShortcutListener/>
-    <Header/>
-
-    <main className={'flex flex-row overflow-hidden'}>
-      <ModulePanel/>
-
-      <EditorComponent/>
-
-      <PropertyPanel/>
-    </main>
+  return <>
+    {
+      Object.values(files).map((file) => {
+        console.log(file)
+        return <EditorProvider/>
+      })
+    }
     {
       Object.values(files).length === 0 && <CreateFile/>
     }
-  </div>
+  </>
 }
 
 export default App

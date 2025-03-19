@@ -6,7 +6,7 @@ interface ModulePanelProps {
 }
 
 export const ModulePanel: React.FC<ModulePanelProps> = ({className = ''}) => {
-  const [width, setWidth] = useState<number>(300); // Initial width in pixels
+  const [width, setWidth] = useState<number>(300);
   const isDragging = useRef(false);
   const panelRef = useRef<HTMLDivElement>(null);
 

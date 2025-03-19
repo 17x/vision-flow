@@ -1,3 +1,6 @@
+import {useContext, useEffect} from "react";
+import {EditorContext} from "../EditorContext.tsx";
+
 interface ModulePanelProps {
 
 }
@@ -31,7 +34,13 @@ const modules: Partial<ModuleProps>[] = [
 ]
 
 export const ModuleList: React.FC<ModulePanelProps> = () => {
+  const {editorRef} = useContext(EditorContext);
 
+  useEffect(() => {
+    if (editorRef.current) {
+      console.log("editorRef.current updated:", editorRef.current);
+    }
+  }, [editorRef])
   return (
     <div className={'flex flex-wrap space-x-2 space-y-2'}>
       {

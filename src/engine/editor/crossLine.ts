@@ -23,7 +23,7 @@ class CrossLine {
     canvas.setAttribute('cross-line', '')
     editor.canvas.parentNode!.append(this.canvas)
 
-    this.update()
+    // this.update()
     this.setupEventListeners()
   }
 

@@ -1,4 +1,5 @@
 import React, {useState, useCallback, useRef, useEffect} from 'react';
+import {ModuleList} from "./ModuleList.tsx";
 
 interface ModulePanelProps {
   className?: string;
@@ -21,13 +22,15 @@ export const ModulePanel: React.FC<ModulePanelProps> = ({className = ''}) => {
 
     const maxWidth = window.innerWidth * 0.9;
     const newWidth = Math.min(Math.max(0, e.clientX), maxWidth);
+    e.stopPropagation()
     setWidth(newWidth);
   }, []);
 
-  const handleMouseUp = useCallback(() => {
+  const handleMouseUp = useCallback((e: MouseEvent) => {
     isDragging.current = false;
     document.body.style.cursor = 'default';
     document.body.style.userSelect = '';
+    e.stopPropagation()
   }, []);
 
   useEffect(() => {
@@ -44,13 +47,14 @@ export const ModulePanel: React.FC<ModulePanelProps> = ({className = ''}) => {
     <div
       ref={panelRef}
       style={{width: `${width}px`}}
-      className="relative h-full flex-shrink-0"
+      className="relative h-full flex-shrink-0 border-r border-gray-200"
     >
-      <div className={`h-full border-r border-gray-200 bg-white overflow-hidden ${className}`}>
-
+      <div className={`h-full  p-6  bg-white overflow-hidden ${className}`}>
+        <span>Module List</span>
+        <ModuleList/>
       </div>
       <div
-        className="absolute z-10 top-0 -right-2 w-2 h-full bg-transparent hover:bg-gray-200 cursor-col-resize transition-colors"
+        className="absolute z-10 top-0 -right-1 w-2 h-full bg-transparent hover:bg-gray-200 cursor-col-resize transition-colors"
         onMouseDown={handleMouseDown}
       />
     </div>

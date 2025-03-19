@@ -40,7 +40,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
     </div>
     {
       hasChildren && subOpen &&
-        <div className={'absolute z-30 left-full top-0 w-auto border border-gray-200 box-border'}>
+        <div className={'absolute bg-white z-30 left-full top-0 w-auto border border-gray-200 box-border'}>
           {
             menu.children!.map((subItem) => <MenuItem menu={subItem} key={subItem.id}/>)
           }

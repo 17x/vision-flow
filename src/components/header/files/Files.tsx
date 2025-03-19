@@ -5,7 +5,7 @@ import {switchFile, closeFile} from "../../../redux/fileSlice.ts";
 const Files: React.FC = () => {
   const {files, currentFileId} = useSelector((state: RootState) => state.files);
   const dispatch = useDispatch()
-  const basicTabClasses = ' group py-2 px-3 relative transition flex items-center">'
+  const basicTabClasses = ' group py-2 px-6 relative transition flex items-center">'
   const activeTabClasses = ' border-b-2 border-black-600'
   const unActiveTabClasses = ' hover:bg-gray-200'
 

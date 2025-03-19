@@ -1,7 +1,7 @@
 import './components/comp.css'
 import {useEffect} from "react";
 import {EditorComponent} from "./components/Editor.tsx";
-import {ModulePanel} from './components/ModulePanel.tsx';
+import {ModulePanel} from './components/modulePanel/ModulePanel.tsx';
 import {PropertyPanel} from './components/PropertyPanel.tsx';
 import "./i18n/config.ts";
 import ShortcutListener from "./components/ShortcutListener.tsx";

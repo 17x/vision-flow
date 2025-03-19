@@ -19,7 +19,7 @@ export const ModulePanel: React.FC<ModulePanelProps> = ({className = ''}) => {
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isDragging.current) return;
 
-    const maxWidth = window.innerWidth * 0.9; // 90% of window width
+    const maxWidth = window.innerWidth * 0.9;
     const newWidth = Math.min(Math.max(0, e.clientX), maxWidth);
     setWidth(newWidth);
   }, []);
@@ -27,7 +27,7 @@ export const ModulePanel: React.FC<ModulePanelProps> = ({className = ''}) => {
   const handleMouseUp = useCallback(() => {
     isDragging.current = false;
     document.body.style.cursor = 'default';
-    document.body.style.userSelect = ''; // Re-enable text selection
+    document.body.style.userSelect = '';
   }, []);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export const ModulePanel: React.FC<ModulePanelProps> = ({className = ''}) => {
 
       </div>
       <div
-        className="absolute z-20 top-0 -right-2 w-2 h-full bg-transparent hover:bg-gray-200 cursor-col-resize transition-colors"
+        className="absolute z-10 top-0 -right-2 w-2 h-full bg-transparent hover:bg-gray-200 cursor-col-resize transition-colors"
         onMouseDown={handleMouseDown}
       />
     </div>

@@ -26,8 +26,12 @@ const MenuItem: React.FC<MenuItemProps> = ({
               onMouseOver={(e) => {
                 setSubOpen(true);
                 e.preventDefault()
+                // e.stopPropagation()
               }}
-              onMouseOut={() => setSubOpen(false)}
+              onMouseLeave={() => {
+                console.log(menu)
+                setSubOpen(false);
+              }}
   >
     <div className="px-4 w-full h-full flex justify-between items-center whitespace-nowrap">
       <span>{t(menu.id + '.label')}</span>
@@ -36,7 +40,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
     </div>
     {
       hasChildren && subOpen &&
-        <div className={'absolute z-10 left-full top-0 w-auto border border-gray-200 box-border'}>
+        <div className={'absolute z-30 left-full top-0 w-auto border border-gray-200 box-border'}>
           {
             menu.children!.map((subItem) => <MenuItem menu={subItem} key={subItem.id}/>)
           }

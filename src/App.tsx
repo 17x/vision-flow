@@ -17,7 +17,7 @@ function App() {
     {
       Object.values(files).map((file) => {
         console.log(file)
-        return <EditorProvider/>
+        return <EditorProvider key={file.id}/>
       })
     }
     {

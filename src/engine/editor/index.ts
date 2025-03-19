@@ -10,6 +10,7 @@ import deepClone from "../../utilities/deepClone.ts";
 import typeCheck from "../../utilities/typeCheck.ts";
 import TypeCheck from "../../utilities/typeCheck.ts";
 import Action, {doIt} from "./actions";
+import {EventHandlers} from "./events";
 
 export interface EditorDataProps {
   id: UID;
@@ -30,6 +31,7 @@ export interface EditorProps {
   zoom?: ZoomRatio;
   logicResolution?: Resolution;
   physicalResolution?: Resolution;
+  events?: EventHandlers
 }
 
 class Editor {
@@ -41,6 +43,7 @@ class Editor {
   readonly dpr: DPR;
   readonly container: HTMLDivElement;
   readonly shortcut: Shortcut;
+  readonly events: EventHandlers = {};
   readonly action: Action;
   readonly history: History;
   readonly panableContainer: PanableContainer;
@@ -55,7 +58,7 @@ class Editor {
   private zoomSpeed: number = 0.1;
 
   constructor({
-                container, data, dpr = 2, zoom = 1,
+                container, data, dpr = 2, zoom = 1, events = {}
               }: EditorProps) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -75,6 +78,7 @@ class Editor {
     this.size = data.size;
     this.wrapper = wrapper;
     this.scale = dpr
+    this.events = events
 
     canvas.style.width = window.outerWidth + 'px';
     canvas.style.height = window.outerHeight + 'px';

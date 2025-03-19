@@ -21,7 +21,7 @@ const MOCK_FILES: FileRecord = {
     config: {},
     data: {}
   },
-  "999": {
+  /*"999": {
     id: '999',
     name: 'Untitled 2',
     config: {},
@@ -32,7 +32,7 @@ const MOCK_FILES: FileRecord = {
     name: 'Untitled 3',
     config: {},
     data: {}
-  },
+  },*/
 }
 
 const initialState: FileState = {

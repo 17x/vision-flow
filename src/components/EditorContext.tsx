@@ -9,13 +9,15 @@ import uid from "../utilities/Uid.ts";
 import {HistoryPanel} from "./historyPanel/historyPanel.tsx";
 import {OnHistoryUpdated} from "../engine/editor/events";
 import {HistoryNode} from "../engine/editor/history/HistoryDoublyLinkedList.ts";
+import {LayerPanel} from "./layerPanel/LayerPanel.tsx";
+import {ActionCode} from "../engine/editor/editor";
 
 interface EditorContextType {
   historyArray: HistoryNode[]
   historyCurrent: HistoryNode
   editorRef: React.RefObject<Editor | null>
   applyHistoryNode: (node: HistoryNode) => void
-
+  executeAction: (code: ActionCode) => void
 }
 
 export const EditorContext = createContext<EditorContextType>({
@@ -23,6 +25,8 @@ export const EditorContext = createContext<EditorContextType>({
   historyCurrent: {} as HistoryNode,
   editorRef: {} as React.RefObject<Editor>,
   applyHistoryNode: () => {
+  },
+  executeAction: () => {
 
   }
 });
@@ -38,7 +42,7 @@ export const EditorProvider = () => {
 
     if (divRef.current) {
       const container = divRef!.current
-      console.log(9)
+
       const newUID = uid();
 
       editor = new Editor({
@@ -58,6 +62,7 @@ export const EditorProvider = () => {
     }
   }, [])
 
+
   const onHistoryUpdated: OnHistoryUpdated = (historyTree) => {
     console.log(historyTree!.toArray())
 
@@ -74,15 +79,22 @@ export const EditorProvider = () => {
     }
   }
 
+  const executeAction = (code: ActionCode) => {
+    console.log(code)
+    editorRef.current!.execute(code)
+  }
+
   return (
     <EditorContext.Provider value={{
       historyArray,
       historyCurrent,
       editorRef,
       applyHistoryNode,
+      executeAction
     }}>
       <div className={'w-full h-full flex flex-col'}>
         <ShortcutListener/>
+
         <Header/>
 
         <main className={'flex flex-row overflow-hidden'}>
@@ -95,6 +107,7 @@ export const EditorProvider = () => {
           {/*<EditorComponent/>*/}
 
           <div className={'w-[30%] h-full border-l border-gray-200'}>
+            <LayerPanel/>
             <HistoryPanel/>
             <PropertyPanel/>
           </div>

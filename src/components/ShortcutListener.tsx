@@ -1,24 +1,62 @@
-import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-// import {triggerAction} from "../redux/menuSlice.ts";
-import {RootState} from "../redux/store.ts";
+import React, {useContext, useEffect} from 'react';
+import {EditorContext} from "./EditorContext.tsx";
+import {ActionCode} from "../engine/editor/editor";
 
 const ShortcutListener: React.FC = () => {
-  const dispatch = useDispatch();
-  // const actions = useSelector((state: RootState) => state.action.actions);
+  const {executeAction} = useContext(EditorContext)
 
   const handleKeyPress = (e: KeyboardEvent) => {
-    // const pressedShortcut = `${e.ctrlKey ? 'Ctrl+' : ''}${e.key}`;
-    /*   const actionToTrigger = actions.find(
-         (action: any) => action.shortcut === pressedShortcut && !action.disabled
-       );*/
-    // console.log(actions)
-    // flattenedToNested(actions)
-    /*if (actionToTrigger) {
-      // Dispatch the action to the Redux store
-      console.log(actionToTrigger.id)
-      dispatch(triggerAction(actionToTrigger.id));
-    }*/
+    let shortcutCode: ActionCode | null = null
+    const {key, ctrlKey, metaKey, shiftKey} = e
+    const arrowKeys = new Set(
+      [
+        'ArrowUp',
+        'ArrowDown',
+        'ArrowLeft',
+        'ArrowRight'
+      ]
+    )
+
+    if (key === 'a' && (ctrlKey || metaKey)) {
+      shortcutCode = 'select-all'
+    }
+
+    if (key === 'c' && (ctrlKey || metaKey) && !shiftKey) {
+      shortcutCode = 'copy'
+    }
+
+    if (key === 'v' && (ctrlKey || metaKey)) {
+      shortcutCode = 'paste'
+    }
+
+    if (key === 'd' && (ctrlKey || metaKey)) {
+      shortcutCode = 'duplicate'
+    }
+
+    if (key === 'Delete' || key === 'Backspace') {
+      shortcutCode = 'delete'
+    }
+    if (key === 'Escape') {
+      shortcutCode = 'escape'
+    }
+
+    if (key === 'z' && (ctrlKey || metaKey)) {
+      shortcutCode = 'undo'
+    }
+
+    if (key === 'z' && shiftKey && (ctrlKey || metaKey)) {
+      shortcutCode = 'redo'
+    }
+
+    if (arrowKeys.has(key)) {
+      shortcutCode = 'modify-modules'
+    }
+
+    if (!shortcutCode) return
+
+    executeAction(shortcutCode)
+    e.stopPropagation()
+    e.preventDefault()
   };
 
   useEffect(() => {

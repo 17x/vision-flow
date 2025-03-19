@@ -3,7 +3,7 @@ import SelectionManager from "./selectionManager.ts";
 import CrossLine from "./crossLine.ts";
 import {BasicEditorAreaSize, HistoryActionType, ActionCode} from "./editor";
 import PanableContainer from "./panableContainer";
-import Shortcut from "./shortcut.ts";
+// import Shortcut from "./shortcut.ts";
 import History from "./history/history.ts";
 import Rectangle from "../core/modules/shapes/rectangle.ts";
 import deepClone from "../../utilities/deepClone.ts";
@@ -42,7 +42,7 @@ class Editor {
   readonly size: Size;
   readonly dpr: DPR;
   readonly container: HTMLDivElement;
-  readonly shortcut: Shortcut;
+  // readonly shortcut: Shortcut;
   readonly events: EventHandlers = {};
   readonly action: Action;
   readonly history: History;
@@ -103,7 +103,7 @@ class Editor {
 
       },
     });
-    this.shortcut = new Shortcut(this)
+    // this.shortcut = new Shortcut(this)
     this.action = new Action(this)
     this.selectionManager = new SelectionManager(this);
     this.crossLine = new CrossLine(this);
@@ -237,6 +237,10 @@ class Editor {
     }
   }
 
+  getModulesByLayerIndex() {
+
+  }
+
   getModulesByIdSet(idSet: Set<UID>): Map<UID, Modules> {
     const result: Map<UID, Modules> = new Map()
 
@@ -309,7 +313,7 @@ class Editor {
     this.selectionManager.render()
   }
 
-  public execute(code: ActionCode, data: unknown) {
+  public execute(code: ActionCode, data: unknown = null) {
     this.action.dispatcher(code, data)
   }
 

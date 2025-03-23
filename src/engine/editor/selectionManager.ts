@@ -1,7 +1,7 @@
 import Editor from "./index.ts";
 import coordinator from "./coordinator.ts";
 import {ActionCode, ModifyModuleMap} from "./editor";
-import {RectangleRenderProps, rectRender} from "../core/renderer.ts";
+import rectRender from "../core/renderer/rectRender.ts";
 
 type CopiedModuleProps = Omit<ModuleProps, 'id'>
 type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'

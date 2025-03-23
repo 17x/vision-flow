@@ -1,40 +1,35 @@
 import Base, {BasicModuleProps} from "../base.ts";
 
-export interface ShapeProps extends BasicModuleProps {
-  x?: number
-  y?: number
-  // width?: number
-  // height?: number
+export interface ConnectorProps extends BasicModuleProps {
+  start?: UID
+  end?: UID
   gradient?: Gradient
   enableGradient?: boolean
   fillColor?: HexColor
   enableFill?: boolean
 }
 
-class Shape extends Base {
-  readonly x: number;
-  readonly y: number;
-  // private width: number;
-  // private height: number;
+class Connector extends Base {
+  readonly start: UID;
+  readonly end: UID;
 
   constructor({
-                x,
-                y,
+                start,
+                end,
                 ...rest
-              }: ShapeProps) {
+              }: ConnectorProps) {
     super(rest);
 
-    this.x = x!;
-    this.y = y!;
+    this.start = start!;
+    this.end = end!;
     // this.width = width!;
     // this.height = height!;
   }
 
-  public getDetails(): ShapeProps {
+  public getDetails(): ConnectorProps {
     return {
       ...this.getSize(),
-      x: this.x,
-      y: this.y, ...super.getDetails(),
+      ...super.getDetails(),
     };
   }
 
@@ -49,7 +44,7 @@ class Shape extends Base {
     const {
       x,
       y
-    } = this;
+    } = {x: 0, y: 1};
     const {
       width,
       height
@@ -64,10 +59,8 @@ class Shape extends Base {
       left: x,
       right: x + width,
       bottom: y + height,
-      centerX: x + width / 2,
-      centerY: y + height / 2,
     }
   }
 }
 
-export default Shape
+export default Connector

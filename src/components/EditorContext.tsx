@@ -11,6 +11,7 @@ import {OnHistoryUpdated} from "../engine/editor/events";
 import {HistoryNode} from "../engine/editor/history/HistoryDoublyLinkedList.ts";
 import {LayerPanel} from "./layerPanel/LayerPanel.tsx";
 import {ActionCode} from "../engine/editor/editor";
+import Connector, {ConnectorProps} from "../engine/core/modules/connectors/connector.ts";
 
 interface EditorContextType {
   historyArray: HistoryNode[]
@@ -64,7 +65,7 @@ export const EditorProvider = () => {
 
 
   const onHistoryUpdated: OnHistoryUpdated = (historyTree) => {
-    console.log(historyTree!.toArray())
+    // console.log(historyTree!.toArray())
 
     setHistoryArray(historyTree!.toArray())
 
@@ -120,10 +121,10 @@ export const EditorProvider = () => {
 
 const createMockData = (editor: Editor) => {
 
-  const dataBase: Omit<ModuleProps, 'id'> = {
+  const r1data: Omit<ShapeProps, 'id'> = {
     type: "rectangle",
-    x: 0,
-    y: 0,
+    x: 50,
+    y: 50,
     width: 100,
     height: 100,
     lineColor: "000",
@@ -132,17 +133,22 @@ const createMockData = (editor: Editor) => {
     shadow: false,
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  const data: ModuleProps[] = Array.from({length: 1}, (_, index) => {
-    return {
-      ...dataBase,
-      x: (index + 1) * 10,
-      y: (index + 1) * 20,
-    }
-  })
+  const r1: Connector = editor.batchCreate([r1data]) as Connector
+  const r2: Connector = editor.batchCreate([{...r1data, x: 200, y: 200}]) as Connector
 
-  const modules = editor.batchCreate(data)
+  console.log(r1.id)
+
+  const c1data: Omit<ConnectorProps, 'id'> = {
+    type: "connector",
+    start: r1.id,
+    end: r2.id,
+    lineColor: "000",
+  }
+  const c1 = editor.batchCreate([c1data])
+
+  const modules = new Map(
+    [[r1.id, r1], [r2.id, r2], [c1.id, c1]]
+  ) as Map<string, Modules>
 
   editor.batchAdd(
     modules,

@@ -1,7 +1,5 @@
 import {ModuleProps} from "../core/modules/modules";
 
-export type EditorCoordinates = Position
-
 export type BasicEditorAreaSize = {
   width: 1000
   height: 1000
@@ -22,6 +20,8 @@ export type ActionCode =
   | 'delete'
   | 'escape'
   | 'modify-modules'
+
+export type ShortcutCode = 'move' | ActionCode
 
 export type HistoryActionType =
   'init'

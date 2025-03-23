@@ -1,12 +1,12 @@
 import React, {useContext, useEffect} from 'react';
 import {EditorContext} from "./EditorContext.tsx";
-import {ActionCode} from "../engine/editor/editor";
+import {ShortcutCode} from "../engine/editor/editor";
 
 const ShortcutListener: React.FC = () => {
   const {executeAction} = useContext(EditorContext)
 
   const handleKeyPress = (e: KeyboardEvent) => {
-    let shortcutCode: ActionCode | null = null
+    let shortcutCode: ShortcutCode | null = null;
     const {key, ctrlKey, metaKey, shiftKey} = e
     const arrowKeys = new Set(
       [
@@ -36,6 +36,7 @@ const ShortcutListener: React.FC = () => {
     if (key === 'Delete' || key === 'Backspace') {
       shortcutCode = 'delete'
     }
+
     if (key === 'Escape') {
       shortcutCode = 'escape'
     }
@@ -52,7 +53,7 @@ const ShortcutListener: React.FC = () => {
       shortcutCode = 'modify-modules'
     }
 
-    if (!shortcutCode) return
+    if (shortcutCode === undefined) return
 
     executeAction(shortcutCode)
     e.stopPropagation()

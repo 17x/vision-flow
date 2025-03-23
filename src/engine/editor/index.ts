@@ -1,4 +1,4 @@
-import render from "../core/renderer.ts";
+import render from "../core/renderer/renderer.ts";
 import SelectionManager from "./selectionManager.ts";
 import CrossLine from "./crossLine.ts";
 import {BasicEditorAreaSize, HistoryActionType, ActionCode} from "./editor";
@@ -11,6 +11,7 @@ import typeCheck from "../../utilities/typeCheck.ts";
 import TypeCheck from "../../utilities/typeCheck.ts";
 import Action, {doIt} from "./actions";
 import {EventHandlers} from "./events";
+import Connector from "../core/modules/connectors/connector.ts";
 
 export interface EditorDataProps {
   id: UID;
@@ -119,17 +120,32 @@ class Editor {
     return this.id + '-' + (++this.moduleCounter)
   }
 
-  batchCreate(moduleDataList: ModuleProps[]) {
-    const newMap = new Map<UID, Modules>();
+  batchCreate(moduleDataList: ModuleProps[]): Map<UID, Modules> | Modules {
+    const clonedData = deepClone(moduleDataList) as ModuleProps[]
 
-    deepClone(moduleDataList).forEach(data => {
+    const create = (data: ModuleProps) => {
       if (!data.id) {
         data.id = this.createModuleId()
       }
 
       if (data.type === 'rectangle') {
-        newMap.set(data.id, new Rectangle(data));
+        return new Rectangle(data)
       }
+      if (data.type === 'connector') {
+        return new Connector(data)
+      }
+    }
+
+    if (clonedData.length === 1) {
+      return create.call(this, clonedData[0])
+    }
+
+    const newMap = new Map<UID, Modules>();
+
+    clonedData.forEach(data => {
+      const module = create.call(this, data)
+
+      newMap.set(data.id, module);
     })
 
     return newMap;

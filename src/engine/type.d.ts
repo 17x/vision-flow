@@ -14,17 +14,6 @@ declare  global {
     parentId: number | null;
   };
 
-  interface FlattenedTreeNode extends TreeNode {
-    keyName?: string
-    value: JSONPrimitiveValue
-    type: JSONStandardType
-    prev?: number
-    next?: number
-    children: number[]
-  }
-
-  type FlattenedTreeNodeMap = Map<number, FlattenedTreeNode>
-
   interface Size {
     width: number;
     height: number;
@@ -41,13 +30,11 @@ declare  global {
     bottom: number;
     left: number;
     right: number;
+    centerX: number;
+    centerY: number;
   }
 
   type Resolution = Size
-
-  type Positions = Map<TreeNode["id"], Rect>
-
-  type MeasuredDataRecord = Size & Positions
 
   type DPR = number
 

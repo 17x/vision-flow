@@ -1,16 +1,19 @@
 import Rectangle, {RectangleProps} from "./shapes/Rectangle.ts";
+import Connector, {ConnectorProps} from "./connectors/Connector.ts";
 import RoundedRectangle, {RoundedRectangleProps} from "./shapes/RoundedRectangle.ts";
 
 declare global {
   type ModuleTypeMap = {
     'rectangle': Rectangle
-    'roundedRectangle': RoundedRectangle
+    'connector': Connector
+    // 'roundedRectangle': RoundedRectangle
   }
 
-  type ModuleProps = RectangleProps | RoundedRectangleProps
-
+  type ShapeProps = RectangleProps | RoundedRectangleProps
+  type ConnectorProps = ConnectorProps
+  type ModuleProps = ShapeProps | ConnectorProps
   type ModuleNames = keyof ModuleTypeMap
-  // type ModuleNameList = ModuleNames[]
-  type Modules = Rectangle | RoundedRectangle
+
+  type Modules = Rectangle | RoundedRectangle | Connector
 }
 export {}

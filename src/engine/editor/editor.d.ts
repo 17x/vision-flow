@@ -10,6 +10,10 @@ export interface Line {
   end: Position
 }
 
+export type MoveDirection = | 'moveUp'
+  | 'moveDown'
+  | 'moveLeft'
+  | 'moveRight'
 export type ActionCode =
   'select-all'
   | 'copy'
@@ -20,8 +24,9 @@ export type ActionCode =
   | 'delete'
   | 'escape'
   | 'modify-modules'
+  | MoveDirection
 
-export type ShortcutCode = 'move' | ActionCode
+export type ShortcutCode = 'move'
 
 export type HistoryActionType =
   'init'

@@ -7,6 +7,7 @@ export interface BasicModuleProps {
   shadow?: boolean
   position?: Position
   rotation?: number
+  layer: number
 }
 
 class Base {
@@ -18,6 +19,7 @@ class Base {
   private readonly position: Position;
   private readonly rotation: Rotation;
   private readonly shadow: Shadow;
+  private readonly layer: number;
 
   constructor({
                 id,
@@ -25,6 +27,7 @@ class Base {
                 lineColor,
                 opacity,
                 position,
+                layer,
                 rotation = 0,
                 shadow = false,
                 showLine = true,
@@ -37,9 +40,10 @@ class Base {
     this.rotation = rotation;
     this.shadow = shadow;
     this.showLine = showLine;
+    this.layer = layer;
   }
 
-  protected getDetails():BasicModuleProps {
+  protected getDetails(): BasicModuleProps {
     return {
       id: this.id,
       type: this.type,
@@ -49,6 +53,7 @@ class Base {
       rotation: this.rotation,
       shadow: this.shadow,
       showLine: this.showLine,
+      layer: this.layer
     };
   }
 }

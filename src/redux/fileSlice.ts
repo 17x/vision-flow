@@ -12,6 +12,7 @@ export type FileRecord = Record<string, FileType>;
 export interface FileState {
   files: FileRecord
   currentFileId: FileType['id']
+  creating: boolean
 }
 
 const MOCK_FILES: FileRecord = {
@@ -37,7 +38,8 @@ const MOCK_FILES: FileRecord = {
 
 const initialState: FileState = {
   files: MOCK_FILES,
-  currentFileId: "998"
+  currentFileId: "998",
+  creating: false
 };
 
 const menuSlice = createSlice({
@@ -58,9 +60,12 @@ const menuSlice = createSlice({
     createFile: (state, action: PayloadAction<FileType>) => {
       state.files[action.payload.id] = action.payload
       state.currentFileId = action.payload.id
+    },
+    setCreating: (state, action: PayloadAction<boolean>) => {
+      state.creating = action.payload
     }
   }
 });
 
-export const {switchFile, closeFile, createFile} = menuSlice.actions;
+export const {switchFile, closeFile, createFile, setCreating} = menuSlice.actions;
 export default menuSlice.reducer;

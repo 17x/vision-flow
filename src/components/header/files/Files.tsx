@@ -1,6 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../redux/store.ts";
-import {switchFile, closeFile} from "../../../redux/fileSlice.ts";
+import {switchFile, closeFile, setCreating} from "../../../redux/fileSlice.ts";
+import {DynamicIcon} from "lucide-react/dynamic";
 
 const Files: React.FC = () => {
   const {files, currentFileId} = useSelector((state: RootState) => state.files);
@@ -32,6 +33,12 @@ const Files: React.FC = () => {
         </div>
       })
     }
+
+    <button>
+      <DynamicIcon name={'plus'} size={18} onClick={() => {
+        dispatch(setCreating(true))
+      }}/>
+    </button>
   </div>
 };
 

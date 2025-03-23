@@ -84,6 +84,11 @@ class Action {
       this.editor.history.undo()
     }
 
+    if (code === 'moveUp') {
+      console.log(this.editor.selectionManager)
+      this.editor.selectionManager
+    }
+
     if (this.eventsMap.has(code)) {
       this.eventsMap.get(code)!.forEach((cb) => {
         cb()

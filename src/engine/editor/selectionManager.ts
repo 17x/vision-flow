@@ -1,7 +1,7 @@
 import Editor from "./index.ts";
 import coordinator from "./coordinator.ts";
 import {ActionCode, ModifyModuleMap} from "./editor";
-import rectRender from "../core/renderer/rectRender.ts";
+import rectRender, {RectangleRenderProps} from "../core/renderer/rectRender.ts";
 
 type CopiedModuleProps = Omit<ModuleProps, 'id'>
 type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
@@ -53,16 +53,16 @@ class SelectionManager {
     canvas.setAttribute("selection-manager", "");
     editor.canvas.parentNode!.append(this.canvas);
 
-    this.watchActions()
+    // this.watchActions()
     this.render();
     this.setupEventListeners();
   }
 
-  private watchActions() {
-    actions.forEach(action => {
-      // this.editor.action.subscribe(action, this[action].bind(this));
-    });
-  }
+  /*  private watchActions() {
+      actions.forEach(action => {
+        // this.editor.action.subscribe(action, this[action].bind(this));
+      });
+    }*/
 
   private unBindShortcuts() {
     this.editor.action.unsubscribe('select-all', this.selectAll.bind(this));

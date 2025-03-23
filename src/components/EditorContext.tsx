@@ -1,7 +1,7 @@
 import React, {createContext, useEffect, useRef, useState} from 'react';
 import Editor, {basicEditorAreaSize} from "../engine/editor";
 import ShortcutListener from "./ShortcutListener.tsx";
-import Header from "./header/Header.tsx";
+// import Header from "./header/Header.tsx";
 import {ModulePanel} from "./modulePanel/ModulePanel.tsx";
 import {PropertyPanel} from "./PropertyPanel.tsx";
 import {StatusBar} from "./StatusBar/StatusBar.tsx";
@@ -12,6 +12,10 @@ import {HistoryNode} from "../engine/editor/history/HistoryDoublyLinkedList.ts";
 import {LayerPanel} from "./layerPanel/LayerPanel.tsx";
 import {ActionCode} from "../engine/editor/editor";
 import Connector, {ConnectorProps} from "../engine/core/modules/connectors/connector.ts";
+import Header from "./header/Header.tsx";
+import CreateFile from "./createFile.tsx";
+import {useSelector} from "react-redux";
+import {RootState} from "../redux/store.ts";
 
 interface EditorContextType {
   historyArray: HistoryNode[]
@@ -26,6 +30,7 @@ export const EditorContext = createContext<EditorContextType>({
   historyCurrent: {} as HistoryNode,
   editorRef: {} as React.RefObject<Editor>,
   applyHistoryNode: () => {
+
   },
   executeAction: () => {
 
@@ -37,6 +42,9 @@ export const EditorProvider = () => {
   const divRef = useRef<HTMLDivElement>(null)
   const [historyArray, setHistoryArray] = useState<HistoryNode[]>([])
   const [historyCurrent, setHistoryCurrent] = useState<HistoryNode>({} as HistoryNode)
+  const {files, creating} = useSelector((state: RootState) => state.files);
+  const fileLen = Object.values(files).length
+  const showCreateFile = fileLen === 0 || creating
 
   useEffect(() => {
     let editor: Editor;
@@ -63,7 +71,6 @@ export const EditorProvider = () => {
     }
   }, [])
 
-
   const onHistoryUpdated: OnHistoryUpdated = (historyTree) => {
     // console.log(historyTree!.toArray())
 
@@ -81,7 +88,6 @@ export const EditorProvider = () => {
   }
 
   const executeAction = (code: ActionCode) => {
-    console.log(code)
     editorRef.current!.execute(code)
   }
 
@@ -115,6 +121,7 @@ export const EditorProvider = () => {
         </main>
 
       </div>
+      {showCreateFile && <CreateFile bg={fileLen ? '#00000080' : '#fff'}/>}
     </EditorContext.Provider>
   );
 };
@@ -154,5 +161,4 @@ const createMockData = (editor: Editor) => {
     modules,
     "add-modules"
   )
-
 }

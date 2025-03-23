@@ -1,21 +1,20 @@
 import React, {useContext, useEffect} from 'react';
 import {EditorContext} from "./EditorContext.tsx";
-import {ShortcutCode} from "../engine/editor/editor";
+import {ActionCode, MoveDirection} from "../engine/editor/editor";
 
 const ShortcutListener: React.FC = () => {
   const {executeAction} = useContext(EditorContext)
 
   const handleKeyPress = (e: KeyboardEvent) => {
-    let shortcutCode: ShortcutCode | null = null;
+    let shortcutCode: ActionCode | null = null;
     const {key, ctrlKey, metaKey, shiftKey} = e
-    const arrowKeys = new Set(
-      [
-        'ArrowUp',
-        'ArrowDown',
-        'ArrowLeft',
-        'ArrowRight'
-      ]
-    )
+
+    const arrowKeys: { [key: string]: MoveDirection } = {
+      ArrowUp: 'moveUp',
+      ArrowDown: 'moveDown',
+      ArrowLeft: 'moveLeft',
+      ArrowRight: 'moveRight',
+    }
 
     if (key === 'a' && (ctrlKey || metaKey)) {
       shortcutCode = 'select-all'
@@ -49,11 +48,11 @@ const ShortcutListener: React.FC = () => {
       shortcutCode = 'redo'
     }
 
-    if (arrowKeys.has(key)) {
-      shortcutCode = 'modify-modules'
+    if (arrowKeys[key]) {
+      shortcutCode = arrowKeys[key]
     }
 
-    if (shortcutCode === undefined) return
+    if (!shortcutCode) return
 
     executeAction(shortcutCode)
     e.stopPropagation()

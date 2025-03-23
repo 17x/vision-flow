@@ -1,7 +1,6 @@
 import React, {createContext, useEffect, useRef, useState} from 'react';
 import Editor, {basicEditorAreaSize} from "../engine/editor";
 import ShortcutListener from "./ShortcutListener.tsx";
-// import Header from "./header/Header.tsx";
 import {ModulePanel} from "./modulePanel/ModulePanel.tsx";
 import {PropertyPanel} from "./PropertyPanel.tsx";
 import {StatusBar} from "./StatusBar/StatusBar.tsx";

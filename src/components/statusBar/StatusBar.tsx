@@ -1,4 +1,4 @@
-import ZoomSelect from "./Zoom";
+import ZoomSelect from "./zoom";
 
 interface StatusBarProps {
   className?: string

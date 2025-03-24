@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {ZoomLevels} from "../components/StatusBar/Zoom";
+import {ZoomLevels} from "../components/statusBar/zoom";
 
 interface MenuState {
   zoom: ZoomLevels;

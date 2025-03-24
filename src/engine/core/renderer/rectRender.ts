@@ -47,6 +47,7 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
     ctx.strokeRect(x, y, width, height);
   })
 
+  console.log(rectQueue.size)
   ctx.restore();
 }
 

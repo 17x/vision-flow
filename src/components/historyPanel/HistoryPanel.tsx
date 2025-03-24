@@ -1,5 +1,5 @@
 import {useContext, useEffect, useRef} from "react";
-import {EditorContext} from "../EditorContext.tsx";
+import {EditorContext} from "../editorContext/EditorContext.tsx";
 import {useTranslation} from "react-i18next";
 import {I18nHistoryDataItem} from "../../i18n/type";
 
@@ -14,7 +14,11 @@ export const HistoryPanel = () => {
       const targetElement = targetRef.current;
 
       const _timer = setTimeout(() => {
-        targetElement.scrollIntoView({block: "center"})
+        targetElement.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest"
+        })
       }, 0)
 
       return () => {
@@ -27,8 +31,8 @@ export const HistoryPanel = () => {
 
   return (
     <div className={'p-2'}>
-      <h1 className={'bg-gray-400 text-white px-2'}><span>History</span></h1>
-      <div className={'border border-gray-200 overflow-x-auto scrollbar-custom overflow-y-auto'}>
+      <h1 className={'bg-gray-600 text-white px-2'}><span>History</span></h1>
+      <div className={'border h-50 border-gray-200 overflow-x-auto scrollbar-custom overflow-y-auto'}>
         <div className={'flex flex-col m-2 border border-gray-200 min-h-40 bg-gray-100'}>
           {
             historyArray.map((historyNode, index) => {
@@ -42,7 +46,7 @@ export const HistoryPanel = () => {
                               if (isCurr) return;
                               return applyHistoryNode(historyNode);
                             }}
-                            className={`border-b border-gray-200 px-2 py-1 cursor-pointer text-xs hover:bg-gray-400 ${isCurr ? 'bg-gray-400 text-white' : ''}`}>
+                            className={`border-b border-gray-200 px-2 py-1 cursor-pointer text-xs hover:bg-gray-400 hover:text-white ${isCurr ? 'bg-gray-400 text-white' : ''}`}>
                   <span>{label}</span>
                 </div>
               }

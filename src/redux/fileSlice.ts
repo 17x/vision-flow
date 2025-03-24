@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+// import uid from "../utilities/Uid.ts";
 
 export interface FileType {
   id: UID
@@ -16,24 +17,12 @@ export interface FileState {
 }
 
 const MOCK_FILES: FileRecord = {
-  "998": {
-    id: '998',
-    name: 'Untitled 1',
-    config: {},
-    data: {}
-  },
-  /*"999": {
-    id: '999',
-    name: 'Untitled 2',
-    config: {},
-    data: {}
-  },
-  "1000": {
-    id: '1000',
-    name: 'Untitled 3',
-    config: {},
-    data: {}
-  },*/
+  "fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb": {
+    "id": "fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb",
+    "name": "Untitled 1",
+    "config": {},
+    "data": {}
+  }
 }
 
 const initialState: FileState = {
@@ -68,4 +57,4 @@ const menuSlice = createSlice({
 });
 
 export const {switchFile, closeFile, createFile, setCreating} = menuSlice.actions;
-export default menuSlice.reducer;
+// export default menuSlice.reducer;

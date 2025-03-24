@@ -1,5 +1,5 @@
 import {useContext, useEffect} from "react";
-import {EditorContext} from "../EditorContext.tsx";
+import {EditorContext} from "../editorContext/EditorContext.tsx";
 
 interface ModulePanelProps {
 

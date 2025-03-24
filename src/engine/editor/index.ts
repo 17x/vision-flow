@@ -9,7 +9,7 @@ import Rectangle from "../core/modules/shapes/rectangle.ts";
 import deepClone from "../../utilities/deepClone.ts";
 import typeCheck from "../../utilities/typeCheck.ts";
 import TypeCheck from "../../utilities/typeCheck.ts";
-import Action, {doIt} from "./actions";
+import Action from "./actions";
 import {EventHandlers} from "./events";
 import Connector from "../core/modules/connectors/connector.ts";
 
@@ -25,7 +25,7 @@ export const basicEditorAreaSize: BasicEditorAreaSize = {
 
 export interface EditorProps {
   // canvas: HTMLCanvasElement
-  container: HTMLDivElement;
+  container?: HTMLDivElement;
   data: EditorDataProps;
   // theme: ThemeShape
   dpr?: DPR;
@@ -36,14 +36,13 @@ export interface EditorProps {
 }
 
 class Editor {
-  moduleCounter = 0
+  readonly moduleCounter = 0
   readonly moduleMap: Map<UID, Modules>;
   readonly canvas: HTMLCanvasElement;
   readonly id: UID;
   readonly size: Size;
   readonly dpr: DPR;
-  readonly container: HTMLDivElement;
-  // readonly shortcut: Shortcut;
+  readonly container: HTMLDivElement | undefined;
   readonly events: EventHandlers = {};
   readonly action: Action;
   readonly history: History;
@@ -87,17 +86,17 @@ class Editor {
     canvas.height = window.outerHeight * dpr;
 
     // ctx!.scale(dpr, dpr);
-
-    container.innerHTML = "";
-    container.style.overflow = "hidden";
-    container.style.position = "relative";
-    container.style.display = "flex";
-    container.style.height = "100%";
-    container.style.width = "100%";
-    container.setAttribute("editor-container", "");
+    /*
+        container.innerHTML = "";
+        container.style.overflow = "hidden";
+        container.style.position = "relative";
+        container.style.display = "flex";
+        container.style.height = "100%";
+        container.style.width = "100%";
+        container.setAttribute("editor-container", "");*/
 
     wrapper.append(canvas);
-    container.append(wrapper);
+    // container.append(wrapper);
     this.setupEventListeners()
     this.panableContainer = new PanableContainer({
       element: wrapper, onPan: (deltaX, deltaY) => {
@@ -120,9 +119,9 @@ class Editor {
     return this.id + '-' + (++this.moduleCounter)
   }
 
-  batchCreate(moduleDataList: ModuleProps[]): Map<UID, Modules> | Modules {
+  batchCreate(moduleDataList: ModuleProps[]): Map<UID, Modules> {
     const clonedData = deepClone(moduleDataList) as ModuleProps[]
-
+    const newMap = new Map<UID, Modules>();
     const create = (data: ModuleProps) => {
       if (!data.id) {
         data.id = this.createModuleId()
@@ -135,12 +134,6 @@ class Editor {
         return new Connector(data)
       }
     }
-
-    if (clonedData.length === 1) {
-      return create.call(this, clonedData[0])
-    }
-
-    const newMap = new Map<UID, Modules>();
 
     clonedData.forEach(data => {
       const module = create.call(this, data)
@@ -268,6 +261,14 @@ class Editor {
     })
 
     return result
+  }
+
+  getModuleList(): Modules[] {
+    return [...Object.values(this.moduleMap)]
+  }
+
+  public moundToDom(target: HTMLElement) {
+    target.append(this.wrapper)
   }
 
   private setupEventListeners() {

@@ -1,11 +1,12 @@
 import './components/comp.css'
 import "./i18n/config.ts";
-import {EditorProvider} from "./components/EditorContext.tsx";
+import FileProvider from "./components/fileContext/FileContext.tsx";
+import EditorProvider from "./components/editorContext/EditorContext.tsx";
 
 function App() {
-  return <>
+  return <FileProvider>
     <EditorProvider/>
-  </>
+  </FileProvider>
 }
 
 export default App

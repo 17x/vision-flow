@@ -7,6 +7,8 @@ const Files: React.FC = () => {
   const activeTabClasses = ' border-b-2 border-black-600'
   const unActiveTabClasses = ' hover:bg-gray-200'
   const {files, currentFileId, closeFile, switchFile, handleCreating} = useContext(FileContext)
+  console.log(files)
+
   return <div className="flex flex-row items-center text-sm select-none">
     {
       Object.values(files).map(file => {

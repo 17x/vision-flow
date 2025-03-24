@@ -1,15 +1,18 @@
-import {FC, ReactNode, useRef, useState} from "react";
+import {FC, ReactNode, useEffect, useRef, useState} from "react";
 import CreateFile from "../CreateFile.tsx";
 import FileContext, {FileMap, FileType} from "./FileContext.tsx";
 
-const FileProvider: FC<{ children: ReactNode }> = ({children}) => {
+const FileProvider: FC<{ children: ReactNode, data: FileMap }> = ({children, data}) => {
   const files = useRef<FileMap>(new Map())
   const [creating, setCreating] = useState<boolean>(false)
   const [currentFileId, setCurrentFileId] = useState<UID>('')
-  const [forceRenderCounter, setForceRenderCounter] = useState(0); // Dummy state to trigger re-renders
-
+  const [forceRenderCounter, setForceRenderCounter] = useState(0);
   const fileLen = files.current.size
   const showCreateFile = fileLen === 0 || creating
+
+  useEffect(() => {
+    console.log(data)
+  }, [data]);
 
   const switchFile = (id: UID) => {
     setCurrentFileId(id)

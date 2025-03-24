@@ -25,9 +25,9 @@ const EditorProvider = () => {
   useEffect(() => {
     const editors = editorsRef.current
     let editor: Editor;
-    console.log(editors)
-    console.log(editorsRef.current)
-    console.log(files)
+    // console.log(editors)
+    // console.log(editorsRef.current)
+    // console.log(files)
 
     if (divRef.current) {
       const container = divRef!.current

@@ -150,7 +150,7 @@ class Editor {
     })
 
     if (historyCode) {
-      console.log([...modules.values()].map(mod => mod.getDetails()))
+      // console.log([...modules.values()].map(mod => mod.getDetails()))
       this.history.replaceNext({
         type: historyCode,
         modules: [...modules.values()].map(mod => mod.getDetails())

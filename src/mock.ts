@@ -1,12 +1,13 @@
 import uid from "./utilities/Uid.ts";
 import {FileMap, FileType} from "./components/fileContext/FileContext.tsx";
 
-const CreateModules = () => {
+const CreateModules = (fileId: UID) => {
   const moduleList = []
 
 
   return moduleList
 }
+
 const CreateFile = (): FileType => {
   const defaultFileName = 'Untitled 1';
   const defaultConfig = {}

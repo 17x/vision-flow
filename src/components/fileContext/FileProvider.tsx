@@ -10,6 +10,8 @@ const FileProvider: FC<{ children: ReactNode }> = ({children}) => {
   const fileLen = files.current.size
   const showCreateFile = fileLen === 0 || creating
 
+  console.log(fileLen, fileLen, creating)
+
   useEffect(() => {
 
   }, [])
@@ -24,6 +26,7 @@ const FileProvider: FC<{ children: ReactNode }> = ({children}) => {
 
   const createFile = (file: FileType) => {
     files.current.set(file.id, file)
+    console.log(files)
   }
 
   const handleCreating = (v: boolean) => {

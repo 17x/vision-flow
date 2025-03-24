@@ -3,8 +3,8 @@ import {RootState} from "../../../redux/store.ts";
 import {DynamicIcon} from 'lucide-react/dynamic';
 import {LayerDown, LayerToBottom, LayerToTop, LayerUp} from "./Icons/LayerIcons.tsx";
 import {Fragment, ReactNode, useContext} from "react";
-import {EditorContext} from "../../editorContext/EditorContext.tsx";
 import {ActionCode} from "../../../engine/editor/editor";
+import EditorContext from "../../editorContext/EditorContext.tsx";
 
 const IconSize = 20
 const IconColor = 'text-black'

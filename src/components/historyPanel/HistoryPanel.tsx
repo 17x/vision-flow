@@ -1,5 +1,5 @@
 import {useContext, useEffect, useRef} from "react";
-import {EditorContext} from "../editorContext/EditorContext.tsx";
+import EditorContext from "../editorContext/EditorContext.tsx";
 import {useTranslation} from "react-i18next";
 import {I18nHistoryDataItem} from "../../i18n/type";
 

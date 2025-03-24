@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from 'react';
-import {EditorContext} from "./editorContext/EditorContext.tsx";
 import {ActionCode, MoveDirection} from "../engine/editor/editor";
+import EditorContext from "./editorContext/EditorContext.tsx";
 
 const ShortcutListener: React.FC = () => {
   const {executeAction} = useContext(EditorContext)

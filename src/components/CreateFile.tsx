@@ -1,11 +1,10 @@
-import {useDispatch} from "react-redux";
-import {createFile, FileType, setCreating} from "../redux/fileSlice.ts";
-import {useRef} from "react";
+import {FC, useContext, useRef} from "react";
 import uid from "../utilities/Uid.ts";
+import FileContext, {FileType} from "./fileContext/FileContext.tsx";
 
-const CreateFile: React.FC<{ bg: string }> = ({bg = '#fff'}) => {
-  const dispatch = useDispatch()
+const CreateFile: FC<{ bg: string }> = ({bg = '#fff'}) => {
   const formRef = useRef<HTMLFormElement>(null);
+  const {createFile, handleCreating} = useContext(FileContext)
 
   const handleSubmit = () => {
     const filename = (formRef.current?.filename.value.trim())
@@ -20,8 +19,8 @@ const CreateFile: React.FC<{ bg: string }> = ({bg = '#fff'}) => {
       data: {}, config: {},
     }
 
-    dispatch(createFile(newFile))
-    dispatch(setCreating(false))
+    createFile(newFile)
+    handleCreating(false)
   }
 
   return <div

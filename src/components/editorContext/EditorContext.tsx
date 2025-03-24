@@ -11,7 +11,7 @@ interface EditorContextType {
   executeAction: (code: ActionCode) => void
 }
 
-export const EditorContext = createContext<EditorContextType>({
+const EditorContext = createContext<EditorContextType>({
   historyArray: [] as HistoryNode[],
   historyCurrent: {} as HistoryNode,
   editorRef: {} as React.RefObject<Editor>,

@@ -8,8 +8,9 @@ const ShortcutListener: React.FC<{ focused: boolean }> = ({focused}) => {
   const handleKeyPress = (e: KeyboardEvent) => {
     let shortcutCode: ActionCode | null = null;
     const {key, ctrlKey, metaKey, shiftKey} = e
-
+    console.log(focused)
     if (!focused) return;
+
     const arrowKeys: { [key: string]: MoveDirection } = {
       ArrowUp: 'moveUp',
       ArrowDown: 'moveDown',

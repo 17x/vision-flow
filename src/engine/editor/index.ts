@@ -36,7 +36,7 @@ export interface EditorProps {
 }
 
 class Editor {
-  readonly moduleCounter = 0
+  private moduleCounter = 0
   readonly moduleMap: Map<UID, Modules>;
   readonly canvas: HTMLCanvasElement;
   readonly id: UID;
@@ -86,17 +86,16 @@ class Editor {
     canvas.height = window.outerHeight * dpr;
 
     // ctx!.scale(dpr, dpr);
-    /*
-        container.innerHTML = "";
-        container.style.overflow = "hidden";
-        container.style.position = "relative";
-        container.style.display = "flex";
-        container.style.height = "100%";
-        container.style.width = "100%";
-        container.setAttribute("editor-container", "");*/
+    container.innerHTML = "";
+    container.style.overflow = "hidden";
+    container.style.position = "relative";
+    container.style.display = "flex";
+    container.style.height = "100%";
+    container.style.width = "100%";
+    container.setAttribute("editor-container", "");
 
     wrapper.append(canvas);
-    // container.append(wrapper);
+    container.append(wrapper);
     this.setupEventListeners()
     this.panableContainer = new PanableContainer({
       element: wrapper, onPan: (deltaX, deltaY) => {
@@ -115,7 +114,7 @@ class Editor {
 
   }
 
-  createModuleId(): UID {
+  private createModuleId(): UID {
     return this.id + '-' + (++this.moduleCounter)
   }
 

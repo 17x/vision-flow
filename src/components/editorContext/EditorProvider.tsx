@@ -1,4 +1,4 @@
-import {FC, useContext, useEffect, useRef, useState} from 'react';
+import {FC, useEffect, useRef, useState} from 'react';
 import Editor, {basicEditorAreaSize} from "../../engine/editor";
 import ShortcutListener from "../ShortcutListener.tsx";
 import {ModulePanel} from "../modulePanel/ModulePanel.tsx";
@@ -89,7 +89,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       applyHistoryNode,
       executeAction
     }}>
-      <div ref={elementRef} className={'w-full h-full flex flex-col'} autoFocus>
+      <div ref={elementRef} tabIndex={0} className={'w-full h-full flex flex-col'} autoFocus>
         <ShortcutListener focused={focused}/>
 
         <Header/>

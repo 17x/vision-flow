@@ -2,7 +2,7 @@ import {FC, useContext, useRef} from "react";
 import uid from "../utilities/Uid.ts";
 import FileContext, {FileType} from "./fileContext/FileContext.tsx";
 
-const CreateFile: FC<{ bg: string }> = ({bg = '#fff'}) => {
+const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', onBgClick}) => {
   const formRef = useRef<HTMLFormElement>(null);
   const {createFile, handleCreating} = useContext(FileContext)
 
@@ -27,6 +27,7 @@ const CreateFile: FC<{ bg: string }> = ({bg = '#fff'}) => {
     style={{
       backgroundColor: bg
     }}
+    onClick={() => onBgClick && onBgClick()}
     className={`fixed top-0 left-0 z-20 w-full h-full flex flex-row items-center justify-center text-sm select-none`}>
     <form
       ref={formRef}

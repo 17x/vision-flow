@@ -87,7 +87,16 @@ const FileProvider: FC = () => {
           )
         }
 
-        {showCreateFile && <CreateFile bg={fileLen ? '#00000080' : '#fff'}/>}
+        {
+          showCreateFile &&
+            <CreateFile bg={fileLen ? '#00000080' : '#fff'}
+                        onBgClick={() => {
+                          if (fileLen) {
+                            setCreating(false)
+                          }
+                        }
+                        }/>
+        }
       </>
     </FileContext.Provider>
   );

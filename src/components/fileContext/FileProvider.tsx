@@ -1,31 +1,45 @@
-import {FC, ReactNode, useEffect, useRef, useState} from "react";
+import {FC, useEffect, useRef, useState} from "react";
 import CreateFile from "../CreateFile.tsx";
 import FileContext, {FileMap, FileType} from "./FileContext.tsx";
+import EditorProvider from "../editorContext/EditorProvider.tsx";
+import MOCK_FILE_MAP from "../../mock.ts";
 
-const FileProvider: FC<{ children: ReactNode, data: FileMap }> = ({children, data}) => {
-  const files = useRef<FileMap>(new Map())
+const FileProvider: FC = () => {
+  const fileMap = useRef<FileMap>(new Map())
   const [creating, setCreating] = useState<boolean>(false)
   const [currentFileId, setCurrentFileId] = useState<UID>('')
-  const [forceRenderCounter, setForceRenderCounter] = useState(0);
-  const fileLen = files.current.size
+  const [fileList, setFileList] = useState<FileType[]>([])
+  const fileLen = fileMap.current.size
   const showCreateFile = fileLen === 0 || creating
 
   useEffect(() => {
-    console.log(data)
-  }, [data]);
+    if (MOCK_FILE_MAP.size > 0) {
+      fileMap.current = MOCK_FILE_MAP
+
+      setCurrentFileId(updateFileList()[0].id)
+    }
+  }, []);
+
+  const updateFileList = (): FileType[] => {
+    const arr = Array.from(fileMap.current.values())
+
+    setFileList(arr)
+
+    return arr
+  }
 
   const switchFile = (id: UID) => {
     setCurrentFileId(id)
   }
 
   const closeFile = (id: UID) => {
-    files.current.delete(id)
-    setForceRenderCounter(forceRenderCounter + 1)
+    fileMap.current.delete(id)
+    updateFileList()
   }
 
   const createFile = (file: FileType) => {
-    files.current.set(file.id, file)
-    setForceRenderCounter(forceRenderCounter + 1)
+    fileMap.current.set(file.id, file)
+    updateFileList()
   }
 
   const handleCreating = (v: boolean) => {
@@ -34,7 +48,8 @@ const FileProvider: FC<{ children: ReactNode, data: FileMap }> = ({children, dat
 
   return (
     <FileContext.Provider value={{
-      files: files.current,
+      fileMap: fileMap.current,
+      fileList,
       creating,
       currentFileId,
       switchFile,
@@ -43,7 +58,12 @@ const FileProvider: FC<{ children: ReactNode, data: FileMap }> = ({children, dat
       handleCreating,
     }}>
       <>
-        {children}
+        {
+          fileList.map(file =>
+            <EditorProvider key={file.id} file={file}/>
+          )
+        }
+
         {showCreateFile && <CreateFile bg={fileLen ? '#00000080' : '#fff'}/>}
       </>
     </FileContext.Provider>

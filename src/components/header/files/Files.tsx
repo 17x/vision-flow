@@ -6,16 +6,16 @@ const Files: React.FC = () => {
   const basicTabClasses = ' group py-2 px-6 relative transition flex items-center">'
   const activeTabClasses = ' border-b-2 border-black-600'
   const unActiveTabClasses = ' hover:bg-gray-200'
-  const {files, currentFileId, closeFile, switchFile, handleCreating} = useContext(FileContext)
-  console.log(files)
+  const {fileList, currentFileId, closeFile, switchFile, handleCreating} = useContext(FileContext)
 
   return <div className="flex flex-row items-center text-sm select-none">
     {
-      Object.values(files).map(file => {
-        const _curr = file.id === currentFileId
-        const currentTabClasses = basicTabClasses + (_curr ? activeTabClasses : unActiveTabClasses)
-        const currCloseIconClasses: string = (_curr ? 'visible' : 'invisible') + ' w-2 h-2 ml-4 opacity-50 hover:opacity-100 group-hover:visible w-2 h-2 cursor-pointer'
-
+      fileList.map(file => {
+        const isActive = file.id === currentFileId
+        const currentTabClasses = basicTabClasses + (isActive ? activeTabClasses : unActiveTabClasses)
+        const currCloseIconClasses: string = (isActive ? 'visible' : 'invisible') + ' w-2 h-2 ml-4 opacity-50 hover:opacity-100 group-hover:visible w-2 h-2 cursor-pointer'
+        console.log(file.id,)
+        console.log(currentFileId);
         return <div key={file.id}
                     className={currentTabClasses}
                     onClick={() => {

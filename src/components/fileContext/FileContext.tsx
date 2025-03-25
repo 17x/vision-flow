@@ -10,7 +10,8 @@ export interface FileType {
 export type FileMap = Map<string, FileType>;
 
 interface FileContextType {
-  files: FileMap
+  fileMap: FileMap
+  fileList: FileType[]
   creating: boolean
   currentFileId: string | undefined
   switchFile: (id: UID) => void
@@ -20,7 +21,7 @@ interface FileContextType {
 }
 
 const FileContext = createContext<FileContextType>({
-  files: new Map([
+  fileMap: new Map([
     [
       "fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb",
       {
@@ -31,6 +32,7 @@ const FileContext = createContext<FileContextType>({
       }
     ]
   ]),
+  fileList: [],
   currentFileId: "fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb",
   creating: false,
   switchFile: () => {

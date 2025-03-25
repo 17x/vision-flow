@@ -35,6 +35,6 @@ const CreateFileMapByFilesId = (files: FileType[]): FileMap => {
 }
 
 const MOCK_FILE = CreateFile()
-const fileMap = CreateFileMapByFilesId([MOCK_FILE])
+const MOCK_FILE_MAP = CreateFileMapByFilesId([MOCK_FILE])
 
-export default fileMap
+export default MOCK_FILE_MAP

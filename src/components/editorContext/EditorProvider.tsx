@@ -1,4 +1,4 @@
-import {useContext, useEffect, useRef, useState} from 'react';
+import {FC, useContext, useEffect, useRef, useState} from 'react';
 import Editor, {basicEditorAreaSize} from "../../engine/editor";
 import ShortcutListener from "../ShortcutListener.tsx";
 import {ModulePanel} from "../modulePanel/ModulePanel.tsx";
@@ -11,31 +11,23 @@ import {LayerPanel} from "../layerPanel/LayerPanel.tsx";
 import {ActionCode} from "../../engine/editor/editor";
 import Header from "../header/Header.tsx";
 import {HistoryPanel} from "../historyPanel/HistoryPanel.tsx";
-import FileContext from "../fileContext/FileContext.tsx";
+import {FileType} from "../fileContext/FileContext.tsx";
 import EditorContext from './EditorContext.tsx';
 
-const EditorProvider = () => {
+const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const editorRef = useRef<Editor>(null)
   const divRef = useRef<HTMLDivElement>(null)
   const [historyArray, setHistoryArray] = useState<HistoryNode[]>([])
   const [historyCurrent, setHistoryCurrent] = useState<HistoryNode>({} as HistoryNode)
-  const {files} = useContext(FileContext)
-  const editorsRef = useRef<Map<UID, Editor>>(new Map());
 
   useEffect(() => {
-    const editors = editorsRef.current
     let editor: Editor;
-    // console.log(editors)
-    // console.log(editorsRef.current)
-    // console.log(files)
 
     if (divRef.current) {
-      const container = divRef!.current
-
       const newUID = uid();
 
       editor = new Editor({
-        container,
+        container: divRef!.current,
         data: {
           id: newUID,
           size: basicEditorAreaSize,
@@ -49,7 +41,7 @@ const EditorProvider = () => {
       createMockData(editor)
       editorRef.current = editor
     }
-  }, [])
+  }, [file])
 
   const onHistoryUpdated: OnHistoryUpdated = (historyTree) => {
 

@@ -83,14 +83,16 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 
   return (
     <EditorContext.Provider value={{
+      focused,
       historyArray,
       historyCurrent,
       editorRef,
       applyHistoryNode,
       executeAction
     }}>
-      <div ref={elementRef} tabIndex={0} className={'w-full h-full flex flex-col'} autoFocus>
-        <ShortcutListener focused={focused}/>
+      <div ref={elementRef} data-focused={focused} tabIndex={0} className={'outline-0 w-full h-full flex flex-col'}
+           autoFocus>
+        <ShortcutListener/>
 
         <Header/>
 

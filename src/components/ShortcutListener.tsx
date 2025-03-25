@@ -2,14 +2,13 @@ import React, {useContext, useEffect} from 'react';
 import {ActionCode, MoveDirection} from "../engine/editor/editor";
 import EditorContext from "./editorContext/EditorContext.tsx";
 
-const ShortcutListener: React.FC<{ focused: boolean }> = ({focused}) => {
-  const {executeAction} = useContext(EditorContext)
+const ShortcutListener: React.FC = () => {
+  const {executeAction, focused} = useContext(EditorContext)
 
   const handleKeyPress = (e: KeyboardEvent) => {
     let shortcutCode: ActionCode | null = null;
     const {key, ctrlKey, metaKey, shiftKey} = e
-    console.log(focused)
-    if (!focused) return;
+
 
     const arrowKeys: { [key: string]: MoveDirection } = {
       ArrowUp: 'moveUp',
@@ -62,16 +61,16 @@ const ShortcutListener: React.FC<{ focused: boolean }> = ({focused}) => {
   };
 
   useEffect(() => {
-    // Add keydown event listener to watch for keyboard shortcuts
+    if (!focused) return;
+
     window.addEventListener('keydown', handleKeyPress);
 
-    // Clean up the event listener on component unmount
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
     };
-  }, []);
+  }, [focused]);
 
-  return null; // No UI, just functionality
+  return null
 };
 
 

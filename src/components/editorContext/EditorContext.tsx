@@ -4,6 +4,7 @@ import {HistoryNode} from "../../engine/editor/history/HistoryDoublyLinkedList.t
 import {ActionCode} from "../../engine/editor/editor";
 
 interface EditorContextType {
+  focused: boolean
   historyArray: HistoryNode[]
   historyCurrent: HistoryNode
   editorRef: React.RefObject<Editor | null>
@@ -12,6 +13,7 @@ interface EditorContextType {
 }
 
 const EditorContext = createContext<EditorContextType>({
+  focused: false,
   historyArray: [] as HistoryNode[],
   historyCurrent: {} as HistoryNode,
   editorRef: {} as React.RefObject<Editor>,

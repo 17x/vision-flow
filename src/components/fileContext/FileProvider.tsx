@@ -3,6 +3,7 @@ import CreateFile from "../CreateFile.tsx";
 import FileContext, {FileMap, FileType} from "./FileContext.tsx";
 import EditorProvider from "../editorContext/EditorProvider.tsx";
 import MOCK_FILE_MAP from "../../mock.ts";
+import Files from "../files/Files.tsx";
 
 const FileProvider: FC = () => {
   const fileMap = useRef<FileMap>(new Map())
@@ -58,6 +59,7 @@ const FileProvider: FC = () => {
       handleCreating,
     }}>
       <>
+        <Files />
         {
           fileList.map(file =>
             <EditorProvider key={file.id} file={file}/>

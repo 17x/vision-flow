@@ -1,6 +1,6 @@
 import {DynamicIcon} from "lucide-react/dynamic";
 import {useContext} from "react";
-import FileContext from "../../fileContext/FileContext.tsx";
+import FileContext from "../fileContext/FileContext.tsx";
 
 const Files: React.FC = () => {
   const basicTabClasses = ' group py-2 px-6 relative transition flex items-center">'
@@ -32,7 +32,7 @@ const Files: React.FC = () => {
       })
     }
 
-    <button>
+    <button className={'hover:cursor-pointer hover:opacity-100 cursor-pointer opacity-50'}>
       <DynamicIcon name={'plus'} size={18} onClick={() => {
         handleCreating(true)
       }}/>

@@ -16,31 +16,50 @@ const FileProvider: FC = () => {
   useEffect(() => {
     if (MOCK_FILE_MAP.size > 0) {
       fileMap.current = MOCK_FILE_MAP
+      updateFileList()
 
-      setCurrentFileId(updateFileList()[0].id)
+      setCurrentFileId(listFileMap()[0].id)
     }
   }, []);
 
   const updateFileList = (): FileType[] => {
-    const arr = Array.from(fileMap.current.values())
+    const arr = listFileMap()
 
     setFileList(arr)
 
     return arr
   }
 
+  const listFileMap = () => Array.from(fileMap.current.values())
+
   const switchFile = (id: UID) => {
     setCurrentFileId(id)
   }
 
-  const closeFile = (id: UID) => {
-    fileMap.current.delete(id)
+  const closeFile = (deletingId: UID) => {
+    const deletingFileIndex = fileList.findIndex(file => file.id === deletingId)
+
+    fileMap.current.delete(deletingId)
+
+    if (currentFileId === deletingId) {
+      let newFileIndex: number = 0
+
+      // If the deleting file is last one
+      if (deletingFileIndex === 0) {
+        newFileIndex = 0
+      } else {
+        newFileIndex = deletingFileIndex - 1
+      }
+
+      setCurrentFileId(fileList[newFileIndex].id)
+    }
     updateFileList()
   }
 
   const createFile = (file: FileType) => {
     fileMap.current.set(file.id, file)
     updateFileList()
+    setCurrentFileId(file.id)
   }
 
   const handleCreating = (v: boolean) => {
@@ -59,10 +78,12 @@ const FileProvider: FC = () => {
       handleCreating,
     }}>
       <>
-        <Files />
+        <Files/>
         {
           fileList.map(file =>
-            <EditorProvider key={file.id} file={file}/>
+            file.id === currentFileId ?
+              <EditorProvider key={file.id} file={file}/>
+              : undefined
           )
         }
 

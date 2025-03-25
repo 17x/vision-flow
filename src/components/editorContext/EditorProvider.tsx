@@ -16,18 +16,20 @@ import EditorContext from './EditorContext.tsx';
 
 const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const editorRef = useRef<Editor>(null)
-  const divRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [historyArray, setHistoryArray] = useState<HistoryNode[]>([])
   const [historyCurrent, setHistoryCurrent] = useState<HistoryNode>({} as HistoryNode)
+  const elementRef = useRef<HTMLDivElement>(null);
+  const [focused, setFocused] = useState(false)
 
   useEffect(() => {
     let editor: Editor;
 
-    if (divRef.current) {
+    if (containerRef.current) {
       const newUID = uid();
 
       editor = new Editor({
-        container: divRef!.current,
+        container: containerRef!.current,
         data: {
           id: newUID,
           size: basicEditorAreaSize,
@@ -41,7 +43,24 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       createMockData(editor)
       editorRef.current = editor
     }
+
+    const element = elementRef.current;
+    if (element) {
+      element.addEventListener('focus', handleFocus);
+      element.addEventListener('blur', handleBlur);
+    }
+
+    // Clean up the event listeners on unmount
+    return () => {
+      if (element) {
+        element.removeEventListener('focus', handleFocus);
+        element.removeEventListener('blur', handleBlur);
+      }
+    };
   }, [file])
+
+  const handleFocus = () => setFocused(true);
+  const handleBlur = () => setFocused(false);
 
   const onHistoryUpdated: OnHistoryUpdated = (historyTree) => {
 
@@ -70,8 +89,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       applyHistoryNode,
       executeAction
     }}>
-      <div className={'w-full h-full flex flex-col'}>
-        <ShortcutListener/>
+      <div ref={elementRef} className={'w-full h-full flex flex-col'} autoFocus>
+        <ShortcutListener focused={focused}/>
 
         <Header/>
 
@@ -79,7 +98,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           <ModulePanel/>
 
           <div className={'flex flex-col w-full h-full overflow-hidden'}>
-            <div ref={divRef} className={'relative overflow-hidden flex w-full h-full'} editor-container={'true'}></div>
+            <div ref={containerRef} className={'relative overflow-hidden flex w-full h-full'}
+                 editor-container={'true'}></div>
             <StatusBar/>
           </div>
 

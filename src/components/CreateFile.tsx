@@ -1,4 +1,4 @@
-import {FC, useContext, useRef} from "react";
+import {FC, FormEvent, useContext, useRef} from "react";
 import uid from "../utilities/Uid.ts";
 import FileContext, {FileType} from "./fileContext/FileContext.tsx";
 
@@ -6,7 +6,9 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
   const formRef = useRef<HTMLFormElement>(null);
   const {createFile, handleCreating} = useContext(FileContext)
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     const filename = (formRef.current?.filename.value.trim())
 
     if (!filename) {
@@ -18,25 +20,26 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
       name: filename,
       data: {}, config: {},
     }
-
+    console.log(newFile)
     createFile(newFile)
     handleCreating(false)
   }
 
   return <div
-    style={{
-      backgroundColor: bg
-    }}
-    onClick={() => onBgClick && onBgClick()}
+    tabIndex={1}
     className={`fixed top-0 left-0 z-20 w-full h-full flex flex-row items-center justify-center text-sm select-none`}>
+    <div
+      style={{
+        backgroundColor: bg
+      }}
+      onClick={() => onBgClick && onBgClick()}
+      className={'absolute top-0 left-0 w-full h-full flex flex-row items-center justify-center text-sm select-none'}>
+    </div>
+
     <form
       ref={formRef}
-      className={'p-4 bg-white rounded-xl shadow-2xl'}
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleSubmit()
-      }}>
+      className={'relative z-20 p-4 bg-white rounded-xl shadow-2xl'}
+      onSubmit={handleSubmit}>
       <h1 className={'text-xl text-center'}>New File</h1>
 
       <label htmlFor="filename" className="block text-gray-700 font-medium mb-2">File Name</label>

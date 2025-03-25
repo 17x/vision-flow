@@ -38,21 +38,27 @@ const FileProvider: FC = () => {
 
   const closeFile = (deletingId: UID) => {
     const deletingFileIndex = fileList.findIndex(file => file.id === deletingId)
+    let len = fileList.length
+
+    if (deletingFileIndex === -1) return
 
     fileMap.current.delete(deletingId)
+    fileList.splice(deletingFileIndex, 1)
+    len--
 
-    if (currentFileId === deletingId) {
-      let newFileIndex: number = 0
+    if (currentFileId === deletingId && len > 0) {
+      let newOpenFileIndex: number = deletingFileIndex + 1
 
-      // If the deleting file is last one
       if (deletingFileIndex === 0) {
-        newFileIndex = 0
-      } else {
-        newFileIndex = deletingFileIndex - 1
+        newOpenFileIndex = 0
+      }
+      if (newOpenFileIndex > len) {
+        newOpenFileIndex = len - 1
       }
 
-      setCurrentFileId(fileList[newFileIndex].id)
+      setCurrentFileId(fileList[newOpenFileIndex].id)
     }
+
     updateFileList()
   }
 

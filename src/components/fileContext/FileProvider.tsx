@@ -43,6 +43,7 @@ const FileProvider: FC = () => {
     if (deletingFileIndex === -1) return
 
     fileMap.current.delete(deletingId)
+    updateFileList()
     fileList.splice(deletingFileIndex, 1)
     len--
 
@@ -59,7 +60,6 @@ const FileProvider: FC = () => {
       setCurrentFileId(fileList[newOpenFileIndex].id)
     }
 
-    updateFileList()
   }
 
   const createFile = (file: FileType) => {

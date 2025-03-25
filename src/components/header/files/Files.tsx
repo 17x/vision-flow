@@ -14,8 +14,7 @@ const Files: React.FC = () => {
         const isActive = file.id === currentFileId
         const currentTabClasses = basicTabClasses + (isActive ? activeTabClasses : unActiveTabClasses)
         const currCloseIconClasses: string = (isActive ? 'visible' : 'invisible') + ' w-2 h-2 ml-4 opacity-50 hover:opacity-100 group-hover:visible w-2 h-2 cursor-pointer'
-        console.log(file.id,)
-        console.log(currentFileId);
+
         return <div key={file.id}
                     className={currentTabClasses}
                     onClick={() => {

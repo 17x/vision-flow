@@ -74,12 +74,17 @@ class SelectionManager {
     this.editor.action.unsubscribe('modify-modules', this.modifyModules.bind(this));
   }
 
-  public replaceSelectModules(idSet: Set<UID>) {
+  public select(idSet: Set<UID>) {
     this.selectedModules.clear()
     idSet.forEach((id) => {
       this.selectedModules.add(id);
     })
     this.render();
+  }
+
+
+  public getSelected(): Set<UID> {
+    return new Set(this.selectedModules.keys())
   }
 
   public selectAll(): void {
@@ -98,7 +103,7 @@ class SelectionManager {
   public paste(): void {
     const newModules = this.editor.batchCreate(this.copiedItems)
     this.editor.batchAdd(newModules, 'paste-modules')
-    this.replaceSelectModules(new Set(newModules.keys()))
+    this.select(new Set(newModules.keys()))
     this.updateCopiedItemsDelta()
   }
 
@@ -117,9 +122,9 @@ class SelectionManager {
     })
 
     const newModules = this.editor.batchCreate(temp)
-    this.editor.batchAdd(newModules, 'duplicate-modules', true)
+    this.editor.batchAdd(newModules, 'duplicate-modules')
     this.isSelectAll = false
-    this.replaceSelectModules(new Set(newModules.keys()))
+    this.select(new Set(newModules.keys()))
   }
 
   public delete(): void {
@@ -276,10 +281,9 @@ class SelectionManager {
     this.render();
   }
 
-  public selectModules(idSet: Set<UID>) {
-    this.selectedModules = idSet
-    console.log(idSet)
-    console.log(this.selectedModules)
+
+  public clear(): void {
+    this.selectedModules.clear();
     this.render()
   }
 
@@ -375,10 +379,6 @@ class SelectionManager {
     }
   }
 
-  public clear(): void {
-    this.selectedModules.clear();
-    this.render()
-  }
 
   public handleKeyboardMove(modules): void {
 

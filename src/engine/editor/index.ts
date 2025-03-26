@@ -155,7 +155,8 @@ class Editor {
       // console.log([...modules.values()].map(mod => mod.getDetails()))
       this.history.replaceNext({
         type: historyCode,
-        modules: [...modules.values()].map(mod => mod.getDetails())
+        modules: [...modules.values()].map(mod => mod.getDetails()),
+        selectModules: this.selectionManager.getSelected()
       })
     }
 
@@ -212,7 +213,8 @@ class Editor {
     if (historyCode) {
       this.history.replaceNext({
         type: historyCode,
-        modules: backup
+        modules: backup,
+        selectModules: this.selectionManager.getSelected()
       })
     }
 

@@ -9,91 +9,70 @@ class History extends HistoryDoublyLinkedList {
     super();
     this.editor = editor;
     // this.bindShortcuts()
-    {
-      this.replaceNext({
-        type: 'init',
-        modules: [],
-        selectedItems: []
-      })
-      if (editor.events.onHistoryUpdated) {
-        editor.events.onHistoryUpdated(this)
-      }
-    }
+
+    this.replaceNext({
+      type: 'init',
+      modules: [],
+      selectedItems: new Set()
+    })
+
+    editor.events.onHistoryUpdated?.(this)
+
     // if (onHistoryUpdated) onHistoryUpdated()
-  }
-
-  private bindShortcuts() {
-    // this.editor.action.subscribe('undo', this.undo.bind(this));
-    // this.editor.action.subscribe('redo', this.redo.bind(this));
-  }
-
-  private unBindShortcuts() {
-    // this.editor.action.unsubscribe('undo', this.undo.bind(this));
-    // this.editor.action.unsubscribe('redo', this.redo.bind(this));
   }
 
   replaceNext(value: HistoryValue): void {
     super.replaceNext(value)
 
-    if (this.editor.events.onHistoryUpdated) {
-      this.editor.events.onHistoryUpdated(this)
-    }
+    this.editor.events.onHistoryUpdated?.(this)
   }
 
   undo(): void {
     if (!this.current) return
 
-    // get current history node data
-    const type = this.current.value.type;
-    const modules = this.current.value.modules || []
+    const {type, modules = [], selectModules = new Set()} = this.current.value
 
     if (
       type === 'paste-modules'
       || type === 'add-modules'
       || type === 'duplicate-modules'
     ) {
-      console.log(modules)
       this.editor.batchDelete(arrayToSet(modules!))
     } else if (type === 'delete-modules') {
       this.editor.batchAdd(this.editor.batchCreate(modules!))
     }
 
-    this.editor.selectionManager.clear()
+    this.editor.selectionManager.select(selectModules)
 
     this.back()
 
-    if (this.editor.events.onHistoryUpdated) {
-      this.editor.events.onHistoryUpdated(this)
-    }
+    this.editor.events.onHistoryUpdated?.(this)
   }
 
   redo(): void {
     if (!this.current!.next) return
-
-    const type = this.current!.next.value.type;
-    const modules = this.current!.next.value.modules || []
+    const {type, modules = [], selectModules = new Set()} = this.current!.next.value
 
     if (
       type === 'paste-modules'
       || type === 'add-modules'
       || type === 'duplicate-modules'
     ) {
-      console.log(this.editor.batchCreate(modules!))
       this.editor.batchAdd(this.editor.batchCreate(modules!))
     } else if (type === 'delete-modules') {
-      this.editor.batchDelete(modules!)
+      this.editor.batchDelete(new Set(modules.map(m => m.id)))
     }
 
-    this.editor.selectionManager.clear()
+    console.log(selectModules)
+    this.editor.selectionManager.select(selectModules)
     this.forward()
 
-    if (this.editor.events.onHistoryUpdated) {
-      this.editor.events.onHistoryUpdated(this)
-    }
+    this.editor.events.onHistoryUpdated?.(this)
   }
 
   setNode(targetNode: HistoryNode) {
-    console.log(targetNode)
+    console.log(targetNode, this.current)
+    console.log(targetNode.value)
     if (targetNode === this.current) return
     let curr = targetNode
 
@@ -119,7 +98,6 @@ class History extends HistoryDoublyLinkedList {
         curr = curr.prev
       }
     }
-
   }
 
   toArray(): HistoryNode[] {

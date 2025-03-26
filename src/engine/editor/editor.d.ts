@@ -10,10 +10,12 @@ export interface Line {
   end: Position
 }
 
-export type MoveDirection = | 'moveUp'
-  | 'moveDown'
-  | 'moveLeft'
-  | 'moveRight'
+export type MoveDirection =
+  'move-up'
+  | 'move-down'
+  | 'move-left'
+  | 'move-right'
+
 export type ActionCode =
   'select-all'
   | 'copy'

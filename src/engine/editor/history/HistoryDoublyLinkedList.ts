@@ -4,20 +4,23 @@ type Prev = HistoryNode | null;
 type Next = Prev
 
 export interface HistoryValue {
-  type: HistoryActionType,
-  modules?: ModuleProps[],
-  selectedItems?: UID[]
+  type: HistoryActionType
+  modules?: ModuleProps[]
+  selectModules: Set<UID>
+  id?: number
 }
 
 class HistoryNode {
   value: HistoryValue;
   prev: Prev;
   next: Next
+  id: number
 
-  constructor(prev: Prev, next: Next, value: HistoryValue) {
+  constructor(prev: Prev, next: Next, value: HistoryValue, id = -1) {
     this.value = value;
     this.prev = prev;
     this.next = next;
+    this.id = id;
   }
 }
 
@@ -35,15 +38,30 @@ class HistoryDoublyLinkedList {
   }
 
   replaceNext(value: HistoryValue): void {
-    if (this.current) {
+    const current = this.detach()
+
+    if (current) {
       const newNode = new HistoryNode(this.current, null, value);
 
-      this.current.next = newNode;
+      current.next = newNode;
       this.current = newNode;
       this.tail = newNode;
+      newNode.id = 0
     } else {
       this.add(value)
     }
+  }
+
+  /**
+   * Detach: detach next node from current
+   */
+  detach(): HistoryNode | null {
+    if (this.current) {
+      this.current.next = null
+      this.tail = this.current;
+    }
+
+    return this.current
   }
 
   private add(value: HistoryValue): HistoryNode {
@@ -55,9 +73,12 @@ class HistoryDoublyLinkedList {
       this.tail!.next = newNode;
       newNode.prev = this.tail;
       this.tail = newNode;
+      newNode.id = this.head.id + 1;
+
     } else {
       this.head = newNode;
       this.tail = newNode;
+      newNode.id = 0
     }
 
     this.current = newNode;

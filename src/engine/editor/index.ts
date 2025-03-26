@@ -37,7 +37,7 @@ export interface EditorProps {
 
 class Editor {
   private moduleCounter = 0
-  readonly moduleMap: Map<UID, ModuleType>;
+  readonly moduleMap: ModuleMap;
   readonly canvas: HTMLCanvasElement;
   readonly id: UID;
   readonly size: Size;
@@ -69,11 +69,14 @@ class Editor {
     this.ctx = ctx as CanvasRenderingContext2D;
     this.dpr = dpr;
     this.zoom = zoom;
-    this.moduleMap = data.modules.reduce((previousValue, currentValue) => {
-      previousValue.set(currentValue.id, currentValue)
+    this.moduleMap = data.modules.reduce<ModuleMap>(
+      (previousValue, currentValue) => {
+        previousValue.set(currentValue.id, currentValue)
 
-      return previousValue
-    }, new Map<UID, ModuleType>());
+        return previousValue
+      },
+      new Map<UID, ModuleType>()
+    );
     this.id = data.id;
     this.size = data.size;
     this.wrapper = wrapper;
@@ -118,9 +121,9 @@ class Editor {
     return this.id + '-' + (++this.moduleCounter)
   }
 
-  batchCreate(moduleDataList: ModuleProps[]): Map<UID, ModuleType> {
+  batchCreate(moduleDataList: ModuleProps[]): ModuleMap {
     const clonedData = deepClone(moduleDataList) as ModuleProps[]
-    const newMap = new Map<UID, ModuleType>();
+    const newMap: ModuleMap = new Map();
     const create = (data: ModuleProps) => {
       if (!data.id) {
         data.id = this.createModuleId()
@@ -143,7 +146,7 @@ class Editor {
     return newMap;
   }
 
-  batchAdd(modules: Map<UID, ModuleType>, historyCode?: HistoryActionType) {
+  batchAdd(modules: ModuleMap, historyCode?: HistoryActionType) {
     modules.forEach(mod => {
       this.moduleMap.set(mod.id, mod);
     })
@@ -157,12 +160,13 @@ class Editor {
     }
 
     this.events.onModulesUpdated?.(this.moduleMap)
+
     this.render()
   }
 
   batchCopy(from: 'all' | Set<UID>, removeId = false, addOn?: { string: unknown }): ModuleProps[] {
     const result: ModuleProps[] = []
-    let modulesMap = new Map<UID, ModuleType>();
+    let modulesMap: ModuleMap = new Map();
 
     if (from === 'all') {
       modulesMap = this.moduleMap
@@ -250,8 +254,8 @@ class Editor {
 
   }
 
-  getModulesByIdSet(idSet: Set<UID>): Map<UID, ModuleType> {
-    const result: Map<UID, ModuleType> = new Map()
+  getModulesByIdSet(idSet: Set<UID>): ModuleMap {
+    const result: ModuleMap = new Map()
 
     idSet.forEach(id => {
       const mod = this.moduleMap.get(id);

@@ -4,7 +4,7 @@ type HistoryUpdatedHandler = (history: History) => void;
 /**
  *
  */
-type ModulesUpdatedHandler = (moduleMap: Map<UID, ModuleType>) => void;
+type ModulesUpdatedHandler = (moduleMap: ModuleMap) => void;
 
 export declare type EventHandlers = {
   onHistoryUpdated?: HistoryUpdatedHandler

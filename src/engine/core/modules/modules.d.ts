@@ -15,5 +15,6 @@ declare global {
   type ModuleNames = keyof ModuleTypeMap
 
   type ModuleType = Rectangle | RoundedRectangle | Connector
+  type ModuleMap = Map<UID, ModuleType>
 }
 export {}

@@ -139,10 +139,11 @@ const createMockData = (editor: Editor) => {
     opacity: 100,
     shadow: false,
   }
+  const MOCK_ELE_LEN = 1
 
   editor.batchAdd(
     editor.batchCreate(
-      Array.from({length: 5000}).map((_, i) => {
+      Array.from({length: MOCK_ELE_LEN}).map((_, i) => {
         return {
           ...baseRectData,
           x: baseX + (i * 10),

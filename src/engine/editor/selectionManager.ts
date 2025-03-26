@@ -74,9 +74,9 @@ class SelectionManager {
     this.editor.action.unsubscribe('modify-modules', this.modifyModules.bind(this));
   }
 
-  public replaceSelectModules(ids: UID[]) {
+  public replaceSelectModules(idSet: Set<UID>) {
     this.selectedModules.clear()
-    ids.forEach((id) => {
+    idSet.forEach((id) => {
       this.selectedModules.add(id);
     })
     this.render();
@@ -95,14 +95,14 @@ class SelectionManager {
     this.updateCopiedItemsDelta()
   }
 
-  paste(): void {
+  public paste(): void {
     const newModules = this.editor.batchCreate(this.copiedItems)
     this.editor.batchAdd(newModules, 'paste-modules')
-    this.replaceSelectModules([...newModules.keys()])
+    this.replaceSelectModules(new Set(newModules.keys()))
     this.updateCopiedItemsDelta()
   }
 
-  duplicate(): void {
+  public duplicate(): void {
     let temp: ModuleProps[]
 
     if (this.isSelectAll) {
@@ -111,11 +111,15 @@ class SelectionManager {
       temp = this.editor.batchCopy(this.selectedModules, true)
     }
 
-    this.updateCopiedItemsDelta()
-    this.editor.batchAdd(this.editor.batchCreate(temp), 'duplicate-modules')
+    temp.forEach(copiedItem => {
+      copiedItem!.x += CopyDeltaX
+      copiedItem!.y += CopyDeltaY
+    })
+
+    const newModules = this.editor.batchCreate(temp)
+    this.editor.batchAdd(newModules, 'duplicate-modules', true)
     this.isSelectAll = false
-    this.replaceSelectModules(temp.map(module => module.id))
-    // this.updateCopiedItemsDelta()
+    this.replaceSelectModules(new Set(newModules.keys()))
   }
 
   public delete(): void {
@@ -272,6 +276,13 @@ class SelectionManager {
     this.render();
   }
 
+  public selectModules(idSet: Set<UID>) {
+    this.selectedModules = idSet
+    console.log(idSet)
+    console.log(this.selectedModules)
+    this.render()
+  }
+
   public render(): void {
     const enableRotationHandle = this.selectedModules.size === 1
     const {ctx} = this
@@ -279,7 +290,7 @@ class SelectionManager {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.setTransform(this.editor.scale, 0, 0, this.editor.scale, 0, 0);
 
-    const BatchDrawer = (modules: ModuleType[]) => {
+    const BatchDrawer = (modules: ModuleMap) => {
       const handlesQueue: Set<string> = new Set()
       // const rectQueue: Set<string> = new Set()
       const l = this.resizeHandleSize / 2
@@ -350,12 +361,12 @@ class SelectionManager {
     if (this.isSelectAll) {
       BatchDrawer(this.editor.moduleMap)
     } else {
-      const manipulationModules: ModuleType[] = [];
+      const manipulationModules: ModuleMap = new Map();
 
       this.selectedModules.forEach(id => {
         this.editor.moduleMap.forEach((module) => {
           if (module.id === id) {
-            manipulationModules.push(module)
+            manipulationModules.set(module.id, module)
           }
         })
       })
@@ -369,7 +380,7 @@ class SelectionManager {
     this.render()
   }
 
-  public handleKeyboardMove(modules):void{
+  public handleKeyboardMove(modules): void {
 
   }
 

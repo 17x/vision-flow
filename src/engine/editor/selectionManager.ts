@@ -279,7 +279,7 @@ class SelectionManager {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.setTransform(this.editor.scale, 0, 0, this.editor.scale, 0, 0);
 
-    const BatchDrawer = (modules: Modules[]) => {
+    const BatchDrawer = (modules: ModuleType[]) => {
       const handlesQueue: Set<string> = new Set()
       // const rectQueue: Set<string> = new Set()
       const l = this.resizeHandleSize / 2
@@ -350,7 +350,7 @@ class SelectionManager {
     if (this.isSelectAll) {
       BatchDrawer(this.editor.moduleMap)
     } else {
-      const manipulationModules: Modules[] = [];
+      const manipulationModules: ModuleType[] = [];
 
       this.selectedModules.forEach(id => {
         this.editor.moduleMap.forEach((module) => {
@@ -367,6 +367,10 @@ class SelectionManager {
   public clear(): void {
     this.selectedModules.clear();
     this.render()
+  }
+
+  public handleKeyboardMove(modules):void{
+
   }
 
   /*  public setSelectedItems(modulesIdList: SelectionManager['selectedModules']): void {

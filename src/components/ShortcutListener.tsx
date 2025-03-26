@@ -9,7 +9,6 @@ const ShortcutListener: React.FC = () => {
     let shortcutCode: ActionCode | null = null;
     const {key, ctrlKey, metaKey, shiftKey} = e
 
-
     const arrowKeys: { [key: string]: MoveDirection } = {
       ArrowUp: 'moveUp',
       ArrowDown: 'moveDown',

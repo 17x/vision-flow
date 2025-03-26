@@ -16,7 +16,7 @@ import Connector from "../core/modules/connectors/connector.ts";
 export interface EditorDataProps {
   id: UID;
   size: Size;
-  modules: Modules[];
+  modules: ModuleType[];
 }
 
 export const basicEditorAreaSize: BasicEditorAreaSize = {
@@ -37,7 +37,7 @@ export interface EditorProps {
 
 class Editor {
   private moduleCounter = 0
-  readonly moduleMap: Map<UID, Modules>;
+  readonly moduleMap: Map<UID, ModuleType>;
   readonly canvas: HTMLCanvasElement;
   readonly id: UID;
   readonly size: Size;
@@ -73,7 +73,7 @@ class Editor {
       previousValue.set(currentValue.id, currentValue)
 
       return previousValue
-    }, new Map<UID, Modules>());
+    }, new Map<UID, ModuleType>());
     this.id = data.id;
     this.size = data.size;
     this.wrapper = wrapper;
@@ -118,9 +118,9 @@ class Editor {
     return this.id + '-' + (++this.moduleCounter)
   }
 
-  batchCreate(moduleDataList: ModuleProps[]): Map<UID, Modules> {
+  batchCreate(moduleDataList: ModuleProps[]): Map<UID, ModuleType> {
     const clonedData = deepClone(moduleDataList) as ModuleProps[]
-    const newMap = new Map<UID, Modules>();
+    const newMap = new Map<UID, ModuleType>();
     const create = (data: ModuleProps) => {
       if (!data.id) {
         data.id = this.createModuleId()
@@ -143,7 +143,7 @@ class Editor {
     return newMap;
   }
 
-  batchAdd(modules: Map<UID, Modules>, historyCode?: HistoryActionType) {
+  batchAdd(modules: Map<UID, ModuleType>, historyCode?: HistoryActionType) {
     modules.forEach(mod => {
       this.moduleMap.set(mod.id, mod);
     })
@@ -156,12 +156,13 @@ class Editor {
       })
     }
 
+    this.events.onModulesUpdated?.(this.moduleMap)
     this.render()
   }
 
   batchCopy(from: 'all' | Set<UID>, removeId = false, addOn?: { string: unknown }): ModuleProps[] {
     const result: ModuleProps[] = []
-    let modulesMap = new Map<UID, Modules>();
+    let modulesMap = new Map<UID, ModuleType>();
 
     if (from === 'all') {
       modulesMap = this.moduleMap
@@ -249,8 +250,8 @@ class Editor {
 
   }
 
-  getModulesByIdSet(idSet: Set<UID>): Map<UID, Modules> {
-    const result: Map<UID, Modules> = new Map()
+  getModulesByIdSet(idSet: Set<UID>): Map<UID, ModuleType> {
+    const result: Map<UID, ModuleType> = new Map()
 
     idSet.forEach(id => {
       const mod = this.moduleMap.get(id);
@@ -262,12 +263,8 @@ class Editor {
     return result
   }
 
-  getModuleList(): Modules[] {
+  getModuleList(): ModuleType[] {
     return [...Object.values(this.moduleMap)]
-  }
-
-  public moundToDom(target: HTMLElement) {
-    target.append(this.wrapper)
   }
 
   private setupEventListeners() {

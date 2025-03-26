@@ -19,7 +19,7 @@ class Base {
   private readonly position: Position;
   private readonly rotation: Rotation;
   private readonly shadow: Shadow;
-  private readonly layer: number;
+  readonly layer: number;
 
   constructor({
                 id,
@@ -27,7 +27,7 @@ class Base {
                 lineColor,
                 opacity,
                 position,
-                layer,
+                layer = 1,
                 rotation = 0,
                 shadow = false,
                 showLine = true,

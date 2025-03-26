@@ -14,6 +14,6 @@ declare global {
   type ModuleProps = ShapeProps | ConnectorProps
   type ModuleNames = keyof ModuleTypeMap
 
-  type Modules = Rectangle | RoundedRectangle | Connector
+  type ModuleType = Rectangle | RoundedRectangle | Connector
 }
 export {}

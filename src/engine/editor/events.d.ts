@@ -1,7 +1,12 @@
 import History from "./history/history.ts";
 
-type OnHistoryUpdated = (history: History) => void;
+type HistoryUpdatedHandler = (history: History) => void;
+/**
+ *
+ */
+type ModulesUpdatedHandler = (moduleMap: Map<UID, ModuleType>) => void;
 
 export declare type EventHandlers = {
-  onHistoryUpdated?: OnHistoryUpdated
+  onHistoryUpdated?: HistoryUpdatedHandler
+  onModulesUpdated?: ModulesUpdatedHandler
 }

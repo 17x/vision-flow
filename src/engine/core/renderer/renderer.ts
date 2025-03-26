@@ -5,7 +5,7 @@ import lineRender, {LineRenderProps} from "./lineRender.ts";
 
 interface RenderProps {
   ctx: CanvasRenderingContext2D
-  modules: Map<string, Modules>
+  modules: Map<string, ModuleType>
 }
 
 // type RenderTypes = 'line' | 'curve' | 'text' | 'rect'

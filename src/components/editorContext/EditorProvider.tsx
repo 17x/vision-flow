@@ -5,7 +5,7 @@ import {ModulePanel} from "../modulePanel/ModulePanel.tsx";
 import {PropertyPanel} from "../PropertyPanel.tsx";
 import {StatusBar} from "../statusBar/StatusBar.tsx";
 import uid from "../../utilities/Uid.ts";
-import {OnHistoryUpdated} from "../../engine/editor/events";
+import {HistoryUpdatedHandler, ModulesUpdatedHandler} from "../../engine/editor/events";
 import {HistoryNode} from "../../engine/editor/history/HistoryDoublyLinkedList.ts";
 import {LayerPanel} from "../layerPanel/LayerPanel.tsx";
 import {ActionCode} from "../../engine/editor/editor";
@@ -18,6 +18,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const editorRef = useRef<Editor>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [historyArray, setHistoryArray] = useState<HistoryNode[]>([])
+  const [sortedModules, setSortedModules] = useState<ModuleType[]>([])
   const [historyCurrent, setHistoryCurrent] = useState<HistoryNode>({} as HistoryNode)
   const elementRef = useRef<HTMLDivElement>(null);
   const [focused, setFocused] = useState(false)
@@ -36,7 +37,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           modules: [],
         },
         events: {
-          onHistoryUpdated
+          onHistoryUpdated,
+          onModulesUpdated
         }
       });
 
@@ -62,13 +64,19 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const handleFocus = () => setFocused(true);
   const handleBlur = () => setFocused(false);
 
-  const onHistoryUpdated: OnHistoryUpdated = (historyTree) => {
-
+  const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
     setHistoryArray(historyTree!.toArray())
 
     if (historyTree.current) {
       setHistoryCurrent(historyTree.current)
     }
+  }
+
+  const onModulesUpdated: ModulesUpdatedHandler = (moduleMap) => {
+    // console.log(Array.from(moduleMap.values()))
+    const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
+
+    setSortedModules(arr)
   }
 
   const applyHistoryNode = (node: HistoryNode) => {
@@ -106,7 +114,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           </div>
 
           <div className={'w-[40%] h-full border-l border-gray-200'}>
-            <LayerPanel/>
+            <LayerPanel data={sortedModules}/>
             <HistoryPanel/>
             <PropertyPanel/>
           </div>
@@ -131,6 +139,7 @@ const createMockData = (editor: Editor) => {
     opacity: 100,
     shadow: false,
   }
+
   editor.batchAdd(
     editor.batchCreate(
       Array.from({length: 5000}).map((_, i) => {
@@ -138,6 +147,7 @@ const createMockData = (editor: Editor) => {
           ...baseRectData,
           x: baseX + (i * 10),
           y: baseY + (i * 10),
+          layer: i + 1
         }
       })
     ),

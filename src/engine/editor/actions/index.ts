@@ -85,7 +85,7 @@ class Action {
     }
 
     if (code === 'moveUp') {
-      console.log(this.editor.selectionManager)
+      // console.log(this.editor.selectionManager)
       this.editor.selectionManager
     }
 

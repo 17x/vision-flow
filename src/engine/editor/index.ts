@@ -219,6 +219,7 @@ class Editor {
     }
 
     this.render()
+    this.events.onModulesUpdated?.(this.moduleMap)
     return backup
   }
 

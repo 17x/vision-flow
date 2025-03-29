@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef} from "react";
+import {useEffect, useRef} from "react";
 // import {useTranslation} from "react-i18next";
 // import OptimizedDND from "./OptimizedDND.ts";
 
@@ -29,7 +29,7 @@ export const LayerPanel = ({data, selected, handleSelectModule}: LayerPanelProps
         }
       }
     }, [data]);*/
-
+  console.log(data)
   useEffect(() => {
     targetRef.current?.scrollIntoView({
       behavior: "smooth",

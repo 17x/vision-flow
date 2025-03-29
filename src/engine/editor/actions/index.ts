@@ -47,13 +47,16 @@ class Action {
     }
   }
 
-  public dispatcher(code: ActionCode) {
+  public dispatcher(code: ActionCode, data: unknown = null) {
     if (this.lock) return
 
     this.lock = true
 
     if (code === 'select-all') {
       this.editor.selectionManager.selectAll()
+    }
+    if (code === 'select') {
+      this.editor.selectionManager.select(data as Set<UID>)
     }
 
     if (code === 'copy') {

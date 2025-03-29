@@ -74,23 +74,33 @@ class SelectionManager {
     this.editor.action.unsubscribe('modify-modules', this.modifyModules.bind(this));
   }
 
+  public getSelected(): Set<UID> {
+    return new Set(this.selectedModules.keys())
+  }
+
   public select(idSet: Set<UID>) {
+    if (!idSet) return
+    console.log(idSet)
     this.selectedModules.clear()
     idSet.forEach((id) => {
       this.selectedModules.add(id);
     })
     this.render();
-  }
-
-
-  public getSelected(): Set<UID> {
-    return new Set(this.selectedModules.keys())
+    this.editor.events.onSelectionUpdated?.(this.selectedModules)
   }
 
   public selectAll(): void {
     this.selectedModules.clear()
     this.isSelectAll = true
     this.render();
+    this.editor.events.onSelectionUpdated?.(this.selectedModules)
+  }
+
+  public clear(): void {
+    this.selectedModules.clear()
+    this.isSelectAll = false
+    this.render();
+    this.editor.events.onSelectionUpdated?.(this.selectedModules)
   }
 
   public copy(): void {
@@ -217,7 +227,7 @@ class SelectionManager {
     })
 
     if (!possibleModules.length) {
-      this.selectedModules.clear();
+      this.clear();
       return
     }
 
@@ -236,6 +246,7 @@ class SelectionManager {
     }
 
     this.render();
+    this.editor.events.onSelectionUpdated?.(this.selectedModules)
   }
 
   private handleMouseMove(e: MouseEvent): void {
@@ -279,12 +290,6 @@ class SelectionManager {
     this.isResizing = false;
     this.activeResizeHandle = null; // Reset active resize handle
     this.render();
-  }
-
-
-  public clear(): void {
-    this.selectedModules.clear();
-    this.render()
   }
 
   public render(): void {
@@ -378,7 +383,6 @@ class SelectionManager {
       BatchDrawer(manipulationModules)
     }
   }
-
 
   public handleKeyboardMove(modules): void {
 

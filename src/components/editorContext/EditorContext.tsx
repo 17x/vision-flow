@@ -7,6 +7,7 @@ interface EditorContextType {
   focused: boolean
   historyArray: HistoryNode[]
   historyCurrent: HistoryNode
+  selectedModules: UID[]
   editorRef: React.RefObject<Editor | null>
   applyHistoryNode: (node: HistoryNode) => void
   executeAction: (code: ActionCode) => void
@@ -16,6 +17,7 @@ const EditorContext = createContext<EditorContextType>({
   focused: false,
   historyArray: [] as HistoryNode[],
   historyCurrent: {} as HistoryNode,
+  selectedModules: [],
   editorRef: {} as React.RefObject<Editor>,
   applyHistoryNode: () => {
 

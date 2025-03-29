@@ -5,7 +5,7 @@ import {ModulePanel} from "../modulePanel/ModulePanel.tsx";
 import {PropertyPanel} from "../PropertyPanel.tsx";
 import {StatusBar} from "../statusBar/StatusBar.tsx";
 import uid from "../../utilities/Uid.ts";
-import {HistoryUpdatedHandler, ModulesUpdatedHandler} from "../../engine/editor/events";
+import {HistoryUpdatedHandler, ModulesUpdatedHandler, SelectionUpdatedHandler} from "../../engine/editor/events";
 import {HistoryNode} from "../../engine/editor/history/HistoryDoublyLinkedList.ts";
 import {LayerPanel} from "../layerPanel/LayerPanel.tsx";
 import {ActionCode} from "../../engine/editor/editor";
@@ -19,6 +19,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [historyArray, setHistoryArray] = useState<HistoryNode[]>([])
   const [sortedModules, setSortedModules] = useState<ModuleType[]>([])
+  const [selectedModules, setSelectedModules] = useState<UID[]>([])
   const [historyCurrent, setHistoryCurrent] = useState<HistoryNode>({} as HistoryNode)
   const elementRef = useRef<HTMLDivElement>(null);
   const [focused, setFocused] = useState(false)
@@ -38,7 +39,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         },
         events: {
           onHistoryUpdated,
-          onModulesUpdated
+          onModulesUpdated,
+          onSelectionUpdated
         }
       });
 
@@ -64,6 +66,10 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const handleFocus = () => setFocused(true);
   const handleBlur = () => setFocused(false);
 
+  const onSelectionUpdated: SelectionUpdatedHandler = (selected) => {
+    setSelectedModules(Array.from(selected))
+  }
+
   const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
     setHistoryArray(historyTree!.toArray())
 
@@ -85,14 +91,15 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
   }
 
-  const executeAction = (code: ActionCode) => {
-    editorRef.current!.execute(code)
+  const executeAction = (code: ActionCode, data: unknown = null) => {
+    editorRef.current!.execute(code, data)
   }
 
   return (
     <EditorContext.Provider value={{
       focused,
       historyArray,
+      selectedModules,
       historyCurrent,
       editorRef,
       applyHistoryNode,
@@ -114,7 +121,11 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           </div>
 
           <div className={'w-[40%] h-full border-l border-gray-200'}>
-            <LayerPanel data={sortedModules}/>
+            <LayerPanel data={sortedModules}
+                        selected={selectedModules}
+                        handleSelectModule={id => {
+                          executeAction('select', new Set([id]))
+                        }}/>
             <HistoryPanel/>
             <PropertyPanel/>
           </div>

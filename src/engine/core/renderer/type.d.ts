@@ -19,7 +19,7 @@ export interface RectangleRenderProps extends RectangleProps {
 
   rotation: number
 }*/
-export type RectangleRenderProps = Partial<Pick<RectangleProps,
+export type RectangleRenderProps = Pick<RectangleProps,
   'x' |
   'y' |
   'width' |
@@ -34,8 +34,8 @@ export type RectangleRenderProps = Partial<Pick<RectangleProps,
   'enableGradient' |
   'gradient' |
   'rotation'
->>
-
+>
+/*
 export type OrderedProps = [
   x: number,
   y: number,
@@ -51,4 +51,4 @@ export type OrderedProps = [
   enableGradient: boolean,
   gradient: Gradient,
   rotation: number,
-]
+]*/

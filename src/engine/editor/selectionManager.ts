@@ -46,7 +46,6 @@ class SelectionManager {
 
     coordinator(this.editor.canvas, this.canvas);
     this.ctx.scale(this.editor.dpr, this.editor.dpr)
-
     canvas.style.position = "absolute";
     canvas.style.top = "0";
     canvas.style.bottom = "0";
@@ -295,12 +294,10 @@ class SelectionManager {
 
   public render(): void {
     const enableRotationHandle = this.selectedModules.size === 1
-    const {ctx} = this
-
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.setTransform(this.editor.scale, 0, 0, this.editor.scale, 0, 0);
 
     const BatchDrawer = (modules: ModuleMap) => {
+      const {ctx} = this
+
       const handlesQueue: Set<string> = new Set()
       // const rectQueue: Set<string> = new Set()
       const l = this.resizeHandleSize / 2
@@ -308,7 +305,7 @@ class SelectionManager {
       const fillColor = "#5491f8";
       const lineColor = "#5491f8";
       const lineWidth = 1;
-      ctx.save();
+
 
       if (enableRotationHandle) {
         // this.ctx.translate(item.x + item.size / 2, item.y + item.size / 2); // Move origin to center of item
@@ -338,6 +335,11 @@ class SelectionManager {
         // rectQueue.add(`${x}-${y}-${width}-${height}`);
       });
 
+      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      ctx.setTransform(this.editor.scale, 0, 0, this.editor.scale, 0, 0);
+      rectRender(ctx, rects)
+      ctx.save();
+      ctx.fillStyle = fillColor;
       handlesQueue.forEach((s) => {
         const arr = s.split('-');
         const x = parseFloat(arr[0]);
@@ -348,10 +350,8 @@ class SelectionManager {
         ctx.fill();
       })
 
-      console.log(rects)
-      rectRender(ctx, rects)
+      ctx.restore();
 
-      this.ctx.restore();
     }
 
     if (this.isSelectAll) {

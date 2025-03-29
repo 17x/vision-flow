@@ -1,8 +1,8 @@
 import Base, {BasicModuleProps} from "../base.ts";
 
 export interface ShapeProps extends BasicModuleProps {
-  x?: number
-  y?: number
+  x: number
+  y: number
 
   enableGradient?: boolean
   gradient?: Gradient
@@ -28,8 +28,8 @@ class Shape extends Base {
               }: ShapeProps) {
     super(rest);
 
-    this.x = x!;
-    this.y = y!;
+    this.x = x;
+    this.y = y;
     this.fillColor = fillColor
     this.enableFill = enableFill
   }

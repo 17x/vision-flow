@@ -1,36 +1,36 @@
 import Editor from "../index.ts"
 import coordinator from "../coordinator.ts"
-import rectRender from "../../core/renderer/rectRender.ts"
-import {CircleRenderProps, RectangleRenderProps} from "../../core/renderer/type"
-import Rectangle from "../../core/modules/shapes/rectangle.ts"
-import circleRender from "../../core/renderer/circleRender.ts"
-import {getBoxControlPoints, isInsideRotatedRect} from "./helper.ts"
+import handleMouseDown from "./events/mouseDown.ts"
+import handleMouseMove from "./events/mouseMove.ts"
+import handleMouseUp from "./events/mouseUp.ts"
+import render from "./render.ts"
 
 // type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
 const CopyDeltaX = 10
 const CopyDeltaY = 10
 
 class SelectionManager {
-  private canvas: HTMLCanvasElement
-  private ctx: CanvasRenderingContext2D
-  private selectedModules: Set<UID> = new Set()
+  canvas: HTMLCanvasElement
+  ctx: CanvasRenderingContext2D
+  selectedModules: Set<UID> = new Set()
   // @ts-ignore
   private hoveredModules: Set<UID> = new Set()
   // @ts-ignore
-  private isDragging: boolean = false
-  private isResizing: boolean = false
+  isDragging: boolean = false
+  isResizing: boolean = false
   // @ts-ignore
   private dragStart: {
     x: number; y: number
   } = {
     x: 0, y: 0
   }
-  private resizeHandleSize: number = 10
-  private activeResizeHandle: { x: number, y: number } | null = null
+  // @ts-ignore
+  resizeHandleSize: number = 10
+  activeResizeHandle: { x: number, y: number } | null = null
   private isDestroyed: boolean = false
-  private editor: Editor
+  editor: Editor
   private copiedItems: ModuleProps[] = []
-  private isSelectAll: boolean = false
+  isSelectAll: boolean = false
   // private currentCopyDeltaX = CopyDeltaX
   // private currentCopyDeltaY = CopyDeltaY
 
@@ -88,7 +88,7 @@ class SelectionManager {
   public clear(): void {
     this.selectedModules.clear()
     this.isSelectAll = false
-    this.render()
+    render.call(this)
     this.editor.events.onSelectionUpdated?.(this.selectedModules)
   }
 
@@ -144,173 +144,19 @@ class SelectionManager {
   }
 
   private setupEventListeners(): void {
-    this.editor.canvas.addEventListener("mousedown", this.handleMouseDown.bind(this))
-    this.editor.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this))
-    this.editor.canvas.addEventListener("mouseup", this.handleMouseUp.bind(this))
+    this.editor.canvas.addEventListener("mousedown", handleMouseDown.bind(this))
+    this.editor.canvas.addEventListener("mousemove", handleMouseMove.bind(this))
+    this.editor.canvas.addEventListener("mouseup", handleMouseUp.bind(this))
   }
 
   private removeEventListeners(): void {
-    this.canvas.removeEventListener("mousedown", this.handleMouseDown.bind(this))
-    this.canvas.removeEventListener("mousemove", this.handleMouseMove.bind(this))
-    this.canvas.removeEventListener("mouseup", this.handleMouseUp.bind(this))
+    this.canvas.removeEventListener("mousedown", handleMouseDown.bind(this))
+    this.canvas.removeEventListener("mousemove", handleMouseMove.bind(this))
+    this.canvas.removeEventListener("mouseup", handleMouseUp.bind(this))
   }
 
-  private handleMouseDown(e: MouseEvent): void {
-    if (this.editor.panableContainer.isSpaceKeyPressed) return
-
-    const mouseX = e.offsetX
-    const mouseY = e.offsetY
-    // const mousePointX = mouseX
-    // const mousePointY = mouseY
-    this.isDragging = true
-    this.dragStart = {
-      x: mouseX, y: mouseY
-    }
-
-    const possibleModules = Array.from(this.editor.moduleMap.values()).filter((item) => {
-      if (item.type === 'rectangle' && item.rotation > 0) {
-        const {
-          x, y, width, height, rotation
-        } = (item as Rectangle).getDetails()
-
-        return isInsideRotatedRect(mouseX, mouseY, x, y, width, height, rotation)
-      }
-    })
-
-    if (!possibleModules.length) {
-      this.clear()
-      return
-    }
-
-    const lastOne = possibleModules[possibleModules.length - 1]
-    const id = lastOne.id
-
-    if (e.metaKey || e.ctrlKey || e.shiftKey) {
-      if (this.selectedModules.has(id)) {
-        this.selectedModules.delete(id)
-      } else {
-        this.selectedModules.add(id)
-      }
-    } else {
-      this.selectedModules.clear()
-      this.selectedModules.add(id)
-    }
-
-    this.render()
-    this.editor.events.onSelectionUpdated?.(this.selectedModules)
-  }
-
-  private handleMouseMove(e: MouseEvent): void {
-    const mouseX = e.offsetX
-    const mouseY = e.offsetY
-
-    // Drag logic
-    if (this.isResizing && this.activeResizeHandle) {
-      // Calculate the new size based on the mouse position
-      const newSize = Math.max(20,
-        Math.min(
-          this.canvas.width,
-          this.canvas.height,
-          mouseX - this.activeResizeHandle.x,
-          mouseY - this.activeResizeHandle.y
-        )
-      )
-
-      // Apply the resize effect
-      // @ts-ignore
-      this.activeResizeHandle.size = newSize
-      this.render()
-    }
-
-    // console.log(this.editor.modules.entries())
-    // hover logic
-    const filtered = Array.from(this.editor.moduleMap.values()).filter((module) => {
-      const {top, right, bottom, left} = module.getBoundingRect()
-
-      return mouseX > left && mouseY > top && mouseX < right && mouseY < bottom
-    })
-    // console.log(filtered);
-
-    this.canvas.style.cursor = filtered.length > 0 ? "move" : 'default'
-  }
-
-  private handleMouseUp(): void {
-    this.isSelectAll = false
-    this.isDragging = false
-    this.isResizing = false
-    this.activeResizeHandle = null // Reset active resize handle
-    this.render()
-  }
-
-  public render(): void {
-    const enableRotationHandle = this.selectedModules.size === 1
-
-    const BatchDrawer = (modules: ModuleMap) => {
-      const {ctx} = this
-
-      const l = this.resizeHandleSize / 2
-      const rects: RectangleRenderProps[] = []
-      const dots: CircleRenderProps[] = []
-      const fillColor = "#5491f8"
-      const lineColor = "#5491f8"
-      const lineWidth = 1
-
-
-      if (enableRotationHandle) {
-        // this.ctx.translate(item.x + item.size / 2, item.y + item.size / 2); // Move origin to center of item
-        // this.ctx.rotate(item.rotation); // Apply rotation
-      }
-
-      modules.forEach((module) => {
-        const {
-          x, y, width, height, rotation
-        } = (module as Rectangle).getDetails()
-        const points = getBoxControlPoints(x, y, width, height, rotation)
-
-        dots.push(...points.map(point => ({
-          ...point,
-          r1: l,
-          r2: l,
-          fillColor,
-          lineColor: '#fff',
-        })))
-
-        rects.push({
-          x,
-          y,
-          width,
-          height,
-          fillColor,
-          lineColor,
-          lineWidth,
-          rotation,
-          opacity: 0,
-          dashLine: 'dash'
-        })
-      })
-
-      // console.log(rects)
-      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-      // ctx.setTransform(this.editor.scale, 0, 0, this.editor.scale, 0, 0);
-      rectRender(ctx, rects)
-      circleRender(ctx, dots)
-    }
-
-    if (this.isSelectAll) {
-      BatchDrawer(this.editor.moduleMap)
-    } else {
-      const selectedModulesMap: ModuleMap = new Map()
-
-      this.selectedModules.forEach(id => {
-        this.editor.moduleMap.forEach((module) => {
-          if (module.id === id) {
-            selectedModulesMap.set(module.id, module)
-          }
-        })
-      })
-
-      BatchDrawer(selectedModulesMap)
-    }
+  render() {
+    render.call(this)
   }
 
   destroy(): void {

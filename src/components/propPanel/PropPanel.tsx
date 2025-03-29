@@ -1,13 +1,13 @@
-import {useContext, useEffect, useState} from "react"
+import {useContext, useEffect} from "react"
 import EditorContext from "../editorContext/EditorContext.tsx"
 
 const PropPanel = () => {
   const {selectedProps} = useContext(EditorContext)
 
-  console.log(selectedProps)
+  // console.log(selectedProps)
 
   useEffect(() => {
-
+    console.log(9)
   }, [selectedProps])
 
   return <div className={'p-2'}>

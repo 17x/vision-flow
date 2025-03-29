@@ -78,6 +78,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const onSelectionUpdated: SelectionUpdatedHandler = (selected, props) => {
     setSelectedModules(Array.from(selected))
     setSelectedProps(props)
+    console.log(9)
   }
 
   const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {

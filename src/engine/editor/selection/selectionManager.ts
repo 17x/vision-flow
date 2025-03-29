@@ -98,7 +98,7 @@ class SelectionManager {
         this.selectedModules.add(id)
       })
     }
-    console.log(p2)
+    // console.log(p2)
     this.render()
     this.editor.events.onSelectionUpdated?.(idSet, p2)
   }

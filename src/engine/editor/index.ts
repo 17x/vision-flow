@@ -258,7 +258,8 @@ class Editor {
 
     this.render()
     this.events.onModulesUpdated?.(this.moduleMap)
-    this.selectionManager.render()
+    this.selectionManager.update()
+    // this.selectionManager.render()
 
     if (historyCode) {
       this.history.add({

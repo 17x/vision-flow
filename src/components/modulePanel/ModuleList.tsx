@@ -1,5 +1,5 @@
-import {useContext, useEffect} from "react";
-import EditorContext from "../editorContext/EditorContext.tsx";
+import {useContext, useEffect} from "react"
+import EditorContext from "../editorContext/EditorContext.tsx"
 
 interface ModulePanelProps {
 
@@ -34,11 +34,11 @@ const modules: Partial<ModuleProps>[] = [
 ]
 
 export const ModuleList: React.FC<ModulePanelProps> = () => {
-  const {editorRef} = useContext(EditorContext);
+  const {editorRef} = useContext(EditorContext)
 
   useEffect(() => {
     if (editorRef.current) {
-      console.log("editorRef.current updated:", editorRef.current);
+      console.log("editorRef.current updated:", editorRef.current)
     }
   }, [editorRef])
   return (
@@ -61,5 +61,5 @@ export const ModuleList: React.FC<ModulePanelProps> = () => {
         ))
       }
     </div>
-  );
-};
+  )
+}

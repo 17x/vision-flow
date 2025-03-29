@@ -1,9 +1,9 @@
-import {FC, FormEvent, useContext, useRef, useState} from "react";
-import uid from "../utilities/Uid.ts";
-import FileContext, {FileType} from "./fileContext/FileContext.tsx";
+import {FC, FormEvent, useContext, useRef, useState} from "react"
+import uid from "../utilities/Uid.ts"
+import FileContext, {FileType} from "./fileContext/FileContext.tsx"
 
 const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', onBgClick}) => {
-  const formRef = useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null)
   const {createFile, handleCreating} = useContext(FileContext)
   const [error, setError] = useState('')
   const validateFileName = (str: string) => {
@@ -11,13 +11,13 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
   }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault()
+    e.stopPropagation()
     const filename = formRef.current?.filename.value.trim()
 
     if (!validateFileName(filename)) {
       setError('File name can only including number space and alpha')
-      return;
+      return
     }
 
     setError('')
@@ -59,6 +59,6 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
       </label>
     </form>
   </div>
-};
+}
 
 export default CreateFile

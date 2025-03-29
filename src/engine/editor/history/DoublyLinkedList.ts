@@ -1,28 +1,28 @@
-import {HistoryNodeData, HistoryNext, HistoryPrev} from "./type";
+import {HistoryNodeData, HistoryNext, HistoryPrev} from "./type"
 
 class HistoryNode {
-  data: HistoryNodeData;
-  prev: HistoryPrev;
+  data: HistoryNodeData
+  prev: HistoryPrev
   next: HistoryNext
   id: number
 
   constructor(prev: HistoryPrev, next: HistoryNext, data: HistoryNodeData, id = -1) {
-    this.data = data;
-    this.prev = prev;
-    this.next = next;
-    this.id = id;
+    this.data = data
+    this.prev = prev
+    this.next = next
+    this.id = id
   }
 }
 
 class DoublyLinkedList {
-  head: HistoryNode | null;
-  tail: HistoryNode | null;
-  current: HistoryNode | null;
+  head: HistoryNode | null
+  tail: HistoryNode | null
+  current: HistoryNode | null
 
   constructor() {
-    this.head = null;
-    this.tail = null;
-    this.current = null;
+    this.head = null
+    this.tail = null
+    this.current = null
   }
 
   /**
@@ -31,7 +31,7 @@ class DoublyLinkedList {
   protected detach(): HistoryNode | null {
     if (this.current) {
       this.current.next = null
-      this.tail = this.current;
+      this.tail = this.current
     }
 
     return this.current
@@ -42,21 +42,21 @@ class DoublyLinkedList {
   * */
   protected append(data: HistoryNodeData): HistoryNode {
     let newNode
-    const {tail} = this;
+    const {tail} = this
 
     if (tail) {
-      newNode = new HistoryNode(tail, null, data, tail.id + 1);
+      newNode = new HistoryNode(tail, null, data, tail.id + 1)
 
-      tail.next = newNode;
-      this.tail = newNode;
+      tail.next = newNode
+      this.tail = newNode
     } else {
-      newNode = new HistoryNode(null, null, data, 0);
+      newNode = new HistoryNode(null, null, data, 0)
 
-      this.head = newNode;
-      this.tail = newNode;
+      this.head = newNode
+      this.tail = newNode
     }
 
-    this.current = newNode;
+    this.current = newNode
 
     return newNode
   }
@@ -95,7 +95,7 @@ class DoublyLinkedList {
   protected compareToCurrentPosition(node: HistoryNode): 'front' | 'equal' | 'behind' | false {
     if (node === this.current) return 'equal'
 
-    let localCurrent = this.head;
+    let localCurrent = this.head
 
     while (localCurrent) {
       if (this.current === localCurrent) {
@@ -114,12 +114,12 @@ class DoublyLinkedList {
   }
 
   destroy() {
-    this.head = null;
-    this.tail = null;
-    this.current = null;
+    this.head = null
+    this.tail = null
+    this.current = null
   }
 }
 
 export {HistoryNode}
 
-export default DoublyLinkedList;
+export default DoublyLinkedList

@@ -1,4 +1,4 @@
-import {useEffect, useRef} from "react";
+import {useEffect, useRef} from "react"
 // import {useTranslation} from "react-i18next";
 // import OptimizedDND from "./OptimizedDND.ts";
 
@@ -10,8 +10,8 @@ interface LayerPanelProps {
 
 export const LayerPanel = ({data, selected, handleSelectModule}: LayerPanelProps) => {
   // const {t} = useTranslation();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const targetRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const targetRef = useRef<HTMLDivElement>(null)
 
   /*
     const DNDRef = useRef<OptimizedDND>(null);
@@ -36,7 +36,7 @@ export const LayerPanel = ({data, selected, handleSelectModule}: LayerPanelProps
       block: "nearest",
       inline: "nearest"
     })
-  }, [selected]);
+  }, [selected])
 
   return (
     <div className={'p-2'}>
@@ -53,5 +53,5 @@ export const LayerPanel = ({data, selected, handleSelectModule}: LayerPanelProps
         }
       </div>
     </div>
-  );
-};
+  )
+}

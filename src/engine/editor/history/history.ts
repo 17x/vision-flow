@@ -1,14 +1,14 @@
-import Editor from "../index.ts";
-import DoublyLinkedList, {HistoryNode} from "./DoublyLinkedList.ts";
-import {arrayToSet} from "../../core/convert.ts";
-import {HistoryNodeData} from "./type";
+import Editor from "../index.ts"
+import DoublyLinkedList, {HistoryNode} from "./DoublyLinkedList.ts"
+import {arrayToSet} from "../../core/convert.ts"
+import {HistoryNodeData} from "./type"
 
 class History extends DoublyLinkedList {
-  private editor: Editor;
+  private editor: Editor
 
   constructor(editor: Editor) {
-    super();
-    this.editor = editor;
+    super()
+    this.editor = editor
     this.init()
   }
 
@@ -135,4 +135,4 @@ class History extends DoublyLinkedList {
   }
 }
 
-export default History;
+export default History

@@ -6,74 +6,74 @@
  */
 function typeCheck(value: unknown): string {
   if (value === null) {
-    return 'null';
+    return 'null'
   }
 
   if (value === undefined) {
-    return 'undefined';
+    return 'undefined'
   }
 
   if (value instanceof Set) {
-    return 'set';
+    return 'set'
   }
 
   if (value instanceof Map) {
-    return 'map';
+    return 'map'
   }
 
   if (Array.isArray(value)) {
-    return 'array';
+    return 'array'
   }
 
   if (value instanceof Date) {
-    return 'date';
+    return 'date'
   }
 
   if (value instanceof RegExp) {
-    return 'regexp';
+    return 'regexp'
   }
 
   if (value instanceof Error) {
-    return 'error';
+    return 'error'
   }
 
   if (value instanceof Promise) {
-    return 'promise';
+    return 'promise'
   }
 
   if (value instanceof ArrayBuffer) {
-    return 'arraybuffer';
+    return 'arraybuffer'
   }
 
   if (ArrayBuffer.isView(value)) {
-    return 'typedarray'; // Includes Int8Array, Uint8Array, etc.
+    return 'typedarray' // Includes Int8Array, Uint8Array, etc.
   }
 
   if (value instanceof WeakSet) {
-    return 'weakset';
+    return 'weakset'
   }
 
   if (value instanceof WeakMap) {
-    return 'weakmap';
+    return 'weakmap'
   }
 
   if (typeof value === 'function') {
-    return 'function';
+    return 'function'
   }
 
   if (typeof value === 'symbol') {
-    return 'symbol';
+    return 'symbol'
   }
 
   if (typeof value === 'bigint') {
-    return 'bigint';
+    return 'bigint'
   }
 
   if (typeof value === 'object') {
-    return 'object'; // For plain objects
+    return 'object' // For plain objects
   }
 
-  return typeof value; // For primitive types like string, number, boolean, etc.
+  return typeof value // For primitive types like string, number, boolean, etc.
 }
 
 export default typeCheck

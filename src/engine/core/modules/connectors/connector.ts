@@ -1,4 +1,4 @@
-import Base, {BasicModuleProps} from "../base.ts";
+import Base, {BasicModuleProps} from "../base.ts"
 
 export interface ConnectorProps extends BasicModuleProps {
   start?: UID
@@ -10,18 +10,18 @@ export interface ConnectorProps extends BasicModuleProps {
 }
 
 class Connector extends Base {
-  readonly start: UID;
-  readonly end: UID;
+  readonly start: UID
+  readonly end: UID
 
   constructor({
                 start,
                 end,
                 ...rest
               }: ConnectorProps) {
-    super(rest);
+    super(rest)
 
-    this.start = start!;
-    this.end = end!;
+    this.start = start!
+    this.end = end!
     // this.width = width!;
     // this.height = height!;
   }
@@ -30,7 +30,7 @@ class Connector extends Base {
     return {
       ...this.getSize(),
       ...super.getDetails(),
-    };
+    }
   }
 
   public getSize(): Size {
@@ -44,7 +44,7 @@ class Connector extends Base {
     const {
       x,
       y
-    } = {x: 0, y: 1};
+    } = {x: 0, y: 1}
     const {
       width,
       height

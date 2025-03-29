@@ -1,4 +1,4 @@
-import {IntRange} from "type-fest";
+import {IntRange} from "type-fest"
 
 declare global {
   type UID = string

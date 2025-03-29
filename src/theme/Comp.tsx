@@ -15,5 +15,5 @@ export const ThemeSelect: React.FC<ThemeSelectInterface> = ({list, onChange}) =>
           })
         }
       </select></label>
-  );
-};
+  )
+}

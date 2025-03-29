@@ -1,8 +1,8 @@
-import Connector from "../modules/connectors/connector.ts";
-import rectRender from "./rectRender.ts";
-import lineRender, {LineRenderProps} from "./lineRender.ts";
-import {RectangleRenderProps} from "./type";
-import Rectangle from "../modules/shapes/rectangle.ts";
+import Connector from "../modules/connectors/connector.ts"
+import rectRender from "./rectRender.ts"
+import lineRender, {LineRenderProps} from "./lineRender.ts"
+import {RectangleRenderProps} from "./type"
+import Rectangle from "../modules/shapes/rectangle.ts"
 
 interface RenderProps {
   ctx: CanvasRenderingContext2D
@@ -12,15 +12,15 @@ interface RenderProps {
 const render = ({ctx, modules}: RenderProps): void => {
   const rects: RectangleRenderProps[] = []
   const lines: LineRenderProps[] = []
-  const fillStyle = "#5491f8";
-  const lineWidth = 1;
+  const fillStyle = "#5491f8"
+  const lineWidth = 1
   const texts: unknown = []
   ctx.clearRect(
     0,
     0,
     ctx.canvas.width,
     ctx.canvas.height
-  );
+  )
 
   modules.forEach((module) => {
     if (module.type === 'rectangle') {
@@ -49,7 +49,7 @@ const render = ({ctx, modules}: RenderProps): void => {
     }
 
     if (module.type === 'connector') {
-      const startModule = modules.get((module as Connector).start);
+      const startModule = modules.get((module as Connector).start)
       const endModule = modules.get((module as Connector).end)
       const rect1 = startModule!.getBoundingRect()
       const rect2 = endModule!.getBoundingRect()

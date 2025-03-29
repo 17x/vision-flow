@@ -1,5 +1,5 @@
-import {ActionCode} from "../editor";
-import Editor from "../index.ts";
+import {ActionCode} from "../editor"
+import Editor from "../index.ts"
 
 // type EventsFunction = (e: KeyboardEvent, additionalInformation?: unknown) => unknown
 type EventsFunction = () => unknown
@@ -26,7 +26,7 @@ class Action {
 
   public subscribe(eventName: ActionCode, callback: EventsFunction) {
     if (this.eventsMap.has(eventName)) {
-      this.eventsMap.get(eventName)!.push(callback);
+      this.eventsMap.get(eventName)!.push(callback)
     } else {
       this.eventsMap.set(eventName, [callback])
     }
@@ -108,11 +108,11 @@ class Action {
 
   public destroy() {
     this.eventsMap.clear()
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+     
     // @ts-expect-error
     this.editor = null
     this.lock = false
   }
 }
 
-export default Action;
+export default Action

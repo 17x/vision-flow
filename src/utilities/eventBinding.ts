@@ -7,8 +7,8 @@ const on = <
   listener: (this: T, ev: Event) => unknown,
   options?: boolean | AddEventListenerOptions
 ) => {
-  target.addEventListener(type, listener, options);
-};
+  target.addEventListener(type, listener, options)
+}
 
 const off = <
   T extends Window | HTMLElement,
@@ -19,7 +19,7 @@ const off = <
   listener: (this: T, ev: Event) => unknown,
   options?: boolean | AddEventListenerOptions
 ) => {
-  target.removeEventListener(type, listener, options);
-};
+  target.removeEventListener(type, listener, options)
+}
 
-export {on, off};
+export {on, off}

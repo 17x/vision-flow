@@ -1,4 +1,4 @@
-import Base, {BasicModuleProps} from "../base.ts";
+import Base, {BasicModuleProps} from "../base.ts"
 
 export interface ShapeProps extends BasicModuleProps {
   x: number
@@ -14,10 +14,10 @@ export interface ShapeProps extends BasicModuleProps {
 }
 
 class Shape extends Base {
-  readonly x: number;
-  readonly y: number;
-  readonly fillColor: FillColor;
-  readonly enableFill: boolean;
+  readonly x: number
+  readonly y: number
+  readonly fillColor: FillColor
+  readonly enableFill: boolean
 
   constructor({
                 x,
@@ -26,10 +26,10 @@ class Shape extends Base {
                 enableFill = true,
                 ...rest
               }: ShapeProps) {
-    super(rest);
+    super(rest)
 
-    this.x = x;
-    this.y = y;
+    this.x = x
+    this.y = y
     this.fillColor = fillColor
     this.enableFill = enableFill
   }
@@ -42,7 +42,7 @@ class Shape extends Base {
       x: this.x,
       y: this.y,
       ...super.getDetails(),
-    };
+    }
   }
 
   public getSize(): Size {
@@ -56,7 +56,7 @@ class Shape extends Base {
     const {
       x,
       y
-    } = this;
+    } = this
     const {
       width,
       height

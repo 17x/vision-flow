@@ -1,8 +1,8 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {ActionCode} from "../engine/editor/editor";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit"
+import {ActionCode} from "../engine/editor/editor"
 
 export interface MenuActionType {
-  id: ActionCode;
+  id: string | ActionCode;
   parent: string | null;
   disabled?: boolean;
   shortcut?: string;
@@ -97,11 +97,11 @@ const menuData: MenuActionType[] = [
     {id: "shareDocument", parent: "collaboration"},
     {id: "liveCollaboration", parent: "collaboration"},
    */
-];
+]
 
 const initialState: MenuActionState = {
   actions: Object.fromEntries(menuData.map((item) => [item.id, {...item, disabled: false}]))
-};
+}
 
 const menuSlice = createSlice({
   name: "menu",
@@ -109,7 +109,7 @@ const menuSlice = createSlice({
   reducers: {
     setDisabled: (state, action: PayloadAction<{ id: string; disabled: boolean }>) => {
       if (state.actions[action.payload.id]) {
-        state.actions[action.payload.id].disabled = action.payload.disabled;
+        state.actions[action.payload.id].disabled = action.payload.disabled
       }
     },
     triggerAction: (state, action: PayloadAction<string>) => {
@@ -121,7 +121,7 @@ const menuSlice = createSlice({
       }
     },
   }
-});
+})
 
-export const {setDisabled, triggerAction} = menuSlice.actions;
-export default menuSlice.reducer;
+export const {setDisabled, triggerAction} = menuSlice.actions
+export default menuSlice.reducer

@@ -4,22 +4,22 @@ interface CloneOptions {
 
 function deepClone<T>(obj: T, options: CloneOptions = {}): T {
   if (typeof obj !== 'object' || obj === null) {
-    return obj;
+    return obj
   }
 
   if (Array.isArray(obj)) {
-    return obj.map(item => deepClone(item, options)) as T;
+    return obj.map(item => deepClone(item, options)) as T
   }
 
-  const clone = Object.create(options.clonePrototype ? Object.getPrototypeOf(obj) : null);
+  const clone = Object.create(options.clonePrototype ? Object.getPrototypeOf(obj) : null)
 
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      clone[key] = deepClone(obj[key], options);
+      clone[key] = deepClone(obj[key], options)
     }
   }
 
-  return clone;
+  return clone
 }
 
 export default deepClone

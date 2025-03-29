@@ -7,5 +7,5 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({className = ''}) =>
     <div className={'w-[30%] h-full border-l border-gray-200' + ' ' + className}>
        
     </div>
-  );
-};
+  )
+}

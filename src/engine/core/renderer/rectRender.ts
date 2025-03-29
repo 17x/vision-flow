@@ -1,11 +1,11 @@
-import {RectangleRenderProps} from "./type";
-import deduplicateObjectsByKeyValue from "./deduplicate.ts";
+import {RectangleRenderProps} from "./type"
+import deduplicateObjectsByKeyValue from "./deduplicate.ts"
 
 const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]): void => {
   const rectQueue: RectangleRenderProps[] = deduplicateObjectsByKeyValue(rects)
 
   // Start rendering
-  ctx.save();
+  ctx.save()
 
   rectQueue.forEach(({
                        x,
@@ -22,61 +22,61 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
                        dashLine = ''
                      }: RectangleRenderProps) => {
 
-    const LocalX = width / 2;
-    const LocalY = height / 2;
+    const LocalX = width / 2
+    const LocalY = height / 2
 
     // Save current context state to avoid transformations affecting other drawings
-    ctx.save();
+    ctx.save()
 
     // Move context to the rectangle's center (Direct center point at x, y)
-    ctx.translate(x, y);
+    ctx.translate(x, y)
 
     // Apply rotation if needed
     if (rotation > 0) {
-      ctx.rotate(rotation * Math.PI / 180);
+      ctx.rotate(rotation * Math.PI / 180)
     }
 
     // Apply fill style if enabled
     if (opacity > 0) {
-      ctx.fillStyle = fillColor;
-      ctx.globalAlpha = opacity / 100; // Set the opacity
+      ctx.fillStyle = fillColor
+      ctx.globalAlpha = opacity / 100 // Set the opacity
     }
 
     // Apply stroke style if enabled
     if (lineWidth > 0) {
-      ctx.lineWidth = lineWidth;
-      ctx.strokeStyle = lineColor;
-      ctx.lineJoin = 'round';
+      ctx.lineWidth = lineWidth
+      ctx.strokeStyle = lineColor
+      ctx.lineJoin = 'round'
     }
 
     // Draw a rounded rectangle or regular rectangle
-    ctx.beginPath();
+    ctx.beginPath()
 
     if (dashLine) {
-      ctx.setLineDash([3, 5]);
+      ctx.setLineDash([3, 5])
     }
 
     if (radius > 0) {
       // Use arcTo for rounded corners
-      ctx.moveTo(-LocalX + radius, -LocalY);
-      ctx.arcTo(LocalX, -LocalY, LocalX, LocalY, radius);
-      ctx.arcTo(LocalX, LocalY, -LocalX, LocalY, radius);
-      ctx.arcTo(-LocalX, LocalY, -LocalX, -LocalY, radius);
-      ctx.arcTo(-LocalX, -LocalY, LocalX, -LocalY, radius);
+      ctx.moveTo(-LocalX + radius, -LocalY)
+      ctx.arcTo(LocalX, -LocalY, LocalX, LocalY, radius)
+      ctx.arcTo(LocalX, LocalY, -LocalX, LocalY, radius)
+      ctx.arcTo(-LocalX, LocalY, -LocalX, -LocalY, radius)
+      ctx.arcTo(-LocalX, -LocalY, LocalX, -LocalY, radius)
     } else {
       // For square/rectangular modules with no rounded corners
-      ctx.rect(-LocalX, -LocalY, width, height);
+      ctx.rect(-LocalX, -LocalY, width, height)
     }
-    ctx.closePath();
+    ctx.closePath()
 
     // Fill if enabled
     if (opacity > 0) {
-      ctx.fill();
+      ctx.fill()
     }
 
     // Stroke if enabled
     if (lineWidth > 0) {
-      ctx.stroke();
+      ctx.stroke()
     }
 
     if (gradient) {
@@ -84,8 +84,8 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
     }
 
     // Restore the context to avoid affecting subsequent drawings
-    ctx.restore();
-  });
+    ctx.restore()
+  })
 
   /*console.log(`
   Total Rectangles to Render: ${rects.length}
@@ -93,5 +93,5 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
 `);*/
 }
 
-export default rectRender;
+export default rectRender
 

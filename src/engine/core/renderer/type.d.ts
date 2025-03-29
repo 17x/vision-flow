@@ -1,4 +1,4 @@
-import {RectangleProps} from "../modules/shapes/rectangle.ts";
+import {RectangleProps} from "../modules/shapes/rectangle.ts"
 
 /*
 export interface RectangleRenderProps extends RectangleProps {

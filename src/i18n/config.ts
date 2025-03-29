@@ -1,5 +1,5 @@
-import i18n from "i18next";
-import {initReactI18next} from "react-i18next";
+import i18n from "i18next"
+import {initReactI18next} from "react-i18next"
 import enMenu from './en/menu.json'
 import enHistory from './en/history.json'
 
@@ -22,6 +22,6 @@ i18n
     interpolation: {
       escapeValue: false
     }
-  });
+  })
 
-export default i18n;
+export default i18n

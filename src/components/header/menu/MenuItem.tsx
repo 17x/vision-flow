@@ -1,8 +1,8 @@
-import React, {useContext, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {NestedActions} from "./Menu.tsx";
-import {DynamicIcon} from 'lucide-react/dynamic';
-import EditorContext from "../../editorContext/EditorContext.tsx";
+import React, {useContext, useState} from "react"
+import {useTranslation} from "react-i18next"
+import {NestedActions} from "./Menu.tsx"
+import {DynamicIcon} from 'lucide-react/dynamic'
+import EditorContext from "../../editorContext/EditorContext.tsx"
 
 interface MenuItemProps {
   menu: NestedActions
@@ -12,7 +12,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
                                              menu,
                                            }) => {
   const {t} = useTranslation()
-  const [subOpen, setSubOpen] = useState<boolean>(false);
+  const [subOpen, setSubOpen] = useState<boolean>(false)
   const {executeAction} = useContext(EditorContext)
 
   const handleClick = () => {
@@ -28,13 +28,13 @@ const MenuItem: React.FC<MenuItemProps> = ({
   return <div className={'relative h-8 hover:bg-gray-200 min-w-50'}
               onClick={() => handleClick()}
               onMouseOver={(e) => {
-                setSubOpen(true);
+                setSubOpen(true)
                 e.preventDefault()
                 // e.stopPropagation()
               }}
               onMouseLeave={() => {
                 // console.log(menu)
-                setSubOpen(false);
+                setSubOpen(false)
               }}
   >
     <div className="px-4 w-full h-full flex justify-between items-center whitespace-nowrap">
@@ -50,6 +50,6 @@ const MenuItem: React.FC<MenuItemProps> = ({
           }
         </div>}
   </div>
-};
+}
 
-export default MenuItem;
+export default MenuItem

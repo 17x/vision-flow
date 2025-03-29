@@ -1,7 +1,7 @@
-import React, {createContext} from 'react';
-import Editor from "../../engine/editor";
-import {HistoryNode} from "../../engine/editor/history/DoublyLinkedList.ts";
-import {ActionCode} from "../../engine/editor/editor";
+import React, {createContext} from 'react'
+import Editor from "../../engine/editor"
+import {HistoryNode} from "../../engine/editor/history/DoublyLinkedList.ts"
+import {ActionCode} from "../../engine/editor/editor"
 
 interface EditorContextType {
   focused: boolean
@@ -25,6 +25,6 @@ const EditorContext = createContext<EditorContextType>({
   executeAction: () => {
 
   }
-});
+})
 
-export default EditorContext;
+export default EditorContext

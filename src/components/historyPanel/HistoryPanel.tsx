@@ -1,16 +1,16 @@
-import {useContext, useEffect, useRef} from "react";
-import EditorContext from "../editorContext/EditorContext.tsx";
-import {useTranslation} from "react-i18next";
-import {I18nHistoryDataItem} from "../../i18n/type";
+import {useContext, useEffect, useRef} from "react"
+import EditorContext from "../editorContext/EditorContext.tsx"
+import {useTranslation} from "react-i18next"
+import {I18nHistoryDataItem} from "../../i18n/type"
 
 export const HistoryPanel = () => {
-  const {historyArray, historyCurrent, applyHistoryNode} = useContext(EditorContext);
-  const {t} = useTranslation();
-  const targetRef = useRef<HTMLDivElement>(null);
+  const {historyArray, historyCurrent, applyHistoryNode} = useContext(EditorContext)
+  const {t} = useTranslation()
+  const targetRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (targetRef.current) {
-      const targetElement = targetRef.current;
+      const targetElement = targetRef.current
 
       const _timer = setTimeout(() => {
         targetElement.scrollIntoView({
@@ -26,7 +26,7 @@ export const HistoryPanel = () => {
         }
       }
     }
-  }, [historyArray, historyCurrent]);
+  }, [historyArray, historyCurrent])
 
   return (
     <div className={'p-2'}>
@@ -42,9 +42,9 @@ export const HistoryPanel = () => {
                             title={tooltip}
                             ref={isCurr ? targetRef : null}
                             onClick={() => {
-                              if (isCurr) return;
+                              if (isCurr) return
                               // console.log(historyNode.id)
-                              applyHistoryNode(historyNode);
+                              applyHistoryNode(historyNode)
                             }}
                             className={`border-b border-gray-200 px-2 py-1 cursor-pointer text-xs hover:bg-gray-400 hover:text-white ${isCurr ? 'bg-gray-400 text-white' : ''}`}>
                   <span>{label}</span>
@@ -55,5 +55,5 @@ export const HistoryPanel = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

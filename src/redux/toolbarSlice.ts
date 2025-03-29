@@ -1,5 +1,5 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {IconName} from "lucide-react/dynamic";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit"
+import {IconName} from "lucide-react/dynamic"
 
 export interface ToolbarActionType {
   id: string
@@ -28,11 +28,11 @@ const toolbarData: ToolbarActionType[] = [
   {id: 'ungroup', icon: 'ungroup', disabled: true, divide: true},
   {id: 'lock', icon: 'lock', disabled: false},
   {id: 'unlock', icon: 'unlock', disabled: true},
-];
+]
 
 const initialState: ToolbarActionState = {
   actions: Object.fromEntries(toolbarData.map((item) => [item.id, {...item, disabled: false}]))
-};
+}
 
 const toolbarSlice = createSlice({
   name: "menu",
@@ -40,7 +40,7 @@ const toolbarSlice = createSlice({
   reducers: {
     setDisabled: (state, action: PayloadAction<{ id: string; disabled: boolean }>) => {
       if (state.actions[action.payload.id]) {
-        state.actions[action.payload.id].disabled = action.payload.disabled;
+        state.actions[action.payload.id].disabled = action.payload.disabled
       }
     },
     triggerAction: (state, action: PayloadAction<string>) => {
@@ -52,7 +52,7 @@ const toolbarSlice = createSlice({
       }
     },
   }
-});
+})
 
-export const {setDisabled, triggerAction} = toolbarSlice.actions;
-export default toolbarSlice.reducer;
+export const {setDisabled, triggerAction} = toolbarSlice.actions
+export default toolbarSlice.reducer

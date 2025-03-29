@@ -15,16 +15,16 @@ export interface BasicModuleProps {
 }
 
 class Base {
-  readonly id: UID;
+  readonly id: UID
   readonly type: ModuleNames
-  private readonly enableLine: boolean;
-  private readonly lineWidth: number;
-  private readonly lineColor: HexColor;
-  private readonly opacity: Opacity;
-  private readonly position: Position;
-  readonly rotation: Rotation;
-  private readonly shadow: Shadow;
-  readonly layer: number;
+  private readonly enableLine: boolean
+  private readonly lineWidth: number
+  private readonly lineColor: HexColor
+  private readonly opacity: Opacity
+  private readonly position: Position
+  readonly rotation: Rotation
+  private readonly shadow: Shadow
+  readonly layer: number
 
   constructor({
                 id,
@@ -40,14 +40,14 @@ class Base {
               }: BasicModuleProps) {
     this.id = id
     this.type = type
-    this.enableLine = enableLine;
-    this.lineColor = lineColor;
-    this.lineWidth = lineWidth;
-    this.opacity = opacity!;
-    this.position = position!;
-    this.rotation = rotation;
-    this.shadow = shadow;
-    this.layer = layer;
+    this.enableLine = enableLine
+    this.lineColor = lineColor
+    this.lineWidth = lineWidth
+    this.opacity = opacity!
+    this.position = position!
+    this.rotation = rotation
+    this.shadow = shadow
+    this.layer = layer
   }
 
   protected getDetails(): BasicModuleProps {
@@ -64,8 +64,8 @@ class Base {
       position: this.position,
       layer: this.layer,
       rotation: this.rotation,
-    };
+    }
   }
 }
 
-export default Base;
+export default Base

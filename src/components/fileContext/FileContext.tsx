@@ -1,4 +1,4 @@
-import {createContext} from "react";
+import {createContext} from "react"
 
 export interface FileType {
   id: UID
@@ -43,6 +43,6 @@ const FileContext = createContext<FileContextType>({
   },
   handleCreating: () => {
   },
-});
+})
 
-export default FileContext;
+export default FileContext

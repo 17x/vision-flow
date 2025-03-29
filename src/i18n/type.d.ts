@@ -1,4 +1,4 @@
-import {HistoryActionType} from "../engine/editor/editor";
+import {HistoryActionType} from "../engine/editor/editor"
 
 export interface I18nHistoryDataItem {
   label: string

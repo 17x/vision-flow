@@ -1,12 +1,12 @@
-import React, {useContext, useEffect} from 'react';
-import {ActionCode, MoveDirection} from "../engine/editor/editor";
-import EditorContext from "./editorContext/EditorContext.tsx";
+import React, {useContext, useEffect} from 'react'
+import {ActionCode, MoveDirection} from "../engine/editor/editor"
+import EditorContext from "./editorContext/EditorContext.tsx"
 
 const ShortcutListener: React.FC = () => {
   const {executeAction, focused} = useContext(EditorContext)
 
   const handleKeyPress = (e: KeyboardEvent) => {
-    let shortcutCode: ActionCode | null = null;
+    let shortcutCode: ActionCode | null = null
     const {key, ctrlKey, metaKey, shiftKey} = e
 
     const arrowKeys: { [key: string]: MoveDirection } = {
@@ -57,20 +57,20 @@ const ShortcutListener: React.FC = () => {
     executeAction(shortcutCode)
     e.stopPropagation()
     e.preventDefault()
-  };
+  }
 
   useEffect(() => {
-    if (!focused) return;
+    if (!focused) return
 
-    window.addEventListener('keydown', handleKeyPress);
+    window.addEventListener('keydown', handleKeyPress)
 
     return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [focused]);
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [focused])
 
   return null
-};
+}
 
 
-export default ShortcutListener;
+export default ShortcutListener

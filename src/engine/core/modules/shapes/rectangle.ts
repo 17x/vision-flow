@@ -1,4 +1,4 @@
-import Shape, {ShapeProps} from "./shape.ts";
+import Shape, {ShapeProps} from "./shape.ts"
 
 export interface RectangleProps extends ShapeProps {
   width: number;
@@ -7,9 +7,9 @@ export interface RectangleProps extends ShapeProps {
 }
 
 class Rectangle extends Shape {
-  readonly width: number;
-  readonly height: number;
-  readonly radius: number;
+  readonly width: number
+  readonly height: number
+  readonly radius: number
 
   constructor({
                 width,
@@ -17,10 +17,10 @@ class Rectangle extends Shape {
                 radius,
                 ...rest
               }: RectangleProps) {
-    super(rest);
-    this.width = width!;
-    this.height = height!;
-    this.radius = radius!;
+    super(rest)
+    this.width = width!
+    this.height = height!
+    this.radius = radius!
   }
 
   public getDetails(): RectangleProps {
@@ -29,8 +29,8 @@ class Rectangle extends Shape {
       height: this.height,
       radius: this.radius,
       ...super.getDetails()
-    };
+    }
   }
 }
 
-export default Rectangle;
+export default Rectangle

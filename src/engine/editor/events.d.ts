@@ -1,4 +1,4 @@
-import History from "./history/history.ts";
+import History from "./history/history.ts"
 
 type HistoryUpdatedHandler = (history: History) => void;
 /**

@@ -41,4 +41,4 @@ declare  global {
   type ZoomRatio = number
 }
 
-export {};
+export {}

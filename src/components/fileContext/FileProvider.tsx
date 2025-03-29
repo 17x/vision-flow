@@ -1,9 +1,9 @@
-import {FC, useEffect, useRef, useState} from "react";
-import CreateFile from "../CreateFile.tsx";
-import FileContext, {FileMap, FileType} from "./FileContext.tsx";
-import EditorProvider from "../editorContext/EditorProvider.tsx";
-import MOCK_FILE_MAP from "../../mock.ts";
-import Files from "../files/Files.tsx";
+import {FC, useEffect, useRef, useState} from "react"
+import CreateFile from "../CreateFile.tsx"
+import FileContext, {FileMap, FileType} from "./FileContext.tsx"
+import EditorProvider from "../editorContext/EditorProvider.tsx"
+import MOCK_FILE_MAP from "../../mock.ts"
+import Files from "../files/Files.tsx"
 
 const FileProvider: FC = () => {
   const fileMap = useRef<FileMap>(new Map())
@@ -20,7 +20,7 @@ const FileProvider: FC = () => {
 
       setCurrentFileId(listFileMap()[0].id)
     }
-  }, []);
+  }, [])
 
   const updateFileList = (): FileType[] => {
     const arr = listFileMap()
@@ -105,7 +105,7 @@ const FileProvider: FC = () => {
         }
       </>
     </FileContext.Provider>
-  );
-};
+  )
+}
 
-export default FileProvider;
+export default FileProvider

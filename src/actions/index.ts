@@ -1,4 +1,4 @@
-import {EditorAction} from "../engine/editor/editor";
+import {EditorAction} from "../engine/editor/editor"
 
 const editorActions: EditorAction[] = [
   {
@@ -112,6 +112,6 @@ const editorActions: EditorAction[] = [
       { id: "speechToText" }
     ]
   }
-];
+]
 
-export default editorActions;
+export default editorActions

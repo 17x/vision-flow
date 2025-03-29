@@ -1,47 +1,47 @@
-import React, {useState, useCallback, useRef, useEffect} from 'react';
-import {ModuleList} from "./ModuleList.tsx";
+import React, {useState, useCallback, useRef, useEffect} from 'react'
+import {ModuleList} from "./ModuleList.tsx"
 
 interface ModulePanelProps {
   className?: string;
 }
 
 export const ModulePanel: React.FC<ModulePanelProps> = ({className = ''}) => {
-  const [width, setWidth] = useState<number>(300);
-  const isDragging = useRef(false);
-  const panelRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState<number>(300)
+  const isDragging = useRef(false)
+  const panelRef = useRef<HTMLDivElement>(null)
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    isDragging.current = true;
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none'; // Prevent text selection while dragging
-  }, []);
+    e.preventDefault()
+    isDragging.current = true
+    document.body.style.cursor = 'col-resize'
+    document.body.style.userSelect = 'none' // Prevent text selection while dragging
+  }, [])
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!isDragging.current) return;
+    if (!isDragging.current) return
 
-    const maxWidth = window.innerWidth * 0.9;
-    const newWidth = Math.min(Math.max(0, e.clientX), maxWidth);
+    const maxWidth = window.innerWidth * 0.9
+    const newWidth = Math.min(Math.max(0, e.clientX), maxWidth)
     e.stopPropagation()
-    setWidth(newWidth);
-  }, []);
+    setWidth(newWidth)
+  }, [])
 
   const handleMouseUp = useCallback((e: MouseEvent) => {
-    isDragging.current = false;
-    document.body.style.cursor = 'default';
-    document.body.style.userSelect = '';
+    isDragging.current = false
+    document.body.style.cursor = 'default'
+    document.body.style.userSelect = ''
     e.stopPropagation()
-  }, []);
+  }, [])
 
   useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseup', handleMouseUp)
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [handleMouseMove, handleMouseUp]);
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [handleMouseMove, handleMouseUp])
 
   return (
     <div
@@ -58,5 +58,5 @@ export const ModulePanel: React.FC<ModulePanelProps> = ({className = ''}) => {
         onMouseDown={handleMouseDown}
       />
     </div>
-  );
-};
+  )
+}

@@ -1,5 +1,5 @@
-import uid from "./utilities/Uid.ts";
-import {FileMap, FileType} from "./components/fileContext/FileContext.tsx";
+import uid from "./utilities/Uid.ts"
+import {FileMap, FileType} from "./components/fileContext/FileContext.tsx"
 
 const CreateModules = (fileId: UID) => {
   const moduleList = []
@@ -9,7 +9,7 @@ const CreateModules = (fileId: UID) => {
 }
 
 const CreateFile = (): FileType => {
-  const defaultFileName = 'Untitled 1';
+  const defaultFileName = 'Untitled 1'
   const defaultConfig = {}
   const defaultData = {
     modules: CreateModules()
@@ -31,7 +31,7 @@ const CreateFileMapByFilesId = (files: FileType[]): FileMap => {
 
       return acc
     }, [])
-  );
+  )
 }
 
 const MOCK_FILE = CreateFile()

@@ -1,33 +1,33 @@
-import React, {useRef, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "../../../redux/store.ts";
-import {setZoom} from "../../../redux/statusBarSlice.ts";
-import {DynamicIcon} from 'lucide-react/dynamic';
+import React, {useRef, useState} from "react"
+import {useDispatch, useSelector} from "react-redux"
+import {AppDispatch, RootState} from "../../../redux/store.ts"
+import {setZoom} from "../../../redux/statusBarSlice.ts"
+import {DynamicIcon} from 'lucide-react/dynamic'
 
 export type ZoomLevels = number | 'fit window'
 
 const ZoomSelect: React.FC<unknown> = () => {
-  const zoomLevels: ZoomLevels[] = [4, 3, 2, 1.5, 1.25, 1, 0.75, 0.5, 0.25, 'fit window'];
-  const {zoom} = useSelector((state: RootState) => state.statusBar);
-  const dispatch = useDispatch<AppDispatch>();
-  const [isOpen, setIsOpen] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const zoomLevels: ZoomLevels[] = [4, 3, 2, 1.5, 1.25, 1, 0.75, 0.5, 0.25, 'fit window']
+  const {zoom} = useSelector((state: RootState) => state.statusBar)
+  const dispatch = useDispatch<AppDispatch>()
+  const [isOpen, setIsOpen] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleBlur = (event: unknown) => {
     calcNewZoomValue(inputRef.current!.value)
     // inputRef.current!.focus();
-    inputRef.current!.blur();
-    event.preventDefault();
-    event.stopPropagation();
+    inputRef.current!.blur()
+    event.preventDefault()
+    event.stopPropagation()
 
-  };
+  }
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       calcNewZoomValue(inputRef.current!.value)
-      inputRef.current!.blur();
-      event.preventDefault();
-      event.stopPropagation();
+      inputRef.current!.blur()
+      event.preventDefault()
+      event.stopPropagation()
     }
   }
 
@@ -37,8 +37,8 @@ const ZoomSelect: React.FC<unknown> = () => {
     if (match) {
       const v = parseFloat(match[0])
 
-      dispatch(setZoom(v));
-      updateInput(v);
+      dispatch(setZoom(v))
+      updateInput(v)
     }
   }
 
@@ -66,7 +66,7 @@ const ZoomSelect: React.FC<unknown> = () => {
       </button>
       {
         isOpen && <div className={'fixed w-full h-full'} onClick={() => {
-          setIsOpen(false);
+          setIsOpen(false)
         }}></div>
       }
       {isOpen && (
@@ -85,8 +85,8 @@ const ZoomSelect: React.FC<unknown> = () => {
                   v = 1
                 }
 
-                dispatch(setZoom(v));
-                setIsOpen(false);
+                dispatch(setZoom(v))
+                setIsOpen(false)
                 updateInput(v)
               }}
               className="text-sm align-middle p-1 text-center hover:bg-blue-500 hover:text-white transition"
@@ -98,7 +98,7 @@ const ZoomSelect: React.FC<unknown> = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ZoomSelect;
+export default ZoomSelect

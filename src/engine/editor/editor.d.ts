@@ -1,4 +1,4 @@
-import {ModuleProps} from "../core/modules/modules";
+import {ModuleProps} from "../core/modules/modules"
 
 export type BasicEditorAreaSize = {
   width: 1000

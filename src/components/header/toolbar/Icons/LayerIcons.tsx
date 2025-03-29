@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 interface IconProps extends React.SVGProps<SVGSVGElement> {
   color?: string;
@@ -25,7 +25,7 @@ export const LayerUp: React.FC<IconProps> = ({size = 24, ...props}) => (
     <path
       d="M11.96,1.8c.01,2.22.04,6.67.04,6.67M11.96,1.8c-1.87,1.12-3.75,2.25-5.62,3.37M12,1.8c2.09,1.3,3.4,2.13,5.55,3.47"/>
   </svg>
-);
+)
 
 export const LayerDown: React.FC<IconProps> = ({size = 24, ...props}) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
@@ -38,7 +38,7 @@ export const LayerDown: React.FC<IconProps> = ({size = 24, ...props}) => (
           d="M12,13.13l9.06-5.67L12,1.8,2.94,7.46l9.06,5.67Z"/>
 
   </svg>
-);
+)
 
 export const LayerToTop: React.FC<IconProps> = ({size = 24, ...props}) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
@@ -47,7 +47,7 @@ export const LayerToTop: React.FC<IconProps> = ({size = 24, ...props}) => (
     <path fill={'#fff'} d="M12,5.99L2.35,12.02l9.65,6.03,9.65-6.03-9.65-6.03Z"/>
     <path fill={ModifyColor} d="M12,1.14L2.35,7.17l9.65,6.03,9.65-6.03L12,1.14Z"/>
   </svg>
-);
+)
 
 export const LayerToBottom: React.FC<IconProps> = ({size = 24, ...props}) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
@@ -56,4 +56,4 @@ export const LayerToBottom: React.FC<IconProps> = ({size = 24, ...props}) => (
     <path fill={'#fff'} d="M12,5.99L2.35,12.02l9.65,6.03,9.65-6.03-9.65-6.03Z"/>
     <path fill={'#fff'} d="M12,1.14L2.35,7.17l9.65,6.03,9.65-6.03L12,1.14Z"/>
   </svg>
-);
+)

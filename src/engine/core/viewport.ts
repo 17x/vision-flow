@@ -4,8 +4,8 @@ const ElementNotInViewport = (rect: BoundingRect, viewport: BoundingRect): boole
     rect.bottom < viewport.top ||
     rect.left > viewport.right ||
     rect.top > viewport.bottom
-  );
-};
+  )
+}
 
 
 export {ElementNotInViewport}

@@ -1,5 +1,5 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {ZoomLevels} from "../components/statusBar/zoom";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit"
+import {ZoomLevels} from "../components/statusBar/zoom"
 
 interface MenuState {
   zoom: ZoomLevels;
@@ -7,7 +7,7 @@ interface MenuState {
 
 const initialState: MenuState = {
   zoom: 1,
-};
+}
 
 const statusBarSlice = createSlice({
   name: "statusBar",
@@ -17,8 +17,8 @@ const statusBarSlice = createSlice({
       state.zoom = action.payload
     }
   }
-});
+})
 
-export const {setZoom} = statusBarSlice.actions;
+export const {setZoom} = statusBarSlice.actions
 
-export default statusBarSlice.reducer;
+export default statusBarSlice.reducer

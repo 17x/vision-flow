@@ -1,17 +1,17 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../redux/store.ts";
-import {MenuActionRecord, MenuActionType} from "../../../redux/menuSlice.ts";
-import MenuItem from "./MenuItem.tsx";
+import React, {useEffect, useMemo, useRef, useState} from "react"
+import {useTranslation} from "react-i18next"
+import {useSelector} from "react-redux"
+import {RootState} from "../../../redux/store.ts"
+import {MenuActionRecord, MenuActionType} from "../../../redux/menuSlice.ts"
+import MenuItem from "./MenuItem.tsx"
 
 const MenuBar: React.FC = () => {
-  const [open, setOpen] = useState<boolean>(false);
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [open, setOpen] = useState<boolean>(false)
+  const [openId, setOpenId] = useState<string | null>(null)
   const {t} = useTranslation()
-  const componentRef = useRef<HTMLDivElement>(null);
-  const originActions = useSelector((state: RootState) => state.menu.actions);
-  const actions = useMemo(() => flattenedToNested(originActions), [originActions]);
+  const componentRef = useRef<HTMLDivElement>(null)
+  const originActions = useSelector((state: RootState) => state.menu.actions)
+  const actions = useMemo(() => flattenedToNested(originActions), [originActions])
 
   useEffect(() => {
     const detectClose = (e: MouseEvent) => {
@@ -21,10 +21,10 @@ const MenuBar: React.FC = () => {
       }
     }
 
-    window.addEventListener("click", detectClose);
+    window.addEventListener("click", detectClose)
 
     return () => {
-      window.removeEventListener("click", detectClose);
+      window.removeEventListener("click", detectClose)
     }
   })
 
@@ -38,7 +38,7 @@ const MenuBar: React.FC = () => {
                  onClick={() => {
                    if (openId !== menu.id) {
                      setOpen(true)
-                     setOpenId(menu.id);
+                     setOpenId(menu.id)
                    } else {
                      setOpenId(null)
                      setOpen(false)
@@ -60,30 +60,30 @@ const MenuBar: React.FC = () => {
                     })
                   }</div>
             }
-          </div>;
+          </div>
         })
       }</div>
-  </div>;
-};
+  </div>
+}
 
 export type NestedActions = {
   children?: NestedActions[]
 } & MenuActionType
 
 function flattenedToNested(menuData: MenuActionRecord): NestedActions[] {
-  const rootMap: Map<string, NestedActions> = new Map();
+  const rootMap: Map<string, NestedActions> = new Map()
 
   // Build a records for all items
   Object.values(menuData).forEach((item) => {
     rootMap.set(item.id, {...item, children: []})
-  });
+  })
 
   // Create the nested structure
-  const nestedMenu: NestedActions[] = [];
+  const nestedMenu: NestedActions[] = []
 
   rootMap.forEach((currentAction) => {
 
-    const parentAction = rootMap.get(currentAction.parent!);
+    const parentAction = rootMap.get(currentAction.parent!)
     if (parentAction) {
       // If the item has a parent,
       // add it to the parent's children array
@@ -92,11 +92,11 @@ function flattenedToNested(menuData: MenuActionRecord): NestedActions[] {
       // If the item has no parent,
       // it's a top-level item,
       // so add it to the nestedMenu
-      nestedMenu.push(currentAction);
+      nestedMenu.push(currentAction)
     }
-  });
+  })
 
-  return nestedMenu;
+  return nestedMenu
 }
 
-export default MenuBar;
+export default MenuBar

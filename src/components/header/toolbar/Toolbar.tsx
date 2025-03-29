@@ -1,41 +1,41 @@
-import {useSelector} from "react-redux";
-import {RootState} from "../../../redux/store.ts";
-import {DynamicIcon} from 'lucide-react/dynamic';
-import {LayerDown, LayerToBottom, LayerToTop, LayerUp} from "./Icons/LayerIcons.tsx";
-import {Fragment, ReactNode, useContext} from "react";
-import {ActionCode} from "../../../engine/editor/editor";
-import EditorContext from "../../editorContext/EditorContext.tsx";
+import {useSelector} from "react-redux"
+import {RootState} from "../../../redux/store.ts"
+import {DynamicIcon} from 'lucide-react/dynamic'
+import {LayerDown, LayerToBottom, LayerToTop, LayerUp} from "./Icons/LayerIcons.tsx"
+import {Fragment, ReactNode, useContext} from "react"
+import {ActionCode} from "../../../engine/editor/editor"
+import EditorContext from "../../editorContext/EditorContext.tsx"
 
 const IconSize = 20
 const IconColor = 'text-black'
 
 const Toolbar: React.FC = () => {
-  const actions = useSelector((state: RootState) => state.toolbar.actions);
+  const actions = useSelector((state: RootState) => state.toolbar.actions)
   const {executeAction} = useContext(EditorContext)
 
   return <div className={'border-b border-gray-200 box-border'}>
     <div className={'h-10 inline-flex pl-4 items-center'}>
       {
         Object.values(actions).map((action) => {
-          const {id, icon, disabled, divide} = action;
+          const {id, icon, disabled, divide} = action
           let Icon: ReactNode
 
           switch (id) {
             case 'layerUp':
               Icon = <LayerUp size={IconSize} className={IconColor}/>
-              break;
+              break
             case 'layerDown':
               Icon = <LayerDown size={IconSize} className={IconColor}/>
-              break;
+              break
             case 'layerTop':
               Icon = <LayerToTop size={IconSize} className={IconColor}/>
-              break;
+              break
             case 'layerBottom':
               Icon = <LayerToBottom size={IconSize} className={IconColor}/>
-              break;
+              break
             default:
               Icon = <DynamicIcon size={IconSize} name={icon}/>
-              break;
+              break
           }
 
           return <Fragment key={id}>
@@ -55,6 +55,6 @@ const Toolbar: React.FC = () => {
       }
     </div>
   </div>
-};
+}
 
 export default Toolbar

@@ -1,18 +1,18 @@
-import {FC, useEffect, useRef, useState} from 'react';
-import Editor, {basicEditorAreaSize} from "../../engine/editor";
-import ShortcutListener from "../ShortcutListener.tsx";
-import {ModulePanel} from "../modulePanel/ModulePanel.tsx";
-import {PropertyPanel} from "../PropertyPanel.tsx";
-import {StatusBar} from "../statusBar/StatusBar.tsx";
-import uid from "../../utilities/Uid.ts";
-import {HistoryUpdatedHandler, ModulesUpdatedHandler, SelectionUpdatedHandler} from "../../engine/editor/events";
-import {HistoryNode} from "../../engine/editor/history/DoublyLinkedList.ts";
-import {LayerPanel} from "../layerPanel/LayerPanel.tsx";
-import {ActionCode} from "../../engine/editor/editor";
-import Header from "../header/Header.tsx";
-import {HistoryPanel} from "../historyPanel/HistoryPanel.tsx";
-import {FileType} from "../fileContext/FileContext.tsx";
-import EditorContext from './EditorContext.tsx';
+import {FC, useEffect, useRef, useState} from 'react'
+import Editor from "../../engine/editor"
+import ShortcutListener from "../ShortcutListener.tsx"
+import {ModulePanel} from "../modulePanel/ModulePanel.tsx"
+import {PropertyPanel} from "../PropertyPanel.tsx"
+import {StatusBar} from "../statusBar/StatusBar.tsx"
+import uid from "../../utilities/Uid.ts"
+import {HistoryUpdatedHandler, ModulesUpdatedHandler, SelectionUpdatedHandler} from "../../engine/editor/events"
+import {HistoryNode} from "../../engine/editor/history/DoublyLinkedList.ts"
+import {LayerPanel} from "../layerPanel/LayerPanel.tsx"
+import {ActionCode} from "../../engine/editor/editor"
+import Header from "../header/Header.tsx"
+import {HistoryPanel} from "../historyPanel/HistoryPanel.tsx"
+import {FileType} from "../fileContext/FileContext.tsx"
+import EditorContext from './EditorContext.tsx'
 
 const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const editorRef = useRef<Editor>(null)
@@ -21,20 +21,20 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [sortedModules, setSortedModules] = useState<ModuleType[]>([])
   const [selectedModules, setSelectedModules] = useState<UID[]>([])
   const [historyCurrent, setHistoryCurrent] = useState<HistoryNode>({} as HistoryNode)
-  const elementRef = useRef<HTMLDivElement>(null);
+  const elementRef = useRef<HTMLDivElement>(null)
   const [focused, setFocused] = useState(false)
 
   useEffect(() => {
-    let editor: Editor;
+    let editor: Editor
 
     if (containerRef.current) {
-      const newUID = uid();
+      const newUID = uid()
 
       editor = new Editor({
         container: containerRef!.current,
         data: {
           id: newUID,
-          size: basicEditorAreaSize,
+          // size: basicEditorAreaSize,
           modules: [],
         },
         events: {
@@ -42,32 +42,32 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           onModulesUpdated,
           onSelectionUpdated
         }
-      });
+      })
 
       createMockData(editor)
       editorRef.current = editor
     }
 
-    const element = elementRef.current;
+    const element = elementRef.current
     if (element) {
-      element.addEventListener('focus', handleFocus);
-      element.addEventListener('blur', handleBlur);
+      element.addEventListener('focus', handleFocus)
+      element.addEventListener('blur', handleBlur)
     }
 
     return () => {
       if (element) {
-        element.removeEventListener('focus', handleFocus);
-        element.removeEventListener('blur', handleBlur);
+        element.removeEventListener('focus', handleFocus)
+        element.removeEventListener('blur', handleBlur)
       }
 
       if (editor) {
         editor.destroy()
       }
-    };
+    }
   }, [file])
 
-  const handleFocus = () => setFocused(true);
-  const handleBlur = () => setFocused(false);
+  const handleFocus = () => setFocused(true)
+  const handleBlur = () => setFocused(false)
 
   const onSelectionUpdated: SelectionUpdatedHandler = (selected) => {
     setSelectedModules(Array.from(selected))
@@ -136,8 +136,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 
       </div>
     </EditorContext.Provider>
-  );
-};
+  )
+}
 
 const createMockData = (editor: Editor) => {
   const baseX = 100
@@ -159,9 +159,11 @@ const createMockData = (editor: Editor) => {
     rotation: 0
   }
   const MOCK_ELE_LEN = 1
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getRandomHexColor = (): string => {
-    return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0")}`;
-  };
+    return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0")}`
+  }
 
   editor.batchAdd(
     editor.batchCreate(
@@ -188,4 +190,4 @@ const createMockData = (editor: Editor) => {
     } */
 }
 
-export default EditorProvider;
+export default EditorProvider

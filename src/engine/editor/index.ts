@@ -46,7 +46,7 @@ class Editor {
   private container: HTMLDivElement
   events: EventHandlers = {}
   private action: Action
-  private history: History
+  history: History
   public panableContainer: PanableContainer
   selectionManager: SelectionManager
   private wrapper: HTMLDivElement

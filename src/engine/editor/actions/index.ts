@@ -14,7 +14,7 @@ class Action {
     ['duplicate', []],
     ['delete', []],
     ['escape', []],
-    ['modify-modules', []],
+    ['modifyModules', []],
     ['undo', []],
     ['redo', []]
   ])
@@ -87,9 +87,14 @@ class Action {
       this.editor.history.undo()
     }
 
-    if (code === 'moveUp') {
+    if (code === 'moveUp' || code === 'moveRight' || code === 'moveDown' || code === 'moveLeft') {
       // console.log(this.editor.selectionManager)
-      this.editor.selectionManager
+      const selectedModules = this.editor.selectionManager.getSelected()
+
+      this.editor.batchModify(selectedModules, {
+        code,
+      })
+      console.log(selectedModules)
     }
 
     if (this.eventsMap.has(code)) {

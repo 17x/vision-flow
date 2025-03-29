@@ -3,7 +3,7 @@
     "label": "Init",
     "tooltip": "Initialize the file"
   },
-  "add-modules": {
+  "addModules": {
     "label": "Add Modules",
     "tooltip": "Add new modules to the file"
   },
@@ -15,11 +15,11 @@
     "label": "Paste Modules",
     "tooltip": "Paste modules into the file"
   },
-  "duplicate-modules": {
+  "duplicateModules": {
     "label": "Duplicate Modules",
     "tooltip": "Duplicate selected modules"
   },
-  "modify-modules": {
+  "modifyModules": {
     "label": "Modify Modules",
     "tooltip": "Modify the properties of modules"
   }

@@ -87,10 +87,10 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
     ctx.restore();
   });
 
-  console.log(`
+  /*console.log(`
   Total Rectangles to Render: ${rects.length}
   Rectangles in Queue: ${rectQueue.length}
-`);
+`);*/
 }
 
 export default rectRender;

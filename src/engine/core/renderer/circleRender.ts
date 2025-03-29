@@ -78,11 +78,11 @@ const circleRender = (ctx: CanvasRenderingContext2D, rects: CircleRenderProps[])
     // Restore the context to avoid affecting subsequent drawings
     ctx.restore();
   });
-
+/*
   console.log(`
     Total Rectangles to Render: ${rects.length}
     Rectangles in Queue: ${rectQueue.length}
-  `);
+  `);*/
 };
 
 export default circleRender;

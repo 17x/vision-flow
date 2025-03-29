@@ -13,7 +13,7 @@ class History extends HistoryDoublyLinkedList {
     this.replaceNext({
       type: 'init',
       modules: [],
-      selectedItems: new Set()
+      selectModules: new Set()
     })
 
     editor.events.onHistoryUpdated?.(this)
@@ -33,12 +33,12 @@ class History extends HistoryDoublyLinkedList {
     const {type, modules = [], selectModules = new Set()} = this.current.value
 
     if (
-      type === 'paste-modules'
-      || type === 'add-modules'
-      || type === 'duplicate-modules'
+      type === 'pasteModules'
+      || type === 'addModules'
+      || type === 'duplicateModules'
     ) {
       this.editor.batchDelete(arrayToSet(modules!))
-    } else if (type === 'delete-modules') {
+    } else if (type === 'deleteModules') {
       this.editor.batchAdd(this.editor.batchCreate(modules!))
     }
 
@@ -54,12 +54,12 @@ class History extends HistoryDoublyLinkedList {
     const {type, modules = [], selectModules = new Set()} = this.current!.next.value
 
     if (
-      type === 'paste-modules'
-      || type === 'add-modules'
-      || type === 'duplicate-modules'
+      type === 'pasteModules'
+      || type === 'addModules'
+      || type === 'duplicateModules'
     ) {
       this.editor.batchAdd(this.editor.batchCreate(modules!))
-    } else if (type === 'delete-modules') {
+    } else if (type === 'deleteModules') {
       this.editor.batchDelete(new Set(modules.map(m => m.id)))
     }
 

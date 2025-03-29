@@ -11,10 +11,10 @@ export interface Line {
 }
 
 export type MoveDirection =
-  'move-up'
-  | 'move-down'
-  | 'move-left'
-  | 'move-right'
+  'moveUp'
+  | 'moveDown'
+  | 'moveLeft'
+  | 'moveRight'
 
 export type ActionCode =
   'selectAll'
@@ -26,18 +26,18 @@ export type ActionCode =
   | 'duplicate'
   | 'delete'
   | 'escape'
-  | 'modify-modules'
+  | 'modifyModules'
   | MoveDirection
 
 export type ShortcutCode = 'move'
 
 export type HistoryActionType =
   'init'
-  | 'add-modules'
-  | 'delete-modules'
-  | 'paste-modules'
-  | 'duplicate-modules'
-  | 'modify-modules'
+  | 'addModules'
+  | 'deleteModules'
+  | 'pasteModules'
+  | 'duplicateModules'
+  | 'modifyModules'
 
 export type ModifyModule = Partial<ModuleProps>
 export type ModifyModuleMap = Map<UID, ModifyModule>

@@ -10,10 +10,10 @@ const ShortcutListener: React.FC = () => {
     const {key, ctrlKey, metaKey, shiftKey} = e
 
     const arrowKeys: { [key: string]: MoveDirection } = {
-      ArrowUp: 'move-up',
-      ArrowDown: 'move-down',
-      ArrowLeft: 'move-left',
-      ArrowRight: 'move-right',
+      ArrowUp: 'moveUp',
+      ArrowDown: 'moveDown',
+      ArrowLeft: 'moveLeft',
+      ArrowRight: 'moveRight',
     }
 
     if (key === 'a' && (ctrlKey || metaKey)) {

@@ -6,7 +6,7 @@ type Next = Prev
 export interface HistoryValue {
   type: HistoryActionType
   modules?: ModuleProps[]
-  selectModules: Set<UID>
+  selectModules: Set<UID> | 'all'
   id?: number
 }
 

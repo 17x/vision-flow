@@ -1,7 +1,7 @@
 import render from "../core/renderer/renderer.ts";
 import SelectionManager from "./selection/selectionManager.ts";
 import CrossLine from "./crossLine.ts";
-import {BasicEditorAreaSize, HistoryActionType, ActionCode} from "./editor";
+import {BasicEditorAreaSize, HistoryActionType, ActionCode, MoveDirection} from "./editor";
 import PanableContainer from "./panableContainer";
 // import Shortcut from "./shortcut.ts";
 import History from "./history/history.ts";
@@ -234,22 +234,33 @@ class Editor {
       return false
     }
 
-    modulesMap.forEach(module => {
+    modulesMap.forEach((module: ModuleProps) => {
       Object.keys(data).forEach((key) => {
+        const code = data['code'] as MoveDirection
         const value = data[key]
 
-        if (typeof value === 'string') {
+        if (code === 'moveUp') {
+          module.y -= 1
+        } else if (code === 'moveDown') {
+          module.y += 1
+        } else if (code === 'moveLeft') {
+          module.x -= 1
+        } else if (code === 'moveRight') {
+          module.x += 1
+        } else if (typeof value === 'string') {
           module[key] = value
         } else if (typeof value === 'number') {
-          module[key] += data[key]
+          module[key] = data[key]
         }
       })
     })
 
     this.render()
+    this.events.onModulesUpdated?.(this.moduleMap)
+    this.selectionManager.render()
 
     if (historyCode) {
-
+      console.log(historyCode)
     }
   }
 

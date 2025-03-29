@@ -173,7 +173,7 @@ const createMockData = (editor: Editor) => {
         }
       })
     ),
-    "add-modules"
+    "addModules"
   )
   /*
     const c1data: Omit<ConnectorProps, 'id' | 'layer'> = {

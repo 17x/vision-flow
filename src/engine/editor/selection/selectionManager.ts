@@ -14,6 +14,7 @@ class SelectionManager {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private selectedModules: Set<UID> = new Set();
+  private hoveredModules: Set<UID> = new Set();
   private isDragging: boolean = false;
   private isResizing: boolean = false;
   private dragStart: {
@@ -63,20 +64,29 @@ class SelectionManager {
     this.editor.action.unsubscribe('duplicate', this.duplicate.bind(this));
     this.editor.action.unsubscribe('delete', this.delete.bind(this));
     this.editor.action.unsubscribe('escape', this.escape.bind(this));
-    this.editor.action.unsubscribe('modify-modules', this.modifyModules.bind(this));
+    this.editor.action.unsubscribe('modifyModules', this.modifyModules.bind(this));
   }
 
-  public getSelected(): Set<UID> {
+  public getSelected(): Set<UID> | 'all' {
+    if (this.isSelectAll) {
+      return 'all'
+    }
     return new Set(this.selectedModules.keys())
   }
 
-  public select(idSet: Set<UID>) {
+  public select(idSet: Set<UID> | 'all') {
     if (!idSet) return
-    // console.log(idSet)
+
     this.selectedModules.clear()
-    idSet.forEach((id) => {
-      this.selectedModules.add(id);
-    })
+
+    if (idSet === 'all') {
+      this.isSelectAll = true;
+    } else {
+      idSet.forEach((id) => {
+        this.selectedModules.add(id);
+      })
+    }
+
     this.render();
     this.editor.events.onSelectionUpdated?.(this.selectedModules)
   }
@@ -104,7 +114,7 @@ class SelectionManager {
 
   public paste(): void {
     const newModules = this.editor.batchCreate(this.copiedItems)
-    this.editor.batchAdd(newModules, 'paste-modules')
+    this.editor.batchAdd(newModules, 'pasteModules')
     this.select(new Set(newModules.keys()))
     this.updateCopiedItemsDelta()
   }
@@ -124,16 +134,16 @@ class SelectionManager {
     })
 
     const newModules = this.editor.batchCreate(temp)
-    this.editor.batchAdd(newModules, 'duplicate-modules')
+    this.editor.batchAdd(newModules, 'duplicateModules')
     this.isSelectAll = false
     this.select(new Set(newModules.keys()))
   }
 
   public delete(): void {
     if (this.isSelectAll) {
-      this.editor.batchDelete('all', 'delete-modules')
+      this.editor.batchDelete('all', 'deleteModules')
     } else {
-      this.editor.batchDelete(this.selectedModules, 'delete-modules')
+      this.editor.batchDelete(this.selectedModules, 'deleteModules')
     }
 
     this.editor.selectionManager.clear()
@@ -142,6 +152,7 @@ class SelectionManager {
   private escape(): void {
     this.isSelectAll = false
     this.clear()
+
   }
 
   private modifyModules(e: KeyboardEvent, i?: KeyboardDirectionKeys): void {
@@ -171,9 +182,9 @@ class SelectionManager {
     }
 
     if (this.isSelectAll) {
-      this.editor.batchModify('all', modifyData, 'modify-modules')
+      this.editor.batchModify('all', modifyData, 'modifyModules')
     } else if (this.selectedModules.size > 0) {
-      this.editor.batchModify(this.selectedModules, modifyData, 'modify-modules')
+      this.editor.batchModify(this.selectedModules, modifyData, 'modifyModules')
     }
 
     this.render()
@@ -333,7 +344,7 @@ class SelectionManager {
         })
       });
 
-      console.log(rects)
+      // console.log(rects)
       ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
       // ctx.setTransform(this.editor.scale, 0, 0, this.editor.scale, 0, 0);
       rectRender(ctx, rects)
@@ -358,6 +369,7 @@ class SelectionManager {
   }
 
   public handleKeyboardMove(modules): void {
+    console.log(modules)
 
   }
 

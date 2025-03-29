@@ -17,7 +17,7 @@ const handler = {
   'escape': () => {
 
   },
-  'modify-modules': () => {
+  'modifyModules': () => {
 
   },
 }

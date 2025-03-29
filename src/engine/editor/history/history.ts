@@ -1,6 +1,7 @@
 import Editor from "../index.ts";
-import DoublyLinkedList, {HistoryNode, HistoryNodeData} from "./DoublyLinkedList.ts";
+import DoublyLinkedList, {HistoryNode} from "./DoublyLinkedList.ts";
 import {arrayToSet} from "../../core/convert.ts";
+import {HistoryNodeData} from "./type";
 
 class History extends DoublyLinkedList {
   private editor: Editor;
@@ -29,13 +30,15 @@ class History extends DoublyLinkedList {
   }
 
   undo(): void {
-    if (!this.current) return
+    const current = super.back()
+
+    if (!current) return
 
     const {
       type,
       modules = [],
       selectModules = new Set()
-    } = this.current.data
+    } = current.data
 
     if (
       type === 'pasteModules'
@@ -48,20 +51,19 @@ class History extends DoublyLinkedList {
     }
 
     this.editor.selectionManager.select(selectModules)
-
-    this.back()
-
     this.editor.events.onHistoryUpdated?.(this)
   }
 
   redo(): void {
-    if (!this.current!.next) return
+    const current = super.forward()
+
+    if (!current) return
 
     const {
       type,
       modules = [],
       selectModules = new Set()
-    } = this.current!.next.value.data
+    } = current.data
 
     if (
       type === 'pasteModules'
@@ -73,10 +75,7 @@ class History extends DoublyLinkedList {
       this.editor.batchDelete(new Set(modules.map(m => m.id)))
     }
 
-    console.log(selectModules)
     this.editor.selectionManager.select(selectModules)
-    this.forward()
-
     this.editor.events.onHistoryUpdated?.(this)
   }
 

@@ -61,12 +61,23 @@ class DoublyLinkedList {
     return newNode
   }
 
-  back() {
-    this.current = this.current!.prev || this.current;
+  back(): HistoryNode | false {
+    if (this.current === this.head) {
+      return false
+    }
+
+    this.current = this.current!.prev
+    return this.current as HistoryNode
   }
 
-  forward() {
-    this.current = this.current!.next || this.current;
+  forward(): HistoryNode | false {
+    if (this.current === this.tail) {
+      return false
+    }
+
+    this.current = this.current!.next
+
+    return this.current as HistoryNode
   }
 }
 

@@ -1,5 +1,5 @@
 const handler = {
-  'select-all': () => {
+  'selectAll': () => {
 
   },
   'copy': () => {

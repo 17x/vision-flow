@@ -8,7 +8,7 @@ class Action {
   private lock: boolean
   readonly editor: Editor
   readonly eventsMap: Map<ActionCode, EventsFunction[]> = new Map([
-    ['select-all', []],
+    ['selectAll', []],
     ['copy', []],
     ['paste', []],
     ['duplicate', []],
@@ -52,7 +52,7 @@ class Action {
 
     this.lock = true
 
-    if (code === 'select-all') {
+    if (code === 'selectAll') {
       this.editor.selectionManager.selectAll()
     }
     if (code === 'select') {

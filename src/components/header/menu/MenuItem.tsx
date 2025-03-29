@@ -1,7 +1,8 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {NestedActions} from "./Menu.tsx";
 import {DynamicIcon} from 'lucide-react/dynamic';
+import EditorContext from "../../editorContext/EditorContext.tsx";
 
 interface MenuItemProps {
   menu: NestedActions
@@ -12,11 +13,14 @@ const MenuItem: React.FC<MenuItemProps> = ({
                                            }) => {
   const {t} = useTranslation()
   const [subOpen, setSubOpen] = useState<boolean>(false);
+  const {executeAction} = useContext(EditorContext)
 
   const handleClick = () => {
+    console.log(menu)
     if (menu.children || subOpen) return
 
-    setSubOpen(true)
+    executeAction(menu.id)
+    setSubOpen(false)
   }
 
   const hasChildren = menu.children && menu.children!.length > 0
@@ -29,7 +33,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
                 // e.stopPropagation()
               }}
               onMouseLeave={() => {
-                console.log(menu)
+                // console.log(menu)
                 setSubOpen(false);
               }}
   >

@@ -6,7 +6,7 @@ import rectRender, {RectangleRenderProps} from "../core/renderer/rectRender.ts";
 type CopiedModuleProps = Omit<ModuleProps, 'id'>
 type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
 const actions: ActionCode[] = [
-  'select-all',
+  'selectAll',
   'copy',
   'paste',
   'duplicate',
@@ -65,7 +65,7 @@ class SelectionManager {
     }*/
 
   private unBindShortcuts() {
-    this.editor.action.unsubscribe('select-all', this.selectAll.bind(this));
+    this.editor.action.unsubscribe('selectAll', this.selectAll.bind(this));
     this.editor.action.unsubscribe('copy', this.copy.bind(this));
     this.editor.action.unsubscribe('paste', this.paste.bind(this));
     this.editor.action.unsubscribe('duplicate', this.duplicate.bind(this));

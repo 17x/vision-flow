@@ -1,7 +1,8 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {ActionCode} from "../engine/editor/editor";
 
 export interface MenuActionType {
-  id: string;
+  id: ActionCode;
   parent: string | null;
   disabled?: boolean;
   shortcut?: string;
@@ -88,14 +89,14 @@ const menuData: MenuActionType[] = [
   {id: "duplicateLayer", parent: "layer"},
   {id: "deleteLayer", parent: "layer"},
   {id: "toggleLayerVisibility", parent: "layer"},
-/*
-  {id: "collaboration", parent: null},
-  {id: "addComment", parent: "collaboration"},
-  {id: "editComment", parent: "collaboration"},
-  {id: "deleteComment", parent: "collaboration"},
-  {id: "shareDocument", parent: "collaboration"},
-  {id: "liveCollaboration", parent: "collaboration"},
- */
+  /*
+    {id: "collaboration", parent: null},
+    {id: "addComment", parent: "collaboration"},
+    {id: "editComment", parent: "collaboration"},
+    {id: "deleteComment", parent: "collaboration"},
+    {id: "shareDocument", parent: "collaboration"},
+    {id: "liveCollaboration", parent: "collaboration"},
+   */
 ];
 
 const initialState: MenuActionState = {

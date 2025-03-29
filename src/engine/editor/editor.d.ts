@@ -17,7 +17,7 @@ export type MoveDirection =
   | 'move-right'
 
 export type ActionCode =
-  'select-all'
+  'selectAll'
   | 'select'
   | 'copy'
   | 'paste'

@@ -64,7 +64,6 @@ const MenuBar: React.FC = () => {
         })
       }</div>
   </div>;
-
 };
 
 export type NestedActions = {

@@ -17,7 +17,7 @@ const ShortcutListener: React.FC = () => {
     }
 
     if (key === 'a' && (ctrlKey || metaKey)) {
-      shortcutCode = 'select-all'
+      shortcutCode = 'selectAll'
     }
 
     if (key === 'c' && (ctrlKey || metaKey) && !shiftKey) {

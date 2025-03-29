@@ -227,6 +227,7 @@ class Editor {
 
   batchModify(from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryActionType) {
     let modulesMap = null
+    const moveStep = 5
 
     if (from === 'all') {
       modulesMap = this.moduleMap
@@ -242,13 +243,13 @@ class Editor {
         const value = data[key]
 
         if (code === 'moveUp') {
-          module.y -= 1
+          module.y -= moveStep
         } else if (code === 'moveDown') {
-          module.y += 1
+          module.y += moveStep
         } else if (code === 'moveLeft') {
-          module.x -= 1
+          module.x -= moveStep
         } else if (code === 'moveRight') {
-          module.x += 1
+          module.x += moveStep
         } else if (typeof value === 'string' || typeof value === 'number') {
           module[key] = value
         }

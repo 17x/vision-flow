@@ -153,7 +153,7 @@ const createMockData = (editor: Editor) => {
     lineWidth: 1,
     enableFill: true,
     fillColor: "#fff",
-    opacity: 80,
+    opacity: 100,
     shadow: false,
     radius: 0,
     rotation: 0
@@ -172,7 +172,7 @@ const createMockData = (editor: Editor) => {
         return {
           ...baseRectData,
           // fillColor: getRandomHexColor(),
-          fillColor: '#fff',
+          fillColor: '#9c4444',
           x: baseX + (i * 5),
           y: baseY + (i * 5),
           layer: i + 1,

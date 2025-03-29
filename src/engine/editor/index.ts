@@ -1,5 +1,5 @@
 import render from "../core/renderer/renderer.ts";
-import SelectionManager from "./selectionManager.ts";
+import SelectionManager from "./selection/selectionManager.ts";
 import CrossLine from "./crossLine.ts";
 import {BasicEditorAreaSize, HistoryActionType, ActionCode} from "./editor";
 import PanableContainer from "./panableContainer";

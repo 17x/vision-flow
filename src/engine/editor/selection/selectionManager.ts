@@ -1,8 +1,11 @@
-import Editor from "./index.ts";
-import coordinator from "./coordinator.ts";
-import {ActionCode, ModifyModuleMap} from "./editor";
-import rectRender from "../core/renderer/rectRender.ts";
-import {RectangleRenderProps} from "../core/renderer/type";
+import Editor from "../index.ts";
+import coordinator from "../coordinator.ts";
+import {ActionCode, ModifyModuleMap} from "../editor";
+import rectRender from "../../core/renderer/rectRender.ts";
+import {CircleRenderProps, RectangleRenderProps} from "../../core/renderer/type";
+import Rectangle from "../../core/modules/shapes/rectangle.ts";
+import circleRender from "../../core/renderer/circleRender.ts";
+import getBoxControlPoints from "./helper.ts";
 
 type CopiedModuleProps = Omit<ModuleProps, 'id'>
 type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
@@ -298,10 +301,9 @@ class SelectionManager {
     const BatchDrawer = (modules: ModuleMap) => {
       const {ctx} = this
 
-      const handlesQueue: Set<string> = new Set()
-      // const rectQueue: Set<string> = new Set()
       const l = this.resizeHandleSize / 2
       const rects: RectangleRenderProps[] = []
+      const dots: CircleRenderProps[] = []
       const fillColor = "#5491f8";
       const lineColor = "#5491f8";
       const lineWidth = 1;
@@ -314,17 +316,19 @@ class SelectionManager {
 
       modules.forEach((module) => {
         const {
-          x, y, width, height
-        } = module.getBoundingRect()
-
-        handlesQueue.add(`${x}-${y}`);
-        handlesQueue.add(`${x + width / 2}-${y}`);
-        handlesQueue.add(`${x + width}-${y}`);
-        handlesQueue.add(`${x + width}-${y + height / 2}`);
-        handlesQueue.add(`${x + width}-${y + height}`);
-        handlesQueue.add(`${x + width / 2}-${y + height}`);
-        handlesQueue.add(`${x}-${y + height}`);
-        handlesQueue.add(`${x}-${y + height / 2}`);
+          x, y, width, height, rotation
+        } = (module as Rectangle).getDetails()
+        const cx = x + width / 2;
+        const cy = y + height / 2;
+        const points = getBoxControlPoints(cx, cy, width, height, rotation);
+        console.log(points, rotation)
+        dots.push(...points.map(point => ({
+          ...point,
+          r1: l,
+          r2: l,
+          fillColor,
+          lineColor: '#fff',
+        })))
 
         rects.push({
           x,
@@ -334,28 +338,17 @@ class SelectionManager {
           fillColor,
           lineColor,
           lineWidth,
+          rotation,
           opacity: 0,
           dashLine: 'dash'
         })
       });
+
       console.log(rects)
       ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      ctx.setTransform(this.editor.scale, 0, 0, this.editor.scale, 0, 0);
+      // ctx.setTransform(this.editor.scale, 0, 0, this.editor.scale, 0, 0);
       rectRender(ctx, rects)
-      ctx.save();
-      ctx.fillStyle = fillColor;
-
-      handlesQueue.forEach((s) => {
-        const arr = s.split('-');
-        const x = parseFloat(arr[0]);
-        const y = parseFloat(arr[1]);
-
-        ctx.beginPath();
-        ctx.ellipse(x, y, l, l, 0, 0, 360);
-        ctx.fill();
-      })
-
-      ctx.restore();
+      circleRender(ctx, dots)
     }
 
     if (this.isSelectAll) {

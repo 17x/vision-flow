@@ -24,14 +24,11 @@ export type RectangleRenderProps = Pick<RectangleProps,
   'y' |
   'width' |
   'height' |
-  'enableFill' |
   'fillColor' |
-  'enableLine' |
   'lineColor' |
   'lineWidth' |
   'radius' |
   'opacity' |
-  'enableGradient' |
   'gradient' |
   'rotation'
 >

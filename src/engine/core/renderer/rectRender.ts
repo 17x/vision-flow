@@ -3,7 +3,6 @@ import deduplicateObjectsByKeyValue from "./deduplicate.ts";
 
 const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]): void => {
   const rectQueue: RectangleRenderProps[] = deduplicateObjectsByKeyValue(rects)
-  console.log(rectQueue)
 
   // Start rendering
   ctx.save();
@@ -13,14 +12,11 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
                        y,
                        width,
                        height,
-                       enableFill,
                        fillColor,
-                       enableLine,
                        lineColor,
                        lineWidth,
                        radius,
                        opacity = 100,
-                       enableGradient,
                        gradient,
                        rotation = 0
                      }: RectangleRenderProps) => {
@@ -40,13 +36,13 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
     }
 
     // Apply fill style if enabled
-    if (enableFill && opacity > 0) {
+    if (opacity > 0) {
       ctx.fillStyle = fillColor;
       ctx.globalAlpha = opacity / 100; // Set the opacity
     }
 
     // Apply stroke style if enabled
-    if (enableLine && lineWidth > 0) {
+    if (lineWidth > 0) {
       ctx.lineWidth = lineWidth;
       ctx.strokeStyle = lineColor;
       ctx.lineJoin = 'round';
@@ -68,15 +64,18 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
     ctx.closePath();
 
     // Fill if enabled
-    if (enableFill && opacity > 0) {
+    if (opacity > 0) {
       ctx.fill();
     }
 
     // Stroke if enabled
-    if (enableLine && lineWidth > 0) {
+    if (lineWidth > 0) {
       ctx.stroke();
     }
 
+    if(gradient){
+      // do sth...
+    }
     // Restore the context to avoid affecting subsequent drawings
     ctx.restore();
   });

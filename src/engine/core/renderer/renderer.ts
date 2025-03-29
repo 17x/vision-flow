@@ -1,7 +1,8 @@
 import Connector from "../modules/connectors/connector.ts";
-import rectRender, {RectangleRenderProps} from "./rectRender.ts";
-import Rectangle from "../modules/shapes/rectangle.ts";
+import rectRender from "./rectRender.ts";
 import lineRender, {LineRenderProps} from "./lineRender.ts";
+import {RectangleRenderProps} from "./type";
+import Rectangle from "../modules/shapes/rectangle.ts";
 
 interface RenderProps {
   ctx: CanvasRenderingContext2D
@@ -47,7 +48,7 @@ const render = ({ctx, modules}: RenderProps): void => {
   modules.forEach((module) => {
     if (module.type === 'rectangle') {
       // console.log(module)
-      const {x, y, width, height, enableFill, opacity, fillColor} = module.getDetails() as RectangleRenderProps;
+      const {x, y, width, height, enableFill, opacity, fillColor} = (module as Rectangle).getDetails()
 
       if (enableFill && opacity > 0) {
         rects.push({x, y, width, height, fillColor, opacity, lineWidth})

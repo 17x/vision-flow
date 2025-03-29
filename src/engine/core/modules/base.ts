@@ -6,8 +6,8 @@ export interface BasicModuleProps {
   lineColor: HexColor
   lineWidth: number
 
-  opacity?: Opacity
-  shadow?: boolean
+  opacity: Opacity
+  shadow: boolean
   position?: Position
   layer: number
 
@@ -31,7 +31,7 @@ class Base {
                 type,
                 lineColor,
                 lineWidth,
-                opacity,
+                opacity = 100,
                 position,
                 layer = 1,
                 rotation = 0,

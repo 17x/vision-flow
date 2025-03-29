@@ -145,18 +145,26 @@ const createMockData = (editor: Editor) => {
     y: 50,
     width: 100,
     height: 100,
+    enableLine: true,
     lineColor: "000",
+    lineWidth: 1,
+    enableFill: true,
     fillColor: "#ff0000",
-    opacity: 50,
+    opacity: 80,
     shadow: false,
+    radius: 0,
+    rotation: 0
   }
   const MOCK_ELE_LEN = 10
-
+  const getRandomHexColor = (): string => {
+    return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0")}`;
+  };
   editor.batchAdd(
     editor.batchCreate(
       Array.from({length: MOCK_ELE_LEN}).map((_, i) => {
         return {
           ...baseRectData,
+          fillColor: getRandomHexColor(),
           x: baseX + (i * 10),
           y: baseY + (i * 10),
           layer: i + 1

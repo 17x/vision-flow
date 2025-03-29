@@ -32,7 +32,7 @@ export const LayerPanel = ({data, selected, handleSelectModule}: LayerPanelProps
   // console.log(data)
   useEffect(() => {
     targetRef.current?.scrollIntoView({
-      behavior: "smooth",
+      // behavior: "smooth",
       block: "nearest",
       inline: "nearest"
     })

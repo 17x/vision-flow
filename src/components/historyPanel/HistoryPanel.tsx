@@ -15,7 +15,7 @@ export const HistoryPanel = () => {
 
       const _timer = setTimeout(() => {
         targetElement.scrollIntoView({
-          behavior: "smooth",
+          // behavior: "smooth",
           block: "nearest",
           inline: "nearest"
         })

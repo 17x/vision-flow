@@ -334,9 +334,10 @@ class SelectionManager {
           fillColor,
           lineColor,
           lineWidth,
+          opacity: 0
         })
       });
-
+      console.log(rects)
       ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
       ctx.setTransform(this.editor.scale, 0, 0, this.editor.scale, 0, 0);
       rectRender(ctx, rects)

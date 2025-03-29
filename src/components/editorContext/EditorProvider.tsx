@@ -137,19 +137,19 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 };
 
 const createMockData = (editor: Editor) => {
-  const baseX = 50
-  const baseY = 50
+  const baseX = 100
+  const baseY = 100
   const baseRectData: Omit<ShapeProps, 'id' | 'layer'> = {
     type: "rectangle",
-    x: 50,
-    y: 50,
+    x: 100,
+    y: 100,
     width: 100,
     height: 100,
     enableLine: true,
     lineColor: "000",
     lineWidth: 1,
     enableFill: true,
-    fillColor: "#ff0000",
+    fillColor: "#fff",
     opacity: 80,
     shadow: false,
     radius: 0,
@@ -159,12 +159,13 @@ const createMockData = (editor: Editor) => {
   const getRandomHexColor = (): string => {
     return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0")}`;
   };
+
   editor.batchAdd(
     editor.batchCreate(
       Array.from({length: MOCK_ELE_LEN}).map((_, i) => {
         return {
           ...baseRectData,
-          fillColor: getRandomHexColor(),
+          // fillColor: getRandomHexColor(),
           x: baseX + (i * 10),
           y: baseY + (i * 10),
           layer: i + 1,

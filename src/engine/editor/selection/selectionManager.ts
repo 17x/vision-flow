@@ -1,23 +1,12 @@
 import Editor from "../index.ts";
 import coordinator from "../coordinator.ts";
-import {ActionCode, ModifyModuleMap} from "../editor";
 import rectRender from "../../core/renderer/rectRender.ts";
 import {CircleRenderProps, RectangleRenderProps} from "../../core/renderer/type";
 import Rectangle from "../../core/modules/shapes/rectangle.ts";
 import circleRender from "../../core/renderer/circleRender.ts";
-import getBoxControlPoints from "./helper.ts";
+import {getBoxControlPoints, isInsideRotatedRect} from "./helper.ts";
 
-type CopiedModuleProps = Omit<ModuleProps, 'id'>
 type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
-const actions: ActionCode[] = [
-  'selectAll',
-  'copy',
-  'paste',
-  'duplicate',
-  'delete',
-  'escape',
-  'modify-modules'
-];
 const CopyDeltaX = 10
 const CopyDeltaY = 10
 
@@ -214,19 +203,21 @@ class SelectionManager {
 
     const mouseX = e.offsetX;
     const mouseY = e.offsetY;
-    const mousePointX = mouseX
-    const mousePointY = mouseY
+    // const mousePointX = mouseX
+    // const mousePointY = mouseY
     this.isDragging = true;
     this.dragStart = {
       x: mouseX, y: mouseY
     };
 
     const possibleModules = Array.from(this.editor.moduleMap.values()).filter((item) => {
-      const {
-        top, right, bottom, left
-      } = item.getBoundingRect()
+      if (item.type === 'rectangle' && item.rotation > 0) {
+        const {
+          x, y, width, height, rotation
+        } = (item as Rectangle).getDetails()
 
-      return mouseX > left && mouseY > top && mousePointX < right && mousePointY < bottom
+        return isInsideRotatedRect(mouseX, mouseY, x, y, width, height, rotation)
+      }
     })
 
     if (!possibleModules.length) {
@@ -277,7 +268,7 @@ class SelectionManager {
 
     // console.log(this.editor.modules.entries())
     // hover logic
-    const filtered = this.editor.moduleMap.values().filter((module) => {
+    const filtered = Array.from(this.editor.moduleMap.values()).filter((module) => {
       const {top, right, bottom, left} = module.getBoundingRect()
 
       return mouseX > left && mouseY > top && mouseX < right && mouseY < bottom
@@ -318,10 +309,8 @@ class SelectionManager {
         const {
           x, y, width, height, rotation
         } = (module as Rectangle).getDetails()
-        const cx = x + width / 2;
-        const cy = y + height / 2;
-        const points = getBoxControlPoints(cx, cy, width, height, rotation);
-        console.log(points, rotation)
+        const points = getBoxControlPoints(x, y, width, height, rotation);
+
         dots.push(...points.map(point => ({
           ...point,
           r1: l,

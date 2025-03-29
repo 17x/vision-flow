@@ -22,7 +22,7 @@ class Base {
   private readonly lineColor: HexColor;
   private readonly opacity: Opacity;
   private readonly position: Position;
-  private readonly rotation: Rotation;
+  readonly rotation: Rotation;
   private readonly shadow: Shadow;
   readonly layer: number;
 

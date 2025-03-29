@@ -28,8 +28,8 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
     // Save current context state to avoid transformations affecting other drawings
     ctx.save();
 
-    // Move context to the rectangle's center
-    ctx.translate(x + LocalX, y + LocalY);
+    // Move context to the rectangle's center (Direct center point at x, y)
+    ctx.translate(x, y);
 
     // Apply rotation if needed
     if (rotation > 0) {
@@ -80,7 +80,7 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
     }
 
     if (gradient) {
-      // do sth...
+      // Implement gradient rendering (as needed)
     }
 
     // Restore the context to avoid affecting subsequent drawings

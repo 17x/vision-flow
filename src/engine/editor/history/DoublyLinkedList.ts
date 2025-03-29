@@ -28,7 +28,7 @@ class DoublyLinkedList {
   /**
    * Detach: detach all nodes after current
    */
-  detach(): HistoryNode | null {
+  protected detach(): HistoryNode | null {
     if (this.current) {
       this.current.next = null
       this.tail = this.current;
@@ -61,7 +61,10 @@ class DoublyLinkedList {
     return newNode
   }
 
-  back(): HistoryNode | false {
+  /*
+  * Move current back
+  * */
+  protected back(): HistoryNode | false {
     if (this.current === this.head) {
       return false
     }
@@ -70,7 +73,10 @@ class DoublyLinkedList {
     return this.current as HistoryNode
   }
 
-  forward(): HistoryNode | false {
+  /*
+ * Move current forward
+ * */
+  protected forward(): HistoryNode | false {
     if (this.current === this.tail) {
       return false
     }
@@ -78,6 +84,33 @@ class DoublyLinkedList {
     this.current = this.current!.next
 
     return this.current as HistoryNode
+  }
+
+  /**
+   * 'front' : target node in front of current node
+   * 'behind' : target node behind of current node
+   * 'equal' : target node equal to current node
+   * false : target node not belong to this linked list
+   */
+  protected compareToCurrentPosition(node: HistoryNode): 'front' | 'equal' | 'behind' | false {
+    if (node === this.current) return 'equal'
+
+    let localCurrent = this.head;
+
+    while (localCurrent) {
+      if (this.current === localCurrent) {
+        return 'behind'
+      }
+
+      if (node === localCurrent) {
+        return 'front'
+      }
+
+
+      localCurrent = localCurrent.next
+    }
+
+    return false
   }
 }
 

@@ -29,10 +29,10 @@ class History extends DoublyLinkedList {
     this.editor.events.onHistoryUpdated?.(this)
   }
 
-  undo(): void {
+  undo(quiet = false): HistoryNode | false {
     const current = super.back()
 
-    if (!current) return
+    if (!current) return false
 
     const {
       type,
@@ -50,14 +50,18 @@ class History extends DoublyLinkedList {
       this.editor.batchAdd(this.editor.batchCreate(modules!))
     }
 
-    this.editor.selectionManager.select(selectModules)
-    this.editor.events.onHistoryUpdated?.(this)
+    if (!quiet) {
+      this.editor.selectionManager.select(selectModules)
+      this.editor.events.onHistoryUpdated?.(this)
+    }
+
+    return this.current as HistoryNode
   }
 
-  redo(): void {
+  redo(quiet = false): HistoryNode | false {
     const current = super.forward()
 
-    if (!current) return
+    if (!current) return false
 
     const {
       type,
@@ -75,37 +79,47 @@ class History extends DoublyLinkedList {
       this.editor.batchDelete(new Set(modules.map(m => m.id)))
     }
 
-    this.editor.selectionManager.select(selectModules)
-    this.editor.events.onHistoryUpdated?.(this)
+    if (!quiet) {
+      this.editor.selectionManager.select(selectModules)
+      this.editor.events.onHistoryUpdated?.(this)
+    }
+
+    return this.current as HistoryNode
   }
 
   moveCurrentById(targetNode: HistoryNode) {
-    console.log(targetNode, this.current)
-    console.log(targetNode.data)
-    if (targetNode === this.current) return
-    let curr = targetNode
+    const relativePosition = super.compareToCurrentPosition(targetNode)
 
-    // Determine the target node relative to the head node’s position
-    let targetNodeIsAfterTheCurrent = false
+    if (!relativePosition || relativePosition === 'equal') return
 
-    while (curr?.next) {
-      if (curr === this.head) {
-        targetNodeIsAfterTheCurrent = true
-        break
+    let localCurrent: HistoryNode
+
+    // move back
+    if (relativePosition === 'front') {
+      localCurrent = this.current as HistoryNode
+
+      while (true) {
+        localCurrent = this.undo(true)
+        console.log(localCurrent, localCurrent, targetNode)
+        if (localCurrent === targetNode) break
       }
-      curr = curr.next
-    }
 
-    curr = this.current
+    } else if (relativePosition === 'behind') {
+      // move forward
+      localCurrent = this.current as HistoryNode
 
-    while (curr !== targetNode && curr) {
-      if (targetNodeIsAfterTheCurrent) {
-        this.undo()
-        curr = curr.prev
-      } else {
-        this.redo()
-        curr = curr.prev
+      while (true) {
+        const quiet = localCurrent!.next === targetNode
+
+        const r = this.redo(quiet)
+
+        if (!r || localCurrent === targetNode) break
+
+        localCurrent = r
       }
+
+    } else {
+      // do sth...
     }
   }
 
@@ -122,7 +136,7 @@ class History extends DoublyLinkedList {
         curr = curr.next
       }
     }
-    console.log(list)
+
     return list
   }
 

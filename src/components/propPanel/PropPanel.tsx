@@ -3,7 +3,9 @@ import EditorContext from "../editorContext/EditorContext.tsx"
 
 const PropPanel = () => {
   const {selectedProps} = useContext(EditorContext)
+
   console.log(selectedProps)
+
   useEffect(() => {
 
   }, [selectedProps])
@@ -11,22 +13,22 @@ const PropPanel = () => {
   return <div className={'p-2'}>
     <h1 className={'bg-gray-400 text-white px-2'}><span>Properties</span></h1>
     <div className={'scrollbar-custom overflow-x-hidden overflow-y-auto p-2 border h-30 border-gray-200 select-none'}>
-      {selectedProps && <ShapePropsPanel initialProps={selectedProps}/>}
+      {selectedProps && <ShapePropsPanel props={selectedProps}/>}
     </div>
   </div>
 }
 
 export default PropPanel
 
-const ShapePropsPanel = ({initialProps}: { initialProps: ShapeProps }) => {
-  const [props, setProps] = useState(initialProps)
+const ShapePropsPanel = ({props}: { props: ShapeProps }) => {
+  // const [props, setProps] = useState(initialProps)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, type, value, checked} = e.target
-    setProps((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : type === "number" ? Number(value) : value,
-    }))
+    // const {name, type, value, checked} = e.target
+    /* setProps((prev) => ({
+       ...prev,
+       [name]: type === "checkbox" ? checked : type === "number" ? Number(value) : value,
+     }))*/
   }
 
   return (
@@ -35,6 +37,26 @@ const ShapePropsPanel = ({initialProps}: { initialProps: ShapeProps }) => {
       {/* Shape Properties Group */}
       <div className="mb-4 ">
         <h3 className="font-semibold mb-2">Shape Properties</h3>
+        <div className="px-4 w-full h-full flex justify-between items-center">
+          <span className={''}>X:</span>
+          <input
+            type="number"
+            name="x"
+            value={props.x}
+            onChange={handleChange}
+            className="w-16 px-2 py-1 text-black rounded"
+          />
+        </div>
+        <div className="px-4 w-full h-full flex justify-between items-center">
+          <span className={''}>Y:</span>
+          <input
+            type="number"
+            name="y"
+            value={props.y}
+            onChange={handleChange}
+            className="w-16 px-2 py-1 text-black rounded"
+          />
+        </div>
         <div className="px-4 w-full h-full flex justify-between items-center">
           <span className={''}>Width:</span>
           <input

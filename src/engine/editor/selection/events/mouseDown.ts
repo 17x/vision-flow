@@ -1,7 +1,7 @@
 import Rectangle from "../../../core/modules/shapes/rectangle.ts"
 import {isInsideRotatedRect} from "../helper.ts"
 import SelectionManager from "../selectionManager.ts"
-import render from "../render.ts"
+// import render from "../render.ts"
 
 function handleMouseDown(this: SelectionManager, e: MouseEvent) {
 
@@ -47,8 +47,9 @@ function handleMouseDown(this: SelectionManager, e: MouseEvent) {
     this.selectedModules.add(id)
   }
 
-  render.call(this)
-  this.editor.events.onSelectionUpdated?.(this.selectedModules)
+  this.update()
+  // render.call(this)
+  // this.editor.events.onSelectionUpdated?.(this.selectedModules)
 }
 
 

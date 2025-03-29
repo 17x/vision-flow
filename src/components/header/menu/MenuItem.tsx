@@ -48,7 +48,8 @@ const MenuItem: React.FC<MenuItemProps> = ({
           {
             menu.children!.map((subItem) => <MenuItem menu={subItem} key={subItem.id}/>)
           }
-        </div>}
+        </div>
+    }
   </div>
 }
 

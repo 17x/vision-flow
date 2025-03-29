@@ -44,7 +44,7 @@ type HistoryUpdatedHandler = (history: History) => void;
  *
  */
 type ModulesUpdatedHandler = (moduleMap: ModuleMap) => void;
-type SelectionUpdatedHandler = (selected: Set<UID>) => void;
+type SelectionUpdatedHandler = (selected: Set<UID> | 'all', selectedProps?: ModuleProps) => void;
 
 export declare type EventHandlers = {
   onHistoryUpdated?: HistoryUpdatedHandler

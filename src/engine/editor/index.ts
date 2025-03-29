@@ -12,6 +12,7 @@ import TypeCheck from "../../utilities/typeCheck.ts"
 import Action from "./actions"
 import Connector from "../core/modules/connectors/connector.ts"
 import {HistoryActionType} from "./history/type"
+import batchReplaceModules from "./helpers/batchReplaceModules.ts"
 
 export interface EditorDataProps {
   id: UID;
@@ -262,10 +263,14 @@ class Editor {
     if (historyCode) {
       this.history.add({
         type: historyCode,
-        modules: [...this.moduleMap.values()].map(mod => mod.getDetails()),
+        modules: [...modulesMap.values()].map(mod => mod.getDetails()),
         selectModules: this.selectionManager.getSelected()
       })
     }
+  }
+
+  batchReplaceModules(moduleList: ModuleProps[]) {
+    batchReplaceModules.bind(this, moduleList)
   }
 
   getModulesByLayerIndex() {
@@ -371,7 +376,6 @@ class Editor {
     requestAnimationFrame(animate)
   }
 
-
   //eslint-disable-block
   destroy() {
     this.removeEventListeners()
@@ -410,7 +414,6 @@ class Editor {
     // @ts-ignore
     this.container = null
   }
-
 
 }
 

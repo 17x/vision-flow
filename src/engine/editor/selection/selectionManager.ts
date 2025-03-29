@@ -83,32 +83,51 @@ class SelectionManager {
   public select(idSet: Set<UID> | 'all') {
     if (!idSet) return
 
+    let p2: ModuleProps | null = null
+
     this.selectedModules.clear()
 
     if (idSet === 'all') {
       this.isSelectAll = true
     } else {
+
       idSet.forEach((id) => {
+        if (idSet.size === 1) {
+          p2 = (this.editor.moduleMap.get(id) as ModuleType).getDetails()
+        }
         this.selectedModules.add(id)
+      })
+    }
+    console.log(p2)
+    this.render()
+    this.editor.events.onSelectionUpdated?.(idSet, p2)
+  }
+
+  public update() {
+    let p2: ModuleProps | null = null
+
+    if (this.selectedModules.size === 1) {
+      this.selectedModules.forEach((id) => {
+        p2 = (this.editor.moduleMap.get(id) as ModuleType).getDetails()
       })
     }
 
     this.render()
-    this.editor.events.onSelectionUpdated?.(this.selectedModules)
+    this.editor.events.onSelectionUpdated?.(this.selectedModules, p2)
   }
 
   public selectAll(): void {
     this.selectedModules.clear()
     this.isSelectAll = true
     this.render()
-    this.editor.events.onSelectionUpdated?.(this.selectedModules)
+    this.editor.events.onSelectionUpdated?.('all', null)
   }
 
   public clear(): void {
     this.selectedModules.clear()
     this.isSelectAll = false
     render.call(this)
-    this.editor.events.onSelectionUpdated?.(this.selectedModules)
+    this.editor.events.onSelectionUpdated?.(new Set(), null)
   }
 
   public copy(): void {

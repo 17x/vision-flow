@@ -50,8 +50,8 @@ class History extends DoublyLinkedList {
     } else if (type === 'deleteModules') {
       this.editor.batchAdd(this.editor.batchCreate(modules!))
     } else if (type === 'modifyModules') {
-      console.log(modules)
-      this.editor.batchModify()
+      console.log('modify', modules)
+      this.editor.batchReplaceModules(modules)
     }
 
     if (!quiet) {
@@ -83,6 +83,8 @@ class History extends DoublyLinkedList {
       this.editor.batchAdd(this.editor.batchCreate(modules!))
     } else if (type === 'deleteModules') {
       this.editor.batchDelete(new Set(modules.map(m => m.id)))
+    } else if (type === 'modifyModules') {
+      this.editor.batchReplaceModules(modules)
     }
 
     if (!quiet) {

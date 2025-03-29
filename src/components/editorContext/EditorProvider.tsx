@@ -5,20 +5,26 @@ import {ModulePanel} from "../modulePanel/ModulePanel.tsx"
 import {PropertyPanel} from "../PropertyPanel.tsx"
 import {StatusBar} from "../statusBar/StatusBar.tsx"
 import uid from "../../utilities/Uid.ts"
-import {HistoryUpdatedHandler, ModulesUpdatedHandler, SelectionUpdatedHandler} from "../../engine/editor/history/events"
 import {HistoryNode} from "../../engine/editor/history/DoublyLinkedList.ts"
 import {LayerPanel} from "../layerPanel/LayerPanel.tsx"
-import {ActionCode} from "../../engine/editor/type"
+import {
+  ActionCode,
+  HistoryUpdatedHandler,
+  ModulesUpdatedHandler,
+  SelectionUpdatedHandler
+} from "../../engine/editor/type"
 import Header from "../header/Header.tsx"
 import {HistoryPanel} from "../historyPanel/HistoryPanel.tsx"
 import {FileType} from "../fileContext/FileContext.tsx"
 import EditorContext from './EditorContext.tsx'
+import PropPanel from "../propPanel/PropPanel.tsx"
 
 const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const editorRef = useRef<Editor>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [historyArray, setHistoryArray] = useState<HistoryNode[]>([])
   const [sortedModules, setSortedModules] = useState<ModuleType[]>([])
+  const [selectedProps, setSelectedProps] = useState<ModuleProps>(null)
   const [selectedModules, setSelectedModules] = useState<UID[]>([])
   const [historyCurrent, setHistoryCurrent] = useState<HistoryNode>({} as HistoryNode)
   const elementRef = useRef<HTMLDivElement>(null)
@@ -69,8 +75,9 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const handleFocus = () => setFocused(true)
   const handleBlur = () => setFocused(false)
 
-  const onSelectionUpdated: SelectionUpdatedHandler = (selected) => {
+  const onSelectionUpdated: SelectionUpdatedHandler = (selected, props) => {
     setSelectedModules(Array.from(selected))
+    setSelectedProps(props)
   }
 
   const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
@@ -103,6 +110,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       focused,
       historyArray,
       selectedModules,
+      selectedProps,
       historyCurrent,
       editorRef,
       applyHistoryNode,
@@ -118,12 +126,14 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           <ModulePanel/>
 
           <div className={'flex flex-col w-full h-full overflow-hidden'}>
-            <div ref={containerRef} className={'relative overflow-hidden flex w-full h-full'}
+            <div ref={containerRef}
+                 className={'relative overflow-hidden flex w-full h-full'}
                  editor-container={'true'}></div>
             <StatusBar/>
           </div>
 
           <div className={'w-[40%] h-full border-l border-gray-200'}>
+            <PropPanel/>
             <LayerPanel data={sortedModules}
                         selected={selectedModules}
                         handleSelectModule={id => {

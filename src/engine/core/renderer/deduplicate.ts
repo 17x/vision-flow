@@ -1,22 +1,19 @@
-const deduplicateObjectsByKeyValue = <T extends Record<string, unknown>>(objects: T[]): T[] => {
-  // Helper function to generate a unique key from the object's key-value pairs
-  const generateKey = (obj: T): string => {
-    return Object.keys(obj)
-      .sort()
-      .map(key => `${key}:${(obj)[key]}`)
-      .join(';');
-  };
+const deduplicateObjectsByKeyValue = <T>(objects: T[]): T[] => {
+  if (!Array.isArray(objects)) return [];
 
   const seen = new Set<string>();
 
-  return objects.filter(item => {
-    const key = generateKey(item);
+  return objects.filter((item: T) => {
+    const key = Object.keys(item as Record<string, unknown>)
+      .sort()
+      .map(key => `${key}:${String((item as Record<string, unknown>)[key])}`)
+      .join(';');
+
     if (seen.has(key)) {
       return false;
-    } else {
-      seen.add(key);
-      return true;
     }
+    seen.add(key);
+    return true;
   });
 };
 

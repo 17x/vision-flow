@@ -12,10 +12,10 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
                        y,
                        width,
                        height,
-                       fillColor,
-                       lineColor,
-                       lineWidth,
-                       radius,
+                       fillColor = '',
+                       lineColor = '',
+                       lineWidth = 1,
+                       radius = 0,
                        opacity = 100,
                        gradient,
                        rotation = 0
@@ -73,9 +73,10 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
       ctx.stroke();
     }
 
-    if(gradient){
+    if (gradient) {
       // do sth...
     }
+
     // Restore the context to avoid affecting subsequent drawings
     ctx.restore();
   });

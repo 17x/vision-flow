@@ -19,19 +19,21 @@ export interface RectangleRenderProps extends RectangleProps {
 
   rotation: number
 }*/
-export type RectangleRenderProps = Pick<RectangleProps,
-  'x' |
-  'y' |
-  'width' |
-  'height' |
-  'fillColor' |
-  'lineColor' |
-  'lineWidth' |
-  'radius' |
-  'opacity' |
-  'gradient' |
-  'rotation'
->
+
+export interface RectangleRenderProps {
+  x: number
+  y: number
+  width: number
+  height: number
+  fillColor?: RectangleProps['fillColor']
+  lineWidth?: RectangleProps['lineWidth']
+  lineColor?: RectangleProps['lineColor']
+  radius?: RectangleProps['radius']
+  opacity?: RectangleProps['opacity']
+  gradient?: RectangleProps['gradient']
+  rotation?: RectangleProps['rotation']
+}
+
 /*
 export type OrderedProps = [
   x: number,
@@ -49,3 +51,12 @@ export type OrderedProps = [
   gradient: Gradient,
   rotation: number,
 ]*/
+
+
+interface TextRenderProps {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  text: string;
+}

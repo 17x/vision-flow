@@ -327,12 +327,14 @@ class SelectionManager {
         handlesQueue.add(`${x}-${y + height / 2}`);
 
         rects.push({
-          x, y, width, height,
+          x,
+          y,
+          width,
+          height,
           fillColor,
           lineColor,
-          lineWidth
+          lineWidth,
         })
-        // rectQueue.add(`${x}-${y}-${width}-${height}`);
       });
 
       ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -340,6 +342,7 @@ class SelectionManager {
       rectRender(ctx, rects)
       ctx.save();
       ctx.fillStyle = fillColor;
+
       handlesQueue.forEach((s) => {
         const arr = s.split('-');
         const x = parseFloat(arr[0]);
@@ -351,23 +354,22 @@ class SelectionManager {
       })
 
       ctx.restore();
-
     }
 
     if (this.isSelectAll) {
       BatchDrawer(this.editor.moduleMap)
     } else {
-      const manipulationModules: ModuleMap = new Map();
+      const selectedModulesMap: ModuleMap = new Map();
 
       this.selectedModules.forEach(id => {
         this.editor.moduleMap.forEach((module) => {
           if (module.id === id) {
-            manipulationModules.set(module.id, module)
+            selectedModulesMap.set(module.id, module)
           }
         })
       })
 
-      BatchDrawer(manipulationModules)
+      BatchDrawer(selectedModulesMap)
     }
   }
 

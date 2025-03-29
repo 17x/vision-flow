@@ -9,29 +9,6 @@ interface RenderProps {
   modules: Map<string, ModuleType>
 }
 
-// type RenderTypes = 'line' | 'curve' | 'text' | 'rect'
-type RenderTypes = 'text' | 'rect'
-
-interface TextRenderProps {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  text: string;
-}
-
-type RenderDataPropsMap = {
-  rect: RectangleRenderProps;
-  text: TextRenderProps;
-  line: never;
-  curve: never;
-};
-
-interface RenderItem<T extends RenderTypes> {
-  type: T;
-  data: RenderDataPropsMap[T];
-}
-
 const render = ({ctx, modules}: RenderProps): void => {
   const rects: RectangleRenderProps[] = []
   const lines: LineRenderProps[] = []
@@ -47,13 +24,24 @@ const render = ({ctx, modules}: RenderProps): void => {
 
   modules.forEach((module) => {
     if (module.type === 'rectangle') {
-      // console.log(module)
-      const {x, y, width, height, enableFill, opacity, fillColor} = (module as Rectangle).getDetails()
 
-      if (enableFill && opacity > 0) {
-        rects.push({x, y, width, height, fillColor, opacity, lineWidth})
-      } else {
-        // rects.push({x, y, width, height, fillColor, strokeStyle, lineWidth})
+      const {
+        x,
+        y,
+        width,
+        height,
+        enableFill,
+        enableLine,
+        opacity,
+        fillColor,
+        lineColor,
+        rotation,
+        gradient,
+        radius
+      } = (module as Rectangle).getDetails()
+
+      if ((enableFill && opacity > 0) || enableLine) {
+        rects.push({x, y, width, height, fillColor, opacity, lineWidth, lineColor, rotation, gradient, radius})
       }
     }
 

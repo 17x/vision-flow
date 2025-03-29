@@ -10,6 +10,10 @@ const CopyDeltaX = 10
 const CopyDeltaY = 10
 
 class SelectionManager {
+  readonly boundMouseDown: (event: MouseEvent) => void
+  readonly boundMouseMove: (event: MouseEvent) => void
+  readonly boundMouseUp: (event: MouseEvent) => void
+
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
   selectedModules: Set<UID> = new Set()
@@ -51,7 +55,22 @@ class SelectionManager {
 
     // this.watchActions()
     this.render()
+    this.boundMouseDown = handleMouseDown.bind(this)
+    this.boundMouseMove = handleMouseMove.bind(this)
+    this.boundMouseUp = handleMouseUp.bind(this)
     this.setupEventListeners()
+  }
+
+  private setupEventListeners(): void {
+    this.editor.canvas.addEventListener("mousedown", this.boundMouseDown)
+    this.editor.canvas.addEventListener("mousemove", this.boundMouseMove)
+    this.editor.canvas.addEventListener("mouseup", this.boundMouseUp)
+  }
+
+  private removeEventListeners(): void {
+    this.canvas.removeEventListener("mousedown", this.boundMouseDown)
+    this.canvas.removeEventListener("mousemove", this.boundMouseMove)
+    this.canvas.removeEventListener("mouseup", this.boundMouseUp)
   }
 
   public getSelected(): Set<UID> | 'all' {
@@ -141,18 +160,6 @@ class SelectionManager {
       copiedItem!.x += CopyDeltaX
       copiedItem!.y += CopyDeltaY
     })
-  }
-
-  private setupEventListeners(): void {
-    this.editor.canvas.addEventListener("mousedown", handleMouseDown.bind(this))
-    this.editor.canvas.addEventListener("mousemove", handleMouseMove.bind(this))
-    this.editor.canvas.addEventListener("mouseup", handleMouseUp.bind(this))
-  }
-
-  private removeEventListeners(): void {
-    this.canvas.removeEventListener("mousedown", handleMouseDown.bind(this))
-    this.canvas.removeEventListener("mousemove", handleMouseMove.bind(this))
-    this.canvas.removeEventListener("mouseup", handleMouseUp.bind(this))
   }
 
   render() {

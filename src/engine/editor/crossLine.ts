@@ -47,7 +47,7 @@ class CrossLine {
     this.render({x: 0, y: 0})
   }
 
-  private destroy() {
+  destroy() {
     this.removeEventListeners()
   }
 

@@ -54,11 +54,14 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       element.addEventListener('blur', handleBlur);
     }
 
-    // Clean up the event listeners on unmount
     return () => {
       if (element) {
         element.removeEventListener('focus', handleFocus);
         element.removeEventListener('blur', handleBlur);
+      }
+
+      if (editor) {
+        editor.destroy()
       }
     };
   }, [file])

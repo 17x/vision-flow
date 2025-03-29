@@ -6,7 +6,7 @@ import Rectangle from "../../core/modules/shapes/rectangle.ts";
 import circleRender from "../../core/renderer/circleRender.ts";
 import {getBoxControlPoints, isInsideRotatedRect} from "./helper.ts";
 
-type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
+// type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
 const CopyDeltaX = 10
 const CopyDeltaY = 10
 
@@ -28,8 +28,8 @@ class SelectionManager {
   private editor: Editor;
   private copiedItems: ModuleProps[] = []
   private isSelectAll: boolean = false
-  private currentCopyDeltaX = CopyDeltaX
-  private currentCopyDeltaY = CopyDeltaY
+  // private currentCopyDeltaX = CopyDeltaX
+  // private currentCopyDeltaY = CopyDeltaY
 
   constructor(editor: Editor) {
     const canvas = document.createElement("canvas") as HTMLCanvasElement;
@@ -49,22 +49,6 @@ class SelectionManager {
     // this.watchActions()
     this.render();
     this.setupEventListeners();
-  }
-
-  /*  private watchActions() {
-      actions.forEach(action => {
-        // this.editor.action.subscribe(action, this[action].bind(this));
-      });
-    }*/
-
-  private unBindShortcuts() {
-    this.editor.action.unsubscribe('selectAll', this.selectAll.bind(this));
-    this.editor.action.unsubscribe('copy', this.copy.bind(this));
-    this.editor.action.unsubscribe('paste', this.paste.bind(this));
-    this.editor.action.unsubscribe('duplicate', this.duplicate.bind(this));
-    this.editor.action.unsubscribe('delete', this.delete.bind(this));
-    this.editor.action.unsubscribe('escape', this.escape.bind(this));
-    this.editor.action.unsubscribe('modifyModules', this.modifyModules.bind(this));
   }
 
   public getSelected(): Set<UID> | 'all' {
@@ -147,47 +131,6 @@ class SelectionManager {
     }
 
     this.editor.selectionManager.clear()
-  }
-
-  private escape(): void {
-    this.isSelectAll = false
-    this.clear()
-
-  }
-
-  private modifyModules(e: KeyboardEvent, i?: KeyboardDirectionKeys): void {
-    const offsetX = 10
-    const offsetY = 10
-    const modifyData: { x?: number, y?: number } = {}
-
-    if (this.selectedModules.size > 0 || this.isSelectAll) {
-      e.preventDefault()
-    } else {
-      return
-    }
-
-    if (i === 'ArrowUp') {
-      modifyData.y = -offsetY
-    }
-
-    if (i === 'ArrowDown') {
-      modifyData.y = offsetY
-    }
-    if (i === 'ArrowLeft') {
-      modifyData.x = -offsetX
-    }
-
-    if (i === 'ArrowRight') {
-      modifyData.x = offsetX
-    }
-
-    if (this.isSelectAll) {
-      this.editor.batchModify('all', modifyData, 'modifyModules')
-    } else if (this.selectedModules.size > 0) {
-      this.editor.batchModify(this.selectedModules, modifyData, 'modifyModules')
-    }
-
-    this.render()
   }
 
   private updateCopiedItemsDelta(): void {
@@ -368,23 +311,8 @@ class SelectionManager {
     }
   }
 
-  public handleKeyboardMove(modules): void {
-    console.log(modules)
-
-  }
-
-  /*  public setSelectedItems(modulesIdList: SelectionManager['selectedModules']): void {
-      this.selectedModules.clear();
-
-      modulesIdList.forEach((moduleId) => {
-        this.selectedModules.add(moduleId)
-      })
-    }*/
-
-  private destroy(): void {
+  destroy(): void {
     if (this.isDestroyed) return;
-
-    this.unBindShortcuts()
 
     this.removeEventListeners();
     this.selectedModules.clear();

@@ -95,32 +95,23 @@ class History extends DoublyLinkedList {
 
     if (!relativePosition || relativePosition === 'equal') return
 
-    let localCurrent: HistoryNode
-
-    // move back
-    if (relativePosition === 'front') {
-      localCurrent = this.current as HistoryNode
+    if (relativePosition === 'front' || relativePosition === 'behind') {
+      const quietMode = true
+      let localCurrent
 
       while (true) {
-        localCurrent = this.undo(true)
-        console.log(localCurrent, localCurrent, targetNode)
+        if (relativePosition === 'front') {
+          localCurrent = this.undo(quietMode) as HistoryNode
+        } else if (relativePosition === 'behind') {
+          localCurrent = this.redo(quietMode) as HistoryNode
+        }
+
         if (localCurrent === targetNode) break
       }
 
-    } else if (relativePosition === 'behind') {
-      // move forward
-      localCurrent = this.current as HistoryNode
-
-      while (true) {
-        const quiet = localCurrent!.next === targetNode
-
-        const r = this.redo(quiet)
-
-        if (!r || localCurrent === targetNode) break
-
-        localCurrent = r
-      }
-
+      const {selectModules} = targetNode.data
+      this.editor.selectionManager.select(selectModules)
+      this.editor.events.onHistoryUpdated?.(this)
     } else {
       // do sth...
     }
@@ -141,11 +132,6 @@ class History extends DoublyLinkedList {
     }
 
     return list
-  }
-
-
-  private destroy(): void {
-    // this.unBindShortcuts()
   }
 }
 

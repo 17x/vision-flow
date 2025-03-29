@@ -112,6 +112,12 @@ class DoublyLinkedList {
 
     return false
   }
+
+  destroy() {
+    this.head = null;
+    this.tail = null;
+    this.current = null;
+  }
 }
 
 export {HistoryNode}

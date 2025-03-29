@@ -6,7 +6,7 @@ type EventsFunction = () => unknown
 
 class Action {
   private lock: boolean
-  readonly editor: Editor
+  private editor: Editor
   readonly eventsMap: Map<ActionCode, EventsFunction[]> = new Map([
     ['selectAll', []],
     ['copy', []],
@@ -105,9 +105,14 @@ class Action {
 
     this.lock = false
   }
+
+  public destroy() {
+    this.eventsMap.clear()
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    this.editor = null
+    this.lock = false
+  }
 }
 
-export const doIt = () => {
-  console.log(this)
-}
 export default Action;

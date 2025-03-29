@@ -38,26 +38,22 @@ export interface EditorProps {
 class Editor {
   private moduleCounter = 0
   readonly moduleMap: ModuleMap;
-  readonly canvas: HTMLCanvasElement;
-  readonly id: UID;
-  readonly size: Size;
-  readonly dpr: DPR;
-  readonly container: HTMLDivElement;
-  readonly events: EventHandlers = {};
-  readonly action: Action;
-  readonly history: History;
-  readonly panableContainer: PanableContainer;
-  readonly selectionManager: SelectionManager;
+  private canvas: HTMLCanvasElement;
+  private id: UID;
+  private size: Size;
+  private dpr: DPR;
+  private container: HTMLDivElement;
+  private events: EventHandlers = {};
+  private action: Action;
+  private history: History;
+  private panableContainer: PanableContainer;
+  private selectionManager: SelectionManager;
+  private wrapper: HTMLDivElement;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
-  private readonly wrapper: HTMLDivElement;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  private readonly zoom: ZoomRatio;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  private readonly crossLine: CrossLine;
-  private readonly ctx: CanvasRenderingContext2D;
+  private zoom: ZoomRatio;
+  private crossLine: CrossLine;
+  private ctx: CanvasRenderingContext2D;
   scale: number = 1;
   private minScale: number = 0.5;
   private maxScale: number = 10;
@@ -118,10 +114,6 @@ class Editor {
     this.crossLine = new CrossLine(this);
     this.history = new History(this);
     this.render()
-  }
-
-  private init() {
-
   }
 
   private createModuleId(): UID {
@@ -301,9 +293,13 @@ class Editor {
     window.addEventListener("keydown", (event) => this.handleKeyboardZoom(event));
     this.canvas.addEventListener("gesturestart", (event) => event.preventDefault());
     this.canvas.addEventListener("gesturechange", (event) => this.handleTouchpadZoom(event as unknown));
-    this.canvas.addEventListener("touchstart", (event) => {
-      // console.log(event, 'touchmove');
-    }, {passive: true});
+  }
+
+  private removeEventListeners() {
+    window.removeEventListener("wheel", (event) => this.handleWheelZoom(event));
+    window.removeEventListener("keydown", (event) => this.handleKeyboardZoom(event));
+    this.canvas.removeEventListener("gesturestart", (event) => event.preventDefault());
+    this.canvas.removeEventListener("gesturechange", (event) => this.handleTouchpadZoom(event as unknown));
   }
 
   private handleWheelZoom(event: WheelEvent) {
@@ -372,6 +368,31 @@ class Editor {
     }
 
     requestAnimationFrame(animate);
+  }
+
+  destroy() {
+    this.removeEventListeners()
+    this.panableContainer.destroy()
+    this.action.destroy()
+    this.selectionManager.destroy()
+    this.crossLine.destroy()
+    this.history.destroy()
+    this.moduleMap.clear()
+    this.panableContainer = null
+    this.action = null
+    this.selectionManager = null
+    this.crossLine = null
+    this.history = null
+    this.moduleMap = null
+    this.canvas = null;
+    this.ctx = null
+    this.dpr = null;
+    this.zoom = null
+    this.id = null
+    this.events = null
+
+    this.container.removeChild(this.wrapper);
+    this.container = null
   }
 }
 

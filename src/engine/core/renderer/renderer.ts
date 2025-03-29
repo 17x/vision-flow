@@ -14,7 +14,7 @@ const render = ({ctx, modules}: RenderProps): void => {
   const lines: LineRenderProps[] = []
   const fillStyle = "#5491f8";
   const lineWidth = 1;
-
+  const texts: unknown = []
   ctx.clearRect(
     0,
     0,
@@ -37,12 +37,15 @@ const render = ({ctx, modules}: RenderProps): void => {
         lineColor,
         rotation,
         gradient,
-        radius
+        radius,
+        id
       } = (module as Rectangle).getDetails()
 
       if ((enableFill && opacity > 0) || enableLine) {
         rects.push({x, y, width, height, fillColor, opacity, lineWidth, lineColor, rotation, gradient, radius})
       }
+
+      texts.push({x, y, width, height, id: id.match(/\d+$/g)![0]})
     }
 
     if (module.type === 'connector') {
@@ -65,6 +68,16 @@ const render = ({ctx, modules}: RenderProps): void => {
 
   rectRender(ctx, rects)
   lineRender(ctx, lines)
+  textRender(ctx, texts)
+
+
 }
 
+const textRender = (ctx: CanvasRenderingContext2D, texts): void => {
+  ctx.font = 'sans-serif'
+  ctx.textBaseline = 'top'
+  texts.forEach(({id, x, y, width, height}) => {
+    ctx.fillText(id, x - width / 2 + 5, y - height / 2 + 5, 100)
+  })
+}
 export default render

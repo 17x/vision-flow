@@ -22,6 +22,7 @@ class History extends DoublyLinkedList {
     this.editor.events.onHistoryUpdated?.(this)
   }
 
+  // Add a History node after the current
   add(data: HistoryNodeData): void {
     super.detach()
     super.append(data)
@@ -30,7 +31,7 @@ class History extends DoublyLinkedList {
   }
 
   undo(quiet = false): HistoryNode | false {
-    const current = super.back()
+    const current = this.current
 
     if (!current) return false
 
@@ -54,6 +55,8 @@ class History extends DoublyLinkedList {
       this.editor.selectionManager.select(selectModules)
       this.editor.events.onHistoryUpdated?.(this)
     }
+
+    super.back()
 
     return this.current as HistoryNode
   }

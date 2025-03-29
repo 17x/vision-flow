@@ -7,11 +7,11 @@
     "label": "Add Modules",
     "tooltip": "Add new modules to the file"
   },
-  "delete-modules": {
+  "deleteModules": {
     "label": "Delete Modules",
     "tooltip": "Remove modules from the file"
   },
-  "paste-modules": {
+  "pasteModules": {
     "label": "Paste Modules",
     "tooltip": "Paste modules into the file"
   },

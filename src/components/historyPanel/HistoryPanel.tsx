@@ -9,7 +9,6 @@ export const HistoryPanel = () => {
   const targetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-
     if (targetRef.current) {
       const targetElement = targetRef.current;
 

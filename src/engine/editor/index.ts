@@ -160,10 +160,11 @@ class Editor {
 
     if (historyCode) {
       // console.log([...modules.values()].map(mod => mod.getDetails()))
+      const moduleProps = [...modules.values()].map(mod => mod.getDetails())
       this.history.add({
           type: historyCode,
-          modules: [...modules.values()].map(mod => mod.getDetails()),
-          selectModules: this.selectionManager.getSelected()
+          modules: moduleProps,
+          selectModules: new Set(moduleProps.map(m => m.id))
         }
       )
     }
@@ -268,7 +269,7 @@ class Editor {
     if (historyCode) {
       this.history.add({
         type: historyCode,
-        modules: [...this.modules.values()].map(mod => mod.getDetails()),
+        modules: [...this.moduleMap.values()].map(mod => mod.getDetails()),
         selectModules: this.selectionManager.getSelected()
       })
     }

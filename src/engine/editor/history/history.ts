@@ -49,6 +49,9 @@ class History extends DoublyLinkedList {
       this.editor.batchDelete(arrayToSet(modules!))
     } else if (type === 'deleteModules') {
       this.editor.batchAdd(this.editor.batchCreate(modules!))
+    } else if (type === 'modifyModules') {
+      console.log(modules)
+      this.editor.batchModify()
     }
 
     if (!quiet) {

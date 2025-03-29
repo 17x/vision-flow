@@ -3,7 +3,7 @@ import {RootState} from "../../../redux/store.ts"
 import {DynamicIcon} from 'lucide-react/dynamic'
 import {LayerDown, LayerToBottom, LayerToTop, LayerUp} from "./Icons/LayerIcons.tsx"
 import {Fragment, ReactNode, useContext} from "react"
-import {ActionCode} from "../../../engine/editor/editor"
+import {ActionCode} from "../../../engine/editor/type"
 import EditorContext from "../../editorContext/EditorContext.tsx"
 
 const IconSize = 20

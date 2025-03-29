@@ -1,6 +1,6 @@
-import Editor from "./index.ts"
-import coordinator from "./coordinator.ts"
-import {Line} from "./editor"
+import Editor from "../index.ts"
+import coordinator from "../coordinator.ts"
+import {Line} from "../type"
 
 class CrossLine {
   private canvas: HTMLCanvasElement

@@ -1,3 +1,5 @@
+import {HistoryUpdatedHandler, ModulesUpdatedHandler, SelectionUpdatedHandler} from "./events"
+
 export type HistoryActionType =
   'init'
   | 'addModules'
@@ -17,4 +19,9 @@ export interface HistoryNodeData {
   type: HistoryActionType
   modules?: ModuleProps[]
   selectModules: Set<UID> | 'all'
+}
+export interface EventHandlers1 {
+  onHistoryUpdated?: HistoryUpdatedHandler
+  onModulesUpdated?: ModulesUpdatedHandler
+  onSelectionUpdated?: SelectionUpdatedHandler
 }

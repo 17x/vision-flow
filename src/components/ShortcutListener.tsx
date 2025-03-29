@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react'
-import {ActionCode, MoveDirection} from "../engine/editor/editor"
+import {ActionCode, MoveDirection} from "../engine/editor/type"
 import EditorContext from "./editorContext/EditorContext.tsx"
 
 const ShortcutListener: React.FC = () => {

@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit"
-import {ActionCode} from "../engine/editor/editor"
+import {ActionCode} from "../engine/editor/type"
 
 export interface MenuActionType {
   id: string | ActionCode;

@@ -1,54 +1,54 @@
-import Editor from "../index.ts";
-import coordinator from "../coordinator.ts";
-import rectRender from "../../core/renderer/rectRender.ts";
-import {CircleRenderProps, RectangleRenderProps} from "../../core/renderer/type";
-import Rectangle from "../../core/modules/shapes/rectangle.ts";
-import circleRender from "../../core/renderer/circleRender.ts";
-import {getBoxControlPoints, isInsideRotatedRect} from "./helper.ts";
-
+import Editor from "../index.ts"
+import coordinator from "../coordinator.ts"
+import rectRender from "../../core/renderer/rectRender.ts"
+import {CircleRenderProps, RectangleRenderProps} from "../../core/renderer/type"
+import Rectangle from "../../core/modules/shapes/rectangle.ts"
+import circleRender from "../../core/renderer/circleRender.ts"
+import {getBoxControlPoints, isInsideRotatedRect} from "./helper.ts"
+ 
 // type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
 const CopyDeltaX = 10
 const CopyDeltaY = 10
 
 class SelectionManager {
-  private canvas: HTMLCanvasElement;
-  private ctx: CanvasRenderingContext2D;
-  private selectedModules: Set<UID> = new Set();
-  private hoveredModules: Set<UID> = new Set();
-  private isDragging: boolean = false;
-  private isResizing: boolean = false;
+  private canvas: HTMLCanvasElement
+  private ctx: CanvasRenderingContext2D
+  private selectedModules: Set<UID> = new Set()
+  private hoveredModules: Set<UID> = new Set()
+  private isDragging: boolean = false
+  private isResizing: boolean = false
   private dragStart: {
     x: number; y: number
   } = {
     x: 0, y: 0
-  };
-  private resizeHandleSize: number = 10;
-  private activeResizeHandle: Item | null = null;
-  private isDestroyed: boolean = false;
-  private editor: Editor;
+  }
+  private resizeHandleSize: number = 10
+  private activeResizeHandle: Item | null = null
+  private isDestroyed: boolean = false
+  private editor: Editor
   private copiedItems: ModuleProps[] = []
   private isSelectAll: boolean = false
   // private currentCopyDeltaX = CopyDeltaX
   // private currentCopyDeltaY = CopyDeltaY
 
   constructor(editor: Editor) {
-    const canvas = document.createElement("canvas") as HTMLCanvasElement;
-    this.ctx = canvas.getContext("2d")!;
-    this.editor = editor;
-    this.canvas = canvas;
+    const canvas = document.createElement("canvas") as HTMLCanvasElement
+    this.ctx = canvas.getContext("2d")!
+    this.editor = editor
+    this.canvas = canvas
 
-    coordinator(this.editor.canvas, this.canvas);
+    coordinator(this.editor.canvas, this.canvas)
     this.ctx.scale(this.editor.dpr, this.editor.dpr)
-    canvas.style.position = "absolute";
-    canvas.style.top = "0";
-    canvas.style.bottom = "0";
-    canvas.style.pointerEvents = "none";
-    canvas.setAttribute("selection-manager", "");
-    editor.canvas.parentNode!.append(this.canvas);
+    canvas.style.position = "absolute"
+    canvas.style.top = "0"
+    canvas.style.bottom = "0"
+    canvas.style.pointerEvents = "none"
+    canvas.setAttribute("selection-manager", "")
+    editor.canvas.parentNode!.append(this.canvas)
 
     // this.watchActions()
-    this.render();
-    this.setupEventListeners();
+    this.render()
+    this.setupEventListeners()
   }
 
   public getSelected(): Set<UID> | 'all' {
@@ -64,28 +64,28 @@ class SelectionManager {
     this.selectedModules.clear()
 
     if (idSet === 'all') {
-      this.isSelectAll = true;
+      this.isSelectAll = true
     } else {
       idSet.forEach((id) => {
-        this.selectedModules.add(id);
+        this.selectedModules.add(id)
       })
     }
 
-    this.render();
+    this.render()
     this.editor.events.onSelectionUpdated?.(this.selectedModules)
   }
 
   public selectAll(): void {
     this.selectedModules.clear()
     this.isSelectAll = true
-    this.render();
+    this.render()
     this.editor.events.onSelectionUpdated?.(this.selectedModules)
   }
 
   public clear(): void {
     this.selectedModules.clear()
     this.isSelectAll = false
-    this.render();
+    this.render()
     this.editor.events.onSelectionUpdated?.(this.selectedModules)
   }
 
@@ -141,28 +141,28 @@ class SelectionManager {
   }
 
   private setupEventListeners(): void {
-    this.editor.canvas.addEventListener("mousedown", this.handleMouseDown.bind(this));
-    this.editor.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this));
-    this.editor.canvas.addEventListener("mouseup", this.handleMouseUp.bind(this));
+    this.editor.canvas.addEventListener("mousedown", this.handleMouseDown.bind(this))
+    this.editor.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this))
+    this.editor.canvas.addEventListener("mouseup", this.handleMouseUp.bind(this))
   }
 
   private removeEventListeners(): void {
-    this.canvas.removeEventListener("mousedown", this.handleMouseDown.bind(this));
-    this.canvas.removeEventListener("mousemove", this.handleMouseMove.bind(this));
-    this.canvas.removeEventListener("mouseup", this.handleMouseUp.bind(this));
+    this.canvas.removeEventListener("mousedown", this.handleMouseDown.bind(this))
+    this.canvas.removeEventListener("mousemove", this.handleMouseMove.bind(this))
+    this.canvas.removeEventListener("mouseup", this.handleMouseUp.bind(this))
   }
 
   private handleMouseDown(e: MouseEvent): void {
     if (this.editor.panableContainer.isSpaceKeyPressed) return
 
-    const mouseX = e.offsetX;
-    const mouseY = e.offsetY;
+    const mouseX = e.offsetX
+    const mouseY = e.offsetY
     // const mousePointX = mouseX
     // const mousePointY = mouseY
-    this.isDragging = true;
+    this.isDragging = true
     this.dragStart = {
       x: mouseX, y: mouseY
-    };
+    }
 
     const possibleModules = Array.from(this.editor.moduleMap.values()).filter((item) => {
       if (item.type === 'rectangle' && item.rotation > 0) {
@@ -175,11 +175,11 @@ class SelectionManager {
     })
 
     if (!possibleModules.length) {
-      this.clear();
+      this.clear()
       return
     }
 
-    const lastOne = possibleModules[possibleModules.length - 1];
+    const lastOne = possibleModules[possibleModules.length - 1]
     const id = lastOne.id
 
     if (e.metaKey || e.ctrlKey || e.shiftKey) {
@@ -193,13 +193,13 @@ class SelectionManager {
       this.selectedModules.add(id)
     }
 
-    this.render();
+    this.render()
     this.editor.events.onSelectionUpdated?.(this.selectedModules)
   }
 
   private handleMouseMove(e: MouseEvent): void {
-    const mouseX = e.offsetX;
-    const mouseY = e.offsetY;
+    const mouseX = e.offsetX
+    const mouseY = e.offsetY
 
     // Drag logic
     if (this.isResizing && this.activeResizeHandle) {
@@ -211,11 +211,11 @@ class SelectionManager {
           mouseX - this.activeResizeHandle.x,
           mouseY - this.activeResizeHandle.y
         )
-      );
+      )
 
       // Apply the resize effect
-      this.activeResizeHandle.size = newSize;
-      this.render();
+      this.activeResizeHandle.size = newSize
+      this.render()
 
       return
     }
@@ -229,15 +229,15 @@ class SelectionManager {
     })
     // console.log(filtered);
 
-    this.canvas.style.cursor = filtered.length > 0 ? "move" : 'default';
+    this.canvas.style.cursor = filtered.length > 0 ? "move" : 'default'
   }
 
   private handleMouseUp(): void {
-    this.isSelectAll = false;
-    this.isDragging = false;
-    this.isResizing = false;
-    this.activeResizeHandle = null; // Reset active resize handle
-    this.render();
+    this.isSelectAll = false
+    this.isDragging = false
+    this.isResizing = false
+    this.activeResizeHandle = null // Reset active resize handle
+    this.render()
   }
 
   public render(): void {
@@ -249,9 +249,9 @@ class SelectionManager {
       const l = this.resizeHandleSize / 2
       const rects: RectangleRenderProps[] = []
       const dots: CircleRenderProps[] = []
-      const fillColor = "#5491f8";
-      const lineColor = "#5491f8";
-      const lineWidth = 1;
+      const fillColor = "#5491f8"
+      const lineColor = "#5491f8"
+      const lineWidth = 1
 
 
       if (enableRotationHandle) {
@@ -263,7 +263,7 @@ class SelectionManager {
         const {
           x, y, width, height, rotation
         } = (module as Rectangle).getDetails()
-        const points = getBoxControlPoints(x, y, width, height, rotation);
+        const points = getBoxControlPoints(x, y, width, height, rotation)
 
         dots.push(...points.map(point => ({
           ...point,
@@ -285,10 +285,10 @@ class SelectionManager {
           opacity: 0,
           dashLine: 'dash'
         })
-      });
+      })
 
       // console.log(rects)
-      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
       // ctx.setTransform(this.editor.scale, 0, 0, this.editor.scale, 0, 0);
       rectRender(ctx, rects)
       circleRender(ctx, dots)
@@ -297,7 +297,7 @@ class SelectionManager {
     if (this.isSelectAll) {
       BatchDrawer(this.editor.moduleMap)
     } else {
-      const selectedModulesMap: ModuleMap = new Map();
+      const selectedModulesMap: ModuleMap = new Map()
 
       this.selectedModules.forEach(id => {
         this.editor.moduleMap.forEach((module) => {
@@ -312,14 +312,14 @@ class SelectionManager {
   }
 
   destroy(): void {
-    if (this.isDestroyed) return;
+    if (this.isDestroyed) return
 
-    this.removeEventListeners();
-    this.selectedModules.clear();
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.isDestroyed = true;
-    console.log("SelectionModule destroyed.");
+    this.removeEventListeners()
+    this.selectedModules.clear()
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    this.isDestroyed = true
+    console.log("SelectionModule destroyed.")
   }
 }
 
-export default SelectionManager;
+export default SelectionManager

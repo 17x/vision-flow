@@ -50,7 +50,7 @@ class Editor {
   private panableContainer: PanableContainer
   private selectionManager: SelectionManager
   private wrapper: HTMLDivElement
-   
+
   // @ts-expect-error
   private zoom: ZoomRatio
   private crossLine: CrossLine
@@ -372,7 +372,7 @@ class Editor {
   }
 
 
-  // @ts-nocheck
+   
   destroy() {
     this.removeEventListeners()
     this.panableContainer.destroy()

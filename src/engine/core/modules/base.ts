@@ -1,20 +1,25 @@
 export interface BasicModuleProps {
   id: UID
   type: ModuleNames
+
+  enableLine?: boolean
   lineColor: HexColor
-  showLine?: boolean
+  lineWidth: number
+
   opacity?: Opacity
   shadow?: boolean
   position?: Position
-  rotation?: number
   layer: number
+
+  rotation: number
 }
 
 class Base {
   readonly id: UID;
   readonly type: ModuleNames
+  private readonly enableLine: boolean;
+  private readonly lineWidth: number;
   private readonly lineColor: HexColor;
-  private readonly showLine: boolean;
   private readonly opacity: Opacity;
   private readonly position: Position;
   private readonly rotation: Rotation;
@@ -25,21 +30,23 @@ class Base {
                 id,
                 type,
                 lineColor,
+                lineWidth,
                 opacity,
                 position,
                 layer = 1,
                 rotation = 0,
                 shadow = false,
-                showLine = true,
+                enableLine = true,
               }: BasicModuleProps) {
     this.id = id
     this.type = type
+    this.enableLine = enableLine;
     this.lineColor = lineColor;
+    this.lineWidth = lineWidth;
     this.opacity = opacity!;
     this.position = position!;
     this.rotation = rotation;
     this.shadow = shadow;
-    this.showLine = showLine;
     this.layer = layer;
   }
 
@@ -47,13 +54,16 @@ class Base {
     return {
       id: this.id,
       type: this.type,
+
+      enableLine: this.enableLine,
       lineColor: this.lineColor,
+      lineWidth: this.lineWidth,
+
       opacity: this.opacity,
-      position: this.position,
-      rotation: this.rotation,
       shadow: this.shadow,
-      showLine: this.showLine,
-      layer: this.layer
+      position: this.position,
+      layer: this.layer,
+      rotation: this.rotation,
     };
   }
 }

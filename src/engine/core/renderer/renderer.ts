@@ -35,7 +35,6 @@ const render = ({ctx, modules}: RenderProps): void => {
   const rects: RectangleRenderProps[] = []
   const lines: LineRenderProps[] = []
   const fillStyle = "#5491f8";
-  const strokeStyle = "#000";
   const lineWidth = 1;
 
   ctx.clearRect(
@@ -47,9 +46,14 @@ const render = ({ctx, modules}: RenderProps): void => {
 
   modules.forEach((module) => {
     if (module.type === 'rectangle') {
-      const {x, y, width, height} = module as Rectangle
+      // console.log(module)
+      const {x, y, width, height, enableFill, opacity, fillColor} = module.getDetails() as RectangleRenderProps;
 
-      rects.push({x, y, width, height, fillStyle, strokeStyle, lineWidth})
+      if (enableFill && opacity > 0) {
+        rects.push({x, y, width, height, fillColor, opacity, lineWidth})
+      } else {
+        // rects.push({x, y, width, height, fillColor, strokeStyle, lineWidth})
+      }
     }
 
     if (module.type === 'connector') {

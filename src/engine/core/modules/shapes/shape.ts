@@ -3,38 +3,45 @@ import Base, {BasicModuleProps} from "../base.ts";
 export interface ShapeProps extends BasicModuleProps {
   x?: number
   y?: number
-  // width?: number
-  // height?: number
-  gradient?: Gradient
+
   enableGradient?: boolean
-  fillColor?: HexColor
-  enableFill?: boolean
+  gradient?: Gradient
+
+  enableFill: boolean
+  fillColor: FillColor
+
+  rotation: number
 }
 
 class Shape extends Base {
   readonly x: number;
   readonly y: number;
-  // private width: number;
-  // private height: number;
+  readonly fillColor: FillColor;
+  readonly enableFill: boolean;
 
   constructor({
                 x,
                 y,
+                fillColor,
+                enableFill = true,
                 ...rest
               }: ShapeProps) {
     super(rest);
 
     this.x = x!;
     this.y = y!;
-    // this.width = width!;
-    // this.height = height!;
+    this.fillColor = fillColor
+    this.enableFill = enableFill
   }
 
   public getDetails(): ShapeProps {
     return {
       ...this.getSize(),
+      fillColor: this.fillColor,
+      enableFill: this.enableFill,
       x: this.x,
-      y: this.y, ...super.getDetails(),
+      y: this.y,
+      ...super.getDetails(),
     };
   }
 

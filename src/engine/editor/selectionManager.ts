@@ -1,7 +1,8 @@
 import Editor from "./index.ts";
 import coordinator from "./coordinator.ts";
 import {ActionCode, ModifyModuleMap} from "./editor";
-import rectRender, {RectangleRenderProps} from "../core/renderer/rectRender.ts";
+import rectRender from "../core/renderer/rectRender.ts";
+import {RectangleRenderProps} from "../core/renderer/type";
 
 type CopiedModuleProps = Omit<ModuleProps, 'id'>
 type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
@@ -304,8 +305,8 @@ class SelectionManager {
       // const rectQueue: Set<string> = new Set()
       const l = this.resizeHandleSize / 2
       const rects: RectangleRenderProps[] = []
-      const fillStyle = "#5491f8";
-      const strokeStyle = "#5491f8";
+      const fillColor = "#5491f8";
+      const lineColor = "#5491f8";
       const lineWidth = 1;
       ctx.save();
 
@@ -329,40 +330,26 @@ class SelectionManager {
         handlesQueue.add(`${x}-${y + height / 2}`);
 
         rects.push({
-          x, y, width, height, fillStyle,
-          strokeStyle,
+          x, y, width, height,
+          fillColor,
+          lineColor,
           lineWidth
         })
         // rectQueue.add(`${x}-${y}-${width}-${height}`);
       });
 
-      // ctx.fillStyle = "#5491f8";
-      // ctx.strokeStyle = "#5491f8";
-      // ctx.lineWidth = 1;
       handlesQueue.forEach((s) => {
         const arr = s.split('-');
         const x = parseFloat(arr[0]);
         const y = parseFloat(arr[1]);
-
 
         ctx.beginPath();
         ctx.ellipse(x, y, l, l, 0, 0, 360);
         ctx.fill();
       })
 
+      console.log(rects)
       rectRender(ctx, rects)
-      /*
-
-            rectQueue.forEach((s) => {
-              const arr = s.split('-');
-              const x = parseFloat(arr[0]);
-              const y = parseFloat(arr[1]);
-              const width = parseFloat(arr[2]);
-              const height = parseFloat(arr[3]);
-
-              ctx.strokeRect(x, y, width, height);
-            })
-      */
 
       this.ctx.restore();
     }

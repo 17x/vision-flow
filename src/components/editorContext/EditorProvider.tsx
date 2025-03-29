@@ -146,11 +146,11 @@ const createMockData = (editor: Editor) => {
     width: 100,
     height: 100,
     lineColor: "000",
-    fillColor: "000000",
-    opacity: 100,
+    fillColor: "#ff0000",
+    opacity: 50,
     shadow: false,
   }
-  const MOCK_ELE_LEN = 1
+  const MOCK_ELE_LEN = 10
 
   editor.batchAdd(
     editor.batchCreate(

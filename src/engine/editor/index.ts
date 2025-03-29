@@ -260,7 +260,11 @@ class Editor {
     this.selectionManager.render()
 
     if (historyCode) {
-      console.log(historyCode)
+      this.history.replaceNext({
+        type: historyCode,
+        modules: [...this.modules.values()].map(mod => mod.getDetails()),
+        selectModules: this.selectionManager.getSelected()
+      })
     }
   }
 

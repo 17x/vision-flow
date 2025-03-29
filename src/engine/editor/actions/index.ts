@@ -93,7 +93,7 @@ class Action {
 
       this.editor.batchModify(selectedModules, {
         code,
-      })
+      }, 'modifyModules')
       console.log(selectedModules)
     }
 

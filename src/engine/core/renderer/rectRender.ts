@@ -18,7 +18,8 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
                        radius = 0,
                        opacity = 100,
                        gradient,
-                       rotation = 0
+                       rotation = 0,
+                       dashLine = ''
                      }: RectangleRenderProps) => {
 
     const LocalX = width / 2;
@@ -50,6 +51,11 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
 
     // Draw a rounded rectangle or regular rectangle
     ctx.beginPath();
+
+    if (dashLine) {
+      ctx.setLineDash([3, 5]);
+    }
+
     if (radius > 0) {
       // Use arcTo for rounded corners
       ctx.moveTo(-LocalX + radius, -LocalY);

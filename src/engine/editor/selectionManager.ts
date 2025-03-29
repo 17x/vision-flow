@@ -334,7 +334,8 @@ class SelectionManager {
           fillColor,
           lineColor,
           lineWidth,
-          opacity: 0
+          opacity: 0,
+          dashLine: 'dash'
         })
       });
       console.log(rects)

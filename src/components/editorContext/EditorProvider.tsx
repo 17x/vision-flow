@@ -155,7 +155,7 @@ const createMockData = (editor: Editor) => {
     radius: 0,
     rotation: 0
   }
-  const MOCK_ELE_LEN = 10
+  const MOCK_ELE_LEN = 360
   const getRandomHexColor = (): string => {
     return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0")}`;
   };
@@ -167,7 +167,8 @@ const createMockData = (editor: Editor) => {
           fillColor: getRandomHexColor(),
           x: baseX + (i * 10),
           y: baseY + (i * 10),
-          layer: i + 1
+          layer: i + 1,
+          rotation: i + 1,
         }
       })
     ),

@@ -28,6 +28,7 @@ export interface RectangleRenderProps {
   fillColor?: RectangleProps['fillColor']
   lineWidth?: RectangleProps['lineWidth']
   lineColor?: RectangleProps['lineColor']
+  dashLine?: string
   radius?: RectangleProps['radius']
   opacity?: RectangleProps['opacity']
   gradient?: RectangleProps['gradient']

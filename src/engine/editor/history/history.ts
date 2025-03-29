@@ -1,28 +1,29 @@
 import Editor from "../index.ts";
-import HistoryDoublyLinkedList, {HistoryNode, HistoryValue} from "./HistoryDoublyLinkedList.ts";
-import {arrayToMap, arrayToSet} from "../../core/convert.ts";
+import DoublyLinkedList, {HistoryNode, HistoryNodeData} from "./DoublyLinkedList.ts";
+import {arrayToSet} from "../../core/convert.ts";
 
-class History extends HistoryDoublyLinkedList {
+class History extends DoublyLinkedList {
   private editor: Editor;
 
   constructor(editor: Editor) {
     super();
     this.editor = editor;
-    // this.bindShortcuts()
+    this.init()
+  }
 
-    this.replaceNext({
+  init() {
+    this.append({
       type: 'init',
       modules: [],
       selectModules: new Set()
     })
 
-    editor.events.onHistoryUpdated?.(this)
-
-    // if (onHistoryUpdated) onHistoryUpdated()
+    this.editor.events.onHistoryUpdated?.(this)
   }
 
-  replaceNext(value: HistoryValue): void {
-    super.replaceNext(value)
+  add(data: HistoryNodeData): void {
+    super.detach()
+    super.append(data)
 
     this.editor.events.onHistoryUpdated?.(this)
   }
@@ -30,7 +31,11 @@ class History extends HistoryDoublyLinkedList {
   undo(): void {
     if (!this.current) return
 
-    const {type, modules = [], selectModules = new Set()} = this.current.value
+    const {
+      type,
+      modules = [],
+      selectModules = new Set()
+    } = this.current.data
 
     if (
       type === 'pasteModules'
@@ -51,7 +56,12 @@ class History extends HistoryDoublyLinkedList {
 
   redo(): void {
     if (!this.current!.next) return
-    const {type, modules = [], selectModules = new Set()} = this.current!.next.value
+
+    const {
+      type,
+      modules = [],
+      selectModules = new Set()
+    } = this.current!.next.value.data
 
     if (
       type === 'pasteModules'
@@ -70,9 +80,9 @@ class History extends HistoryDoublyLinkedList {
     this.editor.events.onHistoryUpdated?.(this)
   }
 
-  setNode(targetNode: HistoryNode) {
+  moveCurrentById(targetNode: HistoryNode) {
     console.log(targetNode, this.current)
-    console.log(targetNode.value)
+    console.log(targetNode.data)
     if (targetNode === this.current) return
     let curr = targetNode
 
@@ -113,9 +123,10 @@ class History extends HistoryDoublyLinkedList {
         curr = curr.next
       }
     }
-
+    console.log(list)
     return list
   }
+
 
   private destroy(): void {
     // this.unBindShortcuts()

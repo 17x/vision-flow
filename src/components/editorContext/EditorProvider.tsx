@@ -6,7 +6,7 @@ import {PropertyPanel} from "../PropertyPanel.tsx";
 import {StatusBar} from "../statusBar/StatusBar.tsx";
 import uid from "../../utilities/Uid.ts";
 import {HistoryUpdatedHandler, ModulesUpdatedHandler, SelectionUpdatedHandler} from "../../engine/editor/events";
-import {HistoryNode} from "../../engine/editor/history/HistoryDoublyLinkedList.ts";
+import {HistoryNode} from "../../engine/editor/history/DoublyLinkedList.ts";
 import {LayerPanel} from "../layerPanel/LayerPanel.tsx";
 import {ActionCode} from "../../engine/editor/editor";
 import Header from "../header/Header.tsx";
@@ -86,8 +86,9 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }
 
   const applyHistoryNode = (node: HistoryNode) => {
+    console.log(node)
     if (editorRef.current) {
-      editorRef.current.history.setNode(node)
+      editorRef.current.history.moveCurrentById(node)
     }
   }
 
@@ -165,7 +166,7 @@ const createMockData = (editor: Editor) => {
       Array.from({length: MOCK_ELE_LEN}).map((_, i) => {
         return {
           ...baseRectData,
-          // fillColor: getRandomHexColor(),
+          fillColor: getRandomHexColor(),
           x: baseX + (i * 10),
           y: baseY + (i * 10),
           layer: i + 1,

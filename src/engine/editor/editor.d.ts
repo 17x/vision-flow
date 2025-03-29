@@ -29,15 +29,6 @@ export type ActionCode =
   | 'modifyModules'
   | MoveDirection
 
-export type ShortcutCode = 'move'
-
-export type HistoryActionType =
-  'init'
-  | 'addModules'
-  | 'deleteModules'
-  | 'pasteModules'
-  | 'duplicateModules'
-  | 'modifyModules'
 
 export type ModifyModule = Partial<ModuleProps>
 export type ModifyModuleMap = Map<UID, ModifyModule>

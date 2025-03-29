@@ -25,7 +25,7 @@ export const basicEditorAreaSize: BasicEditorAreaSize = {
 
 export interface EditorProps {
   // canvas: HTMLCanvasElement
-  container?: HTMLDivElement;
+  container: HTMLDivElement;
   data: EditorDataProps;
   // theme: ThemeShape
   dpr?: DPR;
@@ -42,16 +42,22 @@ class Editor {
   readonly id: UID;
   readonly size: Size;
   readonly dpr: DPR;
-  readonly container: HTMLDivElement | undefined;
+  readonly container: HTMLDivElement;
   readonly events: EventHandlers = {};
   readonly action: Action;
   readonly history: History;
   readonly panableContainer: PanableContainer;
   readonly selectionManager: SelectionManager;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   private readonly wrapper: HTMLDivElement;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   private readonly zoom: ZoomRatio;
-  private readonly ctx: CanvasRenderingContext2D;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   private readonly crossLine: CrossLine;
+  private readonly ctx: CanvasRenderingContext2D;
   scale: number = 1;
   private minScale: number = 0.5;
   private maxScale: number = 10;
@@ -101,8 +107,9 @@ class Editor {
     container.append(wrapper);
     this.setupEventListeners()
     this.panableContainer = new PanableContainer({
-      element: wrapper, onPan: (deltaX, deltaY) => {
-
+      element: wrapper,
+      onPan: (deltaX, deltaY) => {
+        console.log(deltaX, deltaY);
       },
     });
     // this.shortcut = new Shortcut(this)
@@ -153,11 +160,12 @@ class Editor {
 
     if (historyCode) {
       // console.log([...modules.values()].map(mod => mod.getDetails()))
-      this.history.replaceNext({
-        type: historyCode,
-        modules: [...modules.values()].map(mod => mod.getDetails()),
-        selectModules: this.selectionManager.getSelected()
-      })
+      this.history.add({
+          type: historyCode,
+          modules: [...modules.values()].map(mod => mod.getDetails()),
+          selectModules: this.selectionManager.getSelected()
+        }
+      )
     }
 
     this.events.onModulesUpdated?.(this.moduleMap)
@@ -211,7 +219,7 @@ class Editor {
     }
 
     if (historyCode) {
-      this.history.replaceNext({
+      this.history.add({
         type: historyCode,
         modules: backup,
         selectModules: this.selectionManager.getSelected()
@@ -247,10 +255,8 @@ class Editor {
           module.x -= 1
         } else if (code === 'moveRight') {
           module.x += 1
-        } else if (typeof value === 'string') {
+        } else if (typeof value === 'string' || typeof value === 'number') {
           module[key] = value
-        } else if (typeof value === 'number') {
-          module[key] = data[key]
         }
       })
     })
@@ -260,7 +266,7 @@ class Editor {
     this.selectionManager.render()
 
     if (historyCode) {
-      this.history.replaceNext({
+      this.history.add({
         type: historyCode,
         modules: [...this.modules.values()].map(mod => mod.getDetails()),
         selectModules: this.selectionManager.getSelected()

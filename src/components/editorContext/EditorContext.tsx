@@ -1,6 +1,6 @@
 import React, {createContext} from 'react';
 import Editor from "../../engine/editor";
-import {HistoryNode} from "../../engine/editor/history/HistoryDoublyLinkedList.ts";
+import {HistoryNode} from "../../engine/editor/history/DoublyLinkedList.ts";
 import {ActionCode} from "../../engine/editor/editor";
 
 interface EditorContextType {

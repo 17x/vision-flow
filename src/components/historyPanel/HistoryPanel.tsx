@@ -37,14 +37,16 @@ export const HistoryPanel = () => {
           {
             historyArray.map((historyNode, index) => {
                 const isCurr = historyNode === historyCurrent
-                const {label, tooltip} = t(historyNode.value.type, {returnObjects: true}) as I18nHistoryDataItem
+                console.log(historyNode.data)
+                const {label, tooltip} = t(historyNode.data.type, {returnObjects: true}) as I18nHistoryDataItem
 
                 return <div key={index}
                             title={tooltip}
                             ref={isCurr ? targetRef : null}
                             onClick={() => {
                               if (isCurr) return;
-                              return applyHistoryNode(historyNode);
+                              console.log(historyNode.id)
+                              applyHistoryNode(historyNode);
                             }}
                             className={`border-b border-gray-200 px-2 py-1 cursor-pointer text-xs hover:bg-gray-400 hover:text-white ${isCurr ? 'bg-gray-400 text-white' : ''}`}>
                   <span>{label}</span>

@@ -29,7 +29,7 @@ export const LayerPanel = ({data, selected, handleSelectModule}: LayerPanelProps
         }
       }
     }, [data]);*/
-  console.log(data)
+  // console.log(data)
   useEffect(() => {
     targetRef.current?.scrollIntoView({
       behavior: "smooth",

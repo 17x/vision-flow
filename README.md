@@ -15,4 +15,6 @@ npm install && npm run dev
 ![Tux, the Linux mascot](./doc/img.png)
 
 
-
+Todo List
+- LayerPanel - buffer rendering and drag to reorder
+- 

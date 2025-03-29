@@ -80,7 +80,7 @@ class SelectionManager {
 
   public select(idSet: Set<UID>) {
     if (!idSet) return
-    console.log(idSet)
+    // console.log(idSet)
     this.selectedModules.clear()
     idSet.forEach((id) => {
       this.selectedModules.add(id);

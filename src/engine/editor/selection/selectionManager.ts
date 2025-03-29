@@ -5,7 +5,7 @@ import {CircleRenderProps, RectangleRenderProps} from "../../core/renderer/type"
 import Rectangle from "../../core/modules/shapes/rectangle.ts"
 import circleRender from "../../core/renderer/circleRender.ts"
 import {getBoxControlPoints, isInsideRotatedRect} from "./helper.ts"
- 
+
 // type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
 const CopyDeltaX = 10
 const CopyDeltaY = 10
@@ -14,16 +14,19 @@ class SelectionManager {
   private canvas: HTMLCanvasElement
   private ctx: CanvasRenderingContext2D
   private selectedModules: Set<UID> = new Set()
+  // @ts-ignore
   private hoveredModules: Set<UID> = new Set()
+  // @ts-ignore
   private isDragging: boolean = false
   private isResizing: boolean = false
+  // @ts-ignore
   private dragStart: {
     x: number; y: number
   } = {
     x: 0, y: 0
   }
   private resizeHandleSize: number = 10
-  private activeResizeHandle: Item | null = null
+  private activeResizeHandle: { x: number, y: number } | null = null
   private isDestroyed: boolean = false
   private editor: Editor
   private copiedItems: ModuleProps[] = []
@@ -214,10 +217,9 @@ class SelectionManager {
       )
 
       // Apply the resize effect
+      // @ts-ignore
       this.activeResizeHandle.size = newSize
       this.render()
-
-      return
     }
 
     // console.log(this.editor.modules.entries())

@@ -38,17 +38,17 @@ export interface EditorProps {
 
 class Editor {
   private moduleCounter = 0
-  readonly moduleMap: ModuleMap
-  private canvas: HTMLCanvasElement
+  moduleMap: ModuleMap
+  canvas: HTMLCanvasElement
   private id: UID
   // private size: Size;
-  private dpr: DPR
+  dpr: DPR
   private container: HTMLDivElement
-  private events: EventHandlers = {}
+  events: EventHandlers = {}
   private action: Action
   private history: History
-  private panableContainer: PanableContainer
-  private selectionManager: SelectionManager
+  public panableContainer: PanableContainer
+  selectionManager: SelectionManager
   private wrapper: HTMLDivElement
 
   // @ts-expect-error
@@ -372,7 +372,7 @@ class Editor {
   }
 
 
-   
+  //eslint-disable-block
   destroy() {
     this.removeEventListeners()
     this.panableContainer.destroy()
@@ -381,20 +381,33 @@ class Editor {
     this.crossLine.destroy()
     this.history.destroy()
     this.moduleMap.clear()
+    // @ts-ignore
     this.panableContainer = null
+    // @ts-ignore
     this.action = null
+    // @ts-ignore
     this.selectionManager = null
+    // @ts-ignore
     this.crossLine = null
+    // @ts-ignore
     this.history = null
+    // @ts-ignore
     this.moduleMap = null
+    // @ts-ignore
     this.canvas = null
+    // @ts-ignore
     this.ctx = null
+    // @ts-ignore
     this.dpr = null
+    // @ts-ignore
     this.zoom = null
+    // @ts-ignore
     this.id = null
+    // @ts-ignore
     this.events = null
     this.container.removeChild(this.wrapper)
     this.container.innerHTML = ''
+    // @ts-ignore
     this.container = null
   }
 

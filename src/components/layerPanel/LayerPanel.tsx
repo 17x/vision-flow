@@ -33,8 +33,8 @@ export const LayerPanel = ({data, selected, handleSelectModule}: LayerPanelProps
   useEffect(() => {
     targetRef.current?.scrollIntoView({
       // behavior: "smooth",
-      block: "nearest",
-      inline: "nearest"
+      block: "center",
+      inline: "center"
     })
   }, [selected])
 
@@ -42,7 +42,7 @@ export const LayerPanel = ({data, selected, handleSelectModule}: LayerPanelProps
     <div className={'p-2'}>
       <h1 className={'bg-gray-400 text-white px-2'}><span>Layer</span></h1>
       <div ref={scrollRef}
-           className={'scrollbar-custom overflow-x-hidden overflow-y-scroll p-2 border h-30 border-gray-200 select-none'}>
+           className={'scrollbar-custom overflow-x-hidden overflow-y-auto p-2 border h-30 border-gray-200 select-none'}>
         {
           data?.map((item, index) => (
             <div ref={selected?.includes(item.id) ? targetRef : null}

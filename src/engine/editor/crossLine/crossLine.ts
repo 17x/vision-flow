@@ -1,4 +1,4 @@
-import Editor from "../index.ts"
+import Editor from "../editor.ts"
 import coordinator from "../coordinator.ts"
 import {Line} from "../type"
 

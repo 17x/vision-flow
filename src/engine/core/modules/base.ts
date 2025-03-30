@@ -30,7 +30,7 @@ class Base {
                 id,
                 type,
                 lineColor,
-                lineWidth,
+                lineWidth = 1,
                 opacity = 100,
                 position,
                 layer = 1,

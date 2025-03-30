@@ -1,4 +1,4 @@
-import Editor from "../index.ts"
+import Editor from "../editor.ts"
 import DoublyLinkedList, {HistoryNode} from "./DoublyLinkedList.ts"
 import {arrayToSet} from "../../core/convert.ts"
 import {HistoryNodeData} from "./type"

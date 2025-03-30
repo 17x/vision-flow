@@ -1,4 +1,4 @@
-import Editor from "../index.ts"
+import Editor from "../editor.ts"
 import coordinator from "../coordinator.ts"
 import handleMouseDown from "./events/mouseDown.ts"
 import handleMouseMove from "./events/mouseMove.ts"

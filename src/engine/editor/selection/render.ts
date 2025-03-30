@@ -16,8 +16,7 @@ function render(this: SelectionManager) {
     const dots: CircleRenderProps[] = []
     const fillColor = "#5491f8"
     const lineColor = "#5491f8"
-    const lineWidth = 1
-
+    // const dotLineWidth = 1
 
     if (enableRotationHandle) {
       // this.ctx.translate(item.x + item.size / 2, item.y + item.size / 2); // Move origin to center of item
@@ -26,7 +25,7 @@ function render(this: SelectionManager) {
 
     modules.forEach((module) => {
       const {
-        x, y, width, height, rotation
+        x, y, width, height, rotation, lineWidth
       } = (module as Rectangle).getDetails()
       const points = getBoxControlPoints(x, y, width, height, rotation)
 

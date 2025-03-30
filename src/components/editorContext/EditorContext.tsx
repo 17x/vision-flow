@@ -1,5 +1,5 @@
 import React, {createContext} from 'react'
-import Editor from "../../engine/editor"
+import Editor from "../../engine/editor/editor.ts"
 import {HistoryNode} from "../../engine/editor/history/DoublyLinkedList.ts"
 import {ActionCode} from "../../engine/editor/type"
 

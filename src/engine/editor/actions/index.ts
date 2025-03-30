@@ -1,5 +1,5 @@
 import {ActionCode} from "../type"
-import Editor from "../index.ts"
+import Editor from "../editor.ts"
 
 // type EventsFunction = (e: KeyboardEvent, additionalInformation?: unknown) => unknown
 type EventsFunction = () => unknown

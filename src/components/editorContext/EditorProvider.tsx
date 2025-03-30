@@ -1,5 +1,5 @@
 import {FC, useEffect, useRef, useState} from 'react'
-import Editor from "../../engine/editor"
+import Editor from "../../engine/editor/editor.ts"
 import ShortcutListener from "../ShortcutListener.tsx"
 import {ModulePanel} from "../modulePanel/ModulePanel.tsx"
 import {PropertyPanel} from "../PropertyPanel.tsx"
@@ -159,8 +159,8 @@ const createMockData = (editor: Editor) => {
     width: 100,
     height: 100,
     enableLine: true,
-    lineColor: "#ffaf37",
-    lineWidth: 1,
+    lineColor: "#000000",
+    lineWidth: 2,
     enableFill: true,
     fillColor: "#fff",
     opacity: 100,
@@ -183,8 +183,8 @@ const createMockData = (editor: Editor) => {
           ...baseRectData,
           // fillColor: getRandomHexColor(),
           fillColor: '#9c4444',
-          x: baseX + (i * 5),
-          y: baseY + (i * 5),
+          x: baseX + (i * 30),
+          y: baseY + (i * 30),
           layer: i + 1,
           rotation: i + 10,
         }

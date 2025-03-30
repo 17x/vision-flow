@@ -1,4 +1,4 @@
-import Editor from "../index.ts"
+import Editor from "../editor.ts"
 
 function batchReplaceModules(this: Editor, moduleList: ModuleProps[]) {
   const moduleMap = this.batchCreate(moduleList)

@@ -12,8 +12,7 @@ interface RenderProps {
 const render = ({ctx, modules}: RenderProps): void => {
   const rects: RectangleRenderProps[] = []
   const lines: LineRenderProps[] = []
-  const fillStyle = "#5491f8"
-  const lineWidth = 1
+  // const fillStyle = "#5491f8"
   const texts: unknown = []
   ctx.clearRect(
     0,
@@ -33,6 +32,7 @@ const render = ({ctx, modules}: RenderProps): void => {
         enableFill,
         enableLine,
         opacity,
+        lineWidth,
         fillColor,
         lineColor,
         rotation,
@@ -59,8 +59,8 @@ const render = ({ctx, modules}: RenderProps): void => {
         startY: rect1.bottom,
         endX: rect2.centerX,
         endY: rect2.top,
-        fillStyle,
-        lineWidth
+        fillStyle: "#5491f8",
+        lineWidth: 1
       })
       // rects.push({x, y, width, height, fillStyle, strokeStyle, lineWidth})
     }
@@ -69,7 +69,6 @@ const render = ({ctx, modules}: RenderProps): void => {
   rectRender(ctx, rects)
   lineRender(ctx, lines)
   textRender(ctx, texts)
-
 
 }
 

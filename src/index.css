@@ -37,4 +37,26 @@ html, body, #root {
     .scrollbar-custom:hover::-webkit-scrollbar-thumb {
         display: block;
     }
+
+    .scrollbar-custom-2::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .scrollbar-custom-2::-webkit-scrollbar-thumb {
+        background: #787878;
+        border-radius: 4px;
+    }
+
+    .scrollbar-custom-2::-webkit-scrollbar-track {
+        padding-top: 5px;
+    }
+
+    .scrollbar-custom-2:hover::-webkit-scrollbar-track {
+        display: block;
+    }
+
+    .scrollbar-custom-2:hover::-webkit-scrollbar-thumb {
+        display: block;
+    }
 }

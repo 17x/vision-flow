@@ -49,7 +49,7 @@ export const ModulePanel: React.FC<ModulePanelProps> = ({className = ''}) => {
       style={{width: `${width}px`}}
       className="relative h-full flex-shrink-0 border-r border-gray-200"
     >
-      <div className={`h-full  p-6  bg-white overflow-hidden ${className}`}>
+      <div className={`h-auto p-6 bg-white overflow-hidden ${className}`}>
         <span>Module List</span>
         <ModuleList/>
       </div>

@@ -83,15 +83,18 @@ const FileProvider: FC = () => {
       createFile,
       handleCreating,
     }}>
-      <>
+      <div className={'w-full h-full flex flex-col'}>
         <Files/>
-        {
-          fileList.map(file =>
-            file.id === currentFileId ?
-              <EditorProvider key={file.id} file={file}/>
-              : undefined
-          )
-        }
+        
+        <div className={'flex-1 overflow-hidden'}>
+          {
+            fileList.map(file =>
+              file.id === currentFileId ?
+                <EditorProvider key={file.id} file={file}/>
+                : undefined
+            )
+          }
+        </div>
 
         {
           showCreateFile &&
@@ -103,7 +106,7 @@ const FileProvider: FC = () => {
                         }
                         }/>
         }
-      </>
+      </div>
     </FileContext.Provider>
   )
 }

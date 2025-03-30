@@ -116,7 +116,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       applyHistoryNode,
       executeAction
     }}>
-      <div ref={elementRef} data-focused={focused} tabIndex={0} className={'outline-0 w-full h-full flex flex-col'}
+      <div ref={elementRef} data-focused={focused} tabIndex={0}
+           className={'outline-0 w-full h-full flex flex-col'}
            autoFocus>
         <ShortcutListener/>
 
@@ -129,7 +130,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
             <div ref={containerRef}
                  editor-container={'true'}
                  className={'relative overflow-hidden flex w-full h-full'}
-                 ></div>
+            ></div>
             <StatusBar/>
           </div>
 

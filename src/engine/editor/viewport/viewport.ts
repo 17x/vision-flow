@@ -10,8 +10,8 @@ class Viewport {
   private readonly resizeInterval: number = 100
 
   constructor(editor: Editor) {
-    this.wrapper = document.createElement("div")
     this.editor = editor
+    this.wrapper = document.createElement("div")
     this.resizeThrottle = this.resizeThrottle.bind(this)
     this.resizeObserver = new ResizeObserver(this.resizeThrottle)
     this.doResize = this.doResize.bind(this)
@@ -21,11 +21,18 @@ class Viewport {
   init() {
     this.editor.container.innerHTML = ''
     this.wrapper.setAttribute('editor-wrapper', 'true')
-    this.wrapper.style.overflow = 'hidden'
+    this.wrapper.classList.add('scrollbar-custom-2')
+    this.wrapper.style.overflow = 'auto'
     this.wrapper.style.width = '100%'
     this.wrapper.style.height = '100%'
     this.editor.container.appendChild(this.wrapper)
     this.resizeObserver.observe(this.editor.container)
+
+    //test
+    const placeholder = document.createElement('div')
+    placeholder.style.width = window.innerWidth + 'px'
+    placeholder.style.height = window.innerHeight + 'px'
+    this.wrapper.appendChild(placeholder)
   }
 
   resizeThrottle() {

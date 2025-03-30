@@ -159,7 +159,7 @@ const createMockData = (editor: Editor) => {
     width: 100,
     height: 100,
     enableLine: true,
-    lineColor: "000",
+    lineColor: "#ffaf37",
     lineWidth: 1,
     enableFill: true,
     fillColor: "#fff",

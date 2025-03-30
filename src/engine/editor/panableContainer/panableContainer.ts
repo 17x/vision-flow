@@ -114,7 +114,7 @@ class PanableContainer {
   }
 
   private handlePanMove(currentX: number, currentY: number) {
-    console.log(currentX, currentY)
+    // console.log(currentX, currentY)
     const deltaX = currentX - this.pointerPosition.last.x
     const deltaY = currentY - this.pointerPosition.last.y
 

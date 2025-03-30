@@ -35,6 +35,9 @@ function handleMouseMove(this: Viewport, e: MouseEvent) {
 
     console.log(minX, maxX, minY, maxY)
   }
+
+  // e.preventDefault()
+  // e.stopPropagation()
 }
 
 export default handleMouseMove

@@ -4,7 +4,12 @@ import Viewport from "../viewport.ts"
 
 function handleWheel(this: Viewport, e: WheelEvent) {
   // const _t = e.target !== this.wrapper
-  console.log(e.deltaY)
+  if (e.altKey) {
+    // const idx = Math.round(e.deltaY / 4)
+    const idx = e.deltaY > 0 ? -1 : 1
+    // console.log(idx)
+    this.zoom(idx)
+  }
 }
 
 export default handleWheel

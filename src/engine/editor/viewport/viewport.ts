@@ -30,8 +30,8 @@ class Viewport {
   readonly handleWheel
   readonly handleContextMenu
   readonly eventsController: AbortController
-
-  // optionKey in MACOS
+  dpr = 2
+  // altKey is optionKey in MACOS
   altKey = false
   mouseDown = false
   pointMouseDown: Position = {x: 0, y: 0}
@@ -39,6 +39,13 @@ class Viewport {
   rect: Rect | undefined
   domResizing: boolean = false
   resizeTimeout: number | undefined
+  currentZoom = 100
+  view = {
+    width: 0,
+    height: 0,
+    x: 0,
+    y: 0,
+  }
 
   constructor(editor: Editor) {
     const {scrollBarX, scrollBarY} = generateScrollBars()
@@ -85,7 +92,7 @@ class Viewport {
     window.addEventListener('mouseup', this.handleMouseUp, {signal})
     window.addEventListener('keydown', this.handleKeyDown, {signal})
     window.addEventListener('wheel', this.handleWheel, {signal})
-    window.addEventListener('contextmenu', this.handleContextMenu, {signal})
+    this.wrapper.addEventListener('contextmenu', this.handleContextMenu, {signal})
   }
 
   updateScrollBar() {
@@ -108,10 +115,10 @@ class Viewport {
 
   doResize() {
     this.rect = this.editor.container.getBoundingClientRect()
-    this.mainCanvas.width = this.rect.width
-    this.mainCanvas.height = this.rect.height
-    this.selectionCanvas.width = this.rect.width
-    this.selectionCanvas.height = this.rect.height
+    this.mainCanvas.width = this.rect.width * this.dpr
+    this.mainCanvas.height = this.rect.height * this.dpr
+    this.selectionCanvas.width = this.rect.width * this.dpr
+    this.selectionCanvas.height = this.rect.height * this.dpr
   }
 
   destroy() {
@@ -127,19 +134,46 @@ class Viewport {
   }
 
   renderMainCanvas() {
+    console.log(this.currentZoom / 100)
+    // this.mainCTX.scale(this.dpr, this.dpr)
+    this.mainCTX.imageSmoothingEnabled = true
+    this.mainCTX.imageSmoothingQuality = "high"
+
+    this.mainCTX.setTransform(this.currentZoom/100, 0, 0, this.currentZoom/100, this.pointMouseCurrent.x, this.pointMouseCurrent.y)
+    this.mainCTX.clearRect(
+      0,
+      0,
+      this.mainCTX.canvas.width,
+      this.mainCTX.canvas.height
+    )
     const animate = () => {
       render({
-        ctx: this.mainCTX, modules: this.editor.moduleMap,
+        ctx: this.mainCTX,
+        modules: this.editor.moduleMap,
       })
     }
+
     requestAnimationFrame(animate)
   }
 
   renderSelectionCanvas() {
+    this.selectionCTX.scale(this.dpr, this.dpr)
+
     const animate = () => {
       selectionRender.call(this.editor.selectionManager, this.selectionCTX)
     }
+
     requestAnimationFrame(animate)
+  }
+
+  zoom(idx: number) {
+    console.log(idx)
+    this.currentZoom += idx
+    // console.log(this.currentZoom)
+    /*if (this.currentZoom < 1) {
+      this.currentZoom = 1
+    }*/
+    this.renderMainCanvas()
   }
 }
 

@@ -5,6 +5,10 @@ import handleMouseDown from "./events/mouseDown.ts"
 import handleMouseMove from "./events/mouseMove.ts"
 import handleMouseUp from "./events/mouseUp.ts"
 import selectionRender from "./selectionRender.ts"
+import handleKeyDown from "./events/keyDown.ts"
+import handleKeyUp from "./events/keyUp.ts"
+import handleWheel from "./events/wheel.ts"
+import handleContextMenu from "./events/contextMenu.ts"
 
 class Viewport {
   readonly editor: Editor
@@ -21,6 +25,14 @@ class Viewport {
   readonly handleMouseDown
   readonly handleMouseUp
   readonly handleMouseMove
+  readonly handleKeyDown
+  readonly handleKeyUp
+  readonly handleWheel
+  readonly handleContextMenu
+  readonly eventsController: AbortController
+
+  // optionKey in MACOS
+  altKey = false
   mouseDown = false
   pointMouseDown: Position = {x: 0, y: 0}
   pointMouseCurrent: Position = {x: 0, y: 0}
@@ -50,6 +62,11 @@ class Viewport {
     this.handleMouseDown = handleMouseDown.bind(this)
     this.handleMouseMove = handleMouseMove.bind(this)
     this.handleMouseUp = handleMouseUp.bind(this)
+    this.handleKeyDown = handleKeyDown.bind(this)
+    this.handleKeyUp = handleKeyUp.bind(this)
+    this.handleWheel = handleWheel.bind(this)
+    this.handleContextMenu = handleContextMenu.bind(this)
+    this.eventsController = new AbortController()
     this.init()
   }
 
@@ -61,15 +78,14 @@ class Viewport {
   }
 
   setupEvents() {
-    window.addEventListener('mousedown', this.handleMouseDown)
-    window.addEventListener('mousemove', this.handleMouseMove)
-    window.addEventListener('mouseup', this.handleMouseUp)
-  }
+    const {signal} = this.eventsController
 
-  unSetupEvents() {
-    window.removeEventListener('mousedown', this.handleMouseDown)
-    window.removeEventListener('mousemove', this.handleMouseMove)
-    window.removeEventListener('mouseup', this.handleMouseUp)
+    window.addEventListener('mousedown', this.handleMouseDown, {signal})
+    window.addEventListener('mousemove', this.handleMouseMove, {signal})
+    window.addEventListener('mouseup', this.handleMouseUp, {signal})
+    window.addEventListener('keydown', this.handleKeyDown, {signal})
+    window.addEventListener('wheel', this.handleWheel, {signal})
+    window.addEventListener('contextmenu', this.handleContextMenu, {signal})
   }
 
   updateScrollBar() {
@@ -101,7 +117,9 @@ class Viewport {
   destroy() {
     clearTimeout(this.resizeTimeout)
     this.resizeObserver.disconnect()
-    this.unSetupEvents()
+    // this.unSetupEvents()
+    this.eventsController.abort()
+
     this.wrapper.style.width = '100%'
     this.wrapper.style.height = '100%'
     this.wrapper.remove()

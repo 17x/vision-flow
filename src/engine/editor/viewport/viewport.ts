@@ -21,7 +21,8 @@ class Viewport {
   init() {
     this.editor.container.innerHTML = ''
     this.wrapper.setAttribute('editor-wrapper', 'true')
-    this.wrapper.classList.add('scrollbar-custom-2')
+    this.wrapper.style.scrollbarWidth = 'thin'
+    this.wrapper.style.scrollbarColor = '#787878 transparent'
     this.wrapper.style.overflow = 'auto'
     this.wrapper.style.width = '100%'
     this.wrapper.style.height = '100%'

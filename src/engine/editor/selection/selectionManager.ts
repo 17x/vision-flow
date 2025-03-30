@@ -1,5 +1,5 @@
 import Editor from "../editor.ts"
-import coordinator from "../coordinator.ts"
+// import coordinator from "../coordinator.ts"
 import handleMouseDown from "./events/mouseDown.ts"
 import handleMouseMove from "./events/mouseMove.ts"
 import handleMouseUp from "./events/mouseUp.ts"
@@ -20,8 +20,8 @@ class SelectionManager {
   // @ts-ignore
   private hoveredModules: Set<UID> = new Set()
   // @ts-ignore
-  isDragging: boolean = false
-  isResizing: boolean = false
+  // isDragging: boolean = false
+  // isResizing: boolean = false
   // @ts-ignore
   private dragStart: {
     x: number; y: number
@@ -55,17 +55,17 @@ class SelectionManager {
 
     // this.watchActions()
     this.render()
-    this.boundMouseDown = handleMouseDown.bind(this)
-    this.boundMouseMove = handleMouseMove.bind(this)
-    this.boundMouseUp = handleMouseUp.bind(this)
+    // this.boundMouseDown = handleMouseDown.bind(this)
+    // this.boundMouseMove = handleMouseMove.bind(this)
+    // this.boundMouseUp = handleMouseUp.bind(this)
     // this.setupEventListeners()
   }
 
-  private setupEventListeners(): void {
+/*  private setupEventListeners(): void {
     this.editor.canvas.addEventListener("mousedown", this.boundMouseDown)
     this.editor.canvas.addEventListener("mousemove", this.boundMouseMove)
     this.editor.canvas.addEventListener("mouseup", this.boundMouseUp)
-  }
+  }*/
 
   private removeEventListeners(): void {
     this.canvas.removeEventListener("mousedown", this.boundMouseDown)

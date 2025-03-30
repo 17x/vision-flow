@@ -5,7 +5,23 @@ function initViewportDom(this: Viewport) {
   const boxBgColor = 'rgba(31,180,255,0.5)'
   this.editor.container.innerHTML = ''
 
-  this.wrapper.setAttribute('editor-wrapper', 'true')
+  this.mainCanvas.setAttribute('editor-main-canvas', '')
+  this.mainCanvas.style.position = 'absolute'
+  this.mainCanvas.style.left = '0'
+  this.mainCanvas.style.top = '0'
+  this.mainCanvas.style.width = '100%'
+  this.mainCanvas.style.height = '100%'
+  this.mainCanvas.style.pointerEvents = 'none'
+
+  this.selectionCanvas.setAttribute('editor-selection-canvas', '')
+  this.selectionCanvas.style.position = 'absolute'
+  this.selectionCanvas.style.left = '0'
+  this.selectionCanvas.style.top = '0'
+  this.selectionCanvas.style.width = '100%'
+  this.selectionCanvas.style.height = '100%'
+  this.selectionCanvas.style.pointerEvents = 'none'
+
+  this.wrapper.setAttribute('editor-wrapper', '')
   // this.wrapper.classList.add('scroll-custom-2')
   this.wrapper.style.userSelect = 'none'
   this.wrapper.style.position = 'relative'
@@ -22,7 +38,7 @@ function initViewportDom(this: Viewport) {
 
   updateScrollBars(this.scrollBarX, this.scrollBarY)
   updateSelectionBox(this.selectionBox, {x: 0, y: 0, width: 0, height: 0}, false)
-  this.wrapper.append(this.scrollBarX, this.scrollBarY, this.selectionBox)
+  this.wrapper.append(this.mainCanvas, this.selectionCanvas, this.scrollBarX, this.scrollBarY, this.selectionBox)
   this.editor.container.appendChild(this.wrapper)
 }
 
@@ -62,4 +78,9 @@ const updateSelectionBox = (selectionBox: HTMLDivElement, {x, y, height, width}:
   selectionBox.style.height = height + 'px'
   selectionBox.style.display = show ? 'block' : 'none'
 }
+
+const updateCanvases = () => {
+
+}
+
 export {initViewportDom, generateScrollBars, updateScrollBars, updateSelectionBox}

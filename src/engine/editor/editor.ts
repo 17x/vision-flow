@@ -26,7 +26,6 @@ export const basicEditorAreaSize: BasicEditorAreaSize = {
 }
 
 export interface EditorProps {
-  // canvas: HTMLCanvasElement
   container: HTMLDivElement;
   data: EditorDataProps;
   // theme: ThemeShape
@@ -40,7 +39,6 @@ export interface EditorProps {
 class Editor {
   private moduleCounter = 0
   moduleMap: ModuleMap
-  canvas: HTMLCanvasElement
   private id: UID
   // private size: Size;
   dpr: DPR
@@ -82,6 +80,7 @@ class Editor {
     // const wrapper = document.createElement("div")
 
     this.container = container
+
     /*this.canvas = canvas
     this.ctx = ctx as CanvasRenderingContext2D
     this.dpr = dpr
@@ -181,7 +180,7 @@ class Editor {
 
     this.events.onModulesUpdated?.(this.moduleMap)
 
-    this.render()
+    // this.render()
   }
 
   batchCopy(from: 'all' | Set<UID>, removeId = false, addOn?: { string: unknown }): ModuleProps[] {
@@ -316,21 +315,6 @@ class Editor {
     this.action.dispatcher(code, data)
   }
 
-  render() {
-    // this.ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0)
-    // console.log(this.scale)
-    const animate = () => {
-      // this.viewport.ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0)
-      // console.time();
-      /*render({
-        ctx: this.viewport.ctx, modules: this.moduleMap,
-      })*/
-      // requestAnimationFrame(animate);
-      // console.timeEnd();
-    }
-
-    requestAnimationFrame(animate)
-  }
 
   //eslint-disable-block
   destroy() {

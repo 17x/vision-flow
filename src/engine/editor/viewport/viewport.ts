@@ -1,3 +1,4 @@
+import render from "../../core/renderer/renderer.ts"
 import Editor from "../editor.ts"
 import {generateScrollBars, initViewportDom, updateScrollBars} from "./domManipulations.ts"
 import handleMouseDown from "./events/mouseDown.ts"
@@ -12,6 +13,10 @@ class Viewport {
   readonly scrollBarX: HTMLDivElement
   readonly scrollBarY: HTMLDivElement
   readonly selectionBox: HTMLDivElement
+  readonly selectionCanvas: HTMLCanvasElement
+  readonly selectionCTX: CanvasRenderingContext2D
+  readonly mainCanvas: HTMLCanvasElement
+  readonly mainCTX: CanvasRenderingContext2D
   readonly handleMouseDown
   readonly handleMouseUp
   readonly handleMouseMove
@@ -24,7 +29,15 @@ class Viewport {
 
   constructor(editor: Editor) {
     const {scrollBarX, scrollBarY} = generateScrollBars()
+    const selectionCanvas: HTMLCanvasElement = document.createElement("canvas")
+    const mainCanvas: HTMLCanvasElement = document.createElement("canvas")
+    const selectionCtx = selectionCanvas.getContext('2d')
+    const mainCtx = mainCanvas.getContext('2d')
 
+    this.selectionCanvas = selectionCanvas
+    this.mainCanvas = mainCanvas
+    this.selectionCTX = selectionCtx as CanvasRenderingContext2D
+    this.mainCTX = mainCtx as CanvasRenderingContext2D
     this.editor = editor
     this.scrollBarX = scrollBarX
     this.scrollBarY = scrollBarY
@@ -40,9 +53,9 @@ class Viewport {
   }
 
   init() {
+    this.doResize()
     initViewportDom.call(this)
     this.resizeObserver.observe(this.editor.container)
-    this.doResize()
     this.setupEvents()
   }
 
@@ -85,6 +98,22 @@ class Viewport {
     this.wrapper.style.height = '100%'
     this.wrapper.remove()
     this.editor.container.innerHTML = ''
+  }
+
+  render() {
+    // this.ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0)
+    // console.log(this.scale)
+    const animate = () => {
+      // this.viewport.ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0)
+      // console.time();
+      render({
+        ctx: this.mainCTX, modules: this.editor.moduleMap,
+      })
+      // requestAnimationFrame(animate);
+      // console.timeEnd();
+    }
+
+    requestAnimationFrame(animate)
   }
 }
 

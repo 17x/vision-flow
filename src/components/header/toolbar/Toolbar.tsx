@@ -11,7 +11,10 @@ const IconColor = 'text-black'
 
 const Toolbar: React.FC = () => {
   const actions = useSelector((state: RootState) => state.toolbar.actions)
-  const {executeAction} = useContext(EditorContext)
+  const {executeAction,historyCurrent} = useContext(EditorContext)
+
+  // const hasPrev = Boolean(historyCurrent.prev)
+  // const hasNext = Boolean(historyCurrent.next)
 
   return <div className={'border-b border-gray-200 box-border'}>
     <div className={'h-10 inline-flex pl-4 items-center'}>

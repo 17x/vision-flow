@@ -48,18 +48,18 @@ class Editor {
   events: EventHandlers = {}
   private action: Action
   history: History
-  public panableContainer: PanableContainer
+  // public panableContainer: PanableContainer
   selectionManager: SelectionManager
-  private wrapper: HTMLDivElement
+  // private wrapper: HTMLDivElement
   viewport: Viewport
   // @ts-expect-error
   private zoom: ZoomRatio
   private crossLine: CrossLine
-  private ctx: CanvasRenderingContext2D
+  // private ctx: CanvasRenderingContext2D
   scale: number = 1
-  private minScale: number = 0.5
-  private maxScale: number = 10
-  private zoomSpeed: number = 0.1
+  // private minScale: number = 0.5
+  // private maxScale: number = 10
+  // private zoomSpeed: number = 0.1
 
   constructor({
                 container, data, dpr = 2, zoom = 1, events = {}
@@ -311,7 +311,6 @@ class Editor {
   getModuleList(): ModuleType[] {
     return [...Object.values(this.moduleMap)]
   }
-
 
   public execute(code: ActionCode, data: unknown = null) {
     this.action.dispatcher(code, data)

@@ -1,12 +1,8 @@
 import Rectangle from "../../../core/modules/shapes/rectangle.ts"
 import {isInsideRotatedRect} from "../helper.ts"
-import SelectionManager from "../selectionManager.ts"
-// import render from "../render.ts"
+import Viewport from "../../viewport/viewport.ts"
 
-function handleMouseDown(this: SelectionManager, e: MouseEvent) {
-
-  // if (this.editor.panableContainer.isSpaceKeyPressed) return
-
+function handleMouseDown(this: Viewport, e: MouseEvent) {
   const mouseX = e.offsetX
   const mouseY = e.offsetY
 // const mousePointX = mouseX

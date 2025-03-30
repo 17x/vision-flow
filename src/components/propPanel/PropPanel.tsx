@@ -36,7 +36,6 @@ const ShapePropsPanel = ({props}: { props: ShapeProps }) => {
 
       {/* Shape Properties Group */}
       <div className="mb-4 ">
-        <h3 className="font-semibold mb-2">Shape Properties</h3>
         <div className="px-4 w-full h-full flex justify-between items-center">
           <span className={''}>X:</span>
           <input
@@ -91,7 +90,6 @@ const ShapePropsPanel = ({props}: { props: ShapeProps }) => {
 
       {/* Fill and Line Properties Group */}
       <div className="mb-4">
-        <h3 className=" font-semibold">Fill and Line Properties</h3>
         <div className="px-4 w-full h-full flex justify-between items-center">
           <span>Enable Fill</span>
           <input
@@ -136,7 +134,6 @@ const ShapePropsPanel = ({props}: { props: ShapeProps }) => {
 
       {/* Appearance Group */}
       <div className="mb-4">
-        <h3 className=" font-semibold">Appearance</h3>
         <div className="px-4 w-full h-full flex justify-between items-center">
           <span>Shadow</span>
           <input

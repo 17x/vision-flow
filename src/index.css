@@ -39,8 +39,8 @@ html, body, #root {
     }
 
     .scrollbar-custom-2::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+        width: 6px;
+        height: 6px;
     }
 
     .scrollbar-custom-2::-webkit-scrollbar-thumb {

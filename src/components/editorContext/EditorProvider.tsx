@@ -170,7 +170,7 @@ const createMockData = (editor: Editor) => {
     radius: 0,
     rotation: 0
   }
-  const MOCK_ELE_LEN = 2000
+  const MOCK_ELE_LEN = 10
   // const MOCK_ELE_LEN = 2
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

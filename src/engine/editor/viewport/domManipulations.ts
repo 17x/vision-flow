@@ -31,6 +31,7 @@ function initViewportDom(this: Viewport) {
   this.wrapper.style.width = '100%'
   this.wrapper.style.height = '100%'
 
+  this.selectionBox.setAttribute('editor-selection-box', '')
   this.selectionBox.style.pointerEvents = 'none'
   this.selectionBox.style.position = 'absolute'
   this.selectionBox.style.border = '1px solid ' + boxColor
@@ -77,10 +78,6 @@ const updateSelectionBox = (selectionBox: HTMLDivElement, {x, y, height, width}:
   selectionBox.style.width = width + 'px'
   selectionBox.style.height = height + 'px'
   selectionBox.style.display = show ? 'block' : 'none'
-}
-
-const updateCanvases = () => {
-
 }
 
 export {initViewportDom, generateScrollBars, updateScrollBars, updateSelectionBox}

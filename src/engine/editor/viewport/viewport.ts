@@ -4,10 +4,11 @@ import {generateScrollBars, initViewportDom, updateScrollBars} from "./domManipu
 import handleMouseDown from "./events/mouseDown.ts"
 import handleMouseMove from "./events/mouseMove.ts"
 import handleMouseUp from "./events/mouseUp.ts"
+import selectionRender from "./selectionRender.ts"
 
 class Viewport {
   readonly editor: Editor
-  readonly resizeInterval: number = 100
+  readonly resizeInterval: number = 17
   readonly resizeObserver: ResizeObserver
   readonly wrapper: HTMLDivElement
   readonly scrollBarX: HTMLDivElement
@@ -79,15 +80,22 @@ class Viewport {
 
   resizeThrottle() {
     clearTimeout(this.resizeTimeout)
+
     this.domResizing = true
     this.resizeTimeout = setTimeout(() => {
       this.doResize()
+      this.renderMainCanvas()
+      this.renderSelectionCanvas()
       this.domResizing = false
     }, this.resizeInterval)
   }
 
   doResize() {
     this.rect = this.editor.container.getBoundingClientRect()
+    this.mainCanvas.width = this.rect.width
+    this.mainCanvas.height = this.rect.height
+    this.selectionCanvas.width = this.rect.width
+    this.selectionCanvas.height = this.rect.height
   }
 
   destroy() {
@@ -100,19 +108,19 @@ class Viewport {
     this.editor.container.innerHTML = ''
   }
 
-  render() {
-    // this.ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0)
-    // console.log(this.scale)
+  renderMainCanvas() {
     const animate = () => {
-      // this.viewport.ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0)
-      // console.time();
       render({
         ctx: this.mainCTX, modules: this.editor.moduleMap,
       })
-      // requestAnimationFrame(animate);
-      // console.timeEnd();
     }
+    requestAnimationFrame(animate)
+  }
 
+  renderSelectionCanvas() {
+    const animate = () => {
+      selectionRender.call(this.editor.selectionManager, this.selectionCTX)
+    }
     requestAnimationFrame(animate)
   }
 }

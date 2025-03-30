@@ -20,11 +20,7 @@ const render = ({ctx, modules}: RenderProps): void => {
     ctx.canvas.width,
     ctx.canvas.height
   )
-  {
-    ctx.strokeStyle = "green"
-    ctx.strokeRect(20, 10, 160, 100)
-    console.log('render')
-  }
+
   modules.forEach((module) => {
     if (module.type === 'rectangle') {
 

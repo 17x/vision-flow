@@ -1,76 +1,20 @@
 import Editor from "../editor.ts"
-// import coordinator from "../coordinator.ts"
-import handleMouseDown from "./events/mouseDown.ts"
-import handleMouseMove from "./events/mouseMove.ts"
-import handleMouseUp from "./events/mouseUp.ts"
-import render from "./render.ts"
+// import render from "./render.ts"
 
-// type KeyboardDirectionKeys = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
 const CopyDeltaX = 10
 const CopyDeltaY = 10
 
 class SelectionManager {
-  readonly boundMouseDown: (event: MouseEvent) => void
-  readonly boundMouseMove: (event: MouseEvent) => void
-  readonly boundMouseUp: (event: MouseEvent) => void
-
-  canvas: HTMLCanvasElement
-  ctx: CanvasRenderingContext2D
   selectedModules: Set<UID> = new Set()
-  // @ts-ignore
-  private hoveredModules: Set<UID> = new Set()
-  // @ts-ignore
-  // isDragging: boolean = false
-  // isResizing: boolean = false
-  // @ts-ignore
-  private dragStart: {
-    x: number; y: number
-  } = {
-    x: 0, y: 0
-  }
-  // @ts-ignore
   resizeHandleSize: number = 10
   activeResizeHandle: { x: number, y: number } | null = null
-  private isDestroyed: boolean = false
+  isDestroyed: boolean = false
   editor: Editor
-  private copiedItems: ModuleProps[] = []
+  copiedItems: ModuleProps[] = []
   isSelectAll: boolean = false
-  // private currentCopyDeltaX = CopyDeltaX
-  // private currentCopyDeltaY = CopyDeltaY
 
   constructor(editor: Editor) {
-    const canvas = document.createElement("canvas") as HTMLCanvasElement
-    this.ctx = canvas.getContext("2d")!
     this.editor = editor
-    this.canvas = canvas
-
-    // coordinator(this.editor.canvas, this.canvas)
-    this.ctx.scale(this.editor.dpr, this.editor.dpr)
-    canvas.style.position = "absolute"
-    canvas.style.top = "0"
-    canvas.style.bottom = "0"
-    canvas.style.pointerEvents = "none"
-    canvas.setAttribute("selection-manager", "")
-    // editor.canvas.parentNode!.append(this.canvas)
-
-    // this.watchActions()
-    this.render()
-    // this.boundMouseDown = handleMouseDown.bind(this)
-    // this.boundMouseMove = handleMouseMove.bind(this)
-    // this.boundMouseUp = handleMouseUp.bind(this)
-    // this.setupEventListeners()
-  }
-
-/*  private setupEventListeners(): void {
-    this.editor.canvas.addEventListener("mousedown", this.boundMouseDown)
-    this.editor.canvas.addEventListener("mousemove", this.boundMouseMove)
-    this.editor.canvas.addEventListener("mouseup", this.boundMouseUp)
-  }*/
-
-  private removeEventListeners(): void {
-    this.canvas.removeEventListener("mousedown", this.boundMouseDown)
-    this.canvas.removeEventListener("mousemove", this.boundMouseMove)
-    this.canvas.removeEventListener("mouseup", this.boundMouseUp)
   }
 
   public getSelected(): Set<UID> | 'all' {
@@ -126,7 +70,7 @@ class SelectionManager {
   public clear(): void {
     this.selectedModules.clear()
     this.isSelectAll = false
-    render.call(this)
+    // render.call(this)
     this.editor.events.onSelectionUpdated?.(new Set(), null)
   }
 
@@ -182,15 +126,15 @@ class SelectionManager {
   }
 
   render() {
-    render.call(this)
+    // render.call(this)
   }
 
   destroy(): void {
     if (this.isDestroyed) return
 
-    this.removeEventListeners()
+    // this.removeEventListeners()
     this.selectedModules.clear()
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     this.isDestroyed = true
     console.log("SelectionModule destroyed.")
   }

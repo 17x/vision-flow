@@ -180,7 +180,7 @@ class Editor {
 
     this.events.onModulesUpdated?.(this.moduleMap)
 
-    // this.render()
+    this.render()
   }
 
   batchCopy(from: 'all' | Set<UID>, removeId = false, addOn?: { string: unknown }): ModuleProps[] {
@@ -315,6 +315,9 @@ class Editor {
     this.action.dispatcher(code, data)
   }
 
+  render() {
+    // this.viewport.render()
+  }
 
   //eslint-disable-block
   destroy() {

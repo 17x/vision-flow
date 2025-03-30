@@ -13,6 +13,7 @@ import Action from "./actions"
 import Connector from "../core/modules/connectors/connector.ts"
 import {HistoryActionType} from "./history/type"
 import batchReplaceModules from "./helpers/batchReplaceModules.ts"
+import Viewport from "./viewport/viewport.ts"
 
 export interface EditorDataProps {
   id: UID;
@@ -43,14 +44,14 @@ class Editor {
   private id: UID
   // private size: Size;
   dpr: DPR
-  private container: HTMLDivElement
+  container: HTMLDivElement
   events: EventHandlers = {}
   private action: Action
   history: History
   public panableContainer: PanableContainer
   selectionManager: SelectionManager
   private wrapper: HTMLDivElement
-
+  viewport: Viewport
   // @ts-expect-error
   private zoom: ZoomRatio
   private crossLine: CrossLine
@@ -63,12 +64,25 @@ class Editor {
   constructor({
                 container, data, dpr = 2, zoom = 1, events = {}
               }: EditorProps) {
-    const canvas = document.createElement("canvas")
-    const ctx = canvas.getContext("2d")
-    const wrapper = document.createElement("div")
+    this.moduleMap = data.modules.reduce<ModuleMap>(
+      (previousValue, currentValue) => {
+        previousValue.set(currentValue.id, currentValue)
+
+        return previousValue
+      },
+      new Map<UID, ModuleType>()
+    )
+    this.id = data.id
+    // this.size = data.size;
+    // this.wrapper = wrapper
+    this.scale = dpr
+    this.events = events
+    // const canvas = document.createElement("canvas")
+    // const ctx = canvas.getContext("2d")
+    // const wrapper = document.createElement("div")
 
     this.container = container
-    this.canvas = canvas
+    /*this.canvas = canvas
     this.ctx = ctx as CanvasRenderingContext2D
     this.dpr = dpr
     this.zoom = zoom
@@ -100,21 +114,24 @@ class Editor {
     container.style.width = "100%"
     container.setAttribute("editor-container", "")
 
+    wrapper.setAttribute("editor-wrapper", "")
     wrapper.append(canvas)
     container.append(wrapper)
     this.setupEventListeners()
-    this.panableContainer = new PanableContainer({
+    /!*this.panableContainer = new PanableContainer({
       element: wrapper,
       onPan: (deltaX, deltaY) => {
         console.log(deltaX, deltaY)
       },
-    })
-    // this.shortcut = new Shortcut(this)
+    })*!/
+    // this.shortcut = new Shortcut(this)*/
+
+    this.viewport = new Viewport(this)
     this.action = new Action(this)
     this.selectionManager = new SelectionManager(this)
     this.crossLine = new CrossLine(this)
     this.history = new History(this)
-    this.render()
+    // this.render()
   }
 
   private createModuleId(): UID {
@@ -295,81 +312,20 @@ class Editor {
     return [...Object.values(this.moduleMap)]
   }
 
-  private setupEventListeners() {
-    window.addEventListener("wheel", (event) => this.handleWheelZoom(event), {passive: false})
-    window.addEventListener("keydown", (event) => this.handleKeyboardZoom(event))
-    this.canvas.addEventListener("gesturestart", (event) => event.preventDefault())
-    // this.canvas.addEventListener("gesturechange", (event) => this.handleTouchpadZoom(event as unknown));
-  }
-
-  private removeEventListeners() {
-    window.removeEventListener("wheel", (event) => this.handleWheelZoom(event))
-    window.removeEventListener("keydown", (event) => this.handleKeyboardZoom(event))
-    this.canvas.removeEventListener("gesturestart", (event) => event.preventDefault())
-    // this.canvas.removeEventListener("gesturechange", (event) => this.handleTouchpadZoom(event as unknown));
-  }
-
-  private handleWheelZoom(event: WheelEvent) {
-    // console.log('wheel',event.deltaX, event.deltaY);
-    // console.log(event);
-    if (event.altKey) {
-      const zoomFactor = event.deltaY < 0 ? 1 + this.zoomSpeed : 1 - this.zoomSpeed
-      event.preventDefault()
-      this.applyZoom(zoomFactor)
-    }
-  }
-
-  private handleKeyboardZoom(event: KeyboardEvent) {
-    if (!event.ctrlKey && !event.metaKey) return
-
-    let r = this.scale
-
-    if (event.key === "=" || event.key === "+") {
-      r = r + this.zoomSpeed
-    } else if (event.key === "-") {
-      r = r - this.zoomSpeed
-    } else if (event.key === "0") {
-      r = this.dpr
-    }
-
-    // console.log(r)
-
-    if (r !== this.scale) {
-      this.applyZoom(r)
-      event.preventDefault()
-      event.stopPropagation()
-    }
-  }
-
-  /*  private handleTouchpadZoom(event: unknown) {
-      console.log(9)
-      // event.preventDefault();
-      const zoomFactor = event.scale > 1 ? 1 + this.zoomSpeed : 1 - this.zoomSpeed;
-      this.applyZoom(zoomFactor);
-    }*/
-
-  private applyZoom(factor: number) {
-    const newScale = this.scale * factor
-
-    if (newScale < this.minScale || newScale > this.maxScale) return
-
-    this.scale = newScale
-    this.render()
-    this.selectionManager.render()
-  }
 
   public execute(code: ActionCode, data: unknown = null) {
     this.action.dispatcher(code, data)
   }
 
   render() {
-    this.ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0)
-
+    // this.ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0)
+    // console.log(this.scale)
     const animate = () => {
+      // this.viewport.ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0)
       // console.time();
-      render({
-        ctx: this.ctx, modules: this.moduleMap,
-      })
+      /*render({
+        ctx: this.viewport.ctx, modules: this.moduleMap,
+      })*/
       // requestAnimationFrame(animate);
       // console.timeEnd();
     }
@@ -379,15 +335,15 @@ class Editor {
 
   //eslint-disable-block
   destroy() {
-    this.removeEventListeners()
-    this.panableContainer.destroy()
+    // this.removeEventListeners()
+    // this.panableContainer.destroy()
     this.action.destroy()
     this.selectionManager.destroy()
     this.crossLine.destroy()
     this.history.destroy()
     this.moduleMap.clear()
     // @ts-ignore
-    this.panableContainer = null
+    // this.panableContainer = null
     // @ts-ignore
     this.action = null
     // @ts-ignore
@@ -410,8 +366,6 @@ class Editor {
     this.id = null
     // @ts-ignore
     this.events = null
-    this.container.removeChild(this.wrapper)
-    this.container.innerHTML = ''
     // @ts-ignore
     this.container = null
   }

@@ -12,15 +12,19 @@ interface RenderProps {
 const render = ({ctx, modules}: RenderProps): void => {
   const rects: RectangleRenderProps[] = []
   const lines: LineRenderProps[] = []
-  // const fillStyle = "#5491f8"
   const texts: unknown = []
+
   ctx.clearRect(
     0,
     0,
     ctx.canvas.width,
     ctx.canvas.height
   )
-
+  {
+    ctx.strokeStyle = "green"
+    ctx.strokeRect(20, 10, 160, 100)
+    console.log('render')
+  }
   modules.forEach((module) => {
     if (module.type === 'rectangle') {
 
@@ -69,7 +73,6 @@ const render = ({ctx, modules}: RenderProps): void => {
   rectRender(ctx, rects)
   lineRender(ctx, lines)
   textRender(ctx, texts)
-
 }
 
 const textRender = (ctx: CanvasRenderingContext2D, texts): void => {

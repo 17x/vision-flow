@@ -21,18 +21,18 @@ class CrossLine {
     canvas.style.zIndex = '10'
     canvas.style.pointerEvents = 'none'
     canvas.setAttribute('cross-line', '')
-    editor.canvas.parentNode!.append(this.canvas)
+    // editor.canvas.parentNode!.append(this.canvas)
 
     // this.update()
-    this.setupEventListeners()
+    // this.setupEventListeners()
   }
 
   private setupEventListeners(): void {
-    this.editor.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this))
+    // this.editor.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this))
   }
 
   private removeEventListeners(): void {
-    this.editor.canvas.removeEventListener("mousemove", this.handleMouseMove.bind(this))
+    // this.editor.canvas.removeEventListener("mousemove", this.handleMouseMove.bind(this))
   }
 
   private handleMouseMove(e: MouseEvent) {
@@ -43,7 +43,7 @@ class CrossLine {
   }
 
   private update() {
-    coordinator(this.editor.canvas, this.canvas)
+    // coordinator(this.editor.canvas, this.canvas)
     this.render({x: 0, y: 0})
   }
 

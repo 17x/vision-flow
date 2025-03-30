@@ -5,7 +5,7 @@ import SelectionManager from "../selectionManager.ts"
 
 function handleMouseDown(this: SelectionManager, e: MouseEvent) {
 
-  if (this.editor.panableContainer.isSpaceKeyPressed) return
+  // if (this.editor.panableContainer.isSpaceKeyPressed) return
 
   const mouseX = e.offsetX
   const mouseY = e.offsetY

@@ -44,21 +44,21 @@ class SelectionManager {
     this.editor = editor
     this.canvas = canvas
 
-    coordinator(this.editor.canvas, this.canvas)
+    // coordinator(this.editor.canvas, this.canvas)
     this.ctx.scale(this.editor.dpr, this.editor.dpr)
     canvas.style.position = "absolute"
     canvas.style.top = "0"
     canvas.style.bottom = "0"
     canvas.style.pointerEvents = "none"
     canvas.setAttribute("selection-manager", "")
-    editor.canvas.parentNode!.append(this.canvas)
+    // editor.canvas.parentNode!.append(this.canvas)
 
     // this.watchActions()
     this.render()
     this.boundMouseDown = handleMouseDown.bind(this)
     this.boundMouseMove = handleMouseMove.bind(this)
     this.boundMouseUp = handleMouseUp.bind(this)
-    this.setupEventListeners()
+    // this.setupEventListeners()
   }
 
   private setupEventListeners(): void {

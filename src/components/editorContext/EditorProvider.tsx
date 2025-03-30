@@ -127,8 +127,9 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 
           <div className={'flex flex-col w-full h-full overflow-hidden'}>
             <div ref={containerRef}
+                 editor-container={'true'}
                  className={'relative overflow-hidden flex w-full h-full'}
-                 editor-container={'true'}></div>
+                 ></div>
             <StatusBar/>
           </div>
 
@@ -168,8 +169,8 @@ const createMockData = (editor: Editor) => {
     radius: 0,
     rotation: 0
   }
-  // const MOCK_ELE_LEN = 2000
-  const MOCK_ELE_LEN = 2
+  const MOCK_ELE_LEN = 2000
+  // const MOCK_ELE_LEN = 2
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getRandomHexColor = (): string => {

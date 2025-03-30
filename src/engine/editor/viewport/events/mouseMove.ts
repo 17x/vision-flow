@@ -25,7 +25,15 @@ function handleMouseMove(this: Viewport, e: MouseEvent) {
       boxY = this.pointMouseCurrent.y
       boxHeight = this.pointMouseDown.y - this.pointMouseCurrent.y
     }
+
     updateSelectionBox(this.selectionBox, {x: boxX, y: boxY, width: boxWidth, height: boxHeight})
+
+    const minX = Math.min(this.pointMouseDown.x, this.pointMouseCurrent.x)
+    const maxX = Math.max(this.pointMouseDown.x, this.pointMouseCurrent.x)
+    const minY = Math.min(this.pointMouseDown.y, this.pointMouseCurrent.y)
+    const maxY = Math.max(this.pointMouseDown.y, this.pointMouseCurrent.y)
+
+    console.log(minX, maxX, minY, maxY)
   }
 }
 

@@ -3,8 +3,6 @@
 import Viewport from "../viewport.ts"
 import {updateSelectionBox} from "../domManipulations.ts"
 
-// import render from "../render.ts"
-
 function handleMouseDown(this: Viewport, e: MouseEvent) {
   const _t = e.target !== this.wrapper
 

@@ -7,7 +7,7 @@ const PropPanel = () => {
   // console.log(selectedProps)
 
   useEffect(() => {
-    console.log(9)
+    // console.log(9)
   }, [selectedProps])
 
   return <div className={'p-2'}>

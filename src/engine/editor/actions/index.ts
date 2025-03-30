@@ -94,7 +94,7 @@ class Action {
       this.editor.batchModify(selectedModules, {
         code,
       }, 'modifyModules')
-      console.log(selectedModules)
+      // console.log(selectedModules)
     }
 
     if (this.eventsMap.has(code)) {

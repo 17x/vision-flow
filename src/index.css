@@ -60,3 +60,11 @@ html, body, #root {
         display: block;
     }
 }
+
+
+/*
+html {
+    touch-action: none;
+    user-select: none;
+    overflow: hidden;
+}*/

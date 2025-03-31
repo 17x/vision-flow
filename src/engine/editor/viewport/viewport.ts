@@ -40,12 +40,8 @@ class Viewport {
   domResizing: boolean = false
   resizeTimeout: number | undefined
   currentZoom = 100
-  view = {
-    width: 0,
-    height: 0,
-    x: 0,
-    y: 0,
-  }
+  offsetX: number = 0
+  offsetY: number = 0
 
   constructor(editor: Editor) {
     const {scrollBarX, scrollBarY} = generateScrollBars()
@@ -91,8 +87,36 @@ class Viewport {
     window.addEventListener('mousemove', this.handleMouseMove, {signal})
     window.addEventListener('mouseup', this.handleMouseUp, {signal})
     window.addEventListener('keydown', this.handleKeyDown, {signal})
-    window.addEventListener('wheel', this.handleWheel, {signal})
+    window.addEventListener('wheel', this.handleWheel, {signal, passive: false})
     this.wrapper.addEventListener('contextmenu', this.handleContextMenu, {signal})
+
+    document.addEventListener("touchstart", (event) => {
+      console.log('pre')
+      event.preventDefault() // Stops touch interactions
+    }, {passive: false})
+
+    document.addEventListener("touchmove", (event) => {
+      console.log('pre')
+      event.preventDefault() // Stops scrolling with touchpad
+    }, {passive: false})
+
+    document.addEventListener("touchend", (event) => {
+      console.log('pre')
+      event.preventDefault()
+    }, {passive: false})
+
+    document.addEventListener("gesturestart", (event) => {
+      console.log('gesturestart')
+      event.preventDefault()
+    })
+    document.addEventListener("gesturechange", (event) => {
+      console.log('gesturechange')
+      event.preventDefault()
+    })
+    document.addEventListener("gestureend", (event) => {
+      console.log('gestureend')
+      event.preventDefault()
+    })
   }
 
   updateScrollBar() {
@@ -134,18 +158,19 @@ class Viewport {
   }
 
   renderMainCanvas() {
+    const scaleFactor = this.currentZoom / 100
     console.log(this.currentZoom / 100)
     // this.mainCTX.scale(this.dpr, this.dpr)
     this.mainCTX.imageSmoothingEnabled = true
     this.mainCTX.imageSmoothingQuality = "high"
 
-    this.mainCTX.setTransform(this.currentZoom/100, 0, 0, this.currentZoom/100, this.pointMouseCurrent.x, this.pointMouseCurrent.y)
     this.mainCTX.clearRect(
       0,
       0,
       this.mainCTX.canvas.width,
       this.mainCTX.canvas.height
     )
+    this.mainCTX.setTransform(scaleFactor, 0, 0, scaleFactor, this.pointMouseCurrent.x, this.pointMouseCurrent.y)
     const animate = () => {
       render({
         ctx: this.mainCTX,
@@ -164,6 +189,11 @@ class Viewport {
     }
 
     requestAnimationFrame(animate)
+  }
+
+  offset(x: number, y: number) {
+    this.offsetX += x
+    this.offsetY += y
   }
 
   zoom(idx: number) {

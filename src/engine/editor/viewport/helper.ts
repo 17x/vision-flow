@@ -83,4 +83,8 @@ const isInsideRotatedRect = (
   )
 }
 
-export {getBoxControlPoints, isInsideRotatedRect}
+const hoverOnModule = () => {
+  return true
+}
+
+export {getBoxControlPoints, isInsideRotatedRect, hoverOnModule}

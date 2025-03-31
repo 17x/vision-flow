@@ -2,7 +2,7 @@ import Viewport from "./viewport.ts"
 
 function initViewportDom(this: Viewport) {
   const boxColor = '#1FB3FF'
-  const boxBgColor = 'rgba(31,180,255,0.5)'
+  const boxBgColor = 'rgba(31,180,255,0.1)'
   this.editor.container.innerHTML = ''
 
   this.mainCanvas.setAttribute('editor-main-canvas', '')

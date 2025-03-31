@@ -1,14 +1,22 @@
 import render from "../../core/renderer/renderer.ts"
 import Editor from "../editor.ts"
 import {generateScrollBars, initViewportDom, updateScrollBars} from "./domManipulations.ts"
-import handleMouseDown from "./events/mouseDown.ts"
-import handleMouseMove from "./events/mouseMove.ts"
-import handleMouseUp from "./events/mouseUp.ts"
+import handleMouseDown from "./eventHandlers/mouseDown.ts"
+import handleMouseMove from "./eventHandlers/mouseMove.ts"
+import handleMouseUp from "./eventHandlers/mouseUp.ts"
 import selectionRender from "./selectionRender.ts"
-import handleKeyDown from "./events/keyDown.ts"
-import handleKeyUp from "./events/keyUp.ts"
-import handleWheel from "./events/wheel.ts"
-import handleContextMenu from "./events/contextMenu.ts"
+import handleKeyDown from "./eventHandlers/keyDown.ts"
+import handleKeyUp from "./eventHandlers/keyUp.ts"
+import handleWheel from "./eventHandlers/wheel.ts"
+import handleContextMenu from "./eventHandlers/contextMenu.ts"
+
+// import {canvasToScreen} from "./TransformUtils.ts"
+
+export interface Transform {
+  scale: number;
+  offsetX: number;
+  offsetY: number;
+}
 
 class Viewport {
   readonly editor: Editor
@@ -31,17 +39,19 @@ class Viewport {
   readonly handleContextMenu
   readonly eventsController: AbortController
   dpr = 2
-  // altKey is optionKey in MACOS
-  altKey = false
+  spaceKeyDown = false
   mouseDown = false
-  pointMouseDown: Position = {x: 0, y: 0}
-  pointMouseCurrent: Position = {x: 0, y: 0}
+  panning = false
+  selecting = false
+  mouseDownPoint: Position = {x: 0, y: 0}
+  mouseCurrentPoint: Position = {x: 0, y: 0}
   rect: Rect | undefined
   domResizing: boolean = false
   resizeTimeout: number | undefined
   currentZoom = 100
   offsetX: number = 0
   offsetY: number = 0
+  transform: Transform
 
   constructor(editor: Editor) {
     const {scrollBarX, scrollBarY} = generateScrollBars()
@@ -50,6 +60,7 @@ class Viewport {
     const selectionCtx = selectionCanvas.getContext('2d')
     const mainCtx = mainCanvas.getContext('2d')
 
+    this.transform = {scale: 1, offsetX: 0, offsetY: 0}
     this.selectionCanvas = selectionCanvas
     this.mainCanvas = mainCanvas
     this.selectionCTX = selectionCtx as CanvasRenderingContext2D
@@ -87,6 +98,7 @@ class Viewport {
     window.addEventListener('mousemove', this.handleMouseMove, {signal})
     window.addEventListener('mouseup', this.handleMouseUp, {signal})
     window.addEventListener('keydown', this.handleKeyDown, {signal})
+    window.addEventListener('keyup', this.handleKeyUp, {signal})
     window.addEventListener('wheel', this.handleWheel, {signal, passive: false})
     this.wrapper.addEventListener('contextmenu', this.handleContextMenu, {signal})
 
@@ -158,19 +170,20 @@ class Viewport {
   }
 
   renderMainCanvas() {
-    const scaleFactor = this.currentZoom / 100
-    console.log(this.currentZoom / 100)
-    // this.mainCTX.scale(this.dpr, this.dpr)
-    this.mainCTX.imageSmoothingEnabled = true
-    this.mainCTX.imageSmoothingQuality = "high"
+    const {mainCTX: ctx, transform: {scale}} = this
 
-    this.mainCTX.clearRect(
-      0,
-      0,
-      this.mainCTX.canvas.width,
-      this.mainCTX.canvas.height
-    )
-    this.mainCTX.setTransform(scaleFactor, 0, 0, scaleFactor, this.pointMouseCurrent.x, this.pointMouseCurrent.y)
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    console.log(this.transform)
+    // Example: Draw a virtual module at (100, 100) in canvas space
+    // const screenPos = canvasToScreen(this.transform, 100, 100)
+    // In the Canvas API, transformations are applied in right-to-left order,
+    // meaning that the transformations are applied
+    // starting from the last one and moving toward the first one.
+    // ctx.transform()
+    console.log(scale)
+    ctx.fillStyle = "blue"
+    ctx.fillRect(0, 0, 50 * scale, 50 * scale)
+
     const animate = () => {
       render({
         ctx: this.mainCTX,
@@ -178,7 +191,7 @@ class Viewport {
       })
     }
 
-    requestAnimationFrame(animate)
+    // requestAnimationFrame(animate)
   }
 
   renderSelectionCanvas() {
@@ -191,9 +204,19 @@ class Viewport {
     requestAnimationFrame(animate)
   }
 
-  offset(x: number, y: number) {
-    this.offsetX += x
-    this.offsetY += y
+  /** Updates zoom state (calculations happen outside) */
+  public updateZoom(newScale: number, newOffsetX: number, newOffsetY: number) {
+    this.transform.scale = newScale
+    this.transform.offsetX = newOffsetX
+    this.transform.offsetY = newOffsetY
+    // this.render()
+  }
+
+  /** Updates pan state (move to external logic) */
+  public updatePan(newOffsetX: number, newOffsetY: number) {
+    this.transform.offsetX = newOffsetX
+    this.transform.offsetY = newOffsetY
+    // this.render()
   }
 
   zoom(idx: number) {

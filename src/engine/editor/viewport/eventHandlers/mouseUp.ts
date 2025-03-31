@@ -11,18 +11,21 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
   const x = e.clientX - this.rect!.x
   const y = e.clientY - this.rect!.y
 
-  this.pointMouseCurrent.x = x
-  this.pointMouseCurrent.y = y
+  this.mouseCurrentPoint.x = x
+  this.mouseCurrentPoint.y = y
 
   this.mouseDown = false
-  updateSelectionBox(this.selectionBox, {x: 0, y: 0, width: 0, height: 0}, false)
-/*
-  const minX = Math.min(this.pointMouseDown.x, this.pointMouseCurrent.x)
-  const maxX = Math.max(this.pointMouseDown.x, this.pointMouseCurrent.x)
-  const minY = Math.min(this.pointMouseDown.y, this.pointMouseCurrent.y)
-  const maxY = Math.max(this.pointMouseDown.y, this.pointMouseCurrent.y)
+  this.selecting = false
+  this.panning = false
 
-  console.log(minX, maxX, minY, maxY)*/
+  updateSelectionBox(this.selectionBox, {x: 0, y: 0, width: 0, height: 0}, false)
+  /*
+    const minX = Math.min(this.pointMouseDown.x, this.pointMouseCurrent.x)
+    const maxX = Math.max(this.pointMouseDown.x, this.pointMouseCurrent.x)
+    const minY = Math.min(this.pointMouseDown.y, this.pointMouseCurrent.y)
+    const maxY = Math.max(this.pointMouseDown.y, this.pointMouseCurrent.y)
+
+    console.log(minX, maxX, minY, maxY)*/
 }
 
 export default handleMouseUp

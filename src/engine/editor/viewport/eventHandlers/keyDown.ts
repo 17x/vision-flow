@@ -5,8 +5,10 @@ import Viewport from "../viewport.ts"
 function handleKeyDown(this: Viewport, e: KeyboardEvent) {
   // const _t = e.target !== this.wrapper
 
-  this.altKey = e.altKey
-  
+  if (e.code === 'Space') {
+    this.spaceKeyDown = true
+    this.wrapper.style.cursor = "grabbing"
+  }
 }
 
 export default handleKeyDown

@@ -6,18 +6,13 @@ function handleWheel(this: Viewport, event: WheelEvent) {
   event.preventDefault()
 
   const r = switchTouchMode(event)
-  const {zooming, panning, scrolling, zoomFactor, translateX, translateY} = r
-  console.log(translateX, translateY)
+  const {zooming, zoomFactor, translateX, translateY} = r
+  // console.log(translateX, translateY)
+
   if (zooming) {
-    // console.log('zooming')
     this.zoom(zoomFactor)
-  }else{
+  } else {
     this.translateViewport(translateX, translateY)
-
-  }
-
-  if (panning || scrolling) {
-    // console.log('panning')
   }
 }
 
@@ -38,8 +33,6 @@ const switchTouchMode = (() => {
   let translateY = 0
 
   return (event: WheelEvent) => {
-    // clearTimeout(_timer)
-
     shiftX += event.deltaX
     shiftY += event.deltaY
     EVENT_BUFFER.push(event)
@@ -48,26 +41,8 @@ const switchTouchMode = (() => {
     if (EVENT_BUFFER.length > ACTION_THRESHOLD) {
       EVENT_BUFFER.shift()
     }
-    /**
-     * 1. touchpad
-     *  panning
-     *    x: UInt
-     *    y: UInt
-     *  zoom
-     *    x === -0
-     *    y: Float
-     * 2. mouse scroll
-     *    2.1 vertical scroll
-     *      x === -0
-     *      y: Float, abs(value) > 4, and increasing
-     *    2.2 horizontal scroll
-     *      x: UInt, increasing and abs(v) > 40
-     *      y === -0
-     */
-    const {deltaX, deltaY} = event
-    // console.log('wheel', deltaX, deltaY)
 
-    // console.log(isUInt(deltaX), isUInt(deltaY))
+    const {deltaX, deltaY} = event
 
     zooming = false
     panning = false
@@ -76,41 +51,53 @@ const switchTouchMode = (() => {
     translateX = -deltaX
     translateY = -deltaY
 
-    if (EVENT_BUFFER.length >= ACTION_THRESHOLD) {
-      const conditionOnX0 = EVENT_BUFFER.every(e => e.deltaX === -0)
-      const conditionOnY1 = EVENT_BUFFER.every(e => isFloat(e.deltaY))
-      const conditionOnY2 = EVENT_BUFFER.every(e => Math.abs(e.deltaY) > 4)
-      const mouseScrollHorizontalFlag = EVENT_BUFFER.every(e => (Math.abs(e.deltaX) >= 40) && isUInt(e.deltaX) && e.deltaY === -0)
-
-      if (conditionOnX0 && conditionOnY1) {
-        if (conditionOnY2) {
-          scrolling = true
-          translateY = -deltaY
-        } else {
-          zoomFactor = 0.9
-          zooming = true
-        }
-      } else if (mouseScrollHorizontalFlag) {
-        scrolling = true
-        translateX = -deltaX
-      }
+    if (event.altKey) {
+      zooming = true
+      zoomFactor = 0.9
     } else {
-      if (isUInt(deltaX) && isUInt(deltaY)) {
-        panning = true
-        translateX = -deltaX
-        translateY = -deltaY
+      console.log('no')
+      if (EVENT_BUFFER.length >= ACTION_THRESHOLD) {
+        /**
+         * 1. touchpad
+         *  panning
+         *    x: UInt
+         *    y: UInt
+         *  zoom
+         *    x === -0
+         *    y: Float
+         * 2. mouse scroll
+         *    2.1 vertical scroll
+         *      x === -0
+         *      y: Float, abs(value) > 4, and increasing
+         *    2.2 horizontal scroll
+         *      x: UInt, increasing and abs(v) > 40
+         *      y === -0
+         */
+        const conditionOnX0 = EVENT_BUFFER.every(e => e.deltaX === -0)
+        const conditionOnY1 = EVENT_BUFFER.every(e => isFloat(e.deltaY))
+        const conditionOnY2 = EVENT_BUFFER.every(e => Math.abs(e.deltaY) > 4)
+        const mouseScrollHorizontalFlag = EVENT_BUFFER.every(e => (Math.abs(e.deltaX) >= 40) && isUInt(e.deltaX) && e.deltaY === -0)
+
+        if (conditionOnX0 && conditionOnY1) {
+          if (conditionOnY2) {
+            scrolling = true
+            translateY = -deltaY
+          } else {
+            zoomFactor = 0.9
+            zooming = true
+          }
+        } else if (mouseScrollHorizontalFlag) {
+          scrolling = true
+          translateX = -deltaX
+        }
+      } else {
+        if (isUInt(deltaX) && isUInt(deltaY)) {
+          panning = true
+          translateX = -deltaX
+          translateY = -deltaY
+        }
       }
     }
-
-    /* _timer = setTimeout(() => {
-       // console.log([...EVENT_BUFFER])
-       didShiftByDistance = false
-       shiftX = 0
-       shiftY = 0
-       EVENT_BUFFER.length = 0
-       zooming = false
-       panning = false
-     }, DELAY)*/
 
     return {
       zooming,

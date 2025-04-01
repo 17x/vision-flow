@@ -9,6 +9,7 @@ import handleKeyDown from "./eventHandlers/keyDown.ts"
 import handleKeyUp from "./eventHandlers/keyUp.ts"
 import handleWheel from "./eventHandlers/wheel.ts"
 import handleContextMenu from "./eventHandlers/contextMenu.ts"
+import handleTouchPoint from "./eventHandlers/Touch.ts"
 
 // import {canvasToScreen} from "./TransformUtils.ts"
 
@@ -36,6 +37,7 @@ class Viewport {
   readonly handleKeyDown
   readonly handleKeyUp
   readonly handleWheel
+  readonly handleTouchPoint
   readonly handleContextMenu
   readonly eventsController: AbortController
   dpr = 2
@@ -79,6 +81,7 @@ class Viewport {
     this.handleKeyDown = handleKeyDown.bind(this)
     this.handleKeyUp = handleKeyUp.bind(this)
     this.handleWheel = handleWheel.bind(this)
+    this.handleTouchPoint = handleTouchPoint.bind(this)
     this.handleContextMenu = handleContextMenu.bind(this)
     this.eventsController = new AbortController()
     this.init()
@@ -100,13 +103,44 @@ class Viewport {
     window.addEventListener('keydown', this.handleKeyDown, {signal})
     window.addEventListener('keyup', this.handleKeyUp, {signal})
     window.addEventListener('wheel', this.handleWheel, {signal, passive: false})
+    // window.addEventListener('pointermove', this.handleTouchPoint, {signal, passive: false})
     this.wrapper.addEventListener('contextmenu', this.handleContextMenu, {signal})
-
     /*
-        document.addEventListener("touchstart", (event) => {
-          console.log('pre')
-          event.preventDefault() // Stops touch interactions
-        }, {passive: false})
+    const scrollAgency = document.createElement('div')
+    const scrollAgencyChild = document.createElement('div')
+
+    scrollAgency.setAttribute('id', 'scrollAgency')
+    scrollAgency.className = 'opacity-100 w-full h-full absolute overflow-scroll z-100'
+    scrollAgencyChild.style.width = window.innerWidth + 'px'
+    scrollAgencyChild.style.height = window.innerHeight + 'px'
+    scrollAgencyChild.innerHTML = '123144'
+    scrollAgency.appendChild(scrollAgencyChild)
+
+    this.wrapper.appendChild(scrollAgency)
+
+    scrollAgency.addEventListener('scroll', (e) => {
+      console.log('scroll')
+      this.scrolling = true
+      e.preventDefault()
+      e.stopPropagation()
+      return false
+    }, {signal, passive: false})
+
+    scrollAgency.addEventListener('scrollend', (e) => {
+      this.scrolling = false
+      console.log('scroll end')
+
+      e.preventDefault()
+      e.stopPropagation()
+    }, {signal, passive: false})
+
+    scrollAgency.addEventListener('wheel', (e) => {
+      console.log('wheel')
+      // e.preventDefault()
+      e.stopPropagation()
+    })
+
+
 
         document.addEventListener("touchmove", (event) => {
           console.log('pre')

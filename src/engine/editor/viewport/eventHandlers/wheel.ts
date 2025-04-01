@@ -5,8 +5,7 @@ function handleWheel(this: Viewport, event: WheelEvent) {
   if (event.target as HTMLElement !== this.wrapper) return
   event.preventDefault()
 
-  const r = switchTouchMode(event)
-  const {zooming, zoomFactor, translateX, translateY} = r
+  const {zooming, zoomFactor, translateX, translateY} = detectGestures(event)
   // console.log(translateX, translateY)
 
   if (zooming) {
@@ -16,25 +15,21 @@ function handleWheel(this: Viewport, event: WheelEvent) {
   }
 }
 
-const switchTouchMode = (() => {
-  // const THROTTLE_DISTANCE = 100
-  // let didShiftByDistance = false
-  // const DELAY = 500
-  // let _timer: number | undefined
-  let shiftX: number = 0
-  let shiftY: number = 0
+const detectGestures = (() => {
+  // let shiftX: number = 0
+  // let shiftY: number = 0
   const ACTION_THRESHOLD = 3
   const EVENT_BUFFER: WheelEvent[] = []
   let zooming = false
   let panning = false
   let scrolling = false
-  let zoomFactor = 1
+  let zoomFactor = 0
   let translateX = 0
   let translateY = 0
 
   return (event: WheelEvent) => {
-    shiftX += event.deltaX
-    shiftY += event.deltaY
+    // shiftX += event.deltaX
+    // shiftY += event.deltaY
     EVENT_BUFFER.push(event)
 
     // Only read RECENT actions
@@ -47,15 +42,14 @@ const switchTouchMode = (() => {
     zooming = false
     panning = false
     scrolling = false
-    zoomFactor = 1
+    zoomFactor = 0
     translateX = -deltaX
     translateY = -deltaY
 
     if (event.altKey) {
       zooming = true
-      zoomFactor = 0.9
+      zoomFactor = deltaY > 0 ? -1 : 1
     } else {
-      console.log('no')
       if (EVENT_BUFFER.length >= ACTION_THRESHOLD) {
         /**
          * 1. touchpad
@@ -83,7 +77,8 @@ const switchTouchMode = (() => {
             scrolling = true
             translateY = -deltaY
           } else {
-            zoomFactor = 0.9
+            zoomFactor = deltaY > 0 ? -1 : 1
+            console.log(deltaX, deltaY)
             zooming = true
           }
         } else if (mouseScrollHorizontalFlag) {

@@ -9,7 +9,6 @@ import handleKeyDown from "./eventHandlers/keyDown.ts"
 import handleKeyUp from "./eventHandlers/keyUp.ts"
 import handleWheel from "./eventHandlers/wheel.ts"
 import handleContextMenu from "./eventHandlers/contextMenu.ts"
-import handleTouchPoint from "./eventHandlers/Touch.ts"
 
 // import {canvasToScreen} from "./TransformUtils.ts"
 
@@ -50,7 +49,7 @@ class Viewport {
   rect: Rect | undefined
   domResizing: boolean = false
   resizeTimeout: number | undefined
-  currentZoom = 100
+  currentZoom = 1
   offsetX: number = 0
   offsetY: number = 0
   transform: Transform
@@ -81,7 +80,6 @@ class Viewport {
     this.handleKeyDown = handleKeyDown.bind(this)
     this.handleKeyUp = handleKeyUp.bind(this)
     this.handleWheel = handleWheel.bind(this)
-    this.handleTouchPoint = handleTouchPoint.bind(this)
     this.handleContextMenu = handleContextMenu.bind(this)
     this.eventsController = new AbortController()
     this.init()
@@ -172,13 +170,13 @@ class Viewport {
     - f (vertical translation): Translation (movement) along the y-axis. Positive values move the content
       down, negative values move it up.
     */
-    const scale = 1
+    const scale = this.currentZoom
     ctx.save()
-    // console.log(this.offsetX, this.offsetY, scale)
+    console.log(this.offsetX, this.offsetY, scale)
 
     ctx.transform(scale, 0, 0, scale, this.offsetX, this.offsetY)
     ctx.fillStyle = "blue"
-    ctx.fillRect(0, 0, 100 * scale, 100 * scale)
+    ctx.fillRect(0, 0, 100, 100)
     ctx.restore()
 
     const animate = () => {

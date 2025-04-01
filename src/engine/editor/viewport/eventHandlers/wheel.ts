@@ -55,7 +55,7 @@ const switchTouchMode = (() => {
      *      x === -0
      *      y: Float, abs(value) > 4, and increasing
      *    2.2 horizontal scroll
-     *      x: UInt, increasing and
+     *      x: UInt, increasing and abs(v) > 40
      *      y === -0
      */
     const {deltaX, deltaY} = event
@@ -67,18 +67,20 @@ const switchTouchMode = (() => {
     panning = false
 
     if (EVENT_BUFFER.length >= ACTION_THRESHOLD) {
-      const mouseScrollVerticalFlag = EVENT_BUFFER.every(e => e.deltaX === -0 && Math.abs(e.deltaY) > 4)
+      const conditionOnX0 = EVENT_BUFFER.every(e => e.deltaX === -0)
+      const conditionOnY1 = EVENT_BUFFER.every(e => isFloat(e.deltaY))
+      const conditionOnY2 = EVENT_BUFFER.every(e => Math.abs(e.deltaY) > 4)
       const mouseScrollHorizontalFlag = EVENT_BUFFER.every(e => (Math.abs(e.deltaX) >= 40) && isUInt(e.deltaX) && e.deltaY === -0)
-      const touchPadZoomFlag = EVENT_BUFFER.every(e => e.deltaX === -0 && isFloat(e.deltaY))
-
-      // zooming = !mouseScrollVerticalFlag && touchPadZoomFlag
-      // console.log(mouseScrollVerticalFlag, mouseScrollHorizontalFlag)
-
-      if (!mouseScrollVerticalFlag) {
-        zooming = !mouseScrollVerticalFlag && touchPadZoomFlag
-      } else {
-        // scrolling
-        panning = mouseScrollHorizontalFlag
+      
+      if (conditionOnX0 && conditionOnY1) {
+        if (conditionOnY2) {
+          // horizontal scroll
+          panning = true
+        } else {
+          zooming = true
+        }
+      } else if (mouseScrollHorizontalFlag) {
+        panning = true
       }
     } else {
       if (isUInt(deltaX) && isUInt(deltaY)) {

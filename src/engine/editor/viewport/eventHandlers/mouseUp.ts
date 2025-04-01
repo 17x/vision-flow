@@ -11,8 +11,8 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
   const x = e.clientX - this.rect!.x
   const y = e.clientY - this.rect!.y
 
-  this.mouseCurrentPoint.x = x
-  this.mouseCurrentPoint.y = y
+  this.mouseMovePoint.x = x
+  this.mouseMovePoint.y = y
 
   this.mouseDown = false
   this.selecting = false

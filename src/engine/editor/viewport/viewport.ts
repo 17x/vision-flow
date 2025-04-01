@@ -44,7 +44,7 @@ class Viewport {
   panning = false
   selecting = false
   mouseDownPoint: Position = {x: 0, y: 0}
-  mouseCurrentPoint: Position = {x: 0, y: 0}
+  mouseMovePoint: Position = {x: 0, y: 0}
   rect: Rect | undefined
   domResizing: boolean = false
   resizeTimeout: number | undefined
@@ -102,33 +102,44 @@ class Viewport {
     window.addEventListener('wheel', this.handleWheel, {signal, passive: false})
     this.wrapper.addEventListener('contextmenu', this.handleContextMenu, {signal})
 
-    document.addEventListener("touchstart", (event) => {
-      console.log('pre')
-      event.preventDefault() // Stops touch interactions
-    }, {passive: false})
+    /*
+        document.addEventListener("touchstart", (event) => {
+          console.log('pre')
+          event.preventDefault() // Stops touch interactions
+        }, {passive: false})
 
-    document.addEventListener("touchmove", (event) => {
-      console.log('pre')
-      event.preventDefault() // Stops scrolling with touchpad
-    }, {passive: false})
+        document.addEventListener("touchmove", (event) => {
+          console.log('pre')
+          event.preventDefault() // Stops scrolling with touchpad
+        }, {passive: false})
 
-    document.addEventListener("touchend", (event) => {
-      console.log('pre')
-      event.preventDefault()
-    }, {passive: false})
+        document.addEventListener("touchend", (event) => {
+          console.log('pre')
+          event.preventDefault()
+        }, {passive: false})
 
-    document.addEventListener("gesturestart", (event) => {
-      console.log('gesturestart')
-      event.preventDefault()
-    })
-    document.addEventListener("gesturechange", (event) => {
-      console.log('gesturechange')
-      event.preventDefault()
-    })
-    document.addEventListener("gestureend", (event) => {
-      console.log('gestureend')
-      event.preventDefault()
-    })
+        document.addEventListener("gesturestart", (event) => {
+          console.log('gesturestart')
+          event.preventDefault()
+        })
+        document.addEventListener("gesturechange", (event) => {
+          console.log('gesturechange')
+          event.preventDefault()
+        })
+        document.addEventListener("gestureend", (event) => {
+          console.log('gestureend')
+          event.preventDefault()
+        })*/
+  }
+
+  translateViewport(x: number, y: number) {
+    this.offsetX += x
+    this.offsetY += y
+
+    // this.offsetX = this.offsetX < 0 ? 0 : this.offsetX
+    // this.offsetY = this.offsetY < 0 ? 0 : this.offsetY
+    // console.log(this.offsetX, this.offsetY)
+    this.renderMainCanvas()
   }
 
   updateScrollBar() {
@@ -170,19 +181,30 @@ class Viewport {
   }
 
   renderMainCanvas() {
-    const {mainCTX: ctx, transform: {scale}} = this
+    const {mainCTX: ctx} = this
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-    console.log(this.transform)
-    // Example: Draw a virtual module at (100, 100) in canvas space
-    // const screenPos = canvasToScreen(this.transform, 100, 100)
-    // In the Canvas API, transformations are applied in right-to-left order,
-    // meaning that the transformations are applied
-    // starting from the last one and moving toward the first one.
-    // ctx.transform()
-    console.log(scale)
+    /*
+      ctx transform parameters:
+    - a (horizontal scaling): Scaling factor along the x-axis. Values greater than 1 scale the content,
+      and values less than 1 shrink the content along the x-axis.
+    - b (vertical skewing): Skewing factor for the x-axis. Non-zero values will skew the content along the x-axis.
+    - c (horizontal skewing): Skewing factor for the y-axis. Non-zero values will skew the content along the y-axis.
+    - d (vertical scaling): Scaling factor along the y-axis. Values greater than 1 scale the content,
+      and values less than 1 shrink the content along the y-axis.
+    - e (horizontal translation): Translation (movement) along the x-axis. Positive values move the content
+      to the right, negative values move it to the left.
+    - f (vertical translation): Translation (movement) along the y-axis. Positive values move the content
+      down, negative values move it up.
+    */
+    const scale = 1
+    ctx.save()
+    // console.log(this.offsetX, this.offsetY, scale)
+
+    ctx.transform(scale, 0, 0, scale, this.offsetX, this.offsetY)
     ctx.fillStyle = "blue"
-    ctx.fillRect(0, 0, 50 * scale, 50 * scale)
+    ctx.fillRect(0, 0, 100 * scale, 100 * scale)
+    ctx.restore()
 
     const animate = () => {
       render({

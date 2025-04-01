@@ -11,11 +11,8 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
 
   if (!inViewport || !isLeftClick || this.domResizing) return
 
-  const x = e.clientX - this.rect!.x
-  const y = e.clientY - this.rect!.y
-
-  this.mouseDownPoint.x = x
-  this.mouseDownPoint.y = y
+  this.mouseDownPoint.x = e.clientX - this.rect!.x
+  this.mouseDownPoint.y = e.clientY - this.rect!.y
   this.mouseDown = true
 
   if (this.spaceKeyDown) {

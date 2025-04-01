@@ -4,27 +4,19 @@ import {updateSelectionBox} from "../domManipulations.ts"
 function handleMouseMove(this: Viewport, e: MouseEvent) {
   if (this.domResizing) return
 
-  const x = e.clientX - this.rect!.x
-  const y = e.clientY - this.rect!.y
-  this.mouseCurrentPoint.x = x
-  this.mouseCurrentPoint.y = y
+  this.mouseMovePoint.x = e.clientX - this.rect!.x
+  this.mouseMovePoint.y = e.clientY - this.rect!.y
 
   if (this.panning) {
-    // console.log(x, y)
-    console.log(
-      e.movementX,
-      e.movementY
-    )
+    this.translateViewport(e.movementX, e.movementY)
+
     return
   }
 
   if (this.selecting) {
-    updateSelectionBox(this.selectionBox, calcSelectionBox(this.mouseDownPoint, this.mouseCurrentPoint))
+    updateSelectionBox(this.selectionBox, calcSelectionBox(this.mouseDownPoint, this.mouseMovePoint))
     return
   }
-
-  // e.preventDefault()
-  // e.stopPropagation()
 }
 
 const calcSelectionBox = ({x: x1, y: y1}: Position, {x: x2, y: y2}: Position) => {

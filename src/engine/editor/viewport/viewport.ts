@@ -266,7 +266,7 @@ class Viewport {
 
     // this.offsetX = this.offsetX < 0 ? 0 : this.offsetX
     // this.offsetY = this.offsetY < 0 ? 0 : this.offsetY
-    // console.log(this.offsetX, this.offsetY)
+    console.log(this.offsetX, this.offsetY)
     this.renderMainCanvas()
   }
 

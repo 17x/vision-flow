@@ -7,16 +7,18 @@ function handleWheel(this: Viewport, event: WheelEvent) {
 
   const r = switchTouchMode(event)
   const {zooming, panning, scrolling, zoomFactor, translateX, translateY} = r
-  console.log(r)
+  console.log(translateX, translateY)
   if (zooming) {
-    console.log('zooming')
+    // console.log('zooming')
+    this.zoom(zoomFactor)
+  }else{
+    this.translateViewport(translateX, translateY)
+
   }
 
-  if (panning) {
-    console.log('panning')
+  if (panning || scrolling) {
+    // console.log('panning')
   }
-  this.zoom(zoomFactor)
-  this.translateViewport(translateX, translateY)
 }
 
 const switchTouchMode = (() => {
@@ -71,8 +73,8 @@ const switchTouchMode = (() => {
     panning = false
     scrolling = false
     zoomFactor = 1
-    translateX = 0
-    translateY = 0
+    translateX = -deltaX
+    translateY = -deltaY
 
     if (EVENT_BUFFER.length >= ACTION_THRESHOLD) {
       const conditionOnX0 = EVENT_BUFFER.every(e => e.deltaX === -0)

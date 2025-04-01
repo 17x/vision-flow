@@ -316,7 +316,7 @@ class Editor {
   }
 
   render() {
-    // this.viewport.render()
+    this.viewport.render()
   }
 
   //eslint-disable-block

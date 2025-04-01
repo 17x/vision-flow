@@ -1,5 +1,4 @@
 import Viewport from "../viewport.ts"
-import zoom from "../../../../components/statusBar/zoom";
 
 function handleWheel(this: Viewport, event: WheelEvent) {
   // Prevent page zoom
@@ -12,7 +11,7 @@ function handleWheel(this: Viewport, event: WheelEvent) {
   if (zooming) {
     this.zoom(zoomFactor)
   } else {
-    console.log('pad')
+    // console.log('pad')
     this.translateViewport(translateX, translateY)
   }
 }

@@ -14,26 +14,27 @@ interface RenderProps {
 }
 
 const render = ({ctx, modules, dpr, transform}: RenderProps): void => {
-  const rects: RectangleRenderProps[] = [
-    {
-      x: 0,
-      y: 0,
-      width: 500 * dpr,
-      height: 1000 * dpr,
-      opacity: 0,
-      lineWidth: 1,
-      lineColor: '#dfdfdf',
-    }
-  ]
+  const frame: RectangleRenderProps = {
+    x: 400,
+    y: 500,
+    width: 800,
+    height: 1000,
+    opacity: 100,
+    lineWidth: 1,
+    lineColor: '#000000',
+    fillColor: '#dfdfdf66',
+  }
+
+  const rects: RectangleRenderProps[] = [frame]
   const lines: LineRenderProps[] = []
   const texts: unknown = []
 
-  console.log(dpr)
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(
     0,
     0,
-    ctx.canvas.width * dpr,
-    ctx.canvas.height * dpr
+    ctx.canvas.width,
+    ctx.canvas.height
   )
 
   if (transform) {
@@ -50,7 +51,9 @@ const render = ({ctx, modules, dpr, transform}: RenderProps): void => {
     - f (vertical translation): Translation (movement) along the y-axis. Positive values move the content
       down, negative values move it up.
     */
-    ctx.setTransform(...transform)
+    console.log(transform)
+    const [a, b, c, d, e, f] = transform
+    ctx.setTransform(a, b, c, d, e * dpr, f * dpr)
   }
 
   modules.forEach((module) => {

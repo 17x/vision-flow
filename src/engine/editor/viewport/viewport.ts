@@ -112,7 +112,7 @@ class Viewport {
     // this.offsetX = this.offsetX < 0 ? 0 : this.offsetX
     // this.offsetY = this.offsetY < 0 ? 0 : this.offsetY
     // console.log(this.offsetX, this.offsetY)
-    this.renderMainCanvas()
+    this.render()
   }
 
   updateScrollBar() {
@@ -153,6 +153,11 @@ class Viewport {
     this.editor.container.innerHTML = ''
   }
 
+  render() {
+    this.renderMainCanvas()
+    this.renderSelectionCanvas()
+  }
+
   renderMainCanvas() {
     const animate = () => {
       render({
@@ -167,10 +172,10 @@ class Viewport {
   }
 
   renderSelectionCanvas() {
-    this.selectionCTX.scale(this.dpr, this.dpr)
+    // this.selectionCTX.scale(this.dpr, this.dpr)
 
     const animate = () => {
-      selectionRender.call(this.editor.selectionManager, this.selectionCTX)
+      selectionRender.call(this)
     }
 
     requestAnimationFrame(animate)
@@ -202,7 +207,7 @@ class Viewport {
       this.currentZoom = 5
     }
     console.log(this.currentZoom)
-    this.renderMainCanvas()
+    this.render()
   }
 }
 

@@ -49,6 +49,7 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
       ctx.lineJoin = 'round'
     }
 
+    // return
     // Draw a rounded rectangle or regular rectangle
     ctx.beginPath()
 
@@ -86,11 +87,6 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
     // Restore the context to avoid affecting subsequent drawings
     ctx.restore()
   })
-
-  /*console.log(`
-  Total Rectangles to Render: ${rects.length}
-  Rectangles in Queue: ${rectQueue.length}
-`);*/
 }
 
 export default rectRender

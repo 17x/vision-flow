@@ -1,8 +1,8 @@
 import Editor from "../editor.ts"
 // import render from "./render.ts"
 
-const CopyDeltaX = 10
-const CopyDeltaY = 10
+const CopyDeltaX = 50
+const CopyDeltaY = 100
 
 class SelectionManager {
   selectedModules: Set<UID> = new Set()
@@ -70,7 +70,7 @@ class SelectionManager {
   public clear(): void {
     this.selectedModules.clear()
     this.isSelectAll = false
-    // render.call(this)
+    this.render()
     this.editor.events.onSelectionUpdated?.(new Set(), null)
   }
 
@@ -126,6 +126,7 @@ class SelectionManager {
   }
 
   render() {
+    this.editor.viewport.renderSelectionCanvas()
     // render.call(this)
   }
 

@@ -10,8 +10,6 @@ import handleKeyUp from "./eventHandlers/keyUp.ts"
 import handleWheel from "./eventHandlers/wheel.ts"
 import handleContextMenu from "./eventHandlers/contextMenu.ts"
 
-// import {canvasToScreen} from "./TransformUtils.ts"
-
 export interface Transform {
   scale: number;
   offsetX: number;
@@ -36,13 +34,13 @@ class Viewport {
   readonly handleKeyDown
   readonly handleKeyUp
   readonly handleWheel
-  readonly handleTouchPoint
   readonly handleContextMenu
   readonly eventsController: AbortController
   dpr = 2
   spaceKeyDown = false
   mouseDown = false
   panning = false
+  zooming = false
   selecting = false
   mouseDownPoint: Position = {x: 0, y: 0}
   mouseMovePoint: Position = {x: 0, y: 0}

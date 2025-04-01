@@ -80,7 +80,7 @@ const render = ({ctx, modules, dpr, transform}: RenderProps): void => {
         rects.push({x, y, width, height, fillColor, opacity, lineWidth, lineColor, rotation, gradient, radius})
       }
 
-      texts.push({x, y, width, height, id: id.match(/\d+$/g)![0]})
+      texts.push({x:x+10, y:y+10, width, height, id: id.match(/\d+$/g)![0]})
     }
 
     if (module.type === 'connector') {

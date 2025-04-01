@@ -5,8 +5,10 @@ function handleWheel(this: Viewport, event: WheelEvent) {
   if (event.target as HTMLElement !== this.wrapper) return
   event.preventDefault()
 
-  const {zooming, zoomFactor, translateX, translateY} = detectGestures(event)
+  const {zooming, panning, zoomFactor, translateX, translateY} = detectGestures(event)
   // console.log(translateX, translateY)
+  this.panning = panning
+  this.zooming = zooming
 
   if (zooming) {
     this.zoom(zoomFactor)

@@ -154,39 +154,16 @@ class Viewport {
   }
 
   renderMainCanvas() {
-    const {mainCTX: ctx} = this
-
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-    /*
-      ctx transform parameters:
-    - a (horizontal scaling): Scaling factor along the x-axis. Values greater than 1 scale the content,
-      and values less than 1 shrink the content along the x-axis.
-    - b (vertical skewing): Skewing factor for the x-axis. Non-zero values will skew the content along the x-axis.
-    - c (horizontal skewing): Skewing factor for the y-axis. Non-zero values will skew the content along the y-axis.
-    - d (vertical scaling): Scaling factor along the y-axis. Values greater than 1 scale the content,
-      and values less than 1 shrink the content along the y-axis.
-    - e (horizontal translation): Translation (movement) along the x-axis. Positive values move the content
-      to the right, negative values move it to the left.
-    - f (vertical translation): Translation (movement) along the y-axis. Positive values move the content
-      down, negative values move it up.
-    */
-    const scale = this.currentZoom
-    ctx.save()
-    console.log(this.offsetX, this.offsetY, scale)
-
-    ctx.transform(scale, 0, 0, scale, this.offsetX, this.offsetY)
-    ctx.fillStyle = "blue"
-    ctx.fillRect(0, 0, 100, 100)
-    ctx.restore()
-
     const animate = () => {
       render({
         ctx: this.mainCTX,
         modules: this.editor.moduleMap,
+        dpr: this.dpr,
+        transform: [this.currentZoom, 0, 0, this.currentZoom, this.offsetX, this.offsetY]
       })
     }
 
-    // requestAnimationFrame(animate)
+    requestAnimationFrame(animate)
   }
 
   renderSelectionCanvas() {
@@ -218,9 +195,13 @@ class Viewport {
     // console.log(idx)
     this.currentZoom += idx
     // console.log(this.currentZoom)
-    /*if (this.currentZoom < 1) {
-      this.currentZoom = 1
-    }*/
+    if (this.currentZoom < .1) {
+      this.currentZoom = .1
+    }
+    if (this.currentZoom > 5) {
+      this.currentZoom = 5
+    }
+    console.log(this.currentZoom)
     this.renderMainCanvas()
   }
 }

@@ -105,6 +105,100 @@ class Viewport {
     window.addEventListener('wheel', this.handleWheel, {signal, passive: false})
     // window.addEventListener('pointermove', this.handleTouchPoint, {signal, passive: false})
     this.wrapper.addEventListener('contextmenu', this.handleContextMenu, {signal})
+    window.addEventListener('wheel', check, {passive: false});
+
+    /*
+    * TOUCHPAD panning:
+    * x: UInt
+    * */
+
+    function check(event: WheelEvent) {
+      /**
+       * 1. touchpad
+       *  panning
+       *    x: UInt
+       *    y: UInt
+       *  zoom
+       *    x === -0
+       *    y: Float
+       * 2. mouse scroll
+       *    2.1 vertical scroll
+       *      x === -0
+       *      y: Float, abs(value) > 4, and increasing
+       *    2.2 horizontal scroll
+       *      x: UInt, increasing and
+       *      y === -0
+       */
+      const {deltaX, deltaY} = event
+      // console.log('wheel', deltaX, deltaY)
+      // console.log(isUInt(deltaX), isUInt(deltaY))
+      if (isUInt(deltaX) && isUInt(deltaY)) {
+        console.log('panning')
+      }
+
+      event.preventDefault()
+    }
+
+    function isUInt(v: number) {return !isFloat(v)}
+
+    function isFloat(v: number) {return Math.abs(v) % 1 !== 0}
+
+    function handleWheelEvent(event) {
+      // Normalize the event to support cross-browser compatibility
+      // event = event || window.event;
+      console.log(event.deltaX, event.deltaY)
+      // Prevent default scrolling behavior (like page scroll)
+      event.preventDefault();
+      return
+
+      // Check if the event is coming from the mouse (Alt key is pressed) or the touchpad (no Alt key)
+      if (event.altKey) {
+        // Mouse (with Alt key): Zooming functionality
+        handleZoom(event);
+      } else {
+        // Touchpad (without Alt key): Zooming or panning based on the scroll direction
+        handlePanningOrZooming(event);
+      }
+    }
+
+// Handle zooming with the mouse (when Alt key is pressed)
+    function handleZoom(event) {
+      // Zoom in or out based on the wheel scroll direction (deltaY or deltaX)
+      let zoomFactor = event.deltaY < 0 || event.deltaX < 0 ? 1.1 : 0.9; // Zoom in or out
+
+      // Apply zoom (scale the body or container element as an example)
+      let scale = document.body.style.transform || "scale(1)";
+      scale = parseFloat(scale.match(/[\d.]+/)[0]) * zoomFactor;
+      // document.body.style.transform = `scale(${scale})`;
+
+      console.log(`Zooming ${event.deltaX} ${event.deltaY < 0 ? 'In' : 'Out'}, deltaY: ${event.deltaY}`);
+    }
+
+// Handle panning or zooming with the touchpad or mouse without Alt key
+    function handlePanningOrZooming(event) {
+      // If it's a touchpad or mouse wheel without Alt, zooming and panning can be handled as follows:
+
+      if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+        // Vertical scroll: Zoom in or out (based on deltaY)
+        handleZoom(event); // Zooming functionality for both touchpad or mouse
+      } else {
+        // Horizontal scroll: Panning the window (left or right)
+        handlePanning(event); // Horizontal panning functionality
+      }
+    }
+
+// Handle panning (scrolling horizontally or vertically)
+    function handlePanning(event) {
+      // For horizontal panning (deltaX) or vertical panning (deltaY)
+      let panX = event.deltaX;
+      let panY = event.deltaY;
+
+      // Apply panning (scrolling the window or canvas)
+      // window.scrollBy(panX, panY);  // Panning the page/canvas
+      console.log(`Panning: deltaX = ${panX}, deltaY = ${panY}`);
+    }
+
+// Example: Attach the wheel event handler to the container or document
     /*
     const scrollAgency = document.createElement('div')
     const scrollAgencyChild = document.createElement('div')

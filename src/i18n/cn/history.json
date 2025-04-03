@@ -1,0 +1,26 @@
+{
+  "init": {
+    "label": "初始化",
+    "tooltip": "初始化文件"
+  },
+  "addModules": {
+    "label": "添加模块",
+    "tooltip": "向文件添加新模块"
+  },
+  "deleteModules": {
+    "label": "删除模块",
+    "tooltip": "从文件中移除模块"
+  },
+  "pasteModules": {
+    "label": "粘贴模块",
+    "tooltip": "将模块粘贴到文件中"
+  },
+  "duplicateModules": {
+    "label": "复制模块",
+    "tooltip": "复制选定的模块"
+  },
+  "modifyModules": {
+    "label": "修改模块",
+    "tooltip": "修改模块的属性"
+  }
+}

@@ -4,6 +4,7 @@ import FileContext, {FileMap, FileType} from "./FileContext.tsx"
 import EditorProvider from "../editorContext/EditorProvider.tsx"
 import MOCK_FILE_MAP from "../../mock.ts"
 import Files from "../files/Files.tsx"
+import LanguageSwitcher from "../language/languageSwitcher.tsx";
 
 const FileProvider: FC = () => {
   const fileMap = useRef<FileMap>(new Map())
@@ -84,7 +85,10 @@ const FileProvider: FC = () => {
       handleCreating,
     }}>
       <div className={'w-full h-full flex flex-col'}>
-        <Files/>
+        <div className={'flex justify-between'}>
+          <Files/>
+         <LanguageSwitcher />
+        </div>
         
         <div className={'flex-1 overflow-hidden'}>
           {

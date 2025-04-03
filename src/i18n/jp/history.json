@@ -1,0 +1,26 @@
+{
+  "init": {
+    "label": "初期化",
+    "tooltip": "ファイルを初期化する"
+  },
+  "addModules": {
+    "label": "モジュールを追加",
+    "tooltip": "ファイルに新しいモジュールを追加する"
+  },
+  "deleteModules": {
+    "label": "モジュールを削除",
+    "tooltip": "ファイルからモジュールを削除する"
+  },
+  "pasteModules": {
+    "label": "モジュールを貼り付け",
+    "tooltip": "ファイルにモジュールを貼り付ける"
+  },
+  "duplicateModules": {
+    "label": "モジュールを複製",
+    "tooltip": "選択したモジュールを複製する"
+  },
+  "modifyModules": {
+    "label": "モジュールを修正",
+    "tooltip": "モジュールのプロパティを修正する"
+  }
+}

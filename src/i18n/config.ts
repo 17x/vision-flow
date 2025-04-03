@@ -7,33 +7,31 @@ import cnHistory from './cn/history.json'
 import jpMenu from './jp/menu.json'
 import jpHistory from './jp/history.json'
 
-const en = {
-  translation: {
-    ...enMenu,
-    ...enHistory,
-  }
-}
-const cn = {
-  translation: {
-    ...cnMenu,
-    ...cnHistory,
-  }
-}
-const jp = {
-  translation: {
-    ...jpMenu,
-    ...jpHistory,
+const resources = {
+  en: {
+    translation: {
+      ...enMenu,
+      ...enHistory,
+    }
+  },
+  cn: {
+    translation: {
+      ...cnMenu,
+      ...cnHistory,
+    }
+  },
+  jp: {
+    translation: {
+      ...jpMenu,
+      ...jpHistory,
+    }
   }
 }
 
 i18n
   .use(initReactI18next)
   .init({
-    resources: {
-      en,
-      cn,
-      jp
-    },
+    resources,
     lng: "en",
     fallbackLng: "en",
     // returnObject: true,

@@ -1,10 +1,10 @@
 import {useSelector} from "react-redux"
 import {RootState} from "../../../redux/store.ts"
-import {DynamicIcon} from 'lucide-react/dynamic'
 import {LayerDown, LayerToBottom, LayerToTop, LayerUp} from "./Icons/LayerIcons.tsx"
 import {Fragment, ReactNode, useContext} from "react"
 import {ActionCode} from "../../../engine/editor/type"
 import EditorContext from "../../editorContext/EditorContext.tsx"
+import {NamedIcon} from "../../lib/icon/icon.tsx";
 
 const IconSize = 20
 const IconColor = 'text-black'
@@ -37,7 +37,8 @@ const Toolbar: React.FC = () => {
               Icon = <LayerToBottom size={IconSize} className={IconColor}/>
               break
             default:
-              Icon = <DynamicIcon size={IconSize} name={icon}/>
+              console.log(icon)
+              Icon = <NamedIcon size={IconSize} iconName={icon}/>
               break
           }
 

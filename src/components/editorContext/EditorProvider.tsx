@@ -116,9 +116,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       applyHistoryNode,
       executeAction
     }}>
-      <div ref={elementRef} data-focused={focused} tabIndex={0}
-           className={'outline-0 w-full h-full flex flex-col'}
-           autoFocus>
+      <div ref={elementRef} data-focused={focused} autoFocus tabIndex={0}
+           className={'outline-0 w-full h-full flex flex-col'}>
         <ShortcutListener/>
 
         <Header/>

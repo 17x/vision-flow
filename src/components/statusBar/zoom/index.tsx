@@ -2,7 +2,7 @@ import React, {useRef, useState} from "react"
 import {useDispatch, useSelector} from "react-redux"
 import {AppDispatch, RootState} from "../../../redux/store.ts"
 import {setZoom} from "../../../redux/statusBarSlice.ts"
-import {DynamicIcon} from 'lucide-react/dynamic'
+import {ChevronDown, ChevronUp} from "lucide-react"
 
 export type ZoomLevels = number | 'fit window'
 
@@ -62,7 +62,9 @@ const ZoomSelect: React.FC<unknown> = () => {
         onClick={() => setIsOpen(!isOpen)}
         className="text-gray-800 flex trasition items-center cursor-pointer"
       >
-        <DynamicIcon name={isOpen ? 'chevron-up' : 'chevron-down'} className="w-5 h-5"/>
+        {
+          isOpen ? <ChevronUp className="w-5 h-5"/> : <ChevronDown className="w-5 h-5"/>
+        }
       </button>
       {
         isOpen && <div className={'fixed w-full h-full'} onClick={() => {

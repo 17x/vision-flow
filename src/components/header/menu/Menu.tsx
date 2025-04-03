@@ -27,7 +27,7 @@ const MenuBar: React.FC = () => {
       window.removeEventListener("click", detectClose)
     }
   })
-  console.log(t('newFile.label'));
+
   return <div className="h-8 text-sm select-none border-b border-gray-200 box-border">
     <div ref={componentRef} className={'pl-2 h-full inline-flex'}>
       {

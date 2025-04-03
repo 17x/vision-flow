@@ -1,5 +1,4 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit"
-// import {IconName} from "lucide-react/dynamic"
 
 export interface ToolbarActionType {
   id: string

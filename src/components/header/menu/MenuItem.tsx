@@ -1,8 +1,8 @@
 import React, {useContext, useState} from "react"
 import {useTranslation} from "react-i18next"
 import {NestedActions} from "./Menu.tsx"
-import {DynamicIcon} from 'lucide-react/dynamic'
 import EditorContext from "../../editorContext/EditorContext.tsx"
+import {ChevronRight} from "lucide-react";
 
 interface MenuItemProps {
   menu: NestedActions
@@ -39,7 +39,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
   >
     <div className="px-4 w-full h-full flex justify-between items-center whitespace-nowrap">
       <span>{t(menu.id + '.label')}</span>
-      {hasChildren && <DynamicIcon name={'chevron-right'} size={18}/>}
+      {hasChildren && <ChevronRight size={18}/>}
 
     </div>
     {

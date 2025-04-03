@@ -197,12 +197,16 @@ class Viewport {
     const animate = () => {
       // cross line
       let {x, y} = this.mouseMovePoint
+      const {dpr} = this
 
-      x += this.offsetX * this.dpr
-      y += this.offsetY * this.dpr
-      x *= this.currentZoom * this.dpr
-      y *= this.currentZoom * this.dpr
+      x *= dpr
+      y *= dpr
+      x -= (this.offsetX * dpr)
+      y -= (this.offsetY * dpr)
+      x /= this.currentZoom
+      y /= this.currentZoom
 
+      console.log(this.currentZoom, this.dpr)
       this.selectionCTX.textBaseline = 'hanging'
       this.selectionCTX.font = '24px sans-serif'
       this.selectionCTX.fillText('hello', x, y, 100)

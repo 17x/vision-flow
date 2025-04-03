@@ -1,6 +1,6 @@
 import {useContext} from "react"
 import FileContext from "../fileContext/FileContext.tsx"
-import {Plus} from "lucide-react";
+import {LuPlus} from "react-icons/lu";
 
 const Files: React.FC = () => {
   const basicTabClasses = ' group py-2 px-6 relative transition flex items-center">'
@@ -33,7 +33,7 @@ const Files: React.FC = () => {
     }
 
     <button className={'hover:cursor-pointer hover:opacity-100 cursor-pointer opacity-50'}>
-      <Plus size={18} onClick={() => {
+      <LuPlus size={18} onClick={() => {
         handleCreating(true)
       }}/>
     </button>

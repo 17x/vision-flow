@@ -1,25 +1,35 @@
-import {Cross, Group, Redo, Save, Trash, Undo, Ungroup, Lock, Unlock} from "lucide-react";
+import {
+  LuCross,
+  LuGroup,
+  LuRedo,
+  LuSave,
+  LuTrash,
+  LuUndo,
+  LuUngroup,
+  LuLock,
+  LuLockOpen
+} from "react-icons/lu";
 
 export const NamedIcon: React.FC<{ size: number, iconName: string }> = ({iconName, size}) => {
   switch (iconName) {
     case "save":
-      return <Save size={size}/>;
+      return <LuSave size={size}/>;
     case "undo":
-      return <Undo size={size}/>;
+      return <LuUndo size={size}/>;
     case "redo":
-      return <Redo size={size}/>;
+      return <LuRedo size={size}/>;
     case "trash":
-      return <Trash size={size}/>;
+      return <LuTrash size={size}/>;
     case "cross":
-      return <Cross size={size}/>;
+      return <LuCross size={size}/>;
     case "group":
-      return <Group size={size}/>;
+      return <LuGroup size={size}/>;
     case "ungroup":
-      return <Ungroup size={size}/>;
+      return <LuUngroup size={size}/>;
     case "lock":
-      return <Lock size={size}/>;
+      return <LuLock size={size}/>;
     case "unlock":
-      return <Unlock size={size}/>;
+      return <LuLockOpen size={size}/>;
     default:
       return null;
   }

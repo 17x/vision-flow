@@ -1,5 +1,5 @@
 import React, {FC, useState} from "react";
-import {Globe} from 'lucide-react'
+import {LuGlobe} from 'react-icons/lu'
 
 interface SelectProps {
   children: React.ReactNode[]
@@ -13,7 +13,7 @@ const Select: FC<SelectProps> = ({children, defaultValue}) => {
     <div className={'flex items-center'} onClick={() => {
       setShowList(!showList)
     }}>
-      <Globe/>
+      <LuGlobe/>
       {defaultValue}</div>
 
     {

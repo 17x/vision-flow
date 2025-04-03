@@ -2,7 +2,7 @@ import React, {useRef, useState} from "react"
 import {useDispatch, useSelector} from "react-redux"
 import {AppDispatch, RootState} from "../../../redux/store.ts"
 import {setZoom} from "../../../redux/statusBarSlice.ts"
-import {ChevronDown, ChevronUp} from "lucide-react"
+import {LuChevronDown, LuChevronUp} from "react-icons/lu"
 
 export type ZoomLevels = number | 'fit window'
 
@@ -63,7 +63,7 @@ const ZoomSelect: React.FC<unknown> = () => {
         className="text-gray-800 flex trasition items-center cursor-pointer"
       >
         {
-          isOpen ? <ChevronUp className="w-5 h-5"/> : <ChevronDown className="w-5 h-5"/>
+          isOpen ? <LuChevronUp className="w-5 h-5"/> : <LuChevronDown className="w-5 h-5"/>
         }
       </button>
       {

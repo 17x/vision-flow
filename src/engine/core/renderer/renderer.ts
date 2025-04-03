@@ -27,7 +27,7 @@ const render = ({ctx, modules, dpr, transform}: RenderProps): void => {
 
   const rects: RectangleRenderProps[] = [frame]
   const lines: LineRenderProps[] = []
-  const texts: unknown = []
+  const texts = []
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(
@@ -51,7 +51,7 @@ const render = ({ctx, modules, dpr, transform}: RenderProps): void => {
     - f (vertical translation): Translation (movement) along the y-axis. Positive values move the content
       down, negative values move it up.
     */
-    console.log(transform)
+    // console.log(transform)
     const [a, b, c, d, e, f] = transform
     ctx.setTransform(a, b, c, d, e * dpr, f * dpr)
   }

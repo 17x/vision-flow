@@ -16,7 +16,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
   const {executeAction} = useContext(EditorContext)
 
   const handleClick = () => {
-    console.log(menu)
+    console.log(menu.id)
     if (menu.children || subOpen) return
 
     executeAction(menu.id)

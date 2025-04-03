@@ -51,6 +51,7 @@ function selectionRender(this: Viewport) {
       })
     })
 
+
     rectRender(ctx, rects)
     circleRender(ctx, dots)
   }

@@ -9,7 +9,7 @@ import handleKeyDown from "./eventHandlers/keyDown.ts"
 import handleKeyUp from "./eventHandlers/keyUp.ts"
 import handleWheel from "./eventHandlers/wheel.ts"
 import handleContextMenu from "./eventHandlers/contextMenu.ts"
-import setCanvasRenderConfig from "./setCanvasRenderConfig.tsx";
+import resetCanvas from "./resetCanvas.tsx";
 
 export interface Transform {
   scale: number;
@@ -168,10 +168,18 @@ class Viewport {
 
   // Update all usually means the viewport has been moved or zoomed
   render() {
-    setCanvasRenderConfig(this.mainCTX, this.dpr, [this.currentZoom, 0, 0, this.currentZoom, this.offsetX, this.offsetY])
-    setCanvasRenderConfig(this.selectionCTX, this.dpr, [this.currentZoom, 0, 0, this.currentZoom, this.offsetX, this.offsetY])
+    this.resetMainCanvas()
+    this.resetSelectionCanvas()
     this.renderMainCanvas()
     this.renderSelectionCanvas()
+  }
+
+  resetMainCanvas() {
+    resetCanvas(this.mainCTX, this.dpr, [this.currentZoom, 0, 0, this.currentZoom, this.offsetX, this.offsetY])
+  }
+
+  resetSelectionCanvas() {
+    resetCanvas(this.selectionCTX, this.dpr, [this.currentZoom, 0, 0, this.currentZoom, this.offsetX, this.offsetY])
   }
 
   renderMainCanvas() {
@@ -187,7 +195,20 @@ class Viewport {
 
   renderSelectionCanvas() {
     const animate = () => {
+      // cross line
+      let {x, y} = this.mouseMovePoint
+
+      x += this.offsetX * this.dpr
+      y += this.offsetY * this.dpr
+      x *= this.currentZoom * this.dpr
+      y *= this.currentZoom * this.dpr
+
+      this.selectionCTX.textBaseline = 'hanging'
+      this.selectionCTX.font = '24px sans-serif'
+      this.selectionCTX.fillText('hello', x, y, 100)
+      // console.log(x, y)
       selectionRender.call(this)
+
     }
 
     requestAnimationFrame(animate)

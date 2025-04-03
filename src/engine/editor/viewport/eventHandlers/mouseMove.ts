@@ -3,9 +3,11 @@ import {updateSelectionBox} from "../domManipulations.ts"
 
 function handleMouseMove(this: Viewport, e: MouseEvent) {
   if (this.domResizing) return
-
   this.mouseMovePoint.x = e.clientX - this.rect!.x
   this.mouseMovePoint.y = e.clientY - this.rect!.y
+
+  this.resetSelectionCanvas()
+  this.renderSelectionCanvas()
 
   if (this.panning) {
     this.translateViewport(e.movementX, e.movementY)

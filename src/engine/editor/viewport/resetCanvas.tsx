@@ -1,6 +1,6 @@
 export type TransformType = [a: number, b: number, c: number, d: number, e: number, f: number]
 
-const setCanvasRenderConfig = (ctx:CanvasRenderingContext2D, dpr:DPR, transform:TransformType) => {
+const resetCanvas = (ctx:CanvasRenderingContext2D, dpr:DPR, transform:TransformType) => {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(
     0,
@@ -29,4 +29,4 @@ const setCanvasRenderConfig = (ctx:CanvasRenderingContext2D, dpr:DPR, transform:
   }
 }
 
-export default setCanvasRenderConfig
+export default resetCanvas

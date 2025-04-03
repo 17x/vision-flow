@@ -4,7 +4,6 @@ import {RectangleRenderProps} from "./type"
 import Rectangle from "../modules/shapes/rectangle.ts";
 import Connector from "../modules/connectors/connector.ts";
 
-
 interface RenderProps {
   ctx: CanvasRenderingContext2D
   modules: Map<string, ModuleType>
@@ -27,7 +26,6 @@ const render = ({ctx, modules}: RenderProps): void => {
   const rects: RectangleRenderProps[] = [frame]
   const lines: LineRenderProps[] = []
   const texts = []
-
 
   modules.forEach((module) => {
     if (module.type === 'rectangle') {
@@ -53,7 +51,7 @@ const render = ({ctx, modules}: RenderProps): void => {
         rects.push({x, y, width, height, fillColor, opacity, lineWidth, lineColor, rotation, gradient, radius})
       }
 
-      texts.push({x:x+10, y:y+10, width, height, id: id.match(/\d+$/g)![0]})
+      texts.push({x: x + 10, y: y + 10, width, height, id: id.match(/\d+$/g)![0]})
     }
 
     if (module.type === 'connector') {

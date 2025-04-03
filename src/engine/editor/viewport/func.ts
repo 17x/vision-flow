@@ -83,5 +83,4 @@ const isInsideRotatedRect = (
   )
 }
 
-
 export {getBoxControlPoints, isInsideRotatedRect}

@@ -9,7 +9,8 @@ import handleKeyDown from "./eventHandlers/keyDown.ts"
 import handleKeyUp from "./eventHandlers/keyUp.ts"
 import handleWheel from "./eventHandlers/wheel.ts"
 import handleContextMenu from "./eventHandlers/contextMenu.ts"
-import resetCanvas from "./resetCanvas.tsx";
+import resetCanvas from "./resetCanvas.tsx"
+import {MousePointToVirtualPoint} from "./helper.ts"
 
 export interface Transform {
   scale: number;
@@ -51,6 +52,7 @@ class Viewport {
   currentZoom = 1
   offsetX: number = 0
   offsetY: number = 0
+  enableCrossLine = true
 
   // transform: Transform
 
@@ -195,22 +197,25 @@ class Viewport {
 
   renderSelectionCanvas() {
     const animate = () => {
-      // cross line
-      let {x, y} = this.mouseMovePoint
-      const {dpr} = this
+      if (this.enableCrossLine) {
+        // cross line
+        // const {dpr} = this
 
-      x *= dpr
-      y *= dpr
-      x -= (this.offsetX * dpr)
-      y -= (this.offsetY * dpr)
-      x /= this.currentZoom
-      y /= this.currentZoom
-
-      console.log(this.currentZoom, this.dpr)
-      this.selectionCTX.textBaseline = 'hanging'
-      this.selectionCTX.font = '24px sans-serif'
-      this.selectionCTX.fillText('hello', x, y, 100)
-      // console.log(x, y)
+        const {x, y} = MousePointToVirtualPoint({
+          mousePoint: this.mouseMovePoint,
+          scale: this.currentZoom,
+          dpr: this.dpr,
+          translate: {
+            offsetX: this.offsetX,
+            offsetY: this.offsetY
+          }
+        })
+        console.log(this.currentZoom, this.dpr)
+        this.selectionCTX.textBaseline = 'alphabetic'
+        this.selectionCTX.font = `${24 / this.currentZoom}px sans-serif`
+        this.selectionCTX.fillText(Math.floor(x) + ', ' + Math.floor(y), x, y, 100 / this.currentZoom)
+        // console.log(x, y)
+      }
       selectionRender.call(this)
 
     }

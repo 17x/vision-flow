@@ -2,7 +2,6 @@ import {FC, useEffect, useRef, useState} from 'react'
 import Editor from "../../engine/editor/editor.ts"
 import ShortcutListener from "../ShortcutListener.tsx"
 import {ModulePanel} from "../modulePanel/ModulePanel.tsx"
-import {PropertyPanel} from "../PropertyPanel.tsx"
 import {StatusBar} from "../statusBar/StatusBar.tsx"
 import uid from "../../utilities/Uid.ts"
 import {HistoryNode} from "../../engine/editor/history/DoublyLinkedList.ts"
@@ -141,7 +140,6 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
                           executeAction('select', new Set([id]))
                         }}/>
             <HistoryPanel/>
-            <PropertyPanel/>
           </div>
         </main>
 

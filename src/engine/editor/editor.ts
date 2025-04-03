@@ -1,5 +1,4 @@
 import SelectionManager from "./selection/selectionManager.ts"
-import CrossLine from "./crossLine/crossLine.ts"
 import {BasicEditorAreaSize, ActionCode, MoveDirection, EventHandlers} from "./type"
 import History from "./history/history.ts"
 import Rectangle from "../core/modules/shapes/rectangle.ts"
@@ -49,7 +48,6 @@ class Editor {
   viewport: Viewport
   // @ts-expect-error
   private zoom: ZoomRatio
-  private crossLine: CrossLine
   // private ctx: CanvasRenderingContext2D
   scale: number = 1
   // private minScale: number = 0.5
@@ -125,7 +123,6 @@ class Editor {
     this.viewport = new Viewport(this)
     this.action = new Action(this)
     this.selectionManager = new SelectionManager(this)
-    this.crossLine = new CrossLine(this)
     this.history = new History(this)
     // this.render()
   }

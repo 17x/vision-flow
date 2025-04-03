@@ -87,4 +87,32 @@ const hoverOnModule = () => {
   return true
 }
 
-export {getBoxControlPoints, isInsideRotatedRect, hoverOnModule}
+interface MousePointToVirtualPointProps {
+  mousePoint: Position
+  scale: number
+  dpr: DPR
+  translate: {
+    offsetX: number
+    offsetY: number
+  }
+}
+
+const MousePointToVirtualPoint = ({
+                                    mousePoint: {x, y},
+                                    scale,
+                                    dpr,
+                                    translate: {offsetX, offsetY}
+
+                                  }: MousePointToVirtualPointProps): Position => {
+
+  x *= dpr
+  y *= dpr
+  x -= (offsetX * dpr)
+  y -= (offsetY * dpr)
+  x /= scale
+  y /= scale
+
+  return {x, y}
+}
+
+export {getBoxControlPoints, isInsideRotatedRect, hoverOnModule, MousePointToVirtualPoint}

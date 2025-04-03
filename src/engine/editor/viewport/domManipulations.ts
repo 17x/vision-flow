@@ -6,6 +6,7 @@ function initViewportDom(this: Viewport) {
   this.editor.container.innerHTML = ''
 
   this.mainCanvas.setAttribute('editor-main-canvas', '')
+  this.mainCanvas.style.backgroundColor = '#f0f0f0'
   this.mainCanvas.style.position = 'absolute'
   this.mainCanvas.style.left = '0'
   this.mainCanvas.style.top = '0'

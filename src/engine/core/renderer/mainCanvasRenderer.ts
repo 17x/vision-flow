@@ -21,7 +21,7 @@ const render = ({ctx, modules}: RenderProps): void => {
     opacity: 100,
     lineWidth: 1,
     lineColor: '#000000',
-    fillColor: '#dfdfdf66',
+    fillColor: '#fff',
   }
 
   const rects: RectangleRenderProps[] = [frame]

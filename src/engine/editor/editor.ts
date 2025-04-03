@@ -1,9 +1,6 @@
-import render from "../core/renderer/renderer.ts"
 import SelectionManager from "./selection/selectionManager.ts"
 import CrossLine from "./crossLine/crossLine.ts"
 import {BasicEditorAreaSize, ActionCode, MoveDirection, EventHandlers} from "./type"
-import PanableContainer from "./panableContainer/panableContainer.ts"
-// import Shortcut from "./shortcut.ts";
 import History from "./history/history.ts"
 import Rectangle from "../core/modules/shapes/rectangle.ts"
 import deepClone from "../../utilities/deepClone.ts"

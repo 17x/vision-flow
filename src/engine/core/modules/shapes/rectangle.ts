@@ -1,10 +1,10 @@
 import Shape, {ShapeProps} from "./shape.ts"
 
-export interface RectangleProps extends ShapeProps {
+/*export interface RectangleProps extends ShapeProps {
   width: number;
   height: number;
   radius: number;
-}
+}*/
 
 class Rectangle extends Shape {
   readonly width: number

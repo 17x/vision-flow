@@ -1,8 +1,8 @@
-import Connector from "../modules/connectors/connector.ts"
 import rectRender from "./rectRender.ts"
 import lineRender, {LineRenderProps} from "./lineRender.ts"
 import {RectangleRenderProps} from "./type"
-import Rectangle from "../modules/shapes/rectangle.ts"
+import Rectangle from "../modules/shapes/rectangle.ts";
+import Connector from "../modules/connectors/connector.ts";
 
 export type TransformType = [a: number, b: number, c: number, d: number, e: number, f: number]
 

@@ -51,15 +51,6 @@ function selectionRender(this: Viewport) {
       })
     })
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(
-      0,
-      0,
-      ctx.canvas.width,
-      ctx.canvas.height
-    )
-    ctx.setTransform(this.currentZoom, 0, 0, this.currentZoom, this.offsetX, this.offsetY);
-
     rectRender(ctx, rects)
     circleRender(ctx, dots)
   }

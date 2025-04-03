@@ -1,4 +1,4 @@
-import render from "../../core/renderer/renderer.ts"
+import render from "../../core/renderer/mainCanvasRenderer.ts"
 import Editor from "../editor.ts"
 import {generateScrollBars, initViewportDom, updateScrollBars} from "./domManipulations.ts"
 import handleMouseDown from "./eventHandlers/mouseDown.ts"
@@ -9,6 +9,7 @@ import handleKeyDown from "./eventHandlers/keyDown.ts"
 import handleKeyUp from "./eventHandlers/keyUp.ts"
 import handleWheel from "./eventHandlers/wheel.ts"
 import handleContextMenu from "./eventHandlers/contextMenu.ts"
+import setCanvasRenderConfig from "./setCanvasRenderConfig.tsx";
 
 export interface Transform {
   scale: number;
@@ -50,7 +51,8 @@ class Viewport {
   currentZoom = 1
   offsetX: number = 0
   offsetY: number = 0
-  transform: Transform
+
+  // transform: Transform
 
   constructor(editor: Editor) {
     const {scrollBarX, scrollBarY} = generateScrollBars()
@@ -59,7 +61,7 @@ class Viewport {
     const selectionCtx = selectionCanvas.getContext('2d')
     const mainCtx = mainCanvas.getContext('2d')
 
-    this.transform = {scale: 1, offsetX: 0, offsetY: 0}
+    // this.transform = {scale: 1, offsetX: 0, offsetY: 0}
     this.selectionCanvas = selectionCanvas
     this.mainCanvas = mainCanvas
     this.selectionCTX = selectionCtx as CanvasRenderingContext2D
@@ -71,7 +73,7 @@ class Viewport {
     this.wrapper = document.createElement("div")
     this.resizeThrottle = this.resizeThrottle.bind(this)
     this.resizeObserver = new ResizeObserver(this.resizeThrottle)
-    this.doResize = this.doResize.bind(this)
+    this.updateCanvasSize = this.updateCanvasSize.bind(this)
     this.handleMouseDown = handleMouseDown.bind(this)
     this.handleMouseMove = handleMouseMove.bind(this)
     this.handleMouseUp = handleMouseUp.bind(this)
@@ -80,11 +82,12 @@ class Viewport {
     this.handleWheel = handleWheel.bind(this)
     this.handleContextMenu = handleContextMenu.bind(this)
     this.eventsController = new AbortController()
+
     this.init()
   }
 
   init() {
-    this.doResize()
+    this.updateCanvasSize()
     initViewportDom.call(this)
     this.resizeObserver.observe(this.editor.container)
     this.setupEvents()
@@ -101,6 +104,20 @@ class Viewport {
     window.addEventListener('wheel', this.handleWheel, {signal, passive: false})
     // window.addEventListener('pointermove', this.handleTouchPoint, {signal, passive: false})
     this.wrapper.addEventListener('contextmenu', this.handleContextMenu, {signal})
+  }
+
+  zoom(idx: number) {
+    // console.log(idx)
+    this.currentZoom += idx
+    // console.log(this.currentZoom)
+    if (this.currentZoom < .1) {
+      this.currentZoom = .1
+    }
+    if (this.currentZoom > 5) {
+      this.currentZoom = 5
+    }
+
+    this.render()
   }
 
   translateViewport(x: number, y: number) {
@@ -123,20 +140,57 @@ class Viewport {
     clearTimeout(this.resizeTimeout)
 
     this.domResizing = true
-    this.resizeTimeout = setTimeout(() => {
-      this.doResize()
-      this.renderMainCanvas()
-      this.renderSelectionCanvas()
-      this.domResizing = false
-    }, this.resizeInterval)
+    this.resizeTimeout = setTimeout(this.onResize.bind(this), this.resizeInterval)
   }
 
-  doResize() {
+  onResize() {
+
+    // todo test
+    // set zoom and shift on init
+    this.offsetX = 200
+    this.offsetY = 200
+    // console.log(this)
+    this.domResizing = false
+    this.updateCanvasSize()
+    this.render()
+
+    this.mainCTX.fillStyle = '#000000'
+    this.mainCTX.fillRect(0, 0, 300, 300)
+  }
+
+  updateCanvasSize() {
     this.rect = this.editor.container.getBoundingClientRect()
     this.mainCanvas.width = this.rect.width * this.dpr
     this.mainCanvas.height = this.rect.height * this.dpr
     this.selectionCanvas.width = this.rect.width * this.dpr
     this.selectionCanvas.height = this.rect.height * this.dpr
+  }
+
+  // Update all usually means the viewport has been moved or zoomed
+  render() {
+    setCanvasRenderConfig(this.mainCTX, this.dpr, [this.currentZoom, 0, 0, this.currentZoom, this.offsetX, this.offsetY])
+    setCanvasRenderConfig(this.selectionCTX, this.dpr, [this.currentZoom, 0, 0, this.currentZoom, this.offsetX, this.offsetY])
+    this.renderMainCanvas()
+    this.renderSelectionCanvas()
+  }
+
+  renderMainCanvas() {
+    const animate = () => {
+      render({
+        ctx: this.mainCTX,
+        modules: this.editor.moduleMap
+      })
+    }
+
+    requestAnimationFrame(animate)
+  }
+
+  renderSelectionCanvas() {
+    const animate = () => {
+      selectionRender.call(this)
+    }
+
+    requestAnimationFrame(animate)
   }
 
   destroy() {
@@ -151,62 +205,6 @@ class Viewport {
     this.editor.container.innerHTML = ''
   }
 
-  render() {
-    this.renderMainCanvas()
-    this.renderSelectionCanvas()
-  }
-
-  renderMainCanvas() {
-    const animate = () => {
-      render({
-        ctx: this.mainCTX,
-        modules: this.editor.moduleMap,
-        dpr: this.dpr,
-        transform: [this.currentZoom, 0, 0, this.currentZoom, this.offsetX, this.offsetY]
-      })
-    }
-
-    requestAnimationFrame(animate)
-  }
-
-  renderSelectionCanvas() {
-    // this.selectionCTX.scale(this.dpr, this.dpr)
-
-    const animate = () => {
-      selectionRender.call(this)
-    }
-
-    requestAnimationFrame(animate)
-  }
-
-  /** Updates zoom state (calculations happen outside) */
-  public updateZoom(newScale: number, newOffsetX: number, newOffsetY: number) {
-    this.transform.scale = newScale
-    this.transform.offsetX = newOffsetX
-    this.transform.offsetY = newOffsetY
-    // this.render()
-  }
-
-  /** Updates pan state (move to external logic) */
-  public updatePan(newOffsetX: number, newOffsetY: number) {
-    this.transform.offsetX = newOffsetX
-    this.transform.offsetY = newOffsetY
-    // this.render()
-  }
-
-  zoom(idx: number) {
-    // console.log(idx)
-    this.currentZoom += idx
-    // console.log(this.currentZoom)
-    if (this.currentZoom < .1) {
-      this.currentZoom = .1
-    }
-    if (this.currentZoom > 5) {
-      this.currentZoom = 5
-    }
-    console.log(this.currentZoom)
-    this.render()
-  }
 }
 
 export default Viewport

@@ -147,15 +147,15 @@ class Viewport {
 
     // todo test
     // set zoom and shift on init
-    this.offsetX = 200
-    this.offsetY = 200
+    // this.offsetX = 200
+    // this.offsetY = 200
     // console.log(this)
     this.domResizing = false
     this.updateCanvasSize()
     this.render()
 
-    this.mainCTX.fillStyle = '#000000'
-    this.mainCTX.fillRect(0, 0, 300, 300)
+    // this.mainCTX.fillStyle = '#000000'
+    // this.mainCTX.fillRect(0, 0, 300, 300)
   }
 
   updateCanvasSize() {

@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   base: "./",
   plugins: [
-    react(), tailwindcss(),
+    react(), tailwindcss()
   ],
   resolve: {
     alias: {
@@ -14,4 +14,16 @@ export default defineConfig({
       // '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // Example: Split vendor libraries into separate chunks
+          if (id.includes('node_modules')) {
+            return 'vendor'; // All node_modules are bundled into 'vendor.js'
+          }
+        }
+      }
+    }
+  }
 })

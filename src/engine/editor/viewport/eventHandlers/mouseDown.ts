@@ -2,8 +2,6 @@
 // import {isInsideRotatedRect} from "../func.ts"
 import Viewport from "../viewport.ts"
 
-// import {updateSelectionBox} from "../domManipulations.ts"
-
 function handleMouseDown(this: Viewport, e: MouseEvent) {
   const inViewport = e.target === this.wrapper
   const isLeftClick = e.button === 0

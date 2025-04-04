@@ -126,6 +126,7 @@ class SelectionManager {
   }
 
   render() {
+    this.editor.viewport.resetSelectionCanvas()
     this.editor.viewport.renderSelectionCanvas()
     // render.call(this)
   }

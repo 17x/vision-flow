@@ -268,16 +268,14 @@ class Editor {
 
   updateVisibleModuleMap(virtualRect: BoundingRect) {
     this.visibleModuleMap.clear()
+
     this.moduleMap.forEach((module) => {
       const boundingRect = module.getBoundingRect() as BoundingRect
 
-      if (
-        rectsOverlap(boundingRect, virtualRect)
-      ) {
+      if (rectsOverlap(boundingRect, virtualRect)) {
         this.visibleModuleMap.set(module.id, module)
       }
     })
-
   }
 
   public execute(code: ActionCode, data: unknown = null) {

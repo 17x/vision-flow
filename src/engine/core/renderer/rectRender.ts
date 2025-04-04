@@ -6,7 +6,6 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
 
   // Start rendering
   ctx.save()
-  console.log(rectQueue)
   rectQueue.forEach(({
                        x,
                        y,

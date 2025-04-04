@@ -1,9 +1,9 @@
 import {CircleRenderProps, RectangleRenderProps} from "../../core/renderer/type"
 import Rectangle from "../../core/modules/shapes/rectangle.ts"
-import {drawCrossLine, getBoxControlPoints} from "./helper.ts"
 import rectRender from "../../core/renderer/rectRender.ts"
 import circleRender from "../../core/renderer/circleRender.ts"
 import Viewport from "./viewport.ts";
+import {drawCrossLine, getBoxControlPoints} from "../../lib/lib.ts";
 
 function selectionRender(this: Viewport) {
   const {selectionCTX: ctx, editor, dpr, offset, rect, virtualRect, zoom: scale, mouseMovePoint} = this

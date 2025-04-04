@@ -2,7 +2,16 @@ import {RectangleRenderProps} from "./type"
 import deduplicateObjectsByKeyValue from "./deduplicate.ts"
 
 const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]): void => {
-  const rectQueue: RectangleRenderProps[] = deduplicateObjectsByKeyValue(rects)
+  let uintArray = rects
+
+  if (uintArray.length > 1000) {
+    uintArray = rects.map(item => ({
+      ...item,
+      x: Math.floor(item.x),
+      y: Math.floor(item.y),
+    }))
+  }
+  const rectQueue: RectangleRenderProps[] = deduplicateObjectsByKeyValue(uintArray)
 
   // Start rendering
   ctx.save()

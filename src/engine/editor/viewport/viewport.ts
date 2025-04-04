@@ -211,29 +211,7 @@ class Viewport {
 
   renderSelectionCanvas() {
     const animate = () => {
-      // this.resetSelectionCanvas()
       selectionRender.call(this)
-      /*
-            if (this.enableCrossLine) {
-              // cross line
-              const {selectionCTX, dpr, offset, rect, currentZoom: scale, mouseMovePoint} = this
-              const f = isInsideRect(mouseMovePoint, {
-                x: 0,
-                y: 0,
-                width: rect!.width,
-                height: rect!.height,
-              })
-
-              if (f) {
-                drawCrossLine({
-                  ctx: selectionCTX,
-                  mousePoint: mouseMovePoint,
-                  scale,
-                  dpr,
-                  offset
-                })
-              }
-            }*/
     }
 
     requestAnimationFrame(animate)

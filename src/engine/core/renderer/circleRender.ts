@@ -13,8 +13,7 @@ const circleRender = (ctx: CanvasRenderingContext2D, rects: CircleRenderProps[])
   }
 
   const rectQueue: CircleRenderProps[] = deduplicateObjectsByKeyValue(uintArray)
-  console.log(rectQueue.length)
-  // Start rendering
+
   ctx.save()
 
   rectQueue.forEach(({

@@ -1,5 +1,3 @@
-import {screenToCanvas} from "../editor/viewport/TransformUtils.ts";
-
 export function rectsOverlap(r1: BoundingRect, r2: BoundingRect): boolean {
   return !(
     r1.right < r2.left ||
@@ -44,13 +42,132 @@ export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number
     }
   })
 }
+
+export const isInsideRect = (
+  {
+    x: mouseX,
+    y: mouseY
+  }: {
+    x: number,
+    y: number
+  },
+  {
+    x,
+    y,
+    width,
+    height
+  }: Rect
+): boolean => {
+  if (width <= 0 || height <= 0) {
+    return false
+  }
+
+  return (
+    mouseX >= x && mouseX <= width &&
+    mouseY >= y && mouseY <= height
+  )
+}
+
+interface DrawCrossLineProps {
+  ctx: CanvasRenderingContext2D
+  mousePoint: Position
+  scale: number
+  dpr: DPR
+  offset: Position
+  virtualRect: BoundingRect
+}
+
+/** Convert canvas coordinates to screen coordinates */
+export function canvasToScreen(scale: number, offsetX: number, offsetY: number, canvasX: number, canvasY: number): {
+  x: number;
+  y: number
+} {
+  return {
+    x: canvasX * scale + offsetX,
+    y: canvasY * scale + offsetY,
+  }
+}
+
+/** Convert screen (mouse) coordinates to canvas coordinates */
+export function screenToCanvas(scale: number, offsetX: number, offsetY: number, screenX: number, screenY: number): {
+  x: number;
+  y: number
+} {
+  return {
+    x: (screenX - offsetX) / scale,
+    y: (screenY - offsetY) / scale,
+  }
+}
+
+/*
+
+/!** Calculate new zoom state *!/
+export function calculateZoom(scale: number, mouseX: number, mouseY: number, zoomFactor: number): {
+  scale: number;
+  offsetX: number;
+  offsetY: number
+} {
+  const mousePos = screenToCanvas(scale, 0, 0, mouseX, mouseY) // no offset involved for zooming calculation
+  const newScale = scale * zoomFactor
+  const newOffsetX = mouseX - mousePos.x * newScale
+  const newOffsetY = mouseY - mousePos.y * newScale
+
+  return {scale: newScale, offsetX: newOffsetX, offsetY: newOffsetY}
+}
+
+/!** Calculate pan movement *!/
+export function calculatePan(scale: number, offsetX: number, offsetY: number, lastX: number, lastY: number, mouseX: number, mouseY: number): {
+  offsetX: number;
+  offsetY: number
+} {
+  const dx = mouseX - lastX
+  const dy = mouseY - lastY
+  const newOffsetX = offsetX + dx
+  const newOffsetY = offsetY + dy
+
+  return {offsetX: newOffsetX, offsetY: newOffsetY}
+}*/
+
+export const drawCrossLine = ({
+                                ctx,
+                                mousePoint,
+                                scale,
+                                dpr,
+                                offset: {x: offsetX, y: offsetY},
+                                virtualRect: {left: minX, top: minY, right: maxX, bottom: maxY}
+                              }: DrawCrossLineProps): void => {
+  const textOffsetX = 10 / (dpr * scale)
+  const textOffsetY = 10 / (dpr * scale)
+  const {x, y} = screenToCanvas(scale, offsetX * dpr, offsetY * dpr, mousePoint.x * dpr, mousePoint.y * dpr)
+  const crossLineColor = '#ff0000'
+  const textColor = '#ff0000'
+  const textShadowColor = '#000'
+
+  ctx.save()
+  ctx.textBaseline = 'alphabetic'
+  ctx.font = `${24 / scale}px sans-serif`
+  // ctx.setLineDash([3 * dpr * scale, 5 * dpr * scale])
+  ctx.fillStyle = textColor
+  ctx.shadowColor = crossLineColor;
+  ctx.shadowBlur = 1;
+
+  ctx.fillText(`${Math.floor(x)}, ${Math.floor(y)}`, x + textOffsetX, y - textOffsetY, 200 / scale)
+  ctx.lineWidth = 2 / (dpr * scale)
+  ctx.strokeStyle = crossLineColor
+  ctx.shadowColor = textShadowColor
+  ctx.shadowBlur = 0;
+  ctx.beginPath()
+  ctx.moveTo(minX, y)
+  ctx.lineTo(maxX, y)
+  ctx.moveTo(x, minY)
+  ctx.lineTo(x, maxY)
+  ctx.stroke()
+  ctx.restore()
+}
+
 export const isInsideRotatedRect = (
-  mouseX: number,
-  mouseY: number,
-  centerX: number,
-  centerY: number,
-  width: number,
-  height: number,
+  {x: mouseX, y: mouseY}: Position,
+  {x: centerX, y: centerY, width, height}: Rect,
   rotation: number
 ): boolean => {
   if (width <= 0 || height <= 0) {
@@ -91,74 +208,4 @@ export const isInsideRotatedRect = (
     unrotatedX >= -halfWidth && unrotatedX <= halfWidth &&
     unrotatedY >= -halfHeight && unrotatedY <= halfHeight
   )
-}
-export const isInsideRect = (
-  {
-    x: mouseX,
-    y: mouseY
-  }: {
-    x: number,
-    y: number
-  },
-  {
-    x,
-    y,
-    width,
-    height
-  }: Rect
-): boolean => {
-  if (width <= 0 || height <= 0) {
-    return false
-  }
-
-  return (
-    mouseX >= x && mouseX <= width &&
-    mouseY >= y && mouseY <= height
-  )
-}
-
-interface DrawCrossLineProps {
-  ctx: CanvasRenderingContext2D
-  mousePoint: Position
-  scale: number
-  dpr: DPR
-  offset: Position
-  virtualRect: BoundingRect
-}
-
-export const drawCrossLine = ({
-                                ctx,
-                                mousePoint,
-                                scale,
-                                dpr,
-                                offset: {x: offsetX, y: offsetY},
-                                virtualRect: {left: minX, top: minY, right: maxX, bottom: maxY}
-                              }: DrawCrossLineProps): void => {
-  const textOffsetX = 10 / (dpr * scale)
-  const textOffsetY = 10 / (dpr * scale)
-  const {x, y} = screenToCanvas(scale, offsetX * dpr, offsetY * dpr, mousePoint.x * dpr, mousePoint.y * dpr)
-  const crossLineColor = '#ff0000'
-  const textColor = '#ff0000'
-  const textShadowColor = '#000'
-
-  ctx.save()
-  ctx.textBaseline = 'alphabetic'
-  ctx.font = `${24 / scale}px sans-serif`
-  // ctx.setLineDash([3 * dpr * scale, 5 * dpr * scale])
-  ctx.fillStyle = textColor
-  ctx.shadowColor = crossLineColor;
-  ctx.shadowBlur = 1;
-
-  ctx.fillText(`${Math.floor(x)}, ${Math.floor(y)}`, x + textOffsetX, y - textOffsetY, 200 / scale)
-  ctx.lineWidth = 2 / (dpr * scale)
-  ctx.strokeStyle = crossLineColor
-  ctx.shadowColor = textShadowColor
-  ctx.shadowBlur = 0;
-  ctx.beginPath()
-  ctx.moveTo(minX, y)
-  ctx.lineTo(maxX, y)
-  ctx.moveTo(x, minY)
-  ctx.lineTo(x, maxY)
-  ctx.stroke()
-  ctx.restore()
 }

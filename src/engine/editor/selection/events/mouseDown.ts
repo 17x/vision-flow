@@ -1,6 +1,6 @@
 import Rectangle from "../../../core/modules/shapes/rectangle.ts"
-import {isInsideRotatedRect} from "../helper.ts"
 import Viewport from "../../viewport/viewport.ts"
+import {isInsideRotatedRect} from "../../../lib/lib.ts";
 
 function handleMouseDown(this: Viewport, e: MouseEvent) {
   const mouseX = e.offsetX
@@ -20,7 +20,11 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
         x, y, width, height, rotation
       } = (item as Rectangle).getDetails()
 
-      return isInsideRotatedRect(mouseX, mouseY, x, y, width, height, rotation)
+      return isInsideRotatedRect(
+        {x: mouseX, y: mouseY},
+        {x, y, width, height,},
+        rotation
+      )
     }
   })
 
@@ -47,6 +51,5 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
   // render.call(this)
   // this.editor.events.onSelectionUpdated?.(this.selectedModules)
 }
-
 
 export default handleMouseDown

@@ -10,7 +10,8 @@ import handleKeyUp from "./eventHandlers/keyUp.ts"
 import handleWheel from "./eventHandlers/wheel.ts"
 import handleContextMenu from "./eventHandlers/contextMenu.ts"
 import resetCanvas from "./resetCanvas.tsx"
-import {screenToCanvas} from "./TransformUtils.ts";
+
+import {screenToCanvas} from "../../lib/lib.ts";
 
 // import {drawCrossLine, isInsideRect} from "./helper.ts"
 
@@ -102,12 +103,11 @@ class Viewport {
   }
 
   updateVirtualRect() {
-    const {dpr, offset, rect, zoom} = this
-    const {x: minX, y: minY} = screenToCanvas(zoom, offset.x * dpr, offset.y * dpr, 0, 0)
+    const {x: minX, y: minY} = this.screenToCanvas(0, 0)
     const {
       x: maxX,
       y: maxY
-    } = screenToCanvas(zoom, offset.x * dpr, offset.y * dpr, rect!.width * dpr, rect!.height * dpr)
+    } = this.screenToCanvas(this.rect!.width, this.rect!.height)
     const width = maxX - minX
     const height = maxY - minY
 
@@ -183,13 +183,12 @@ class Viewport {
     this.selectionCanvas.height = this.rect.height * this.dpr
   }
 
-  // Update all usually means the viewport has been moved or zoomed
-  render() {
-    this.resetMainCanvas()
-    this.resetSelectionCanvas()
-    this.renderMainCanvas()
-    this.renderSelectionCanvas()
+  screenToCanvas(x: number, y: number) {
+    const {dpr, offset, zoom} = this
+    return screenToCanvas(zoom, offset.x * dpr, offset.y * dpr, x * dpr, y * dpr)
   }
+
+  // Update all usually means the viewport has been moved or zoomed
 
   resetMainCanvas() {
     resetCanvas(this.mainCTX, this.dpr, this.zoom, this.offset)
@@ -240,6 +239,13 @@ class Viewport {
     requestAnimationFrame(animate)
   }
 
+  render() {
+    this.resetMainCanvas()
+    this.resetSelectionCanvas()
+    this.renderMainCanvas()
+    this.renderSelectionCanvas()
+  }
+
   destroy() {
     clearTimeout(this.resizeTimeout)
     this.resizeObserver.disconnect()
@@ -251,7 +257,6 @@ class Viewport {
     this.wrapper.remove()
     this.editor.container.innerHTML = ''
   }
-
 }
 
 export default Viewport

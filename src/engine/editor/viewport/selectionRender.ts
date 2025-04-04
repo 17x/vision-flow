@@ -6,7 +6,7 @@ import Viewport from "./viewport.ts";
 import {drawCrossLine, getBoxControlPoints} from "../../lib/lib.ts";
 
 function selectionRender(this: Viewport) {
-  const {selectionCTX: ctx, editor, dpr, offset, rect, virtualRect, zoom: scale, mouseMovePoint} = this
+  const {selectionCTX: ctx, editor, dpr, offset, virtualRect, zoom: scale, mouseMovePoint} = this
   const {selectionManager} = editor
   const enableRotationHandle = selectionManager.selectedModules.size === 1
 

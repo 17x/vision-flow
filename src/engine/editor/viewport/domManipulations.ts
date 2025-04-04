@@ -1,6 +1,6 @@
 import Viewport from "./viewport.ts"
 
-function initViewportDom(this: Viewport) {
+export function initViewportDom(this: Viewport) {
   const boxColor = '#1FB3FF'
   const boxBgColor = 'rgba(31,180,255,0.1)'
   this.editor.container.innerHTML = ''
@@ -44,7 +44,7 @@ function initViewportDom(this: Viewport) {
   this.editor.container.appendChild(this.wrapper)
 }
 
-const generateScrollBars = (): { scrollBarX: HTMLDivElement, scrollBarY: HTMLDivElement } => {
+export const generateScrollBars = (): { scrollBarX: HTMLDivElement, scrollBarY: HTMLDivElement } => {
   const scrollBarX = document.createElement('div')
   const scrollBarY = document.createElement('div')
 
@@ -60,7 +60,7 @@ const generateScrollBars = (): { scrollBarX: HTMLDivElement, scrollBarY: HTMLDiv
   return {scrollBarX, scrollBarY}
 }
 
-const updateScrollBars = (scrollBarX: HTMLDivElement, scrollBarY: HTMLDivElement) => {
+export const updateScrollBars = (scrollBarX: HTMLDivElement, scrollBarY: HTMLDivElement) => {
   scrollBarX.style.width = '50px'
   scrollBarX.style.height = '6px'
   scrollBarX.style.position = 'absolute'
@@ -74,11 +74,9 @@ const updateScrollBars = (scrollBarX: HTMLDivElement, scrollBarY: HTMLDivElement
   scrollBarY.style.top = '0'
 }
 
-const updateSelectionBox = (selectionBox: HTMLDivElement, {x, y, height, width}: Rect, show = true) => {
+export const updateSelectionBox = (selectionBox: HTMLDivElement, {x, y, height, width}: Rect, show = true) => {
   selectionBox.style.transform = `translate(${x}px, ${y}px)`
   selectionBox.style.width = width + 'px'
   selectionBox.style.height = height + 'px'
   selectionBox.style.display = show ? 'block' : 'none'
 }
-
-export {initViewportDom, generateScrollBars, updateScrollBars, updateSelectionBox}

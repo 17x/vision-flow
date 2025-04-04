@@ -1,4 +1,5 @@
 import Editor from "../editor.ts"
+import typeCheck from "../../../utilities/typeCheck.ts";
 
 const CopyDeltaX = 50
 const CopyDeltaY = 100
@@ -23,76 +24,81 @@ class SelectionManager {
     return new Set(this.selectedModules.keys())
   }
 
-  public toggle(idSet: Set<UID>) {
-    let p2: ModuleProps | null = null
+  public modifySelection(idSet: Set<UID>, action: 'add' | 'delete' | 'toggle' | 'replace') {
+    if (typeCheck(idSet) !== 'set' || idSet.size <= 0) return;
+
+    let eventCallBackData = idSet.size === 1 ? this.editor.moduleMap.get([...idSet.values()][0]).getDetails() : null
+
+    if (action === 'replace') {
+      this.selectedModules.clear();
+    }
 
     idSet.forEach((id) => {
-      if (idSet.size === 1) {
-        p2 = (this.editor.moduleMap.get(id) as ModuleType).getDetails()
+      switch (action) {
+        case 'add':
+          this.selectedModules.add(id);
+          break;
+        case 'delete':
+          this.selectedModules.delete(id);
+          break;
+        case 'toggle':
+          this.selectedModules.has(id) ? this.selectedModules.delete(id) : this.selectedModules.add(id);
+          break;
+        case 'replace':
+          this.selectedModules.add(id); // Add the new selection
+          break;
       }
-      if (this.selectedModules.has(id)) {
-        this.selectedModules.delete(id)
-      } else {
-        this.selectedModules.add(id)
-      }
-    })
+    });
 
-    this.render()
-    this.editor.events.onSelectionUpdated?.(idSet, p2)
+    this.render();
+    this.editor.events.onSelectionUpdated?.(idSet, eventCallBackData);
   }
 
-  public select(idSet: Set<UID> | 'all') {
-    if (!idSet) return
-
-    let p2: ModuleProps | null = null
-
-    this.selectedModules.clear()
-
-    if (idSet === 'all') {
-      this.isSelectAll = true
-    } else {
-
-      idSet.forEach((id) => {
-        if (idSet.size === 1) {
-          p2 = (this.editor.moduleMap.get(id) as ModuleType).getDetails()
-        }
-        this.selectedModules.add(id)
-      })
-    }
-    // console.log(p2)
-    this.render()
-    this.editor.events.onSelectionUpdated?.(idSet, p2)
+  public add(idSet: Set<UID>) {
+    this.modifySelection(idSet, 'add');
   }
 
-  public selectAll(): void {
+  public delete(idSet: Set<UID>) {
+    this.modifySelection(idSet, 'delete');
+  }
+
+  public toggle(idSet: Set<UID>) {
+    this.modifySelection(idSet, 'toggle');
+  }
+
+  public replace(idSet: Set<UID>) {
+    this.modifySelection(idSet, 'replace');
+  }
+
+  public selectAllModules(): void {
     this.selectedModules.clear()
     this.isSelectAll = true
     this.render()
     this.editor.events.onSelectionUpdated?.('all', null)
   }
 
-  public clear(): void {
+  public clearSelectedModules(): void {
     this.selectedModules.clear()
     this.isSelectAll = false
     this.render()
     this.editor.events.onSelectionUpdated?.(new Set(), null)
   }
 
-  public copy(): void {
+  public copySelectedModules(): void {
     this.copiedItems = []
 
     this.copiedItems = this.editor.batchCopy(this.isSelectAll ? 'all' : this.selectedModules, true)
     this.updateCopiedItemsDelta()
   }
 
-  public paste(): void {
+  public pasteCopiedModules(): void {
     const newModules = this.editor.batchCreate(this.copiedItems)
     this.editor.batchAdd(newModules, 'pasteModules')
-    this.select(new Set(newModules.keys()))
+    this.replace(new Set(newModules.keys()))
     this.updateCopiedItemsDelta()
   }
 
-  public duplicate(): void {
+  public duplicateSelectedModules(): void {
     let temp: ModuleProps[]
 
     if (this.isSelectAll) {
@@ -109,17 +115,17 @@ class SelectionManager {
     const newModules = this.editor.batchCreate(temp)
     this.editor.batchAdd(newModules, 'duplicateModules')
     this.isSelectAll = false
-    this.select(new Set(newModules.keys()))
+    this.replace(new Set(newModules.keys()))
   }
 
-  public delete(): void {
+  public removeSelectedModules(): void {
     if (this.isSelectAll) {
       this.editor.batchDelete('all', 'deleteModules')
     } else {
       this.editor.batchDelete(this.selectedModules, 'deleteModules')
     }
 
-    this.editor.selectionManager.clear()
+    this.editor.selectionManager.clearSelectedModules()
   }
 
   private updateCopiedItemsDelta(): void {

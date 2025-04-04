@@ -55,7 +55,7 @@ class History extends DoublyLinkedList {
     }
 
     if (!quiet) {
-      this.editor.selectionManager.select(selectModules)
+      this.editor.selectionManager.replace(selectModules)
       this.editor.events.onHistoryUpdated?.(this)
     }
 
@@ -88,7 +88,7 @@ class History extends DoublyLinkedList {
     }
 
     if (!quiet) {
-      this.editor.selectionManager.select(selectModules)
+      this.editor.selectionManager.replace(selectModules)
       this.editor.events.onHistoryUpdated?.(this)
     }
 
@@ -115,7 +115,7 @@ class History extends DoublyLinkedList {
       }
 
       const {selectModules} = targetNode.data
-      this.editor.selectionManager.select(selectModules)
+      this.editor.selectionManager.replace(selectModules)
       this.editor.events.onHistoryUpdated?.(this)
     } else {
       // do sth...

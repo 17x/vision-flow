@@ -20,7 +20,7 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
       break
 
     case 'dragging':
-      this.editor.selectionManager.select(this.handlingModules)
+      this.editor.selectionManager.replace(this.handlingModules)
       break
 
     case 'resizing':
@@ -33,7 +33,7 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
       if (e.ctrlKey || e.metaKey || e.shiftKey) {
         this.editor.selectionManager.toggle(this.handlingModules)
       } else {
-        this.editor.selectionManager.select(this.handlingModules)
+        this.editor.selectionManager.replace(this.handlingModules)
       }
 
       break

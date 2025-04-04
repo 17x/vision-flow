@@ -36,7 +36,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       })
 
       if (!(e.ctrlKey || e.shiftKey || e.metaKey)) {
-        this.editor.selectionManager.select(idSet)
+        this.editor.selectionManager.replace(idSet)
       } else {
         this.editor.selectionManager.toggle(idSet)
       }

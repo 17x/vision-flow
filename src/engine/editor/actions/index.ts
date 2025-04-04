@@ -53,30 +53,30 @@ class Action {
     this.lock = true
 
     if (code === 'selectAll') {
-      this.editor.selectionManager.selectAll()
+      this.editor.selectionManager.selectAllModules()
     }
     if (code === 'select') {
-      this.editor.selectionManager.select(data as Set<UID>)
+      this.editor.selectionManager.replace(data as Set<UID>)
     }
 
     if (code === 'copy') {
-      this.editor.selectionManager.copy()
+      this.editor.selectionManager.copySelectedModules()
     }
 
     if (code === 'delete') {
-      this.editor.selectionManager.delete()
+      this.editor.selectionManager.removeSelectedModules()
     }
 
     if (code === 'duplicate') {
-      this.editor.selectionManager.duplicate()
+      this.editor.selectionManager.duplicateSelectedModules()
     }
 
     if (code === 'escape') {
-      this.editor.selectionManager.clear()
+      this.editor.selectionManager.clearSelectedModules()
     }
 
     if (code === 'paste') {
-      this.editor.selectionManager.paste()
+      this.editor.selectionManager.pasteCopiedModules()
     }
 
     if (code === 'redo') {

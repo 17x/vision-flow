@@ -4,12 +4,12 @@ import {generateScrollBars, initViewportDom, updateScrollBars} from "./domManipu
 import handleMouseDown from "./eventHandlers/mouseDown.ts"
 import handlePointerMove from "./eventHandlers/pointerMove.ts"
 import handleMouseUp from "./eventHandlers/mouseUp.ts"
-import selectionRender from "./selectionRender.ts"
 import handleKeyDown from "./eventHandlers/keyDown.ts"
 import handleKeyUp from "./eventHandlers/keyUp.ts"
 import handleWheel from "./eventHandlers/wheel.ts"
 import handleContextMenu from "./eventHandlers/contextMenu.ts"
 import resetCanvas from "./resetCanvas.tsx"
+import selectionRender from "./selectionRender.ts"
 
 import {screenToCanvas} from "../../lib/lib.ts";
 
@@ -31,14 +31,9 @@ class Viewport {
   readonly eventsController: AbortController
   dpr = 2
   spaceKeyDown = false
-  mouseDown = false
+  // mouseDown = false
   manipulationStatus: ViewportManipulationType = 'static'
-  panning = false
-  dragging = false
-  resizing = false
-  rotating = false
-  zooming = false
-  selecting = false
+
   mouseDownPoint: Position = {x: 0, y: 0}
   mouseMovePoint: Position = {x: 0, y: 0}
   offset: Position = {x: 0, y: 0}
@@ -99,11 +94,11 @@ class Viewport {
     const {signal} = this.eventsController
 
     window.addEventListener('mousedown', handleMouseDown.bind(this), {signal})
-    this.wrapper.addEventListener('pointermove', handlePointerMove.bind(this), {signal})
     window.addEventListener('mouseup', handleMouseUp.bind(this), {signal})
     window.addEventListener('keydown', handleKeyDown.bind(this), {signal})
     window.addEventListener('keyup', handleKeyUp.bind(this), {signal})
     window.addEventListener('wheel', handleWheel.bind(this), {signal, passive: false})
+    this.wrapper.addEventListener('pointermove', handlePointerMove.bind(this), {signal})
     this.wrapper.addEventListener('contextmenu', handleContextMenu.bind(this), {signal})
   }
 

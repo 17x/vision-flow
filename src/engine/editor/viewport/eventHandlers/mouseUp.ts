@@ -9,10 +9,6 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
   this.mouseMovePoint.y = y
 
   this.manipulationStatus = 'static'
-  this.mouseDown = false
-  this.selecting = false
-  this.panning = false
-
   updateSelectionBox(this.selectionBox, {x: 0, y: 0, width: 0, height: 0}, false)
 }
 

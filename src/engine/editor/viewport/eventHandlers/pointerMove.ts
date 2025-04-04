@@ -23,6 +23,8 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       break
 
     case 'dragging':
+      this.wrapper.releasePointerCapture(e.pointerId)
+
       break
 
     case 'resizing':

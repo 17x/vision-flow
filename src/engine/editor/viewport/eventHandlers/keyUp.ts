@@ -5,7 +5,6 @@ import Viewport from "../viewport.ts"
 function handleKeyUp(this: Viewport, e: KeyboardEvent) {
   if (e.code === 'Space') {
     this.spaceKeyDown = false
-    this.panning = false
     this.wrapper.style.cursor = "default"
   }
 }

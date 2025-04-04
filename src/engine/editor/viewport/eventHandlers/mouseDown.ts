@@ -12,10 +12,9 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
 
   this.mouseDownPoint.x = e.clientX - this.rect!.x
   this.mouseDownPoint.y = e.clientY - this.rect!.y
-  this.mouseDown = true
+  // this.mouseDown = true
 
   if (this.spaceKeyDown) {
-    // this.panning = true
     this.manipulationStatus = 'panning'
   } else {
     // check item touch
@@ -45,7 +44,7 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
     // check handle points touch
     // this.manipulationStatus = 'resizing'
 
-    const lastOne = possibleModules[possibleModules.length - 1]
+    // const lastOne = possibleModules[possibleModules.length - 1]
 
     /* if (e.metaKey || e.ctrlKey || e.shiftKey) {
        if (this.selectedModules.has(id)) {

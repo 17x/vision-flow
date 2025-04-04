@@ -7,6 +7,15 @@ export function rectsOverlap(r1: BoundingRect, r2: BoundingRect): boolean {
   )
 }
 
+export function rectInside(inner: BoundingRect, outer: BoundingRect): boolean {
+  return (
+    inner.left >= outer.left &&
+    inner.right <= outer.right &&
+    inner.top >= outer.top &&
+    inner.bottom <= outer.bottom
+  );
+}
+
 export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Position[] => {
   const halfW = w / 2
   const halfH = h / 2
@@ -209,3 +218,34 @@ export const isInsideRotatedRect = (
     unrotatedY >= -halfHeight && unrotatedY <= halfHeight
   )
 }
+
+export const generateBoundingRectFromRect = (rect: Rect): BoundingRect => {
+  const {x, y, width, height} = rect;
+
+  return {
+    x,
+    y,
+    width,
+    height,
+    top: y,
+    bottom: y + height,
+    left: x,
+    right: x + width,
+    centerX: x + width / 2,
+    centerY: y + height / 2,
+  };
+};
+
+export const generateBoundingRectFromTwoPoints = (p1: Position, p2: Position): BoundingRect => {
+  const minX = Math.min(p1.x, p2.x);
+  const maxX = Math.max(p1.x, p2.x);
+  const minY = Math.min(p1.y, p2.y);
+  const maxY = Math.max(p1.y, p2.y);
+
+  return generateBoundingRectFromRect({
+    x: minX,
+    y: minY,
+    width: maxX - minX,
+    height: maxY - minY,
+  });
+};

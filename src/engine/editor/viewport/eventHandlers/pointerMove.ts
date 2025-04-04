@@ -1,6 +1,12 @@
 import Viewport from "../viewport.ts"
 import {updateSelectionBox} from "../domManipulations.ts"
-import {isInsideRotatedRect} from "../../../lib/lib.ts";
+import {
+  generateBoundingRectFromTwoPoints,
+  isInsideRect,
+  isInsideRotatedRect,
+  rectInside,
+  rectsOverlap
+} from "../../../lib/lib.ts";
 import Rectangle from "../../../core/modules/shapes/rectangle.ts";
 
 export default function handlePointerMove(this: Viewport, e: PointerEvent) {
@@ -14,9 +20,26 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
   switch (this.manipulationStatus) {
     case 'selecting':
       this.wrapper.setPointerCapture(e.pointerId)
-      // this.drawCrossLine = false
-      updateSelectionBox(this.selectionBox, calcSelectionBox(this.mouseDownPoint, this.mouseMovePoint))
+      const rect = generateBoundingRectFromTwoPoints(this.mouseDownPoint, this.mouseMovePoint)
+      const pointA = this.screenToCanvas(rect.x, rect.y)
+      const pointB = this.screenToCanvas(rect.x + rect.width, rect.y + rect.height)
+      const virtualSelectionRect: BoundingRect = generateBoundingRectFromTwoPoints(pointA, pointB)
+      let idSet: Set<UID> = new Set()
+      this.editor.visibleModuleMap.forEach(((module) => {
+          if (module.type === 'rectangle') {
+            const boundingRect = module.getBoundingRect() as BoundingRect
 
+            if (rectInside(boundingRect, virtualSelectionRect)) {
+              idSet.add(module.id)
+            }
+          }
+        })
+      )
+
+      this.editor.selectionManager.select(idSet)
+      updateSelectionBox(this.selectionBox, rect)
+
+      console.log(9)
       this.resetSelectionCanvas()
       this.renderSelectionCanvas()
       break
@@ -81,12 +104,3 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       break
   }
 }
-
-export const calcSelectionBox = ({x: x1, y: y1}: Position, {x: x2, y: y2}: Position) => {
-  const x = Math.min(x1, x2);
-  const y = Math.min(y1, y2);
-  const width = Math.abs(x2 - x1);
-  const height = Math.abs(y2 - y1);
-
-  return {x, y, width, height};
-};

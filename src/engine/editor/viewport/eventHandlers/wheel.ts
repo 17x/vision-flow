@@ -22,7 +22,7 @@ function handleWheel(this: Viewport, event: WheelEvent) {
 
 const detectGestures = (() => {
   let _timer: number | undefined
-  const DELAY = 300
+  const DELAY = 200
   // let shiftX: number = 0
   // let shiftY: number = 0
   const ACTION_THRESHOLD = 3
@@ -114,6 +114,7 @@ const detectGestures = (() => {
       zoomFactor = 0
       translateX = -deltaX
       translateY = -deltaY
+      EVENT_BUFFER.length = 0
     }, DELAY)
 
     return {

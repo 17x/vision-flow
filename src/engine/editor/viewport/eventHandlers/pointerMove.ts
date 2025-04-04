@@ -8,12 +8,13 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
 
   this.mouseMovePoint.x = e.clientX - this.rect!.x
   this.mouseMovePoint.y = e.clientY - this.rect!.y
-  this.hoveredModules.length = 0
+  this.hoveredModules.clear()
+  this.drawCrossLine = false
 
   switch (this.manipulationStatus) {
     case 'selecting':
       this.wrapper.setPointerCapture(e.pointerId)
-      this.drawCrossLine = false
+      // this.drawCrossLine = false
       updateSelectionBox(this.selectionBox, calcSelectionBox(this.mouseDownPoint, this.mouseMovePoint))
 
       this.resetSelectionCanvas()
@@ -26,8 +27,24 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       break
 
     case 'dragging':
-      this.wrapper.releasePointerCapture(e.pointerId)
+      this.wrapper.setPointerCapture(e.pointerId)
+      // console.log(this.handlingModules.size)
+      // this.wrapper.releasePointerCapture(e.pointerId)
+      // console.log(this.handlingModules)
 
+      const x = e.movementX * this.dpr / this.zoom
+      const y = e.movementY * this.dpr / this.zoom
+
+      this.handlingModules.forEach((id) => {
+        // console.log(e.movementX, e.movementY)
+        console.log(x, y)
+        this.editor.moduleMap.get(id).x += x
+        this.editor.moduleMap.get(id).y += y
+      })
+      this.updateVirtualRect()
+
+      this.render()
+      // this.renderMainCanvas()
       break
 
     case 'resizing':
@@ -36,31 +53,37 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
     case 'rotating':
       break
 
-    default:
-// check item touch
-      const virtualPoint = this.screenToCanvas(this.mouseMovePoint.x, this.mouseMovePoint.y)
-      const possibleModules: UID[] = []
+    case 'static':
+      const MOVE_THROTTLE = 10
+      const moved = Math.abs(this.mouseMovePoint.x - this.mouseDownPoint.x) > MOVE_THROTTLE ||
+        Math.abs(this.mouseMovePoint.y - this.mouseDownPoint.y) > MOVE_THROTTLE
 
-      this.editor.visibleModuleMap.forEach((module) => {
-        if (module.type === 'rectangle') {
-          const {x, y, width, height, rotation} = (module as Rectangle)
-          const f = isInsideRotatedRect(virtualPoint, {x, y, width, height}, rotation)
+      if (this.handlingModules.size > 0 && moved) {
+        this.manipulationStatus = 'dragging'
+      } else {
+        const virtualPoint = this.screenToCanvas(this.mouseMovePoint.x, this.mouseMovePoint.y)
 
-          if (f) {
-            possibleModules.push(module.id)
+        this.editor.visibleModuleMap.forEach((module) => {
+          if (module.type === 'rectangle') {
+            const {x, y, width, height, rotation} = (module as Rectangle)
+            const f = isInsideRotatedRect(virtualPoint, {x, y, width, height}, rotation)
+
+            if (f) {
+              this.hoveredModules.add(module.id)
+            }
           }
-        }
-      })
+        })
 
-      this.hoveredModules = possibleModules
-      // console.log(possibleModules)
+        this.wrapper.releasePointerCapture(e.pointerId)
+        this.drawCrossLine = true
+        this.updateVirtualRect()
+        this.resetSelectionCanvas()
+        this.renderSelectionCanvas()
+      }
 
-      this.wrapper.releasePointerCapture(e.pointerId)
-      this.drawCrossLine = true
-
-      this.updateVirtualRect()
-      this.resetSelectionCanvas()
-      this.renderSelectionCanvas()
+      // this.updateVirtualRect()
+      // this.resetSelectionCanvas()
+      // this.renderSelectionCanvas()
       break
   }
 }

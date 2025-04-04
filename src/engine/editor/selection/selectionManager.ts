@@ -23,6 +23,24 @@ class SelectionManager {
     return new Set(this.selectedModules.keys())
   }
 
+  public toggle(idSet: Set<UID>) {
+    let p2: ModuleProps | null = null
+
+    idSet.forEach((id) => {
+      if (idSet.size === 1) {
+        p2 = (this.editor.moduleMap.get(id) as ModuleType).getDetails()
+      }
+      if (this.selectedModules.has(id)) {
+        this.selectedModules.delete(id)
+      } else {
+        this.selectedModules.add(id)
+      }
+    })
+
+    this.render()
+    this.editor.events.onSelectionUpdated?.(idSet, p2)
+  }
+
   public select(idSet: Set<UID> | 'all') {
     if (!idSet) return
 

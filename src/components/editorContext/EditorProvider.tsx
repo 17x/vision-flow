@@ -27,7 +27,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [selectedModules, setSelectedModules] = useState<UID[]>([])
   const [historyCurrent, setHistoryCurrent] = useState<HistoryNode>({} as HistoryNode)
   const elementRef = useRef<HTMLDivElement>(null)
-  const [focused, setFocused] = useState(false)
+  const [focused, setFocused] = useState(true)
 
   useEffect(() => {
     let editor: Editor
@@ -115,7 +115,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       applyHistoryNode,
       executeAction
     }}>
-      <div ref={elementRef} data-focused={focused} autoFocus tabIndex={0}
+      <div ref={elementRef} data-focused={focused} autoFocus={true} tabIndex={0}
            className={'outline-0 w-full h-full flex flex-col'}>
         <ShortcutListener/>
 
@@ -167,7 +167,7 @@ const createMockData = (editor: Editor) => {
     radius: 0,
     rotation: 0
   }
-  const MOCK_ELE_LEN = 1000
+  const MOCK_ELE_LEN = 10
   const shiftSpeed = 30
   // const MOCK_ELE_LEN = 2
   // @ts-ignore

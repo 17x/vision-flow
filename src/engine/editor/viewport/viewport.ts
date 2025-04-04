@@ -31,7 +31,8 @@ class Viewport {
   readonly eventsController: AbortController
   dpr = 2
   spaceKeyDown = false
-  hoveredModules: UID[] = []
+  hoveredModules: Set<UID> = new Set()
+  handlingModules: Set<UID> = new Set()
   // mouseDown = false
   manipulationStatus: ViewportManipulationType = 'static'
 

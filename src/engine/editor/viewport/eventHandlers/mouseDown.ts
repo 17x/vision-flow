@@ -1,7 +1,6 @@
 // import Rectangle from "../../../core/modules/shapes/rectangle.ts"
 // import {isInsideRotatedRect} from "../func.ts"
 import Viewport from "../viewport.ts"
-import {hoverOnModule} from "../helper.ts"
 
 // import {updateSelectionBox} from "../domManipulations.ts"
 
@@ -18,16 +17,10 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
   if (this.spaceKeyDown) {
     this.panning = true
   } else {
-    const f = hoverOnModule()
 
-    this.selecting = f
+    this.selecting = true
+    // this.dragging = true
 
-    if (f) {
-
-    } else {
-
-      // this.dragging = true
-    }
   }
 }
 

@@ -123,6 +123,8 @@ class Viewport {
       bottom: maxY,
       left: minX,
     }
+
+    this.editor.updateVisibleModuleMap(this.virtualRect)
   }
 
   scale(idx: number) {
@@ -138,12 +140,14 @@ class Viewport {
       this.zoom = maxZoom
     }
 
+    this.updateVirtualRect()
     this.render()
   }
 
   translateViewport(x: number, y: number) {
     this.offset.x += x
     this.offset.y += y
+    this.updateVirtualRect()
     this.render()
   }
 
@@ -199,7 +203,7 @@ class Viewport {
     const animate = () => {
       render({
         ctx: this.mainCTX,
-        modules: this.editor.moduleMap
+        modules: this.editor.visibleModuleMap
       })
     }
 

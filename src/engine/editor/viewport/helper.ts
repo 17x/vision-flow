@@ -108,11 +108,6 @@ export const isInsideRect = (
     mouseX >= x && mouseX <= width &&
     mouseY >= y && mouseY <= height
   )
-
-}
-
-export const hoverOnModule = () => {
-  return true
 }
 
 interface DrawCrossLineProps {

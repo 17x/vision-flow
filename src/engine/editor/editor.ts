@@ -10,6 +10,9 @@ import Connector from "../core/modules/connectors/connector.ts"
 import {HistoryActionType} from "./history/type"
 import batchReplaceModules from "./helpers/batchReplaceModules.ts"
 import Viewport from "./viewport/viewport.ts"
+import {rectsOverlap} from "../lib/lib.ts";
+
+// import {isInsideRect} from "./viewport/helper.ts";
 
 export interface EditorDataProps {
   id: UID;
@@ -35,6 +38,7 @@ export interface EditorProps {
 class Editor {
   private moduleCounter = 0
   moduleMap: ModuleMap
+  visibleModuleMap: ModuleMap
   private id: UID
   // private size: Size;
   dpr: DPR
@@ -65,6 +69,7 @@ class Editor {
       },
       new Map<UID, ModuleType>()
     )
+    this.visibleModuleMap = new Map()
     this.id = data.id
     // this.size = data.size;
     // this.wrapper = wrapper
@@ -75,50 +80,6 @@ class Editor {
     // const wrapper = document.createElement("div")
 
     this.container = container
-
-    /*this.canvas = canvas
-    this.ctx = ctx as CanvasRenderingContext2D
-    this.dpr = dpr
-    this.zoom = zoom
-    this.moduleMap = data.modules.reduce<ModuleMap>(
-      (previousValue, currentValue) => {
-        previousValue.set(currentValue.id, currentValue)
-
-        return previousValue
-      },
-      new Map<UID, ModuleType>()
-    )
-    this.id = data.id
-    // this.size = data.size;
-    this.wrapper = wrapper
-    this.scale = dpr
-    this.events = events
-
-    canvas.style.width = window.outerWidth + 'px'
-    canvas.style.height = window.outerHeight + 'px'
-    canvas.width = window.outerWidth * dpr
-    canvas.height = window.outerHeight * dpr
-
-    // ctx!.scale(dpr, dpr);
-    container.innerHTML = ""
-    container.style.overflow = "hidden"
-    container.style.position = "relative"
-    container.style.display = "flex"
-    container.style.height = "100%"
-    container.style.width = "100%"
-    container.setAttribute("editor-container", "")
-
-    wrapper.setAttribute("editor-wrapper", "")
-    wrapper.append(canvas)
-    container.append(wrapper)
-    this.setupEventListeners()
-    /!*this.panableContainer = new PanableContainer({
-      element: wrapper,
-      onPan: (deltaX, deltaY) => {
-        console.log(deltaX, deltaY)
-      },
-    })*!/
-    // this.shortcut = new Shortcut(this)*/
 
     this.viewport = new Viewport(this)
     this.action = new Action(this)
@@ -303,6 +264,20 @@ class Editor {
 
   getModuleList(): ModuleType[] {
     return [...Object.values(this.moduleMap)]
+  }
+
+  updateVisibleModuleMap(virtualRect: BoundingRect) {
+    this.visibleModuleMap.clear()
+    this.moduleMap.forEach((module) => {
+      const boundingRect = module.getBoundingRect() as BoundingRect
+
+      if (
+        rectsOverlap(boundingRect, virtualRect)
+      ) {
+        this.visibleModuleMap.set(module.id, module)
+      }
+    })
+
   }
 
   public execute(code: ActionCode, data: unknown = null) {

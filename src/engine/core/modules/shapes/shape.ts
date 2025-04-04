@@ -54,8 +54,7 @@ class Shape extends Base {
 
   public getBoundingRect(): BoundingRect {
     const {
-      x,
-      y
+      x, y
     } = this
     const {
       width,

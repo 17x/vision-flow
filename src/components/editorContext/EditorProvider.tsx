@@ -167,7 +167,8 @@ const createMockData = (editor: Editor) => {
     radius: 0,
     rotation: 0
   }
-  const MOCK_ELE_LEN = 1000
+  const MOCK_ELE_LEN = 10000
+  const shiftSpeed = 0
   // const MOCK_ELE_LEN = 2
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -182,8 +183,8 @@ const createMockData = (editor: Editor) => {
           ...baseRectData,
           // fillColor: getRandomHexColor(),
           fillColor: '#9c4444',
-          x: baseX + (i * 30),
-          y: baseY + (i * 30),
+          x: baseX + (i * shiftSpeed),
+          y: baseY + (i * shiftSpeed),
           layer: i + 1,
           rotation: i + 10,
         }

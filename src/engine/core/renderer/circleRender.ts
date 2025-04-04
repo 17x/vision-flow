@@ -2,8 +2,18 @@ import {CircleRenderProps} from "./type"
 import deduplicateObjectsByKeyValue from "./deduplicate.ts"
 
 const circleRender = (ctx: CanvasRenderingContext2D, rects: CircleRenderProps[]): void => {
-  const rectQueue: CircleRenderProps[] = deduplicateObjectsByKeyValue(rects)
+  let uintArray = rects
 
+  if (uintArray.length > 1000) {
+    uintArray = rects.map(item => ({
+      ...item,
+      x: Math.floor(item.x),
+      y: Math.floor(item.y),
+    }))
+  }
+
+  const rectQueue: CircleRenderProps[] = deduplicateObjectsByKeyValue(uintArray)
+  console.log(rectQueue.length)
   // Start rendering
   ctx.save()
 
@@ -78,11 +88,11 @@ const circleRender = (ctx: CanvasRenderingContext2D, rects: CircleRenderProps[])
     // Restore the context to avoid affecting subsequent drawings
     ctx.restore()
   })
-/*
-  console.log(`
-    Total Rectangles to Render: ${rects.length}
-    Rectangles in Queue: ${rectQueue.length}
-  `);*/
+  /*
+    console.log(`
+      Total Rectangles to Render: ${rects.length}
+      Rectangles in Queue: ${rectQueue.length}
+    `);*/
 }
 
 export default circleRender

@@ -1,5 +1,7 @@
 import Viewport from "../viewport.ts"
 import {updateSelectionBox} from "../domManipulations.ts"
+import {isInsideRotatedRect} from "../../../lib/lib.ts";
+import Rectangle from "../../../core/modules/shapes/rectangle.ts";
 
 export default function handlePointerMove(this: Viewport, e: PointerEvent) {
   if (this.domResizing) return
@@ -34,6 +36,23 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       break
 
     default:
+// check item touch
+      const virtualPoint = this.screenToCanvas(this.mouseMovePoint.x, this.mouseMovePoint.y)
+      const possibleModules: UID[] = []
+
+      this.editor.visibleModuleMap.forEach((module) => {
+        if (module.type === 'rectangle') {
+          const {x, y, width, height, rotation} = (module as Rectangle)
+          const f = isInsideRotatedRect(virtualPoint, {x, y, width, height}, rotation)
+
+          if (f) {
+            possibleModules.push(module.id)
+          }
+        }
+      })
+
+      // console.log(possibleModules)
+
       this.wrapper.releasePointerCapture(e.pointerId)
       this.drawCrossLine = true
 

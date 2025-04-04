@@ -121,6 +121,7 @@ interface DrawCrossLineProps {
   scale: number
   dpr: DPR
   offset: Position
+  virtualRect: BoundingRect
 }
 
 export const drawCrossLine = ({
@@ -128,18 +129,16 @@ export const drawCrossLine = ({
                                 mousePoint,
                                 scale,
                                 dpr,
-                                offset: {x: offsetX, y: offsetY}
-
+                                offset: {x: offsetX, y: offsetY},
+                                virtualRect: {left: minX, top: minY, right: maxX, bottom: maxY}
                               }: DrawCrossLineProps): void => {
   const textOffsetX = 10 / (dpr * scale)
   const textOffsetY = 10 / (dpr * scale)
-  const {width, height} = ctx.canvas
   const {x, y} = screenToCanvas(scale, offsetX * dpr, offsetY * dpr, mousePoint.x * dpr, mousePoint.y * dpr)
-  const {x: minX, y: minY} = screenToCanvas(scale, offsetX * dpr, offsetY * dpr, 0, 0)
-  const {x: maxX, y: maxY} = screenToCanvas(scale, offsetX * dpr, offsetY * dpr, width * dpr, height * dpr)
   const crossLineColor = '#ff0000'
   const textColor = '#ff0000'
   const textShadowColor = '#000'
+
   ctx.save()
   ctx.textBaseline = 'alphabetic'
   ctx.font = `${24 / scale}px sans-serif`

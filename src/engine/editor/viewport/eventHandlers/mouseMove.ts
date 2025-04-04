@@ -16,6 +16,7 @@ function handleMouseMove(this: Viewport, e: PointerEvent) {
     this.wrapper.releasePointerCapture(e.pointerId)
     this.drawCrossLine = true
 
+    this.updateVirtualRect()
     this.resetSelectionCanvas()
     this.renderSelectionCanvas()
   }

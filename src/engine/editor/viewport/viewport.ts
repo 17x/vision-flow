@@ -10,6 +10,7 @@ import handleKeyUp from "./eventHandlers/keyUp.ts"
 import handleWheel from "./eventHandlers/wheel.ts"
 import handleContextMenu from "./eventHandlers/contextMenu.ts"
 import resetCanvas from "./resetCanvas.tsx"
+import {screenToCanvas} from "./TransformUtils.ts";
 
 // import {drawCrossLine, isInsideRect} from "./helper.ts"
 
@@ -36,6 +37,18 @@ class Viewport {
   mouseMovePoint: Position = {x: 0, y: 0}
   offset: Position = {x: 0, y: 0}
   rect: Rect | undefined
+  virtualRect: BoundingRect = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    centerX: 0,
+    centerY: 0,
+  }
   domResizing: boolean = false
   resizeTimeout: number | undefined
   zoom = 1
@@ -85,18 +98,31 @@ class Viewport {
     window.addEventListener('keydown', handleKeyDown.bind(this), {signal})
     window.addEventListener('keyup', handleKeyUp.bind(this), {signal})
     window.addEventListener('wheel', handleWheel.bind(this), {signal, passive: false})
-    /*
-        this.wrapper.addEventListener('pointermove', (e) => {
-          if(this.selecting) {
-            this.wrapper.setPointerCapture(e.pointerId)
-          }else{
-            this.wrapper.setPointerCapture(e.pointerId)
-          }
-          this.isMouseHovered = true
-          this.resetSelectionCanvas()
-          this.renderSelectionCanvas()
-        }, {signal})*/
     this.wrapper.addEventListener('contextmenu', handleContextMenu.bind(this), {signal})
+  }
+
+  updateVirtualRect() {
+    const {dpr, offset, rect, zoom} = this
+    const {x: minX, y: minY} = screenToCanvas(zoom, offset.x * dpr, offset.y * dpr, 0, 0)
+    const {
+      x: maxX,
+      y: maxY
+    } = screenToCanvas(zoom, offset.x * dpr, offset.y * dpr, rect!.width * dpr, rect!.height * dpr)
+    const width = maxX - minX
+    const height = maxY - minY
+
+    this.virtualRect = {
+      x: minX,
+      y: minY,
+      width,
+      height,
+      centerX: minX + width / 2,
+      centerY: minY + height / 2,
+      top: minY,
+      right: maxX,
+      bottom: maxY,
+      left: minX,
+    }
   }
 
   scale(idx: number) {
@@ -135,14 +161,10 @@ class Viewport {
   }
 
   onResize() {
-
-    // todo test
-    // set zoom and shift on init
-    // this.offsetX = 200
-    // this.offsetY = 200
-    // console.log(this)
     this.domResizing = false
     this.updateCanvasSize()
+    // updateAllVisible
+    this.updateVirtualRect()
     this.render()
 
     // this.mainCTX.fillStyle = '#000000'

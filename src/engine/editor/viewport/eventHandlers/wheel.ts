@@ -16,6 +16,8 @@ function handleWheel(this: Viewport, event: WheelEvent) {
     // console.log('pad')
     this.translateViewport(translateX, translateY)
   }
+  this.updateVirtualRect()
+
 }
 
 const detectGestures = (() => {

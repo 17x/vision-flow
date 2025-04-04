@@ -6,7 +6,7 @@ import circleRender from "../../core/renderer/circleRender.ts"
 import Viewport from "./viewport.ts";
 
 function selectionRender(this: Viewport) {
-  const {selectionCTX: ctx, editor, dpr, offset, rect, zoom: scale, mouseMovePoint} = this
+  const {selectionCTX: ctx, editor, dpr, offset, rect, virtualRect, zoom: scale, mouseMovePoint} = this
   const {selectionManager} = editor
   const enableRotationHandle = selectionManager.selectedModules.size === 1
 
@@ -54,14 +54,14 @@ function selectionRender(this: Viewport) {
     rectRender(ctx, rects)
     circleRender(ctx, dots)
 
-    console.log(this.drawCrossLine)
     if (this.enableCrossLine && this.drawCrossLine) {
       drawCrossLine({
         ctx,
         mousePoint: mouseMovePoint,
         scale,
         dpr,
-        offset
+        offset,
+        virtualRect
       })
     }
   }

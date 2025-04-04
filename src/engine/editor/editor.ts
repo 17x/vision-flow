@@ -319,7 +319,6 @@ class Editor {
     // this.panableContainer.destroy()
     this.action.destroy()
     this.selectionManager.destroy()
-    this.crossLine.destroy()
     this.history.destroy()
     this.moduleMap.clear()
     // @ts-ignore

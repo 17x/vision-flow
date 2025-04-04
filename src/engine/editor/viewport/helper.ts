@@ -1,4 +1,6 @@
-const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Position[] => {
+import {canvasToScreen, screenToCanvas} from "./TransformUtils.ts";
+
+export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Position[] => {
   const halfW = w / 2
   const halfH = h / 2
 
@@ -34,7 +36,7 @@ const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotat
   })
 }
 
-const isInsideRotatedRect = (
+export const isInsideRotatedRect = (
   mouseX: number,
   mouseY: number,
   centerX: number,
@@ -83,36 +85,37 @@ const isInsideRotatedRect = (
   )
 }
 
-const hoverOnModule = () => {
+export const hoverOnModule = () => {
   return true
 }
 
-interface MousePointToVirtualPointProps {
+interface DrawCrossLineProps {
+  ctx: CanvasRenderingContext2D
   mousePoint: Position
   scale: number
   dpr: DPR
-  translate: {
-    offsetX: number
-    offsetY: number
-  }
+  offset: Position
 }
 
-const MousePointToVirtualPoint = ({
-                                    mousePoint: {x, y},
-                                    scale,
-                                    dpr,
-                                    translate: {offsetX, offsetY}
+export const drawCrossLine = ({
+                                ctx,
+                                mousePoint,
+                                scale,
+                                dpr,
+                                offset: {x: offsetX, y: offsetY}
 
-                                  }: MousePointToVirtualPointProps): Position => {
+                              }: DrawCrossLineProps): void => {
 
-  x *= dpr
-  y *= dpr
-  x -= (offsetX * dpr)
-  y -= (offsetY * dpr)
-  x /= scale
-  y /= scale
-
-  return {x, y}
+  const {x, y} = screenToCanvas(scale, offsetX * dpr, offsetY * dpr, mousePoint.x * dpr, mousePoint.y * dpr)
+  ctx.textBaseline = 'alphabetic'
+  ctx.font = `${24 / scale}px sans-serif`
+  ctx.save()
+  ctx.setLineDash([3 * dpr * scale, 5])
+  ctx.fillText(Math.floor(x) + ', ' + Math.floor(y), x, y, 100 / scale)
+  ctx.moveTo(0, y)
+  ctx.lineTo(ctx.canvas.width, y)
+  ctx.moveTo(x, 0)
+  ctx.lineTo(x, ctx.canvas.height)
+  ctx.stroke()
+  ctx.restore()
 }
-
-export {getBoxControlPoints, isInsideRotatedRect, hoverOnModule, MousePointToVirtualPoint}

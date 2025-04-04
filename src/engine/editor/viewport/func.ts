@@ -1,4 +1,4 @@
-const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Position[] => {
+export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Position[] => {
   const halfW = w / 2
   const halfH = h / 2
 
@@ -34,7 +34,7 @@ const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotat
   })
 }
 
-const isInsideRotatedRect = (
+export const isInsideRotatedRect = (
   mouseX: number,
   mouseY: number,
   centerX: number,
@@ -83,4 +83,3 @@ const isInsideRotatedRect = (
   )
 }
 
-export {getBoxControlPoints, isInsideRotatedRect}

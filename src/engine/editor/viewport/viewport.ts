@@ -10,13 +10,7 @@ import handleKeyUp from "./eventHandlers/keyUp.ts"
 import handleWheel from "./eventHandlers/wheel.ts"
 import handleContextMenu from "./eventHandlers/contextMenu.ts"
 import resetCanvas from "./resetCanvas.tsx"
-import {MousePointToVirtualPoint} from "./helper.ts"
-
-export interface Transform {
-  scale: number;
-  offsetX: number;
-  offsetY: number;
-}
+import {drawCrossLine} from "./helper.ts"
 
 class Viewport {
   readonly editor: Editor
@@ -46,12 +40,11 @@ class Viewport {
   selecting = false
   mouseDownPoint: Position = {x: 0, y: 0}
   mouseMovePoint: Position = {x: 0, y: 0}
+  offset: Position = {x: 0, y: 0}
   rect: Rect | undefined
   domResizing: boolean = false
   resizeTimeout: number | undefined
   currentZoom = 1
-  offsetX: number = 0
-  offsetY: number = 0
   enableCrossLine = true
 
   // transform: Transform
@@ -110,25 +103,23 @@ class Viewport {
 
   zoom(idx: number) {
     // console.log(idx)
+    const minZoom = .1
+    const maxZoom = 10
     this.currentZoom += idx
     // console.log(this.currentZoom)
-    if (this.currentZoom < .1) {
-      this.currentZoom = .1
+    if (this.currentZoom < minZoom) {
+      this.currentZoom = minZoom
     }
-    if (this.currentZoom > 5) {
-      this.currentZoom = 5
+    if (this.currentZoom > maxZoom) {
+      this.currentZoom = maxZoom
     }
 
     this.render()
   }
 
   translateViewport(x: number, y: number) {
-    this.offsetX += x
-    this.offsetY += y
-
-    // this.offsetX = this.offsetX < 0 ? 0 : this.offsetX
-    // this.offsetY = this.offsetY < 0 ? 0 : this.offsetY
-    // console.log(this.offsetX, this.offsetY)
+    this.offset.x += x
+    this.offset.y += y
     this.render()
   }
 
@@ -177,11 +168,11 @@ class Viewport {
   }
 
   resetMainCanvas() {
-    resetCanvas(this.mainCTX, this.dpr, [this.currentZoom, 0, 0, this.currentZoom, this.offsetX, this.offsetY])
+    resetCanvas(this.mainCTX, this.dpr, [this.currentZoom, 0, 0, this.currentZoom, this.offset.x, this.offset.y])
   }
 
   resetSelectionCanvas() {
-    resetCanvas(this.selectionCTX, this.dpr, [this.currentZoom, 0, 0, this.currentZoom, this.offsetX, this.offsetY])
+    resetCanvas(this.selectionCTX, this.dpr, [this.currentZoom, 0, 0, this.currentZoom, this.offset.x, this.offset.y])
   }
 
   renderMainCanvas() {
@@ -200,20 +191,16 @@ class Viewport {
       if (this.enableCrossLine) {
         // cross line
         // const {dpr} = this
-
-        const {x, y} = MousePointToVirtualPoint({
+        drawCrossLine({
+          ctx:this.selectionCTX,
           mousePoint: this.mouseMovePoint,
           scale: this.currentZoom,
           dpr: this.dpr,
-          translate: {
-            offsetX: this.offsetX,
-            offsetY: this.offsetY
-          }
+          offset: this.offset
         })
-        console.log(this.currentZoom, this.dpr)
-        this.selectionCTX.textBaseline = 'alphabetic'
-        this.selectionCTX.font = `${24 / this.currentZoom}px sans-serif`
-        this.selectionCTX.fillText(Math.floor(x) + ', ' + Math.floor(y), x, y, 100 / this.currentZoom)
+        // this.selectionCTX.textBaseline = 'alphabetic'
+        // this.selectionCTX.font = `${24 / this.currentZoom}px sans-serif`
+        // this.selectionCTX.fillText(Math.floor(x) + ', ' + Math.floor(y), x, y, 100 / this.currentZoom)
         // console.log(x, y)
       }
       selectionRender.call(this)

@@ -133,6 +133,7 @@ class Editor {
       )
     }
 
+    this.updateVisibleModuleMap(this.viewport.virtualRect)
     this.events.onModulesUpdated?.(this.moduleMap)
 
     this.render()
@@ -191,8 +192,10 @@ class Editor {
       })
     }
 
+    this.updateVisibleModuleMap(this.viewport.virtualRect)
     this.render()
     this.events.onModulesUpdated?.(this.moduleMap)
+
     return backup
   }
 
@@ -229,8 +232,8 @@ class Editor {
 
     this.render()
     this.events.onModulesUpdated?.(this.moduleMap)
-    this.selectionManager.update()
-    // this.selectionManager.render()
+    this.selectionManager.render()
+    this.events.onSelectionUpdated?.(this.selectionManager.selectedModules, this.selectionManager.getIfUnique())
 
     if (historyCode) {
       this.history.add({

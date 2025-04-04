@@ -70,35 +70,35 @@ class SelectionManager {
     this.modifySelection(idSet, 'replace');
   }
 
-  public selectAllModules(): void {
+  public selectAll(): void {
     this.selectedModules.clear()
     this.isSelectAll = true
     this.render()
     this.editor.events.onSelectionUpdated?.('all', null)
   }
 
-  public clearSelectedModules(): void {
+  public clear(): void {
     this.selectedModules.clear()
     this.isSelectAll = false
     this.render()
     this.editor.events.onSelectionUpdated?.(new Set(), null)
   }
 
-  public copySelectedModules(): void {
+  public copySelected(): void {
     this.copiedItems = []
 
     this.copiedItems = this.editor.batchCopy(this.isSelectAll ? 'all' : this.selectedModules, true)
     this.updateCopiedItemsDelta()
   }
 
-  public pasteCopiedModules(): void {
+  public pasteCopied(): void {
     const newModules = this.editor.batchCreate(this.copiedItems)
     this.editor.batchAdd(newModules, 'pasteModules')
     this.replace(new Set(newModules.keys()))
     this.updateCopiedItemsDelta()
   }
 
-  public duplicateSelectedModules(): void {
+  public duplicateSelected(): void {
     let temp: ModuleProps[]
 
     if (this.isSelectAll) {
@@ -118,14 +118,14 @@ class SelectionManager {
     this.replace(new Set(newModules.keys()))
   }
 
-  public removeSelectedModules(): void {
+  public removeSelected(): void {
     if (this.isSelectAll) {
       this.editor.batchDelete('all', 'deleteModules')
     } else {
       this.editor.batchDelete(this.selectedModules, 'deleteModules')
     }
 
-    this.editor.selectionManager.clearSelectedModules()
+    this.editor.selectionManager.clear()
   }
 
   private updateCopiedItemsDelta(): void {
@@ -133,6 +133,11 @@ class SelectionManager {
       copiedItem!.x += CopyDeltaX
       copiedItem!.y += CopyDeltaY
     })
+  }
+
+  public getIfUnique() {
+    if (this.selectedModules.size === 1) return [...this.selectedModules.values()][0]
+    return null;
   }
 
   public update() {

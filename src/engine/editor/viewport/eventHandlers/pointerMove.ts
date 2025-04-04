@@ -28,23 +28,17 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
 
     case 'dragging':
       this.wrapper.setPointerCapture(e.pointerId)
-      // console.log(this.handlingModules.size)
-      // this.wrapper.releasePointerCapture(e.pointerId)
-      // console.log(this.handlingModules)
 
       const x = e.movementX * this.dpr / this.zoom
       const y = e.movementY * this.dpr / this.zoom
 
       this.handlingModules.forEach((id) => {
-        // console.log(e.movementX, e.movementY)
-        console.log(x, y)
         this.editor.moduleMap.get(id).x += x
         this.editor.moduleMap.get(id).y += y
       })
       this.updateVirtualRect()
 
       this.render()
-      // this.renderMainCanvas()
       break
 
     case 'resizing':

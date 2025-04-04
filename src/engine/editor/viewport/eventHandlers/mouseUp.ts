@@ -43,8 +43,12 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
       break
 
     case 'static':
-      console.log(this.handlingModules)
-      this.editor.selectionManager.toggle(this.handlingModules)
+      if (e.ctrlKey || e.metaKey || e.shiftKey) {
+        this.editor.selectionManager.toggle(this.handlingModules)
+      } else {
+        this.editor.selectionManager.select(this.handlingModules)
+      }
+
       break
   }
 

@@ -8,6 +8,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
 
   this.mouseMovePoint.x = e.clientX - this.rect!.x
   this.mouseMovePoint.y = e.clientY - this.rect!.y
+  this.hoveredModules.length = 0
 
   switch (this.manipulationStatus) {
     case 'selecting':
@@ -51,6 +52,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
         }
       })
 
+      this.hoveredModules = possibleModules
       // console.log(possibleModules)
 
       this.wrapper.releasePointerCapture(e.pointerId)

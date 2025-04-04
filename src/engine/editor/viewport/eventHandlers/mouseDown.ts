@@ -17,8 +17,10 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
   if (this.spaceKeyDown) {
     this.manipulationStatus = 'panning'
   } else {
+    console.log(this.hoveredModules)
+    return
     // check item touch
-    const virtualPoint = this.screenToCanvas(this.mouseDownPoint.x, this.mouseDownPoint.y)
+    /*const virtualPoint = this.screenToCanvas(this.mouseDownPoint.x, this.mouseDownPoint.y)
     const possibleModules: UID[] = []
 
     this.editor.visibleModuleMap.forEach((module) => {
@@ -38,7 +40,7 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
 
       this.editor.selectionManager.clear()
       return
-    }
+    }*/
 
     this.manipulationStatus = 'dragging'
     // check handle points touch

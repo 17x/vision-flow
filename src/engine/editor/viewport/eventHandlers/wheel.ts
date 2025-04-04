@@ -1,18 +1,26 @@
 import Viewport from "../viewport.ts"
+import {isNegativeZero} from "../../../lib/lib.ts";
 
 function handleWheel(this: Viewport, event: WheelEvent) {
   // Prevent page zoom
   if (event.target as HTMLElement !== this.wrapper) return
+  console.log(this.manipulationStatus)
   event.preventDefault()
   event.stopPropagation()
+
   const {zooming, panning, zoomFactor, translateX, translateY} = detectGestures(event)
-  // this.manipulationStatus = 'static'
+
   console.log(zooming, panning)
 
   this.zooming = zooming
 
   if (zooming) {
+    const shiftX = (this.mouseMovePoint.x - this.offset.x) / this.zoom
+    const shiftY = (this.mouseMovePoint.y - this.offset.y) / this.zoom
+
+    // console.log(zoomFactor)
     this.scale(zoomFactor)
+    // this.setTranslateViewport(shiftX, shiftY)
   } else if (panning) {
     this.translateViewport(translateX, translateY)
   }
@@ -45,14 +53,7 @@ const detectGestures = (() => {
     clearTimeout(_timer)
 
     const {deltaX, deltaY} = event
-
-    // zooming = false
-    /* panning = false
-     scrolling = false
-     zoomFactor = 0
-     translateX = -deltaX
-     translateY = -deltaY*/
-
+    console.log(event)
     if (zooming) {
       // zooming = true
       zoomFactor = deltaY > 0 ? -.1 : .1
@@ -60,6 +61,7 @@ const detectGestures = (() => {
       translateX = -deltaX
       translateY = -deltaY
       if (event.altKey) {
+        console.log(deltaX, deltaY)
         zooming = true
         zoomFactor = deltaY > 0 ? -.1 : .1
       } else {
@@ -80,10 +82,10 @@ const detectGestures = (() => {
            *      x: UInt, increasing and abs(v) > 40
            *      y === -0
            */
-          const conditionOnX0 = EVENT_BUFFER.every(e => e.deltaX === -0)
+          const conditionOnX0 = EVENT_BUFFER.every(e => isNegativeZero(e.deltaX))
           const conditionOnY1 = EVENT_BUFFER.every(e => isFloat(e.deltaY))
           const conditionOnY2 = EVENT_BUFFER.every(e => Math.abs(e.deltaY) > 4)
-          const mouseScrollHorizontalFlag = EVENT_BUFFER.every(e => (Math.abs(e.deltaX) >= 40) && isUInt(e.deltaX) && e.deltaY === -0)
+          const mouseScrollHorizontalFlag = EVENT_BUFFER.every(e => (Math.abs(e.deltaX) >= 40) && isUInt(e.deltaX) && isNegativeZero(e.deltaY))
 
           if (conditionOnX0 && conditionOnY1) {
             if (conditionOnY2) {

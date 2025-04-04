@@ -249,3 +249,5 @@ export const generateBoundingRectFromTwoPoints = (p1: Position, p2: Position): B
     height: maxY - minY,
   });
 };
+
+export const isNegativeZero = (x: number) => x === 0 && (1 / x) === -Infinity;

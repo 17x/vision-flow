@@ -146,6 +146,12 @@ class Viewport {
     this.render()
   }
 
+  setTranslateViewport(x: number, y: number) {
+    this.offset.x = 0
+    this.offset.y = 0
+    this.translateViewport(x, y)
+  }
+
   translateViewport(x: number, y: number) {
     this.offset.x += x
     this.offset.y += y

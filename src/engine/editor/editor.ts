@@ -230,9 +230,9 @@ class Editor {
       })
     })
 
+    this.selectionManager.render()
     this.render()
     this.events.onModulesUpdated?.(this.moduleMap)
-    this.selectionManager.render()
     this.events.onSelectionUpdated?.(this.selectionManager.selectedModules, this.selectionManager.getIfUnique())
 
     if (historyCode) {

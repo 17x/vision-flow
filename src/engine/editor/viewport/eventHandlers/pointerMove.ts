@@ -14,29 +14,34 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
   this.mouseMovePoint.y = e.clientY - this.rect!.y
   this.hoveredModules.clear()
   this.drawCrossLine = false
-  console.log(this.manipulationStatus)
+
   switch (this.manipulationStatus) {
     case 'selecting':
       this.wrapper.setPointerCapture(e.pointerId)
+
       const rect = generateBoundingRectFromTwoPoints(this.mouseDownPoint, this.mouseMovePoint)
       const pointA = this.screenToCanvas(rect.x, rect.y)
       const pointB = this.screenToCanvas(rect.x + rect.width, rect.y + rect.height)
       const virtualSelectionRect: BoundingRect = generateBoundingRectFromTwoPoints(pointA, pointB)
       let idSet: Set<UID> = new Set()
-      this.editor.visibleModuleMap.forEach(((module) => {
-          if (module.type === 'rectangle') {
-            const boundingRect = module.getBoundingRect() as BoundingRect
 
-            if (rectInside(boundingRect, virtualSelectionRect)) {
-              idSet.add(module.id)
-            }
+      this.editor.visibleModuleMap.forEach((module) => {
+        if (module.type === 'rectangle') {
+          const boundingRect = module.getBoundingRect() as BoundingRect
+
+          if (rectInside(boundingRect, virtualSelectionRect)) {
+            idSet.add(module.id)
           }
-        })
-      )
+        }
+      })
 
-      this.editor.selectionManager.select(idSet)
+      if (!(e.ctrlKey || e.shiftKey || e.metaKey)) {
+        this.editor.selectionManager.select(idSet)
+      } else {
+        this.editor.selectionManager.toggle(idSet)
+      }
+
       updateSelectionBox(this.selectionBox, rect)
-
       this.resetSelectionCanvas()
       this.renderSelectionCanvas()
       break

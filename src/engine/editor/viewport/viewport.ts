@@ -14,6 +14,7 @@ import resetCanvas from "./resetCanvas.tsx"
 import {screenToCanvas} from "../../lib/lib.ts";
 
 // import {drawCrossLine, isInsideRect} from "./helper.ts"
+type ViewportManipulationType = 'static' | 'panning' | 'dragging' | 'resizing' | 'rotating' | 'zooming' | 'selecting'
 
 class Viewport {
   readonly editor: Editor
@@ -31,6 +32,7 @@ class Viewport {
   dpr = 2
   spaceKeyDown = false
   mouseDown = false
+  manipulationStatus: ViewportManipulationType = 'static'
   panning = false
   dragging = false
   resizing = false

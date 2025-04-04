@@ -15,7 +15,8 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
   this.mouseDown = true
 
   if (this.spaceKeyDown) {
-    this.panning = true
+    // this.panning = true
+    this.manipulationStatus = 'panning'
   } else {
     // check item touch
     const virtualPoint = this.screenToCanvas(this.mouseDownPoint.x, this.mouseDownPoint.y)
@@ -33,12 +34,16 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
     })
 
     if (!possibleModules.length) {
-      this.selecting = true
+      // this.selecting = true
+      this.manipulationStatus = 'selecting'
+
       this.editor.selectionManager.clear()
       return
     }
 
-    this.selecting = false
+    this.manipulationStatus = 'dragging'
+    // check handle points touch
+    // this.manipulationStatus = 'resizing'
 
     const lastOne = possibleModules[possibleModules.length - 1]
 

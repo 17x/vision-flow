@@ -7,30 +7,38 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
   this.mouseMovePoint.x = e.clientX - this.rect!.x
   this.mouseMovePoint.y = e.clientY - this.rect!.y
 
-  if (this.selecting) {
-    this.wrapper.setPointerCapture(e.pointerId)
-    this.drawCrossLine = false
-    updateSelectionBox(this.selectionBox, calcSelectionBox(this.mouseDownPoint, this.mouseMovePoint))
+  switch (this.manipulationStatus) {
+    case 'selecting':
+      this.wrapper.setPointerCapture(e.pointerId)
+      this.drawCrossLine = false
+      updateSelectionBox(this.selectionBox, calcSelectionBox(this.mouseDownPoint, this.mouseMovePoint))
 
-    this.resetSelectionCanvas()
-    this.renderSelectionCanvas()
-  } else if (this.panning) {
-    this.translateViewport(e.movementX, e.movementY)
-  } else if (this.dragging) {
+      this.resetSelectionCanvas()
+      this.renderSelectionCanvas()
+      break
 
-  } else if (this.resizing) {
+    case 'panning':
+      this.translateViewport(e.movementX, e.movementY)
 
-  } else if (this.rotating) {
+      break
 
-  } else {
-    this.wrapper.releasePointerCapture(e.pointerId)
-    this.drawCrossLine = true
+    case 'dragging':
+      break
 
-    // dragging or resizing
+    case 'resizing':
+      break
 
-    this.updateVirtualRect()
-    this.resetSelectionCanvas()
-    this.renderSelectionCanvas()
+    case 'rotating':
+      break
+
+    default:
+      this.wrapper.releasePointerCapture(e.pointerId)
+      this.drawCrossLine = true
+
+      this.updateVirtualRect()
+      this.resetSelectionCanvas()
+      this.renderSelectionCanvas()
+      break
   }
 }
 

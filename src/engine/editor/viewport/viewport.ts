@@ -33,7 +33,7 @@ class Viewport {
   spaceKeyDown = false
   hoveredModules: Set<UID> = new Set()
   handlingModules: Set<UID> = new Set()
-  // mouseDown = false
+  zooming = false
   manipulationStatus: ViewportManipulationType = 'static'
 
   mouseDownPoint: Position = {x: 0, y: 0}

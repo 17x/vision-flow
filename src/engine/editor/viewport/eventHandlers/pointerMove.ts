@@ -14,7 +14,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
   this.mouseMovePoint.y = e.clientY - this.rect!.y
   this.hoveredModules.clear()
   this.drawCrossLine = false
-
+  console.log(this.manipulationStatus)
   switch (this.manipulationStatus) {
     case 'selecting':
       this.wrapper.setPointerCapture(e.pointerId)

@@ -4,8 +4,12 @@ function handleWheel(this: Viewport, event: WheelEvent) {
   // Prevent page zoom
   if (event.target as HTMLElement !== this.wrapper) return
   event.preventDefault()
-
+  event.stopPropagation()
   const {zooming, panning, zoomFactor, translateX, translateY} = detectGestures(event)
+  // this.manipulationStatus = 'static'
+  console.log(zooming, panning)
+
+  this.zooming = zooming
 
   if (zooming) {
     this.scale(zoomFactor)

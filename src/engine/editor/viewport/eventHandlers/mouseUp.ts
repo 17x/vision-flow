@@ -40,7 +40,6 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
   }
 
   this.handlingModules.clear()
-
   this.manipulationStatus = 'static'
   updateSelectionBox(this.selectionBox, {x: 0, y: 0, width: 0, height: 0}, false)
 }

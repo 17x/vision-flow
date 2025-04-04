@@ -2,10 +2,8 @@ import Viewport from "../viewport.ts"
 import {updateSelectionBox} from "../domManipulations.ts"
 import {
   generateBoundingRectFromTwoPoints,
-  isInsideRect,
   isInsideRotatedRect,
   rectInside,
-  rectsOverlap
 } from "../../../lib/lib.ts";
 import Rectangle from "../../../core/modules/shapes/rectangle.ts";
 
@@ -39,7 +37,6 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       this.editor.selectionManager.select(idSet)
       updateSelectionBox(this.selectionBox, rect)
 
-      console.log(9)
       this.resetSelectionCanvas()
       this.renderSelectionCanvas()
       break

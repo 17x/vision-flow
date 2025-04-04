@@ -1,8 +1,5 @@
 import Viewport from "../viewport.ts"
 import {updateSelectionBox} from "../domManipulations.ts"
-import Rectangle from "../../../core/modules/shapes/rectangle.ts";
-import {isInsideRotatedRect} from "../../../lib/lib.ts";
-import {calcSelectionBox} from "./pointerMove.ts";
 
 function handleMouseUp(this: Viewport, e: MouseEvent) {
   const x = e.clientX - this.rect!.x
@@ -13,10 +10,6 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
 
   switch (this.manipulationStatus) {
     case 'selecting':
-      /*this.wrapper.setPointerCapture(e.pointerId)
-      this.drawCrossLine = false
-      updateSelectionBox(this.selectionBox, calcSelectionBox(this.mouseDownPoint, this.mouseMovePoint))
-*/
       this.resetSelectionCanvas()
       this.renderSelectionCanvas()
       break
@@ -28,12 +21,6 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
 
     case 'dragging':
       this.editor.selectionManager.select(this.handlingModules)
-      // this.handlingModules.clear()
-      /*this.wrapper.releasePointerCapture(e.pointerId)
-      const lastId = [...this.draggingModules][this.draggingModules.size - 1];
-      console.log(lastId)
-      this.editor.moduleMap.get(lastId).x += e.movementX
-      this.editor.moduleMap.get(lastId).y += e.movementY*/
       break
 
     case 'resizing':

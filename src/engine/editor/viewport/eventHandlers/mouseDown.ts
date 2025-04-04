@@ -1,5 +1,6 @@
 import Viewport from "../viewport.ts"
 import {isInsideRotatedRect} from "../../../lib/lib.ts";
+import Rectangle from "../../../core/modules/shapes/rectangle.ts";
 
 // import {isInsideRotatedRect, screenToCanvas} from "../../../lib/lib.ts";
 
@@ -17,23 +18,43 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
     this.panning = true
   } else {
     // check item touch
-    //
     const virtualPoint = this.screenToCanvas(this.mouseDownPoint.x, this.mouseDownPoint.y)
+    const possibleModules: UID[] = []
 
     this.editor.visibleModuleMap.forEach((module) => {
       if (module.type === 'rectangle') {
-        const boundingRect = module.getBoundingRect() as BoundingRect
-        const f = isInsideRotatedRect(virtualPoint, boundingRect, module.rotation)
+        const {x, y, width, height, rotation} = (module as Rectangle)
+        const f = isInsideRotatedRect(virtualPoint, {x, y, width, height}, rotation)
 
         if (f) {
-          console.log(module)
+          possibleModules.push(module.id)
         }
       }
     })
-    // const f = isInsideRotatedRect()
-    // console.log(this.editor.selectionManager.selectedModules)
 
-    this.selecting = true
+    if (!possibleModules.length) {
+      this.selecting = true
+      this.editor.selectionManager.clear()
+      return
+    }
+
+    this.selecting = false
+
+    const lastOne = possibleModules[possibleModules.length - 1]
+
+    /* if (e.metaKey || e.ctrlKey || e.shiftKey) {
+       if (this.selectedModules.has(id)) {
+         this.selectedModules.delete(id)
+       } else {
+         this.selectedModules.add(id)
+       }
+     } else {
+       this.selectedModules.clear()
+       this.selectedModules.add(id)
+     }*/
+
+    // this.update()
+
     // this.dragging = true
 
   }

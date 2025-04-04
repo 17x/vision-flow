@@ -2,7 +2,7 @@ import render from "../../core/renderer/mainCanvasRenderer.ts"
 import Editor from "../editor.ts"
 import {generateScrollBars, initViewportDom, updateScrollBars} from "./domManipulations.ts"
 import handleMouseDown from "./eventHandlers/mouseDown.ts"
-import handleMouseMove from "./eventHandlers/mouseMove.ts"
+import handlePointerMove from "./eventHandlers/pointerMove.ts"
 import handleMouseUp from "./eventHandlers/mouseUp.ts"
 import selectionRender from "./selectionRender.ts"
 import handleKeyDown from "./eventHandlers/keyDown.ts"
@@ -32,6 +32,9 @@ class Viewport {
   spaceKeyDown = false
   mouseDown = false
   panning = false
+  dragging = false
+  resizing = false
+  rotating = false
   zooming = false
   selecting = false
   mouseDownPoint: Position = {x: 0, y: 0}
@@ -94,7 +97,7 @@ class Viewport {
     const {signal} = this.eventsController
 
     window.addEventListener('mousedown', handleMouseDown.bind(this), {signal})
-    this.wrapper.addEventListener('pointermove', handleMouseMove.bind(this), {signal})
+    this.wrapper.addEventListener('pointermove', handlePointerMove.bind(this), {signal})
     window.addEventListener('mouseup', handleMouseUp.bind(this), {signal})
     window.addEventListener('keydown', handleKeyDown.bind(this), {signal})
     window.addEventListener('keyup', handleKeyUp.bind(this), {signal})

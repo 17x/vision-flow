@@ -1,5 +1,4 @@
 import Editor from "../editor.ts"
-// import render from "./render.ts"
 
 const CopyDeltaX = 50
 const CopyDeltaY = 100
@@ -45,19 +44,6 @@ class SelectionManager {
     // console.log(p2)
     this.render()
     this.editor.events.onSelectionUpdated?.(idSet, p2)
-  }
-
-  public update() {
-    let p2: ModuleProps | null = null
-
-    if (this.selectedModules.size === 1) {
-      this.selectedModules.forEach((id) => {
-        p2 = (this.editor.moduleMap.get(id) as ModuleType).getDetails()
-      })
-    }
-
-    this.render()
-    this.editor.events.onSelectionUpdated?.(this.selectedModules, p2)
   }
 
   public selectAll(): void {
@@ -123,6 +109,19 @@ class SelectionManager {
       copiedItem!.x += CopyDeltaX
       copiedItem!.y += CopyDeltaY
     })
+  }
+
+  public update() {
+    let p2: ModuleProps | null = null
+
+    if (this.selectedModules.size === 1) {
+      this.selectedModules.forEach((id) => {
+        p2 = (this.editor.moduleMap.get(id) as ModuleType).getDetails()
+      })
+    }
+
+    this.render()
+    this.editor.events.onSelectionUpdated?.(this.selectedModules, p2)
   }
 
   render() {

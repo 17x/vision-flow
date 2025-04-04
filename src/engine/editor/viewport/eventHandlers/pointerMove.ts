@@ -9,7 +9,7 @@ import Rectangle from "../../../core/modules/shapes/rectangle.ts";
 
 export default function handlePointerMove(this: Viewport, e: PointerEvent) {
   if (this.domResizing) return
-  if (this.zooming) return
+  // if (this.zooming) return
   // console.log(this.zooming,this.manipulationStatus)
   this.mouseMovePoint.x = e.clientX - this.rect!.x
   this.mouseMovePoint.y = e.clientY - this.rect!.y

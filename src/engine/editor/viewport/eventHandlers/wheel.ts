@@ -4,11 +4,11 @@ import {isNegativeZero} from "../../../lib/lib.ts";
 function handleWheel(this: Viewport, event: WheelEvent) {
   // Prevent page zoom
   if (event.target as HTMLElement !== this.wrapper) return
-  console.log(this.manipulationStatus)
+  // console.log(this.manipulationStatus)
   event.preventDefault()
   event.stopPropagation()
 
-  const {zooming, panning, zoomFactor, translateX, translateY} = detectGestures(event)
+  const {zooming, panning, scrolling, zoomFactor, translateX, translateY} = detectGestures(event)
 
   console.log(zooming, panning)
 
@@ -21,7 +21,7 @@ function handleWheel(this: Viewport, event: WheelEvent) {
     // console.log(zoomFactor)
     this.scale(zoomFactor)
     // this.setTranslateViewport(shiftX, shiftY)
-  } else if (panning) {
+  } else if (panning || scrolling) {
     this.translateViewport(translateX, translateY)
   }
 
@@ -43,20 +43,24 @@ const detectGestures = (() => {
   let translateY = 0
 
   return (event: WheelEvent) => {
-    EVENT_BUFFER.push(event)
+    if (!zooming) {
+      EVENT_BUFFER.push(event)
 
-    // Only read RECENT actions
-    if (EVENT_BUFFER.length > ACTION_THRESHOLD) {
-      EVENT_BUFFER.shift()
+      // Only read RECENT actions
+      if (EVENT_BUFFER.length > ACTION_THRESHOLD) {
+        EVENT_BUFFER.shift()
+      }
     }
 
     clearTimeout(_timer)
 
     const {deltaX, deltaY} = event
-    console.log(event)
+
+    // console.log(event)
     if (zooming) {
       // zooming = true
       zoomFactor = deltaY > 0 ? -.1 : .1
+      EVENT_BUFFER.length = 0
     } else {
       translateX = -deltaX
       translateY = -deltaY
@@ -65,6 +69,8 @@ const detectGestures = (() => {
         zooming = true
         zoomFactor = deltaY > 0 ? -.1 : .1
       } else {
+
+        console.log(deltaX, deltaY)
         if (EVENT_BUFFER.length >= ACTION_THRESHOLD) {
           /**
            * 1. touchpad
@@ -82,16 +88,17 @@ const detectGestures = (() => {
            *      x: UInt, increasing and abs(v) > 40
            *      y === -0
            */
-          const conditionOnX0 = EVENT_BUFFER.every(e => isNegativeZero(e.deltaX))
-          const conditionOnY1 = EVENT_BUFFER.every(e => isFloat(e.deltaY))
-          const conditionOnY2 = EVENT_BUFFER.every(e => Math.abs(e.deltaY) > 4)
+          const allXAreMinusZero = EVENT_BUFFER.every(e => isNegativeZero(e.deltaX))
+          const allYAreFloat = EVENT_BUFFER.every(e => isFloat(e.deltaY))
+          const absBiggerThan4 = EVENT_BUFFER.every(e => Math.abs(e.deltaY) > 4)
           const mouseScrollHorizontalFlag = EVENT_BUFFER.every(e => (Math.abs(e.deltaX) >= 40) && isUInt(e.deltaX) && isNegativeZero(e.deltaY))
 
-          if (conditionOnX0 && conditionOnY1) {
-            if (conditionOnY2) {
+          if (allXAreMinusZero && allYAreFloat) {
+            if (absBiggerThan4) {
               scrolling = true
               translateY = -deltaY
             } else {
+              console.log([...EVENT_BUFFER])
               zoomFactor = deltaY > 0 ? -.1 : .1
               zooming = true
             }

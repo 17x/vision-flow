@@ -10,7 +10,8 @@ import handleKeyUp from "./eventHandlers/keyUp.ts"
 import handleWheel from "./eventHandlers/wheel.ts"
 import handleContextMenu from "./eventHandlers/contextMenu.ts"
 import resetCanvas from "./resetCanvas.tsx"
-import {drawCrossLine} from "./helper.ts"
+
+// import {drawCrossLine, isInsideRect} from "./helper.ts"
 
 class Viewport {
   readonly editor: Editor
@@ -24,13 +25,6 @@ class Viewport {
   readonly selectionCTX: CanvasRenderingContext2D
   readonly mainCanvas: HTMLCanvasElement
   readonly mainCTX: CanvasRenderingContext2D
-  readonly handleMouseDown
-  readonly handleMouseUp
-  readonly handleMouseMove
-  readonly handleKeyDown
-  readonly handleKeyUp
-  readonly handleWheel
-  readonly handleContextMenu
   readonly eventsController: AbortController
   dpr = 2
   spaceKeyDown = false
@@ -44,8 +38,9 @@ class Viewport {
   rect: Rect | undefined
   domResizing: boolean = false
   resizeTimeout: number | undefined
-  currentZoom = 1
+  zoom = 1
   enableCrossLine = true
+  drawCrossLine = false
 
   // transform: Transform
 
@@ -69,13 +64,6 @@ class Viewport {
     this.resizeThrottle = this.resizeThrottle.bind(this)
     this.resizeObserver = new ResizeObserver(this.resizeThrottle)
     this.updateCanvasSize = this.updateCanvasSize.bind(this)
-    this.handleMouseDown = handleMouseDown.bind(this)
-    this.handleMouseMove = handleMouseMove.bind(this)
-    this.handleMouseUp = handleMouseUp.bind(this)
-    this.handleKeyDown = handleKeyDown.bind(this)
-    this.handleKeyUp = handleKeyUp.bind(this)
-    this.handleWheel = handleWheel.bind(this)
-    this.handleContextMenu = handleContextMenu.bind(this)
     this.eventsController = new AbortController()
 
     this.init()
@@ -91,27 +79,37 @@ class Viewport {
   setupEvents() {
     const {signal} = this.eventsController
 
-    window.addEventListener('mousedown', this.handleMouseDown, {signal})
-    window.addEventListener('mousemove', this.handleMouseMove, {signal})
-    window.addEventListener('mouseup', this.handleMouseUp, {signal})
-    window.addEventListener('keydown', this.handleKeyDown, {signal})
-    window.addEventListener('keyup', this.handleKeyUp, {signal})
-    window.addEventListener('wheel', this.handleWheel, {signal, passive: false})
-    // window.addEventListener('pointermove', this.handleTouchPoint, {signal, passive: false})
-    this.wrapper.addEventListener('contextmenu', this.handleContextMenu, {signal})
+    window.addEventListener('mousedown', handleMouseDown.bind(this), {signal})
+    this.wrapper.addEventListener('pointermove', handleMouseMove.bind(this), {signal})
+    window.addEventListener('mouseup', handleMouseUp.bind(this), {signal})
+    window.addEventListener('keydown', handleKeyDown.bind(this), {signal})
+    window.addEventListener('keyup', handleKeyUp.bind(this), {signal})
+    window.addEventListener('wheel', handleWheel.bind(this), {signal, passive: false})
+    /*
+        this.wrapper.addEventListener('pointermove', (e) => {
+          if(this.selecting) {
+            this.wrapper.setPointerCapture(e.pointerId)
+          }else{
+            this.wrapper.setPointerCapture(e.pointerId)
+          }
+          this.isMouseHovered = true
+          this.resetSelectionCanvas()
+          this.renderSelectionCanvas()
+        }, {signal})*/
+    this.wrapper.addEventListener('contextmenu', handleContextMenu.bind(this), {signal})
   }
 
-  zoom(idx: number) {
+  scale(idx: number) {
     // console.log(idx)
     const minZoom = .1
     const maxZoom = 10
-    this.currentZoom += idx
+    this.zoom += idx
     // console.log(this.currentZoom)
-    if (this.currentZoom < minZoom) {
-      this.currentZoom = minZoom
+    if (this.zoom < minZoom) {
+      this.zoom = minZoom
     }
-    if (this.currentZoom > maxZoom) {
-      this.currentZoom = maxZoom
+    if (this.zoom > maxZoom) {
+      this.zoom = maxZoom
     }
 
     this.render()
@@ -168,11 +166,11 @@ class Viewport {
   }
 
   resetMainCanvas() {
-    resetCanvas(this.mainCTX, this.dpr, [this.currentZoom, 0, 0, this.currentZoom, this.offset.x, this.offset.y])
+    resetCanvas(this.mainCTX, this.dpr, this.zoom, this.offset)
   }
 
   resetSelectionCanvas() {
-    resetCanvas(this.selectionCTX, this.dpr, [this.currentZoom, 0, 0, this.currentZoom, this.offset.x, this.offset.y])
+    resetCanvas(this.selectionCTX, this.dpr, this.zoom, this.offset)
   }
 
   renderMainCanvas() {
@@ -188,23 +186,29 @@ class Viewport {
 
   renderSelectionCanvas() {
     const animate = () => {
-      if (this.enableCrossLine) {
-        // cross line
-        // const {dpr} = this
-        drawCrossLine({
-          ctx:this.selectionCTX,
-          mousePoint: this.mouseMovePoint,
-          scale: this.currentZoom,
-          dpr: this.dpr,
-          offset: this.offset
-        })
-        // this.selectionCTX.textBaseline = 'alphabetic'
-        // this.selectionCTX.font = `${24 / this.currentZoom}px sans-serif`
-        // this.selectionCTX.fillText(Math.floor(x) + ', ' + Math.floor(y), x, y, 100 / this.currentZoom)
-        // console.log(x, y)
-      }
+      // this.resetSelectionCanvas()
       selectionRender.call(this)
+      /*
+            if (this.enableCrossLine) {
+              // cross line
+              const {selectionCTX, dpr, offset, rect, currentZoom: scale, mouseMovePoint} = this
+              const f = isInsideRect(mouseMovePoint, {
+                x: 0,
+                y: 0,
+                width: rect!.width,
+                height: rect!.height,
+              })
 
+              if (f) {
+                drawCrossLine({
+                  ctx: selectionCTX,
+                  mousePoint: mouseMovePoint,
+                  scale,
+                  dpr,
+                  offset
+                })
+              }
+            }*/
     }
 
     requestAnimationFrame(animate)

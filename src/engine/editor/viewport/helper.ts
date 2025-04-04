@@ -1,4 +1,4 @@
-import {canvasToScreen, screenToCanvas} from "./TransformUtils.ts";
+import {screenToCanvas} from "./TransformUtils.ts";
 
 export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Position[] => {
   const halfW = w / 2
@@ -85,6 +85,32 @@ export const isInsideRotatedRect = (
   )
 }
 
+export const isInsideRect = (
+  {
+    x: mouseX,
+    y: mouseY
+  }: {
+    x: number,
+    y: number
+  },
+  {
+    x,
+    y,
+    width,
+    height
+  }: Rect
+): boolean => {
+  if (width <= 0 || height <= 0) {
+    return false
+  }
+
+  return (
+    mouseX >= x && mouseX <= width &&
+    mouseY >= y && mouseY <= height
+  )
+
+}
+
 export const hoverOnModule = () => {
   return true
 }
@@ -105,17 +131,33 @@ export const drawCrossLine = ({
                                 offset: {x: offsetX, y: offsetY}
 
                               }: DrawCrossLineProps): void => {
-
+  const textOffsetX = 10 / (dpr * scale)
+  const textOffsetY = 10 / (dpr * scale)
+  const {width, height} = ctx.canvas
   const {x, y} = screenToCanvas(scale, offsetX * dpr, offsetY * dpr, mousePoint.x * dpr, mousePoint.y * dpr)
+  const {x: minX, y: minY} = screenToCanvas(scale, offsetX * dpr, offsetY * dpr, 0, 0)
+  const {x: maxX, y: maxY} = screenToCanvas(scale, offsetX * dpr, offsetY * dpr, width * dpr, height * dpr)
+  const crossLineColor = '#ff0000'
+  const textColor = '#ff0000'
+  const textShadowColor = '#000'
+  ctx.save()
   ctx.textBaseline = 'alphabetic'
   ctx.font = `${24 / scale}px sans-serif`
-  ctx.save()
-  ctx.setLineDash([3 * dpr * scale, 5])
-  ctx.fillText(Math.floor(x) + ', ' + Math.floor(y), x, y, 100 / scale)
-  ctx.moveTo(0, y)
-  ctx.lineTo(ctx.canvas.width, y)
-  ctx.moveTo(x, 0)
-  ctx.lineTo(x, ctx.canvas.height)
+  // ctx.setLineDash([3 * dpr * scale, 5 * dpr * scale])
+  ctx.fillStyle = textColor
+  ctx.shadowColor = crossLineColor;
+  ctx.shadowBlur = 1;
+
+  ctx.fillText(`${Math.floor(x)}, ${Math.floor(y)}`, x + textOffsetX, y - textOffsetY, 200 / scale)
+  ctx.lineWidth = 2 / (dpr * scale)
+  ctx.strokeStyle = crossLineColor
+  ctx.shadowColor = textShadowColor
+  ctx.shadowBlur = 0;
+  ctx.beginPath()
+  ctx.moveTo(minX, y)
+  ctx.lineTo(maxX, y)
+  ctx.moveTo(x, minY)
+  ctx.lineTo(x, maxY)
   ctx.stroke()
   ctx.restore()
 }

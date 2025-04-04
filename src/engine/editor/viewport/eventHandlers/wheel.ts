@@ -11,7 +11,7 @@ function handleWheel(this: Viewport, event: WheelEvent) {
   this.zooming = zooming
 
   if (zooming) {
-    this.zoom(zoomFactor)
+    this.scale(zoomFactor)
   } else {
     // console.log('pad')
     this.translateViewport(translateX, translateY)

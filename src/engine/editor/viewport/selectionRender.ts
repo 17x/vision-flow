@@ -1,12 +1,12 @@
 import {CircleRenderProps, RectangleRenderProps} from "../../core/renderer/type"
 import Rectangle from "../../core/modules/shapes/rectangle.ts"
-import {getBoxControlPoints} from "./helper.ts"
+import {drawCrossLine, getBoxControlPoints} from "./helper.ts"
 import rectRender from "../../core/renderer/rectRender.ts"
 import circleRender from "../../core/renderer/circleRender.ts"
 import Viewport from "./viewport.ts";
 
 function selectionRender(this: Viewport) {
-  const {selectionCTX: ctx, editor} = this
+  const {selectionCTX: ctx, editor, dpr, offset, rect, zoom: scale, mouseMovePoint} = this
   const {selectionManager} = editor
   const enableRotationHandle = selectionManager.selectedModules.size === 1
 
@@ -51,9 +51,19 @@ function selectionRender(this: Viewport) {
       })
     })
 
-
     rectRender(ctx, rects)
     circleRender(ctx, dots)
+
+    console.log(this.drawCrossLine)
+    if (this.enableCrossLine && this.drawCrossLine) {
+      drawCrossLine({
+        ctx,
+        mousePoint: mouseMovePoint,
+        scale,
+        dpr,
+        offset
+      })
+    }
   }
 
   if (selectionManager.isSelectAll) {

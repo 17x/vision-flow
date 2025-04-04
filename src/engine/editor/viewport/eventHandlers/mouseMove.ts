@@ -1,13 +1,24 @@
 import Viewport from "../viewport.ts"
 import {updateSelectionBox} from "../domManipulations.ts"
 
-function handleMouseMove(this: Viewport, e: MouseEvent) {
+function handleMouseMove(this: Viewport, e: PointerEvent) {
   if (this.domResizing) return
+
   this.mouseMovePoint.x = e.clientX - this.rect!.x
   this.mouseMovePoint.y = e.clientY - this.rect!.y
 
-  this.resetSelectionCanvas()
-  this.renderSelectionCanvas()
+  if (this.selecting) {
+    this.wrapper.setPointerCapture(e.pointerId)
+    this.drawCrossLine = false
+    this.resetSelectionCanvas()
+    this.renderSelectionCanvas()
+  } else {
+    this.wrapper.releasePointerCapture(e.pointerId)
+    this.drawCrossLine = true
+
+    this.resetSelectionCanvas()
+    this.renderSelectionCanvas()
+  }
 
   if (this.panning) {
     this.translateViewport(e.movementX, e.movementY)
@@ -21,7 +32,7 @@ function handleMouseMove(this: Viewport, e: MouseEvent) {
   }
 }
 
-const calcSelectionBox = ({x: x1, y: y1}: Position, {x: x2, y: y2}: Position) => {
+export const calcSelectionBox = ({x: x1, y: y1}: Position, {x: x2, y: y2}: Position) => {
   let boxX = x1
   let boxY = y1
   let boxWidth = x2 - x1

@@ -90,7 +90,7 @@ const FileProvider: FC = () => {
          <LanguageSwitcher />
         </div>
         
-        <div className={'flex-1 overflow-hidden'}>
+        <div className={'flex-1 overflow-hidden min-h-[600px]'}>
           {
             fileList.map(file =>
               file.id === currentFileId ?

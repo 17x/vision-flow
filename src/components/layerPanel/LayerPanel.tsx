@@ -33,8 +33,8 @@ export const LayerPanel = ({data, selected, handleSelectModule}: LayerPanelProps
   useEffect(() => {
     targetRef.current?.scrollIntoView({
       // behavior: "smooth",
-      block: "nearest",
-      inline: "nearest"
+      // block: "start",
+      inline: "start"
     })
   }, [selected])
 

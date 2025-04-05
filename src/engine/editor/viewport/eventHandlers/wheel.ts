@@ -58,59 +58,60 @@ const detectGestures = (() => {
 
     // console.log(event)
     if (zooming) {
+      console.log(deltaX, deltaY)
+
       // zooming = true
-      zoomFactor = deltaY > 0 ? -.1 : .1
+      zoomFactor = ~~deltaY > 0 ? -.1 : .1
       EVENT_BUFFER.length = 0
     } else {
       translateX = -deltaX
       translateY = -deltaY
       if (event.altKey) {
-        console.log(deltaX, deltaY)
         zooming = true
         zoomFactor = deltaY > 0 ? -.1 : .1
       } else {
-
         console.log(deltaX, deltaY)
-        if (EVENT_BUFFER.length >= ACTION_THRESHOLD) {
-          /**
-           * 1. touchpad
-           *  panning
-           *    x: UInt
-           *    y: UInt
-           *  zoom
-           *    x === -0
-           *    y: Float
-           * 2. mouse scroll
-           *    2.1 vertical scroll
-           *      x === -0
-           *      y: Float, abs(value) > 4, and increasing
-           *    2.2 horizontal scroll
-           *      x: UInt, increasing and abs(v) > 40
-           *      y === -0
-           */
-          const allXAreMinusZero = EVENT_BUFFER.every(e => isNegativeZero(e.deltaX))
-          const allYAreFloat = EVENT_BUFFER.every(e => isFloat(e.deltaY))
-          const absBiggerThan4 = EVENT_BUFFER.every(e => Math.abs(e.deltaY) > 4)
-          const mouseScrollHorizontalFlag = EVENT_BUFFER.every(e => (Math.abs(e.deltaX) >= 40) && isUInt(e.deltaX) && isNegativeZero(e.deltaY))
+        console.log(deltaX, deltaY)
+        /**
+         * 1. touchpad
+         *  panning
+         *    x: UInt
+         *    y: UInt
+         *  zoom
+         *    x === -0
+         *    y: Float
+         * 2. mouse scroll
+         *    2.1 vertical scroll
+         *      x === -0
+         *      y: Float, abs(value) > 4, and increasing
+         *    2.2 horizontal scroll
+         *      x: UInt, increasing and abs(v) > 40
+         *      y === -0
+         */
+        if (Math.abs(deltaX) >= 40 && isNegativeZero(deltaY)) {
+          // Horizontal scrolling
+          scrolling = true
+          translateX = -deltaX
+        } else if (isNegativeZero(deltaX) && isFloat(deltaY) && Math.abs(deltaY) > 4) {
+          // Vertical scrolling
+          scrolling = true
+          translateY = -deltaY
+        } else if (isUInt(deltaX) && isUInt(deltaY)) {
+          // panning
+          panning = true
+          translateX = -deltaX
+          translateY = -deltaY
+        } else {
+          if (EVENT_BUFFER.length >= ACTION_THRESHOLD) {
+            const allXAreMinusZero = EVENT_BUFFER.every(e => isNegativeZero(e.deltaX))
+            const allYAreFloat = EVENT_BUFFER.every(e => isFloat(e.deltaY))
+            const absBiggerThan4 = EVENT_BUFFER.every(e => Math.abs(e.deltaY) > 4)
 
-          if (allXAreMinusZero && allYAreFloat) {
-            if (absBiggerThan4) {
-              scrolling = true
-              translateY = -deltaY
-            } else {
+            if (allXAreMinusZero && allYAreFloat && !absBiggerThan4) {
               console.log([...EVENT_BUFFER])
               zoomFactor = deltaY > 0 ? -.1 : .1
               zooming = true
             }
-          } else if (mouseScrollHorizontalFlag) {
-            scrolling = true
-            translateX = -deltaX
-          }
-        } else {
-          if (isUInt(deltaX) && isUInt(deltaY)) {
-            panning = true
-            translateX = -deltaX
-            translateY = -deltaY
           }
         }
       }

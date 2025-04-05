@@ -10,13 +10,13 @@ function handleWheel(this: Viewport, event: WheelEvent) {
 
   const {zooming, panning, scrolling, zoomFactor, translateX, translateY} = detectGestures(event)
 
-  console.log(zooming, panning)
+  console.log(`${zooming ? 'zooming' : ''} ${panning ? 'panning' : ''} ${scrolling ? 'scrolling' : ''} `)
 
   this.zooming = zooming
 
   if (zooming) {
-    const shiftX = (this.mouseMovePoint.x - this.offset.x) / this.zoom
-    const shiftY = (this.mouseMovePoint.y - this.offset.y) / this.zoom
+    // const shiftX = (this.mouseMovePoint.x - this.offset.x) / this.zoom
+    // const shiftY = (this.mouseMovePoint.y - this.offset.y) / this.zoom
 
     // console.log(zoomFactor)
     this.scale(zoomFactor)
@@ -30,7 +30,7 @@ function handleWheel(this: Viewport, event: WheelEvent) {
 
 const detectGestures = (() => {
   let _timer: number | undefined
-  const DELAY = 200
+  const DELAY = 100
   // let shiftX: number = 0
   // let shiftY: number = 0
   const ACTION_THRESHOLD = 3
@@ -41,89 +41,120 @@ const detectGestures = (() => {
   let zoomFactor = 0
   let translateX = 0
   let translateY = 0
+  let gestureLock = false
 
   return (event: WheelEvent) => {
-    if (!zooming) {
-      EVENT_BUFFER.push(event)
+    const {deltaX, deltaY, altKey} = event
 
-      // Only read RECENT actions
-      if (EVENT_BUFFER.length > ACTION_THRESHOLD) {
-        EVENT_BUFFER.shift()
-      }
+    if (_timer) {
+      clearTimeout(_timer)
     }
 
-    clearTimeout(_timer)
-
-    const {deltaX, deltaY} = event
-
-    // console.log(event)
-    if (zooming) {
-      console.log(deltaX, deltaY)
-
-      // zooming = true
-      zoomFactor = ~~deltaY > 0 ? -.1 : .1
+    if (gestureLock) {
       EVENT_BUFFER.length = 0
     } else {
-      translateX = -deltaX
-      translateY = -deltaY
-      if (event.altKey) {
-        zooming = true
-        zoomFactor = deltaY > 0 ? -.1 : .1
-      } else {
-        console.log(deltaX, deltaY)
-        console.log(deltaX, deltaY)
-        /**
-         * 1. touchpad
-         *  panning
-         *    x: UInt
-         *    y: UInt
-         *  zoom
-         *    x === -0
-         *    y: Float
-         * 2. mouse scroll
-         *    2.1 vertical scroll
-         *      x === -0
-         *      y: Float, abs(value) > 4, and increasing
-         *    2.2 horizontal scroll
-         *      x: UInt, increasing and abs(v) > 40
-         *      y === -0
-         */
-        if (Math.abs(deltaX) >= 40 && isNegativeZero(deltaY)) {
-          // Horizontal scrolling
-          scrolling = true
-          translateX = -deltaX
-        } else if (isNegativeZero(deltaX) && isFloat(deltaY) && Math.abs(deltaY) > 4) {
-          // Vertical scrolling
-          scrolling = true
-          translateY = -deltaY
-        } else if (isUInt(deltaX) && isUInt(deltaY)) {
-          // panning
-          panning = true
-          translateX = -deltaX
-          translateY = -deltaY
-        } else {
-          if (EVENT_BUFFER.length >= ACTION_THRESHOLD) {
-            const allXAreMinusZero = EVENT_BUFFER.every(e => isNegativeZero(e.deltaX))
-            const allYAreFloat = EVENT_BUFFER.every(e => isFloat(e.deltaY))
-            const absBiggerThan4 = EVENT_BUFFER.every(e => Math.abs(e.deltaY) > 4)
-
-            if (allXAreMinusZero && allYAreFloat && !absBiggerThan4) {
-              console.log([...EVENT_BUFFER])
-              zoomFactor = deltaY > 0 ? -.1 : .1
-              zooming = true
-            }
-          }
-        }
-      }
+      EVENT_BUFFER.push(event)
     }
 
+    translateX = -deltaX
+    translateY = -deltaY
+    zooming = false
+    scrolling = false
+    panning = false
+
+    if (altKey) {
+      zooming = true
+      // zoomFactor = ~~deltaY < 0 ? -.1 : .1
+    }
+
+    console.log(deltaX, deltaY)
+
+    /**
+     * Wheel deltaX deltaY
+     * 1. touchpad
+     *  panning
+     *    x: UInt
+     *    y: UInt
+     *  zoom
+     *    x === -0
+     *    y: Float
+     * 2. mouse scroll
+     *    2.1 vertical scroll
+     *      x === -0
+     *      y: Float, abs(value) > 4, and increasing
+     *    2.2 horizontal scroll
+     *      x: UInt, increasing and abs(v) > 40
+     *      y === -0
+     */
+    if (gestureLock) {
+      console.log('hit')
+      zoomFactor = deltaY > 0 ? -.1 : .1
+      zooming = true
+    } else if (EVENT_BUFFER.length >= ACTION_THRESHOLD) {
+      // detect zooming
+      const allXAreMinusZero = EVENT_BUFFER.every(e => isNegativeZero(e.deltaX))
+      const allYAreFloat = EVENT_BUFFER.every(e => isFloat(e.deltaY))
+      const absBiggerThan4 = EVENT_BUFFER.every(e => Math.abs(e.deltaY) > 4)
+
+      if (allXAreMinusZero && allYAreFloat && !absBiggerThan4) {
+        gestureLock = true
+
+        console.log('touchpadZoomingLock')
+        console.log([...EVENT_BUFFER])
+        zoomFactor = deltaY > 0 ? -.1 : .1
+        zooming = true
+      }
+    } else if (Math.abs(deltaX) >= 40 && isNegativeZero(deltaY)) {
+      // Mouse horizontal scrolling
+      // console.log('hor scroll', deltaX)
+      if (altKey) {
+        zoomFactor = deltaX < 0 ? .1 : -.1
+      } else {
+        scrolling = true
+        translateX = -deltaX
+      }
+    } else if (isNegativeZero(deltaX) && isFloat(deltaY) && Math.abs(deltaY) > 4) {
+      // Vertical scrolling
+      // console.log('ver scrolling', deltaX)
+      if (altKey) {
+        zoomFactor = deltaY < 0 ? .1 : -.1
+      } else {
+        scrolling = true
+        translateY = -deltaY
+      }
+    } else if (isUInt(deltaX) && isUInt(deltaY)) {
+      // panning
+      if (altKey) {
+        const max = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY
+
+        zoomFactor = max < 0 ? .1 : -.1
+      } else {
+        panning = true
+        translateX = -deltaX
+        translateY = -deltaY
+      }
+    } /*else {
+      if (EVENT_BUFFER.length >= ACTION_THRESHOLD) {
+        const allXAreMinusZero = EVENT_BUFFER.every(e => isNegativeZero(e.deltaX))
+        const allYAreFloat = EVENT_BUFFER.every(e => isFloat(e.deltaY))
+        const absBiggerThan4 = EVENT_BUFFER.every(e => Math.abs(e.deltaY) > 4)
+
+        if (allXAreMinusZero && allYAreFloat && !absBiggerThan4) {
+          console.log([...EVENT_BUFFER])
+          zoomFactor = deltaY > 0 ? -.1 : .1
+          zooming = true
+        }
+      }
+    }*/
+
     _timer = setTimeout(() => {
+      gestureLock = false
       zooming = false
       panning = false
       scrolling = false
       zoomFactor = 0
-      translateX = -deltaX
-      translateY = -deltaY
+      translateX = 0
+      translateY = 0
       EVENT_BUFFER.length = 0
     }, DELAY)
 

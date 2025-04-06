@@ -149,7 +149,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
             <StatusBar/>
           </div>
 
-          <div className={'w-[40%] h-full border-l border-gray-200'}>
+          <div style={{width:200}}  className={'h-full flex-shrink-0 border-l border-gray-200'}>
             <PropPanel/>
             <LayerPanel data={sortedModules}
                         selected={selectedModules}

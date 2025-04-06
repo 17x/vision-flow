@@ -1,19 +1,21 @@
 import rectRender from "./rectRender.ts"
 import lineRender, {LineRenderProps} from "./lineRender.ts"
 import {RectangleRenderProps} from "./type"
-import Rectangle from "../modules/shapes/rectangle.ts";
-import Connector from "../modules/connectors/connector.ts";
+import Rectangle from "../modules/shapes/rectangle.ts"
+import Connector from "../modules/connectors/connector.ts"
 
 interface RenderProps {
   ctx: CanvasRenderingContext2D
-  frame: RectangleRenderProps
+  frame: Partial<RectangleRenderProps> & BoundingRect
   modules: Map<string, ModuleType>
   // transform: TransformType
   // dpr: DPR
 }
 
 const render = ({ctx, modules, frame}: RenderProps): void => {
-  const rects: RectangleRenderProps[] = [frame]
+  console.log(frame)
+  const fixedFrame = {...frame, x: frame.cx, y: frame.cy}
+  const rects: Partial<RectangleRenderProps> & BoundingRect[] = [fixedFrame]
   const lines: LineRenderProps[] = []
   const texts = []
 

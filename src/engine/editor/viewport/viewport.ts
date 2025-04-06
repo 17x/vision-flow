@@ -16,6 +16,7 @@ import resetCanvas from "./resetCanvas.tsx";
 import selectionRender from "./selectionRender.ts";
 
 import {screenToCanvas} from "../../lib/lib.ts";
+import {RectangleRenderProps} from "../../core/renderer/type";
 
 // import {drawCrossLine, isInsideRect} from "./helper.ts"
 type ViewportManipulationType =
@@ -40,13 +41,23 @@ class Viewport {
   readonly mainCanvas: HTMLCanvasElement;
   readonly mainCTX: CanvasRenderingContext2D;
   readonly eventsController: AbortController;
+  private initialized = false;
   dpr = 2;
   spaceKeyDown = false;
   hoveredModules: Set<UID> = new Set();
   handlingModules: Set<UID> = new Set();
   zooming = false;
   manipulationStatus: ViewportManipulationType = "static";
-
+  frame: RectangleRenderProps = {
+    x: 500,
+    y: 707,
+    width: 1000,
+    height: 1414.2857,
+    opacity: 100,
+    lineWidth: 1,
+    lineColor: '#000000',
+    fillColor: '#fff',
+  };
   mouseDownPoint: Point = {x: 0, y: 0};
   mouseMovePoint: Point = {x: 0, y: 0};
   offset: Point = {x: 0, y: 0};
@@ -149,23 +160,25 @@ class Viewport {
     this.editor.updateVisibleModuleMap(this.virtualRect);
   }
 
-  zoom(idx: number, point?: Point) {
-    // console.log(idx)
-    const minZoom = 0.1;
-    const maxZoom = 10;
-    this.scale += idx;
-    // console.log(point)
-    // console.log(this.currentZoom)
-    if (this.scale < minZoom) {
-      this.scale = minZoom;
-    }
-    if (this.scale > maxZoom) {
-      this.scale = maxZoom;
-    }
+  /*
+    zoom(idx: number, point?: Point) {
+      // console.log(idx)
+      const minZoom = 0.1;
+      const maxZoom = 10;
+      this.scale += idx;
+      // console.log(point)
+      // console.log(this.currentZoom)
+      if (this.scale < minZoom) {
+        this.scale = minZoom;
+      }
+      if (this.scale > maxZoom) {
+        this.scale = maxZoom;
+      }
 
-    this.updateVirtualRect();
-    this.render();
-  }
+      this.updateVirtualRect();
+      this.render();
+    }
+  */
 
   zoomAtPoint(zoomIncrement: number, point: Point) {
     const {offset, scale} = this;
@@ -225,10 +238,13 @@ class Viewport {
   onResize() {
     this.domResizing = false;
     this.updateCanvasSize();
-    // updateAllVisible
     this.updateVirtualRect();
     this.render();
 
+    if (!this.initialized) {
+      this.initialized = true;
+      this.fitFrame();
+    }
     // this.mainCTX.fillStyle = '#000000'
     // this.mainCTX.fillRect(0, 0, 300, 300)
   }
@@ -252,7 +268,31 @@ class Viewport {
     );
   }
 
-  // Update all usually means the viewport has been moved or zoomed
+  fitFrame() {
+    if (!this.rect) return;
+
+    const {
+      frame,
+      virtualRect: {centerX, centerY, width, height},
+      scale,
+    } = this;
+
+    const frameRatio = frame.width / frame.height;
+    const viewportRatio = width / height;
+
+    console.log(frameRatio, viewportRatio)
+    const newScale = scale
+    console.log(frame, centerX, centerY);
+    // Calculate the new offset to center the frame
+    const newOffsetX = frame.x - centerX / newScale;
+    const newOffsetY = frame.y - centerY / newScale;
+
+    // Apply the new scale and offset
+    this.scale = newScale;
+    this.setTranslateViewport(newOffsetX, newOffsetY);
+    // this.updateVirtualRect();
+    this.render();
+  }
 
   resetMainCanvas() {
     resetCanvas(this.mainCTX, this.dpr, this.scale, this.offset);
@@ -266,6 +306,7 @@ class Viewport {
     const animate = () => {
       render({
         ctx: this.mainCTX,
+        frame: this.frame,
         modules: this.editor.visibleModuleMap,
       });
     };

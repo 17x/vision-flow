@@ -6,23 +6,13 @@ import Connector from "../modules/connectors/connector.ts";
 
 interface RenderProps {
   ctx: CanvasRenderingContext2D
+  frame: RectangleRenderProps
   modules: Map<string, ModuleType>
   // transform: TransformType
   // dpr: DPR
 }
 
-const render = ({ctx, modules}: RenderProps): void => {
-  const frame: RectangleRenderProps = {
-    x: 400,
-    y: 500,
-    width: 800,
-    height: 1000,
-    opacity: 100,
-    lineWidth: 1,
-    lineColor: '#000000',
-    fillColor: '#fff',
-  }
-
+const render = ({ctx, modules, frame}: RenderProps): void => {
   const rects: RectangleRenderProps[] = [frame]
   const lines: LineRenderProps[] = []
   const texts = []

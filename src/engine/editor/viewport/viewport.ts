@@ -179,11 +179,25 @@ class Viewport {
   */
 
   zoomAtPoint(point: Point, zoom: number, zoomTo: boolean = false) {
-    const {offset, scale} = this
+    const {offset, scale, dpr} = this
     const minScale = 0.1
     const maxScale = 5
     let newScale = scale + zoom
-
+    const offsetX = 0
+    const offsetY = 0
+    const pointX = point.x * scale
+    const pointY = point.y * scale
+    const rect = {
+      x: 0,
+      y: 0,
+      width: this.rect!.width * dpr,
+      height: this.rect!.height * dpr,
+    }
+    console.log(
+      pointX,
+      pointY,
+      rect
+    )
     if (zoomTo) {
       newScale = zoom
     }
@@ -208,9 +222,10 @@ class Viewport {
 
     // Apply updated values
     this.scale = clampedScale
-    this.setTranslateViewport(newOffsetX, newOffsetY)
-    this.updateVirtualRect()
+    this.offset.x = newOffsetX
+    this.offset.y = newOffsetY
     this.render()
+    this.updateVirtualRect()
   }
 
   zoomTo(newScale: number | 'fit') {

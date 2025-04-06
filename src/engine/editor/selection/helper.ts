@@ -1,4 +1,4 @@
-const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Position[] => {
+const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Point[] => {
   const halfW = w / 2
   const halfH = h / 2
 
@@ -10,7 +10,7 @@ const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotat
   const sinAngle = Math.sin(angle)
 
   // Control points before rotation
-  const points: Position[] = [
+  const points: Point[] = [
     {x: cx - halfW, y: cy - halfH}, // Top-left
     {x: cx, y: cy - halfH},         // Top-center
     {x: cx + halfW, y: cy - halfH}, // Top-right

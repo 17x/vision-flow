@@ -55,8 +55,8 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
     case 'dragging':
       this.wrapper.setPointerCapture(e.pointerId)
 
-      const x = e.movementX * this.dpr / this.zoom
-      const y = e.movementY * this.dpr / this.zoom
+      const x = e.movementX * this.dpr / this.scale
+      const y = e.movementY * this.dpr / this.scale
 
       this.handlingModules.forEach((id) => {
         this.editor.moduleMap.get(id).x += x

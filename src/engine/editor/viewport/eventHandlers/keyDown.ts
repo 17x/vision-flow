@@ -9,6 +9,7 @@ function handleKeyDown(this: Viewport, e: KeyboardEvent) {
   if (e.code === 'Space') {
     this.spaceKeyDown = true
     this.wrapper.style.cursor = "grabbing"
+    e.preventDefault()
     return
   }
 }

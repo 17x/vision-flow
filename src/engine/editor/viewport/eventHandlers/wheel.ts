@@ -10,16 +10,13 @@ function handleWheel(this: Viewport, event: WheelEvent) {
 
   const {zooming, panning, scrolling, zoomFactor, translateX, translateY} = detectGestures(event)
 
-  console.log(`${zooming ? 'zooming' : ''} ${panning ? 'panning' : ''} ${scrolling ? 'scrolling' : ''} `)
+  // console.log(`${zooming ? 'zooming' : ''} ${panning ? 'panning' : ''} ${scrolling ? 'scrolling' : ''} `)
 
   this.zooming = zooming
 
   if (zooming) {
-    // const shiftX = (this.mouseMovePoint.x - this.offset.x) / this.zoom
-    // const shiftY = (this.mouseMovePoint.y - this.offset.y) / this.zoom
-
     // console.log(zoomFactor)
-    this.scale(zoomFactor)
+    this.zoomAtPoint(zoomFactor, this.mouseMovePoint)
     // this.setTranslateViewport(shiftX, shiftY)
   } else if (panning || scrolling) {
     this.translateViewport(translateX, translateY)
@@ -30,7 +27,7 @@ function handleWheel(this: Viewport, event: WheelEvent) {
 
 const detectGestures = (() => {
   let _timer: number | undefined
-  const DELAY = 100
+  const DELAY = 200
   // let shiftX: number = 0
   // let shiftY: number = 0
   const ACTION_THRESHOLD = 3

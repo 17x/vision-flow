@@ -7,8 +7,8 @@ export type BasicEditorAreaSize = {
 }
 
 export interface Line {
-  start: Position
-  end: Position
+  start: Point
+  end: Point
 }
 
 export type MoveDirection =

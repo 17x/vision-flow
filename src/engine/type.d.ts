@@ -19,13 +19,13 @@ declare  global {
     height: number;
   }
 
-  interface Position {
+  interface Point {
     x: number;
     y: number;
   }
 
-  type Rect = Size & Position
-  type BoundingRect = Size & Position & {
+  type Rect = Size & Point
+  type BoundingRect = Size & Point & {
     top: number;
     bottom: number;
     left: number;

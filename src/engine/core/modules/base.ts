@@ -8,7 +8,7 @@ export interface BasicModuleProps {
 
   opacity: Opacity
   shadow: boolean
-  position?: Position
+  position?: Point
   layer: number
 
   rotation: number
@@ -21,7 +21,7 @@ class Base {
   private readonly lineWidth: number
   private readonly lineColor: HexColor
   private readonly opacity: Opacity
-  private readonly position: Position
+  private readonly position: Point
   readonly rotation: Rotation
   private readonly shadow: Shadow
   readonly layer: number

@@ -31,11 +31,11 @@ export const LayerPanel = ({data, selected, handleSelectModule}: LayerPanelProps
     }, [data]);*/
   // console.log(data)
   useEffect(() => {
-    targetRef.current?.scrollIntoView({
+  /*  targetRef.current?.scrollIntoView({
       // behavior: "smooth",
       // block: "start",
       inline: "start"
-    })
+    })*/
   }, [selected])
 
   return (

@@ -19,3 +19,13 @@ https://lucasischow.github.io/demos/vision-flow/
 ![Tux, the Linux mascot](./doc/img.png)
 
 
+Todo List
+- zooming
+  - on specific position
+- LayerPanel - buffer rendering and drag to reorder
+- modules - Layer indexes
+  - lock and unlock
+  - group and ungroup
+  - folder management
+- Interface: light theme, dark theme, preferences
+- 

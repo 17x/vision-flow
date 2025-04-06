@@ -16,7 +16,7 @@ export function rectInside(inner: BoundingRect, outer: BoundingRect): boolean {
   );
 }
 
-export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Position[] => {
+export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Point[] => {
   const halfW = w / 2
   const halfH = h / 2
 
@@ -28,7 +28,7 @@ export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number
   const sinAngle = Math.sin(angle)
 
   // Control points before rotation
-  const points: Position[] = [
+  const points: Point[] = [
     {x: cx - halfW, y: cy - halfH}, // Top-left
     {x: cx, y: cy - halfH},         // Top-center
     {x: cx + halfW, y: cy - halfH}, // Top-right
@@ -79,10 +79,10 @@ export const isInsideRect = (
 
 interface DrawCrossLineProps {
   ctx: CanvasRenderingContext2D
-  mousePoint: Position
+  mousePoint: Point
   scale: number
   dpr: DPR
-  offset: Position
+  offset: Point
   virtualRect: BoundingRect
 }
 
@@ -175,7 +175,7 @@ export const drawCrossLine = ({
 }
 
 export const isInsideRotatedRect = (
-  {x: mouseX, y: mouseY}: Position,
+  {x: mouseX, y: mouseY}: Point,
   {x: centerX, y: centerY, width, height}: Rect,
   rotation: number
 ): boolean => {
@@ -236,7 +236,7 @@ export const generateBoundingRectFromRect = (rect: Rect): BoundingRect => {
   };
 };
 
-export const generateBoundingRectFromTwoPoints = (p1: Position, p2: Position): BoundingRect => {
+export const generateBoundingRectFromTwoPoints = (p1: Point, p2: Point): BoundingRect => {
   const minX = Math.min(p1.x, p2.x);
   const maxX = Math.max(p1.x, p2.x);
   const minY = Math.min(p1.y, p2.y);

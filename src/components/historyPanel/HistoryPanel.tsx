@@ -12,13 +12,13 @@ export const HistoryPanel = () => {
     if (targetRef.current) {
       const targetElement = targetRef.current
 
-      const _timer = setTimeout(() => {
+    /*  const _timer = setTimeout(() => {
         targetElement.scrollIntoView({
           // behavior: "smooth",
           block: "nearest",
           inline: "nearest"
         })
-      }, 0)
+      }, 0)*/
 
       return () => {
         if (_timer) {

@@ -13,7 +13,6 @@ import selectionRender from "./selectionRender.ts"
 import {screenToCanvas} from "../../lib/lib.ts"
 import {RectangleRenderProps} from "../../core/renderer/type"
 import {createBoundingRect, createFrame, fitRectToViewport} from "./helper.ts"
-import {generateBoundingRectFromRotatedRect} from "../../core/utils.ts"
 
 // import {drawCrossLine, isInsideRect} from "./helper.ts"
 type ViewportManipulationType =
@@ -201,7 +200,7 @@ class Viewport {
     // Calculate new offset to keep the point under cursor stable
     const newOffsetX = canvasPoint.x - (canvasPoint.x - offset.x) * zoomFactor
     const newOffsetY = canvasPoint.y - (canvasPoint.y - offset.y) * zoomFactor
-    console.log('clampedScale',clampedScale)
+    console.log('clampedScale', clampedScale)
     // Apply updated values
     this.scale = clampedScale
     this.setTranslateViewport(newOffsetX, newOffsetY)
@@ -294,7 +293,7 @@ class Viewport {
     // console.log(testFrame)
     // console.log(frame)
     const viewportRect = createBoundingRect(0, 0, rect!.width * dpr, rect!.height * dpr)
-    const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect, dpr)
+    const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect)
 
     // console.log(virtualRect)
     // console.log(scale, offsetX, offsetY)

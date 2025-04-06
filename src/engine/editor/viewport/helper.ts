@@ -1,7 +1,7 @@
 import {RectangleRenderProps} from "../../core/renderer/type"
 import {generateBoundingRectFromRect} from "../../core/utils.ts"
 
-export const fitRectToViewport = (rect: Rect, viewport: Rect, dpr: DPR): {
+export const fitRectToViewport = (rect: Rect, viewport: Rect): {
   scale: number
   offsetX: number
   offsetY: number

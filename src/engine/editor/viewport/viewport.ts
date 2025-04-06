@@ -200,10 +200,14 @@ class Viewport {
     const canvasPoint = this.screenToCanvas(point.x, point.y)
 
     // Calculate new offset to keep the point under cursor stable
-    const newOffsetX = canvasPoint.x - (canvasPoint.x - offset.x) * zoomFactor
-    const newOffsetY = canvasPoint.y - (canvasPoint.y - offset.y) * zoomFactor
-    // console.log('clampedScale', clampedScale)
-    console.log(point, canvasPoint, zoomFactor,offset)
+    // const newOffsetX = canvasPoint.x - (canvasPoint.x - offset.x) * zoomFactor
+    // const newOffsetY = canvasPoint.y - (canvasPoint.y - offset.y) * zoomFactor
+    const newOffsetX = offset.x + 10
+    const newOffsetY = offset.y + 10
+    // const newOffsetX = offset.x - offset.x * zoomFactor
+    // const newOffsetY = offset.y - offset.y * zoomFactor
+    console.log('clampedScale', clampedScale)
+    // console.log(point, canvasPoint, zoomFactor,offset)
     // console.log('newOffsetX', newOffsetX)
     // console.log('newOffsetY', newOffsetY)
     // Apply updated values

@@ -180,15 +180,17 @@ class Viewport {
 
   zoomAtPoint(point: Point, zoom: number, zoomTo: boolean = false) {
     const {offset, scale} = this
+    const minScale = 0.1
+    const maxScale = 5
     let newScale = scale + zoom
 
     if (zoomTo) {
       newScale = zoom
     }
 
+    if (newScale < minScale || newScale > maxScale) return
+
     // Clamp scale
-    const minScale = 0.1
-    const maxScale = 10
     const clampedScale = Math.max(minScale, Math.min(maxScale, newScale))
 
     // Calculate zoom factor
@@ -200,7 +202,10 @@ class Viewport {
     // Calculate new offset to keep the point under cursor stable
     const newOffsetX = canvasPoint.x - (canvasPoint.x - offset.x) * zoomFactor
     const newOffsetY = canvasPoint.y - (canvasPoint.y - offset.y) * zoomFactor
-    console.log('clampedScale', clampedScale)
+    // console.log('clampedScale', clampedScale)
+    console.log(point, canvasPoint, zoomFactor,offset)
+    // console.log('newOffsetX', newOffsetX)
+    // console.log('newOffsetY', newOffsetY)
     // Apply updated values
     this.scale = clampedScale
     this.setTranslateViewport(newOffsetX, newOffsetY)

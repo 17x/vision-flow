@@ -1,6 +1,6 @@
 import Viewport from "../viewport.ts"
 
-import {isNegativeZero} from "../../../core/utils.ts";
+import {isNegativeZero} from "../../../core/utils.ts"
 
 function handleWheel(this: Viewport, event: WheelEvent) {
   // Prevent page zoom
@@ -108,7 +108,7 @@ const detectGestures = (() => {
       // Mouse horizontal scrolling
       // console.log('hor scroll', deltaX)
       if (altKey) {
-        zoomFactor = deltaX < 0 ? .1 : -.1
+        zoomFactor = deltaX < 0 ? 0.01 : -0.01
       } else {
         scrolling = true
         translateX = -deltaX
@@ -117,7 +117,7 @@ const detectGestures = (() => {
       // Vertical scrolling
       // console.log('ver scrolling', deltaX)
       if (altKey) {
-        zoomFactor = deltaY < 0 ? .1 : -.1
+        zoomFactor = deltaY < 0 ? 0.01 : -0.01
       } else {
         scrolling = true
         translateY = -deltaY

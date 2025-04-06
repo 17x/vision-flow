@@ -1,60 +1,73 @@
-import React, {useRef, useState} from "react"
-import {useDispatch, useSelector} from "react-redux"
-import {AppDispatch, RootState} from "../../../redux/store.ts"
-import {setZoom} from "../../../redux/statusBarSlice.ts"
+import React, {useEffect, useRef, useState} from "react"
 import {LuChevronDown, LuChevronUp} from "react-icons/lu"
 
-export type ZoomLevels = number | 'fit window'
+export type ZoomLevels = {
+  label: string,
+  value: number | 'fit'
+}
 
-const ZoomSelect: React.FC<unknown> = () => {
-  const zoomLevels: ZoomLevels[] = [4, 3, 2, 1.5, 1.25, 1, 0.75, 0.5, 0.25, 'fit window']
-  const {zoom} = useSelector((state: RootState) => state.statusBar)
-  const dispatch = useDispatch<AppDispatch>()
+const fixNumber = (i: number) => {
+  return (i * 100).toFixed(2) + '%'
+}
+
+const resolveNumber = (value: string): number | false => {
+  const str = value.replace('%', '').trim()
+  const numeric = Number(str)
+
+  if (!isNaN(numeric)) {
+    return Number(numeric.toFixed(2));
+  }
+
+  return false
+}
+
+const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit') => void }> = ({scale, onChange}) => {
+  const zoomLevels: ZoomLevels[] = [
+    {label: '400%', value: 4},
+    {label: '300%', value: 3},
+    {label: '200%', value: 2},
+    {label: '150%', value: 1.5},
+    {label: '125%', value: 1.25},
+    {label: '100%', value: 1},
+    {label: '75%', value: 0.75},
+    {label: '50%', value: 0.5},
+    {label: '25%', value: 0.25},
+    {label: 'Fit window', value: 'fit'}
+  ];
+  // const {zoom} = useSelector((state: RootState) => state.statusBar)
+  // const dispatch = useDispatch<AppDispatch>()
+  const [inputValue, setInputValue] = useState<string>(fixNumber(1));
   const [isOpen, setIsOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const handleBlur = (event: unknown) => {
-    calcNewZoomValue(inputRef.current!.value)
-    // inputRef.current!.focus();
-    inputRef.current!.blur()
-    event.preventDefault()
-    event.stopPropagation()
+  useEffect(() => {
+    setInputValue(fixNumber(scale));
+  }, [scale]);
 
-  }
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const v = resolveNumber((e.target as HTMLInputElement).value)
 
-  const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      calcNewZoomValue(inputRef.current!.value)
+      if (v !== false) {
+        onChange(v);
+      }
       inputRef.current!.blur()
-      event.preventDefault()
-      event.stopPropagation()
     }
+
+    // event.preventDefault()
+    e.stopPropagation()
   }
 
-  const calcNewZoomValue = (value: string) => {
-    const match = value.match(/\d+/)
-
-    if (match) {
-      const v = parseFloat(match[0])
-
-      dispatch(setZoom(v))
-      updateInput(v)
-    }
-  }
-
-  const updateInput = (newValue: number) => {
-    inputRef.current!.value = newValue * 100 + '%'
-  }
   return (
     <div
       className="w-17 h-5 ml-2 flex justify-start items-center relative  focus:ring-blue-500 focus:ring-1">
       <input
         type="text"
         ref={inputRef}
-        defaultValue={zoom as number * 100 + '%'}
-        onBlur={handleBlur}
+        onChange={void 0}
+        defaultValue={inputValue}
         onKeyDown={onKeyDown}
-        className="w-12 h-5 text-sm bg-gray-100 text-center overflow-hidden "
+        className="w-20 h-5 text-sm bg-gray-100 text-center overflow-hidden "
         placeholder="Enter zoom %"
       />
 
@@ -77,25 +90,19 @@ const ZoomSelect: React.FC<unknown> = () => {
           {
 
           }
-          {zoomLevels.map((level) => (
-            <div
-              key={level}
-              onClick={() => {
-                let v = level
-
-                if (v === "fit window") {
-                  v = 1
-                }
-
-                dispatch(setZoom(v))
-                setIsOpen(false)
-                updateInput(v)
-              }}
-              className="text-sm align-middle p-1 text-center hover:bg-blue-500 hover:text-white transition"
-            >
-              {level === 'fit window' ? level : `${level * 100}%`}
-            </div>
-          ))
+          {
+            zoomLevels.map(({label, value}) => (
+              <div
+                key={value}
+                onClick={() => {
+                  setIsOpen(false)
+                  onChange(value)
+                }}
+                className="text-sm align-middle p-1 text-center hover:bg-blue-500 hover:text-white transition"
+              >
+                {value === 'fit' ? label : `${value * 100}%`}
+              </div>
+            ))
           }
         </div>
       )}

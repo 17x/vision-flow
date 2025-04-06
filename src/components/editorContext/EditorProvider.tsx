@@ -10,7 +10,8 @@ import {
   ActionCode,
   HistoryUpdatedHandler,
   ModulesUpdatedHandler,
-  SelectionUpdatedHandler
+  SelectionUpdatedHandler, ViewportInfo,
+  ViewportUpdatedHandler
 } from "../../engine/editor/type"
 import Header from "../header/Header.tsx"
 import {HistoryPanel} from "../historyPanel/HistoryPanel.tsx"
@@ -26,6 +27,16 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [selectedProps, setSelectedProps] = useState<ModuleProps>(null)
   const [selectedModules, setSelectedModules] = useState<UID[]>([])
   const [historyCurrent, setHistoryCurrent] = useState<HistoryNode>({} as HistoryNode)
+  const [viewport, setViewport] = useState<ViewportInfo>({
+    width: 0,
+    height: 0,
+    offsetX: 0,
+    offsetY: 0,
+    scale: 1,
+    dx: 0,
+    dy: 0,
+    status: ''
+  })
   const elementRef = useRef<HTMLDivElement>(null)
   const [focused, setFocused] = useState(true)
 
@@ -45,7 +56,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         events: {
           onHistoryUpdated,
           onModulesUpdated,
-          onSelectionUpdated
+          onSelectionUpdated,
+          onViewportUpdated,
         }
       })
 
@@ -94,6 +106,10 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     setSortedModules(arr)
   }
 
+  const onViewportUpdated: ViewportUpdatedHandler = (viewportInfo) => {
+    setViewport(viewportInfo)
+  }
+
   const applyHistoryNode = (node: HistoryNode) => {
     if (editorRef.current) {
       editorRef.current.history.moveCurrentById(node)
@@ -111,6 +127,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       selectedModules,
       selectedProps,
       historyCurrent,
+      viewport,
       editorRef,
       applyHistoryNode,
       executeAction

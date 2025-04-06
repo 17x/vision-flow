@@ -62,7 +62,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
         this.editor.moduleMap.get(id).x += x
         this.editor.moduleMap.get(id).y += y
       })
-      this.updateVirtualRect()
+      // this.updateVirtualRect()
 
       this.render()
       break

@@ -16,7 +16,7 @@ function handleWheel(this: Viewport, event: WheelEvent) {
 
   if (zooming) {
     // console.log(zoomFactor)
-    this.zoomAtPoint(zoomFactor, this.mouseMovePoint)
+    this.zoomAtPoint(this.mouseMovePoint, zoomFactor)
     // this.setTranslateViewport(shiftX, shiftY)
   } else if (panning || scrolling) {
     this.translateViewport(translateX, translateY)
@@ -100,7 +100,7 @@ const detectGestures = (() => {
      *      y === -0
      */
     if (gestureLock) {
-      console.log('hit')
+      // console.log('hit')
       zoomFactor = deltaY > 0 ? -.1 : .1
       zooming = true
     } else if (Math.abs(deltaX) >= 40 && isNegativeZero(deltaY)) {

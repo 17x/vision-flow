@@ -10,7 +10,7 @@ export const HistoryPanel = () => {
 
   useEffect(() => {
     if (targetRef.current) {
-      const targetElement = targetRef.current
+      // const targetElement = targetRef.current
 
     /*  const _timer = setTimeout(() => {
         targetElement.scrollIntoView({
@@ -21,9 +21,9 @@ export const HistoryPanel = () => {
       }, 0)*/
 
       return () => {
-        if (_timer) {
+       /* if (_timer) {
           clearTimeout(_timer)
-        }
+        }*/
       }
     }
   }, [historyArray, historyCurrent])

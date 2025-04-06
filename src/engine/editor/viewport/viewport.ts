@@ -48,16 +48,7 @@ class Viewport {
   handlingModules: Set<UID> = new Set();
   zooming = false;
   manipulationStatus: ViewportManipulationType = "static";
-  frame: RectangleRenderProps = {
-    x: 500,
-    y: 707,
-    width: 1000,
-    height: 1414.2857,
-    opacity: 100,
-    lineWidth: 1,
-    lineColor: '#000000',
-    fillColor: '#fff',
-  };
+  frame: RectangleRenderProps = createFrame('A4');
   mouseDownPoint: Point = {x: 0, y: 0};
   mouseMovePoint: Point = {x: 0, y: 0};
   offset: Point = {x: 0, y: 0};
@@ -141,9 +132,11 @@ class Viewport {
       this.rect!.width,
       this.rect!.height
     );
+    const {x: mouseVirtualX, y: mouseVirtualY} = this.screenToCanvas(this.mouseMovePoint.x, this.mouseMovePoint.y);
     const width = maxX - minX;
     const height = maxY - minY;
-
+    // console.log(this.rect);
+    // console.log(width, height);
     this.virtualRect = {
       x: minX,
       y: minY,
@@ -156,8 +149,17 @@ class Viewport {
       bottom: maxY,
       left: minX,
     };
-
     this.editor.updateVisibleModuleMap(this.virtualRect);
+    this.editor.events.onViewportUpdated?.({
+      offsetX: this.offset.x,
+      offsetY: this.offset.y,
+      scale: this.scale,
+      dx: mouseVirtualX,
+      dy: mouseVirtualY,
+      status: this.manipulationStatus,
+      width,
+      height
+    })
   }
 
   /*
@@ -180,9 +182,13 @@ class Viewport {
     }
   */
 
-  zoomAtPoint(zoomIncrement: number, point: Point) {
+  zoomAtPoint(point: Point, zoom: number, zoomTo: boolean = false) {
     const {offset, scale} = this;
-    const newScale = scale + zoomIncrement;
+    let newScale = scale + zoom;
+
+    if (zoomTo) {
+      newScale = zoom
+    }
 
     // Clamp scale
     const minScale = 0.1;
@@ -204,6 +210,18 @@ class Viewport {
     this.setTranslateViewport(newOffsetX, newOffsetY);
     this.updateVirtualRect();
     this.render();
+  }
+
+  zoomTo(newScale: number | 'fit') {
+    console.log(newScale)
+    if (newScale === 'fit') {
+      this.fitFrame()
+    } else {
+      this.zoomAtPoint({
+        x: this.rect!.width / 2,
+        y: this.rect!.height / 2,
+      }, newScale, true)
+    }
   }
 
   setTranslateViewport(x: number, y: number) {
@@ -271,26 +289,35 @@ class Viewport {
   fitFrame() {
     if (!this.rect) return;
 
-    const {
-      frame,
-      virtualRect: {centerX, centerY, width, height},
-      scale,
-    } = this;
-
+    const {frame} = this;
+    const width = this.rect.width * 2;
+    const height = this.rect.height * 2;
+    const centerX = width;
+    const centerY = height;
     const frameRatio = frame.width / frame.height;
     const viewportRatio = width / height;
+    let newScale
+    const paddingScale = 0.95
 
-    console.log(frameRatio, viewportRatio)
-    const newScale = scale
-    console.log(frame, centerX, centerY);
+    if (frameRatio > viewportRatio) {
+      // Frame is wider than viewport, scale based on width
+      newScale = (width / frame.width) * paddingScale;
+    } else {
+      // Frame is taller than viewport, scale based on height
+      newScale = (height / frame.height) * paddingScale;
+    }
+
+    console.log({...this.virtualRect})
+
     // Calculate the new offset to center the frame
-    const newOffsetX = frame.x - centerX / newScale;
-    const newOffsetY = frame.y - centerY / newScale;
+    const newOffsetX = centerX - frame.x / newScale;
+    const newOffsetY = centerY - frame.y / newScale;
 
-    // Apply the new scale and offset
+    console.log(frame, this.virtualRect, newScale);
+    console.log(newOffsetX, newOffsetY);
     this.scale = newScale;
     this.setTranslateViewport(newOffsetX, newOffsetY);
-    // this.updateVirtualRect();
+    this.updateVirtualRect();
     this.render();
   }
 
@@ -342,4 +369,39 @@ class Viewport {
   }
 }
 
+type FrameType = 'A4' | 'A4L'
+
+const createFrame = (p: FrameType = 'A4'): RectangleRenderProps => {
+  let width: number = 0
+  let height: number = 0
+  let x: number = 0
+  let y: number = 0
+
+  if (p === 'A4' || p === 'A4L') {
+    const RATIO = 1.414142857
+
+    if (p === 'A4L') {
+      // A4 landscape
+      height = 1000
+      width = RATIO * height
+    } else {
+      width = 1000
+      height = RATIO * width
+    }
+
+    x = width / 2
+    y = height / 2
+  }
+
+  return {
+    x,
+    y,
+    width,
+    height,
+    opacity: 100,
+    lineWidth: 1,
+    lineColor: '#000000',
+    fillColor: '#fff',
+  };
+}
 export default Viewport;

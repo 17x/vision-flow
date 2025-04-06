@@ -47,54 +47,66 @@ class Action {
     }
   }
 
-  public dispatcher(code: ActionCode, data: unknown = null) {
+  public dispatcher(code: ActionCode, data: never) {
     if (this.lock) return
 
     this.lock = true
 
-    if (code === 'selectAll') {
-      this.editor.selectionManager.selectAll()
-    }
-    if (code === 'select') {
-      this.editor.selectionManager.replace(data as Set<UID>)
-    }
+    switch (code) {
+      case 'selectAll':
+        this.editor.selectionManager.selectAll();
+        break;
 
-    if (code === 'copy') {
-      this.editor.selectionManager.copySelected()
-    }
+      case 'select':
+        this.editor.selectionManager.replace(data as Set<UID>);
+        break;
 
-    if (code === 'delete') {
-      this.editor.selectionManager.removeSelected()
-    }
+      case 'copy':
+        this.editor.selectionManager.copySelected();
+        break;
 
-    if (code === 'duplicate') {
-      this.editor.selectionManager.duplicateSelected()
-    }
+      case 'delete':
+        this.editor.selectionManager.removeSelected();
+        break;
 
-    if (code === 'escape') {
-      this.editor.selectionManager.clear()
-    }
+      case 'duplicate':
+        this.editor.selectionManager.duplicateSelected();
+        break;
 
-    if (code === 'paste') {
-      this.editor.selectionManager.pasteCopied()
-    }
+      case 'escape':
+        this.editor.selectionManager.clear();
+        break;
 
-    if (code === 'redo') {
-      this.editor.history.redo()
-    }
+      case 'paste':
+        this.editor.selectionManager.pasteCopied();
+        break;
 
-    if (code === 'undo') {
-      this.editor.history.undo()
-    }
+      case 'redo':
+        this.editor.history.redo();
+        break;
 
-    if (code === 'moveUp' || code === 'moveRight' || code === 'moveDown' || code === 'moveLeft') {
-      // console.log(this.editor.selectionManager)
-      const selectedModules = this.editor.selectionManager.getSelected()
+      case 'undo':
+        this.editor.history.undo();
+        break;
 
-      this.editor.batchModify(selectedModules, {
-        code,
-      }, 'modifyModules')
-      // console.log(selectedModules)
+      case 'zoom':
+        this.editor.viewport.zoomTo(data);
+        break;
+
+      case 'moveUp':
+      case 'moveRight':
+      case 'moveDown':
+      case 'moveLeft':
+        const selectedModules = this.editor.selectionManager.getSelected()
+
+        this.editor.batchModify(selectedModules, {
+          code,
+        }, 'modifyModules')
+        break;
+
+      default:
+        // Optionally handle unknown codes
+        console.warn(`Unknown code: ${code}`);
     }
 
     if (this.eventsMap.has(code)) {
@@ -108,7 +120,7 @@ class Action {
 
   public destroy() {
     this.eventsMap.clear()
-     
+
     // @ts-expect-error
     this.editor = null
     this.lock = false

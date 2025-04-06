@@ -48,7 +48,7 @@ class Viewport {
   handlingModules: Set<UID> = new Set();
   zooming = false;
   manipulationStatus: ViewportManipulationType = "static";
-  frame: RectangleRenderProps = createFrame('A4');
+  frame: RectangleRenderProps = createFrame('photo1');
   mouseDownPoint: Point = {x: 0, y: 0};
   mouseMovePoint: Point = {x: 0, y: 0};
   offset: Point = {x: 0, y: 0};
@@ -306,8 +306,9 @@ class Viewport {
     if (frameRatio > viewportRatio) {
       // Frame is wider than viewport, scale based on width
       const widthRatio = viewWidth / frameWidth
-      newScale = (widthRatio) * paddingScale;
+      newScale = widthRatio * paddingScale;
       newOffsetY = (viewHeight - frameHeight) / newScale
+      newOffsetX = (viewWidth * newScale * (1 - paddingScale)) / 2
     } else {
       // Frame is taller than viewport, scale based on height
       const heightRatio = viewHeight / frameHeight
@@ -317,8 +318,8 @@ class Viewport {
       // console.log(viewWidth / frame.width)
       console.log(newScale)
       // newOffsetY = (frame.height * (1 - heightRatio))
-      newOffsetY = -(frameHeight - frameHeight / heightRatio * newScale)
-      console.log(viewHeight - viewHeight * heightRatio / newScale)
+      newOffsetY = (viewHeight * newScale * (1 - paddingScale)) / 2
+      // console.log(viewHeight - viewHeight * (1 - paddingScale))
     }
 
     // console.log({...this.virtualRect})
@@ -379,7 +380,7 @@ class Viewport {
   }
 }
 
-type FrameType = 'A4' | 'A4L'
+type FrameType = 'A4' | 'A4L' | 'photo1'
 
 const createFrame = (p: FrameType = 'A4'): RectangleRenderProps => {
   let width: number = 0
@@ -398,10 +399,13 @@ const createFrame = (p: FrameType = 'A4'): RectangleRenderProps => {
       width = 1000
       height = RATIO * width
     }
-
-    x = width / 2
-    y = height / 2
+  } else if (p === 'photo1') {
+    width = 35
+    height = 55
   }
+
+  x = width / 2
+  y = height / 2
 
   return {
     x,

@@ -22,7 +22,8 @@ https://lucasischow.github.io/demos/vision-flow/
 Todo List
 - zooming
   - on specific position
-- LayerPanel - buffer rendering and drag to reorder
+
+[//]: # (- LayerPanel - buffer rendering and drag to reorder)
 - modules - Layer indexes
   - lock and unlock
   - group and ungroup

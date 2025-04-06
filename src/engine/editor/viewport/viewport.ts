@@ -1,10 +1,6 @@
 import render from "../../core/renderer/mainCanvasRenderer.ts";
 import Editor from "../editor.ts";
-import {
-  generateScrollBars,
-  initViewportDom,
-  updateScrollBars,
-} from "./domManipulations.ts";
+import {generateScrollBars, initViewportDom, updateScrollBars,} from "./domManipulations.ts";
 import handleMouseDown from "./eventHandlers/mouseDown.ts";
 import handlePointerMove from "./eventHandlers/pointerMove.ts";
 import handleMouseUp from "./eventHandlers/mouseUp.ts";
@@ -14,9 +10,9 @@ import handleWheel from "./eventHandlers/wheel.ts";
 import handleContextMenu from "./eventHandlers/contextMenu.ts";
 import resetCanvas from "./resetCanvas.tsx";
 import selectionRender from "./selectionRender.ts";
-
-import {canvasToScreen, screenToCanvas} from "../../lib/lib.ts";
+import {screenToCanvas} from "../../lib/lib.ts";
 import {RectangleRenderProps} from "../../core/renderer/type";
+import {createBoundingRect, createFrame, fitRectToViewport} from "./helper.ts";
 
 // import {drawCrossLine, isInsideRect} from "./helper.ts"
 type ViewportManipulationType =
@@ -48,7 +44,7 @@ class Viewport {
   handlingModules: Set<UID> = new Set();
   zooming = false;
   manipulationStatus: ViewportManipulationType = "static";
-  frame: RectangleRenderProps = createFrame('A4L');
+  frame: RectangleRenderProps & Size = createFrame('A4');
   mouseDownPoint: Point = {x: 0, y: 0};
   mouseMovePoint: Point = {x: 0, y: 0};
   offset: Point = {x: 0, y: 0};
@@ -135,8 +131,7 @@ class Viewport {
     const {x: mouseVirtualX, y: mouseVirtualY} = this.screenToCanvas(this.mouseMovePoint.x, this.mouseMovePoint.y);
     const width = maxX - minX;
     const height = maxY - minY;
-    // console.log(this.rect);
-    // console.log(width, height);
+
     this.virtualRect = {
       x: minX,
       y: minY,
@@ -149,6 +144,7 @@ class Viewport {
       bottom: maxY,
       left: minX,
     };
+
     this.editor.updateVisibleModuleMap(this.virtualRect);
     this.editor.events.onViewportUpdated?.({
       offsetX: this.offset.x,
@@ -287,62 +283,27 @@ class Viewport {
   }
 
   fitFrame() {
-    if (!this.rect) return;
-
-    const {frame, rect, dpr} = this;
-    const centerX = rect.width;
-    const centerY = rect.height;
-    const viewWidth = centerX * dpr;
-    const viewHeight = centerY * dpr;
-    const frameWidth = frame.width
-    const frameHeight = frame.height
-    const frameRatio = frameWidth / frameHeight;
-    const viewportRatio = viewWidth / viewHeight;
-    const paddingScale = 0.98
-    let newScale: number
-    let newOffsetX = 0
-    let newOffsetY = 0
-
-    if (frameRatio > viewportRatio) {
-      // Frame is wider than viewport, scale based on width
-      const widthRatio = viewWidth / frameWidth
-
-      newScale = widthRatio * paddingScale;
-
-      // newOffsetY = (viewHeight - frameHeight) / newScale
-      // newOffsetX = (viewWidth * newScale * (1 - paddingScale)) / 2
-    } else {
-      // Frame is taller than viewport, scale based on height
-      const heightRatio = viewHeight / frameHeight
-
-      newScale = heightRatio * paddingScale;
-      // console.log(viewWidth / frame.width)
-      // newOffsetY = (frame.height * (1 - heightRatio))
-      // newOffsetX = (viewWidth - frameWidth) / newScale
-      // newOffsetY = (viewHeight * newScale * (1 - paddingScale)) / 2
-      // console.log(viewHeight - viewHeight * (1 - paddingScale))
+    const {dpr, frame, virtualRect} = this
+    let testFrame = {
+      x: 850,
+      y: 850,
+      width: 100,
+      height: 100
     }
+    const viewportRect = createBoundingRect(0, 0, virtualRect.width, virtualRect.height);
+    const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect, dpr)
 
-    console.log(newScale)
+    console.log(scale, offsetX, offsetY)
 
-    // let p = canvasToScreen(newScale, 0, 0, 0, 0)
-    let p = canvasToScreen(newScale, 0, 0, frameWidth, frameHeight)
-
-    console.log('v ', viewWidth, viewHeight)
-    console.log('f ', frameWidth, frameHeight)
-    console.log('s ', frameWidth * newScale, frameHeight * newScale)
-    console.log(viewHeight - frameHeight * newScale)
-    // console.log(p)
-    newOffsetX = (viewWidth - frameWidth * newScale) / (dpr * 2)
-    newOffsetY = (viewHeight - frameHeight * newScale) / (dpr * 2)
-    // console.log({...this.virtualRect})
-    // console.log(centerX, frame.x)
-    console.log(newOffsetX, newOffsetY);
-    this.scale = newScale;
-    this.offset.x = newOffsetX;
-    this.offset.y = newOffsetY;
+    this.scale = scale;
+    this.offset.x = offsetX;
+    this.offset.y = offsetY;
     this.render()
     this.updateVirtualRect();
+  }
+
+  fitRect() {
+
   }
 
   resetMainCanvas() {
@@ -393,42 +354,4 @@ class Viewport {
   }
 }
 
-type FrameType = 'A4' | 'A4L' | 'photo1'
-
-const createFrame = (p: FrameType = 'A4'): RectangleRenderProps => {
-  let width: number = 0
-  let height: number = 0
-  let x: number = 0
-  let y: number = 0
-
-  if (p === 'A4' || p === 'A4L') {
-    const RATIO = 1.414142857
-
-    if (p === 'A4L') {
-      // A4 landscape
-      height = 1000
-      width = RATIO * height
-    } else {
-      width = 1000
-      height = RATIO * width
-    }
-  } else if (p === 'photo1') {
-    width = 35
-    height = 55
-  }
-
-  x = width / 2
-  y = height / 2
-
-  return {
-    x,
-    y,
-    width,
-    height,
-    opacity: 100,
-    lineWidth: 1,
-    lineColor: '#000000',
-    fillColor: '#fff',
-  };
-}
 export default Viewport;

@@ -1,26 +1,4 @@
-/*
-export interface RectangleRenderProps extends RectangleProps {
-  x: number
-  y: number
-  width: number
-  height: number
-
-  enableFill: boolean
-  fillColor: string
-
-  enableLine: boolean
-  lineColor: string
-  lineWidth: number
-
-  enableGradient: boolean
-  gradient: Gradient
-
-  rotation: number
-}*/
-
-export interface RectangleProps {
-
-}
+import {RectangleProps} from "../modules/shapes/rectangle.ts";
 
 export interface RectangleRenderProps extends RectangleProps {}
 

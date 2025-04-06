@@ -19,7 +19,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({className = ''}) => {
               <ZoomSelect scale={viewport.scale} onChange={(newScale) => {
                 executeAction('zoom', newScale as never)
               }}/>
-              <div className={'text-xs line-clamp-1'}>{`dx:${viewport.dx} dx:${viewport.dy}`}</div>
+              <div className={'text-xs line-clamp-1'}>{`dx:${viewport.dx.toFixed(2)} dx:${viewport.dy.toFixed(2)}`}</div>
           </>
       }
     </footer>

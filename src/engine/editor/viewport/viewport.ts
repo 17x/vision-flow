@@ -289,36 +289,46 @@ class Viewport {
   fitFrame() {
     if (!this.rect) return;
 
-    const {frame} = this;
-    const width = this.rect.width * 2;
-    const height = this.rect.height * 2;
-    const centerX = width;
-    const centerY = height;
-    const frameRatio = frame.width / frame.height;
-    const viewportRatio = width / height;
-    let newScale
-    const paddingScale = 0.95
+    const {frame, rect, dpr} = this;
+    const centerX = rect.width;
+    const centerY = rect.height;
+    const viewWidth = centerX * dpr;
+    const viewHeight = centerY * dpr;
+    const frameWidth = frame.width
+    const frameHeight = frame.height
+    const frameRatio = frameWidth / frameHeight;
+    const viewportRatio = viewWidth / viewHeight;
+    const paddingScale = 0.98
+    let newScale: number
+    let newOffsetX = 0
+    let newOffsetY = 0
 
     if (frameRatio > viewportRatio) {
       // Frame is wider than viewport, scale based on width
-      newScale = (width / frame.width) * paddingScale;
+      const widthRatio = viewWidth / frameWidth
+      newScale = (widthRatio) * paddingScale;
+      newOffsetY = (viewHeight - frameHeight) / newScale
     } else {
       // Frame is taller than viewport, scale based on height
-      newScale = (height / frame.height) * paddingScale;
+      const heightRatio = viewHeight / frameHeight
+
+      newScale = heightRatio * paddingScale;
+      newOffsetX = (viewWidth - frameWidth) / newScale
+      // console.log(viewWidth / frame.width)
+      console.log(newScale)
+      // newOffsetY = (frame.height * (1 - heightRatio))
+      newOffsetY = -(frameHeight - frameHeight / heightRatio * newScale)
+      console.log(viewHeight - viewHeight * heightRatio / newScale)
     }
 
-    console.log({...this.virtualRect})
-
-    // Calculate the new offset to center the frame
-    const newOffsetX = centerX - frame.x / newScale;
-    const newOffsetY = centerY - frame.y / newScale;
-
-    console.log(frame, this.virtualRect, newScale);
+    // console.log({...this.virtualRect})
+    // console.log(centerX, frame.x)
     console.log(newOffsetX, newOffsetY);
     this.scale = newScale;
-    this.setTranslateViewport(newOffsetX, newOffsetY);
+    this.offset.x = newOffsetX;
+    this.offset.y = newOffsetY;
+    this.render()
     this.updateVirtualRect();
-    this.render();
   }
 
   resetMainCanvas() {

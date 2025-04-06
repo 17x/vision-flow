@@ -201,7 +201,7 @@ class Viewport {
     // Calculate new offset to keep the point under cursor stable
     const newOffsetX = canvasPoint.x - (canvasPoint.x - offset.x) * zoomFactor
     const newOffsetY = canvasPoint.y - (canvasPoint.y - offset.y) * zoomFactor
-
+    console.log('clampedScale',clampedScale)
     // Apply updated values
     this.scale = clampedScale
     this.setTranslateViewport(newOffsetX, newOffsetY)
@@ -284,32 +284,26 @@ class Viewport {
   }
 
   fitFrame() {
-    const {dpr, frame, rect, virtualRect} = this
-    const testFrame = generateBoundingRectFromRotatedRect({
-      x: 800,
-      y: 800,
-      width: 100,
-      height: 100
-    }, 50)
+    const {dpr, frame, rect} = this
+    /* const testFrame = generateBoundingRectFromRotatedRect({
+       x: 800,
+       y: 800,
+       width: 100,
+       height: 100
+     }, 50)*/
     // console.log(testFrame)
     // console.log(frame)
     const viewportRect = createBoundingRect(0, 0, rect!.width * dpr, rect!.height * dpr)
     const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect, dpr)
 
     // console.log(virtualRect)
-    console.log(scale, offsetX, offsetY)
+    // console.log(scale, offsetX, offsetY)
 
     this.scale = scale
     this.offset.x = offsetX
     this.offset.y = offsetY
     this.render()
     this.updateVirtualRect()
-    console.log(this.virtualRect)
-    console.log(this.scale, this.offset)
-  }
-
-  fitRect() {
-
   }
 
   resetMainCanvas() {

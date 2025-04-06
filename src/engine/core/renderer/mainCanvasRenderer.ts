@@ -13,7 +13,7 @@ interface RenderProps {
 }
 
 const render = ({ctx, modules, frame}: RenderProps): void => {
-  console.log(frame)
+  // console.log(frame)
   const fixedFrame = {...frame, x: frame.cx, y: frame.cy}
   const rects: Partial<RectangleRenderProps> & BoundingRect[] = [fixedFrame]
   const lines: LineRenderProps[] = []

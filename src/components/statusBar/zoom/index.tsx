@@ -15,7 +15,7 @@ const resolveNumber = (value: string): number | false => {
   const numeric = Number(str)
 
   if (!isNaN(numeric)) {
-    return Number(numeric.toFixed(2));
+    return Number(numeric.toFixed(2))
   }
 
   return false
@@ -33,23 +33,29 @@ const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit')
     {label: '50%', value: 0.5},
     {label: '25%', value: 0.25},
     {label: 'Fit window', value: 'fit'}
-  ];
+  ]
   // const {zoom} = useSelector((state: RootState) => state.statusBar)
   // const dispatch = useDispatch<AppDispatch>()
-  const [inputValue, setInputValue] = useState<string>(fixNumber(1));
+  const [inputValue, setInputValue] = useState<string>(fixNumber(1))
   const [isOpen, setIsOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    setInputValue(fixNumber(scale));
-  }, [scale]);
+    const v = fixNumber(scale)
+
+    if (inputRef.current) {
+      inputRef.current.value = v
+    }
+
+    setInputValue(v)
+  }, [scale])
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const v = resolveNumber((e.target as HTMLInputElement).value)
 
       if (v !== false) {
-        onChange(v);
+        onChange(v)
       }
       inputRef.current!.blur()
     }

@@ -1,6 +1,6 @@
 import ZoomSelect from "./zoom"
-import {useContext} from "react";
-import EditorContext from "../editorContext/EditorContext.tsx";
+import {useContext} from "react"
+import EditorContext from "../editorContext/EditorContext.tsx"
 
 interface StatusBarProps {
   className?: string
@@ -16,7 +16,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({className = ''}) => {
       {
         viewport &&
           <>
-              <ZoomSelect scale={viewport.scale} onChange={(newScale) => {
+              <ZoomSelect key={viewport.scale} scale={viewport.scale} onChange={(newScale) => {
                 executeAction('zoom', newScale as never)
               }}/>
               <div className={'text-xs line-clamp-1'}>{`dx:${viewport.dx.toFixed(2)} dx:${viewport.dy.toFixed(2)}`}</div>

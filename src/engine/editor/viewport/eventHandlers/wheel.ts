@@ -1,5 +1,6 @@
 import Viewport from "../viewport.ts"
-import {isNegativeZero} from "../../../lib/lib.ts";
+
+import {isNegativeZero} from "../../../core/utils.ts";
 
 function handleWheel(this: Viewport, event: WheelEvent) {
   // Prevent page zoom

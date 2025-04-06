@@ -1,4 +1,5 @@
 import {RectangleRenderProps} from "../../core/renderer/type";
+import {generateBoundingRectFromRect} from "../../core/utils.ts";
 
 export const fitRectToViewport = (rect: Rect, viewport: Rect, dpr: DPR): {
   scale: number
@@ -6,36 +7,57 @@ export const fitRectToViewport = (rect: Rect, viewport: Rect, dpr: DPR): {
   offsetY: number
 } => {
   const {width: viewWidth, height: viewHeight} = viewport;
-  const frameWidth = rect.width
-  const frameHeight = rect.height
-  const frameRatio = frameWidth / frameHeight;
-  const viewportRatio = viewWidth / viewHeight;
+  const {width: rectWidth, height: rectHeight} = rect;
+  // const frameRatio = rectWidth / rectHeight;
+  // const viewportRatio = viewWidth / viewHeight;
   const paddingScale = 0.95
-  let newScale: number
-  let newOffsetX: number
-  let newOffsetY: number
+  let offsetX: number
+  let offsetY: number
+  const scaleX = viewWidth / rectWidth * paddingScale;
+  const scaleY = viewHeight / rectHeight * paddingScale;
+  const scale = Math.min(scaleX, scaleY);
 
-  if (frameRatio > viewportRatio) {
-    // Frame is wider than viewport, scale based on width
-    newScale = viewWidth / frameWidth * paddingScale;
-  } else {
-    // Frame is taller than viewport, scale based on height
-    newScale = viewHeight / frameHeight * paddingScale;
-  }
-
-  newOffsetX = 0 + (viewWidth - frameWidth * newScale) / (dpr * 2)
-  newOffsetY = 0 + (viewHeight - frameHeight * newScale) / (dpr * 2)
+  // -850 * scale / 2
+  offsetX = (viewWidth - rectWidth * scale) / (dpr * 2)
+  offsetY = (viewHeight - rectHeight * scale) / (dpr * 2)
 
   return {
-    scale: newScale,
-    offsetX: newOffsetX,
-    offsetY: newOffsetY,
+    scale,
+    offsetX,
+    offsetY,
   }
 }
 
+export const fitRectToViewport2 = (rect, viewport, paddingScale = 1) => {
+  const rectWidth = rect.width;
+  const rectHeight = rect.height;
+
+  const viewportWidth = viewport.width * paddingScale;
+  const viewportHeight = viewport.height * paddingScale;
+
+  // Calculate scale to fit rect into padded viewport while preserving aspect ratio
+  const scaleX = viewportWidth / rectWidth;
+  const scaleY = viewportHeight / rectHeight;
+  const scale = Math.min(scaleX, scaleY);
+
+  // Calculate the size of the scaled rect
+  const scaledWidth = rectWidth * scale;
+  const scaledHeight = rectHeight * scale;
+
+  // Compute offsets to center the scaled rect in the full (unpadded) viewport
+  const offsetX = (viewport.width - scaledWidth) / 2 - rect.x * scale;
+  const offsetY = (viewport.height - scaledHeight) / 2 - rect.y * scale;
+
+  return {
+    scale,
+    offsetX,
+    offsetY
+  };
+};
+
 type FrameType = 'A4' | 'A4L' | 'photo1'
 
-export const createFrame = (p: FrameType = 'A4'): RectangleRenderProps => {
+export const createFrame = (p: FrameType = 'A4'): Partial<RectangleRenderProps> & BoundingRect => {
   let width: number = 0
   let height: number = 0
   let x: number = 0
@@ -57,14 +79,9 @@ export const createFrame = (p: FrameType = 'A4'): RectangleRenderProps => {
     height = 55
   }
 
-  x = width / 2
-  y = height / 2
-
+  const rect = generateBoundingRectFromRect({x, y, width, height})
   return {
-    x,
-    y,
-    width,
-    height,
+    ...rect,
     opacity: 100,
     lineWidth: 1,
     lineColor: '#000000',
@@ -82,7 +99,7 @@ export const createBoundingRect = (x: number, y: number, width: number, height: 
     top: y,
     right: x + width,
     bottom: y + height,
-    centerX: x + width / 2,
-    centerY: y + height / 2,
+    cx: x + width / 2,
+    cy: y + height / 2,
   }
 }

@@ -1,11 +1,7 @@
 import Viewport from "../viewport.ts"
 import {updateSelectionBox} from "../domManipulations.ts"
-import {
-  generateBoundingRectFromTwoPoints,
-  isInsideRotatedRect,
-  rectInside,
-} from "../../../lib/lib.ts";
 import Rectangle from "../../../core/modules/shapes/rectangle.ts";
+import {generateBoundingRectFromTwoPoints, isInsideRotatedRect, rectInside} from "../../../core/utils.ts";
 
 export default function handlePointerMove(this: Viewport, e: PointerEvent) {
   if (this.domResizing) return

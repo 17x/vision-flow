@@ -10,7 +10,8 @@ import Connector from "../core/modules/connectors/connector.ts"
 import {HistoryActionType} from "./history/type"
 import batchReplaceModules from "./helpers/batchReplaceModules.ts"
 import Viewport from "./viewport/viewport.ts"
-import {rectsOverlap} from "../lib/lib.ts";
+
+import {rectsOverlap} from "../core/utils.ts";
 
 // import {isInsideRect} from "./viewport/helper.ts";
 

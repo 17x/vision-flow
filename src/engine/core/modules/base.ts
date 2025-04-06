@@ -77,8 +77,8 @@ class Base {
       left: 0,
       right: 0,
       bottom: 0,
-      centerX: 0,
-      centerY: 0
+      cx: 0,
+      cy: 0
     }
   }
 }

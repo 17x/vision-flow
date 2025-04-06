@@ -30,8 +30,8 @@ declare  global {
     bottom: number;
     left: number;
     right: number;
-    centerX: number;
-    centerY: number;
+    cx: number;
+    cy: number;
   }
 
   type Resolution = Size

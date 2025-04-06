@@ -1,21 +1,3 @@
-export function rectsOverlap(r1: BoundingRect, r2: BoundingRect): boolean {
-  return !(
-    r1.right < r2.left ||
-    r1.left > r2.right ||
-    r1.bottom < r2.top ||
-    r1.top > r2.bottom
-  )
-}
-
-export function rectInside(inner: BoundingRect, outer: BoundingRect): boolean {
-  return (
-    inner.left >= outer.left &&
-    inner.right <= outer.right &&
-    inner.top >= outer.top &&
-    inner.bottom <= outer.bottom
-  );
-}
-
 export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Point[] => {
   const halfW = w / 2
   const halfH = h / 2
@@ -52,31 +34,6 @@ export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number
   })
 }
 
-export const isInsideRect = (
-  {
-    x: mouseX,
-    y: mouseY
-  }: {
-    x: number,
-    y: number
-  },
-  {
-    x,
-    y,
-    width,
-    height
-  }: Rect
-): boolean => {
-  if (width <= 0 || height <= 0) {
-    return false
-  }
-
-  return (
-    mouseX >= x && mouseX <= width &&
-    mouseY >= y && mouseY <= height
-  )
-}
-
 interface DrawCrossLineProps {
   ctx: CanvasRenderingContext2D
   mousePoint: Point
@@ -107,35 +64,6 @@ export function screenToCanvas(scale: number, offsetX: number, offsetY: number, 
     y: (screenY - offsetY) / scale,
   }
 }
-
-/*
-
-/!** Calculate new zoom state *!/
-export function calculateZoom(scale: number, mouseX: number, mouseY: number, zoomFactor: number): {
-  scale: number;
-  offsetX: number;
-  offsetY: number
-} {
-  const mousePos = screenToCanvas(scale, 0, 0, mouseX, mouseY) // no offset involved for zooming calculation
-  const newScale = scale * zoomFactor
-  const newOffsetX = mouseX - mousePos.x * newScale
-  const newOffsetY = mouseY - mousePos.y * newScale
-
-  return {scale: newScale, offsetX: newOffsetX, offsetY: newOffsetY}
-}
-
-/!** Calculate pan movement *!/
-export function calculatePan(scale: number, offsetX: number, offsetY: number, lastX: number, lastY: number, mouseX: number, mouseY: number): {
-  offsetX: number;
-  offsetY: number
-} {
-  const dx = mouseX - lastX
-  const dy = mouseY - lastY
-  const newOffsetX = offsetX + dx
-  const newOffsetY = offsetY + dy
-
-  return {offsetX: newOffsetX, offsetY: newOffsetY}
-}*/
 
 export const drawCrossLine = ({
                                 ctx,
@@ -174,80 +102,3 @@ export const drawCrossLine = ({
   ctx.restore()
 }
 
-export const isInsideRotatedRect = (
-  {x: mouseX, y: mouseY}: Point,
-  {x: centerX, y: centerY, width, height}: Rect,
-  rotation: number
-): boolean => {
-  if (width <= 0 || height <= 0) {
-    return false // Invalid rectangle dimensions
-  }
-
-  // If the rotation is 0, no need to apply any rotation logic
-  if (rotation === 0) {
-    const halfWidth = width / 2
-    const halfHeight = height / 2
-
-    return (
-      mouseX >= centerX - halfWidth && mouseX <= centerX + halfWidth &&
-      mouseY >= centerY - halfHeight && mouseY <= centerY + halfHeight
-    )
-  }
-
-  // Convert rotation angle from degrees to radians
-  const angle = rotation * (Math.PI / 180)
-
-  // Pre-calculate sine and cosine of the rotation angle for optimization
-  const cosAngle = Math.cos(angle)
-  const sinAngle = Math.sin(angle)
-
-  // Step 1: Translate the mouse position to the local space of the rotated rectangle
-  const dx = mouseX - centerX
-  const dy = mouseY - centerY
-
-  // Step 2: Undo the rotation by rotating the mouse position back
-  const unrotatedX = dx * cosAngle + dy * sinAngle
-  const unrotatedY = -dx * sinAngle + dy * cosAngle
-
-  // Step 3: Check if the unrotated mouse position lies within the bounds of the axis-aligned rectangle
-  const halfWidth = width / 2
-  const halfHeight = height / 2
-
-  return (
-    unrotatedX >= -halfWidth && unrotatedX <= halfWidth &&
-    unrotatedY >= -halfHeight && unrotatedY <= halfHeight
-  )
-}
-
-export const generateBoundingRectFromRect = (rect: Rect): BoundingRect => {
-  const {x, y, width, height} = rect;
-
-  return {
-    x,
-    y,
-    width,
-    height,
-    top: y,
-    bottom: y + height,
-    left: x,
-    right: x + width,
-    centerX: x + width / 2,
-    centerY: y + height / 2,
-  };
-};
-
-export const generateBoundingRectFromTwoPoints = (p1: Point, p2: Point): BoundingRect => {
-  const minX = Math.min(p1.x, p2.x);
-  const maxX = Math.max(p1.x, p2.x);
-  const minY = Math.min(p1.y, p2.y);
-  const maxY = Math.max(p1.y, p2.y);
-
-  return generateBoundingRectFromRect({
-    x: minX,
-    y: minY,
-    width: maxX - minX,
-    height: maxY - minY,
-  });
-};
-
-export const isNegativeZero = (x: number) => x === 0 && (1 / x) === -Infinity;

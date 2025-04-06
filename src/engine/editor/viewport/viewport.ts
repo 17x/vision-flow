@@ -13,6 +13,7 @@ import selectionRender from "./selectionRender.ts";
 import {screenToCanvas} from "../../lib/lib.ts";
 import {RectangleRenderProps} from "../../core/renderer/type";
 import {createBoundingRect, createFrame, fitRectToViewport} from "./helper.ts";
+import {generateBoundingRectFromRotatedRect} from "../../core/utils.ts";
 
 // import {drawCrossLine, isInsideRect} from "./helper.ts"
 type ViewportManipulationType =
@@ -44,7 +45,7 @@ class Viewport {
   handlingModules: Set<UID> = new Set();
   zooming = false;
   manipulationStatus: ViewportManipulationType = "static";
-  frame: RectangleRenderProps & Size = createFrame('A4');
+  frame: Partial<RectangleRenderProps> & BoundingRect = createFrame('A4');
   mouseDownPoint: Point = {x: 0, y: 0};
   mouseMovePoint: Point = {x: 0, y: 0};
   offset: Point = {x: 0, y: 0};
@@ -58,8 +59,8 @@ class Viewport {
     right: 0,
     bottom: 0,
     left: 0,
-    centerX: 0,
-    centerY: 0,
+    cx: 0,
+    cy: 0,
   };
   domResizing: boolean = false;
   resizeTimeout: number | undefined;
@@ -137,8 +138,8 @@ class Viewport {
       y: minY,
       width,
       height,
-      centerX: minX + width / 2,
-      centerY: minY + height / 2,
+      cx: minX + width / 2,
+      cy: minY + height / 2,
       top: minY,
       right: maxX,
       bottom: maxY,
@@ -284,20 +285,23 @@ class Viewport {
 
   fitFrame() {
     const {dpr, frame, virtualRect} = this
-    let testFrame = {
-      x: 850,
-      y: 850,
+    let testFrame = generateBoundingRectFromRotatedRect({
+      x: 800,
+      y: 800,
       width: 100,
       height: 100
-    }
+    }, 50)
+    // console.log(testFrame)
+    // console.log(frame)
     const viewportRect = createBoundingRect(0, 0, virtualRect.width, virtualRect.height);
     const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect, dpr)
 
     console.log(scale, offsetX, offsetY)
 
     this.scale = scale;
-    this.offset.x = offsetX;
-    this.offset.y = offsetY;
+    // this.offset.x = -850 * scale / 2;
+    this.offset.x = offsetX
+    this.offset.y = offsetY
     this.render()
     this.updateVirtualRect();
   }

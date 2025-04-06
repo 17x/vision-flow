@@ -20,7 +20,7 @@ const PropPanel = () => {
 
 export default PropPanel
 
-const ShapePropsPanel = ({props}: { props: ShapeProps }) => {
+const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
   // const [props, setProps] = useState(initialProps)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

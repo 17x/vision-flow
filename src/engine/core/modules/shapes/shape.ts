@@ -7,9 +7,10 @@ export interface ShapeProps extends BasicModuleProps {
   enableGradient?: boolean
   gradient?: Gradient
 
-  enableFill: boolean
-  fillColor: FillColor
+  enableFill?: boolean
+  fillColor?: FillColor
 
+  dashLine?: string
   rotation: number
 }
 
@@ -30,7 +31,7 @@ class Shape extends Base {
 
     this.x = x
     this.y = y
-    this.fillColor = fillColor
+    this.fillColor = fillColor as FillColor
     this.enableFill = enableFill
   }
 

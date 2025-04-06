@@ -168,7 +168,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 const createMockData = (editor: Editor) => {
   const baseX = 100
   const baseY = 100
-  const baseRectData: Omit<ShapeProps, 'id' | 'layer'> = {
+  const baseRectData: Omit<ShapePropsType, 'id' | 'layer'> = {
     type: "rectangle",
     x: 100,
     y: 100,

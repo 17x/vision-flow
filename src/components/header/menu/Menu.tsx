@@ -28,7 +28,7 @@ const MenuBar: React.FC = () => {
     }
   })
 
-  return <div className="h-8 text-sm select-none border-b border-gray-200 box-border">
+  return <div className="h-8 text-sm select-none border-gray-200 box-border">
     <div ref={componentRef} className={'pl-2 h-full inline-flex'}>
       {
         actions.map((menu) => {

@@ -4,7 +4,7 @@ import {LuPlus} from "react-icons/lu";
 
 const Files: React.FC = () => {
   const basicTabClasses = ' group py-2 px-6 relative transition flex items-center">'
-  const activeTabClasses = ' border-b-2 border-black-600'
+  const activeTabClasses = ' bg-gray-200'
   const unActiveTabClasses = ' hover:bg-gray-200'
   const {fileList, currentFileId, closeFile, switchFile, handleCreating} = useContext(FileContext)
 

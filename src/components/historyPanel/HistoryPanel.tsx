@@ -46,7 +46,7 @@ export const HistoryPanel = () => {
                               // console.log(historyNode.id)
                               applyHistoryNode(historyNode)
                             }}
-                            className={`border-b border-gray-200 px-2 py-1 cursor-pointer text-xs hover:bg-gray-400 hover:text-white ${isCurr ? 'bg-gray-400 text-white' : ''}`}>
+                            className={` px-2 py-1 cursor-pointer text-xs hover:bg-gray-400 hover:text-white ${isCurr ? 'bg-gray-400 text-white' : ''}`}>
                   <span>{label}</span>
                 </div>
               }

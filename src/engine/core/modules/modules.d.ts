@@ -9,9 +9,9 @@ declare global {
     // 'roundedRectangle': RoundedRectangle
   }
 
-  type ShapeProps = RectangleProps | RoundedRectangleProps
+  type ShapePropsType = RectangleProps | RoundedRectangleProps
   type ConnectorProps = ConnectorProps
-  type ModuleProps = ShapeProps | ConnectorProps
+  type ModuleProps = ShapePropsType | ConnectorProps
   type ModuleNames = keyof ModuleTypeMap
 
   type ModuleType = Rectangle | RoundedRectangle | Connector

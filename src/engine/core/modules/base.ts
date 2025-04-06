@@ -61,7 +61,7 @@ class Base {
 
       opacity: this.opacity,
       shadow: this.shadow,
-      position: this.position,
+      // position: this.position,
       layer: this.layer,
       rotation: this.rotation,
     }

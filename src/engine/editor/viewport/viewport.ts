@@ -15,7 +15,7 @@ import handleContextMenu from "./eventHandlers/contextMenu.ts";
 import resetCanvas from "./resetCanvas.tsx";
 import selectionRender from "./selectionRender.ts";
 
-import {screenToCanvas} from "../../lib/lib.ts";
+import {canvasToScreen, screenToCanvas} from "../../lib/lib.ts";
 import {RectangleRenderProps} from "../../core/renderer/type";
 
 // import {drawCrossLine, isInsideRect} from "./helper.ts"
@@ -48,7 +48,7 @@ class Viewport {
   handlingModules: Set<UID> = new Set();
   zooming = false;
   manipulationStatus: ViewportManipulationType = "static";
-  frame: RectangleRenderProps = createFrame('photo1');
+  frame: RectangleRenderProps = createFrame('A4L');
   mouseDownPoint: Point = {x: 0, y: 0};
   mouseMovePoint: Point = {x: 0, y: 0};
   offset: Point = {x: 0, y: 0};
@@ -306,22 +306,35 @@ class Viewport {
     if (frameRatio > viewportRatio) {
       // Frame is wider than viewport, scale based on width
       const widthRatio = viewWidth / frameWidth
+
       newScale = widthRatio * paddingScale;
-      newOffsetY = (viewHeight - frameHeight) / newScale
-      newOffsetX = (viewWidth * newScale * (1 - paddingScale)) / 2
+
+      // newOffsetY = (viewHeight - frameHeight) / newScale
+      // newOffsetX = (viewWidth * newScale * (1 - paddingScale)) / 2
     } else {
       // Frame is taller than viewport, scale based on height
       const heightRatio = viewHeight / frameHeight
 
       newScale = heightRatio * paddingScale;
-      newOffsetX = (viewWidth - frameWidth) / newScale
       // console.log(viewWidth / frame.width)
-      console.log(newScale)
       // newOffsetY = (frame.height * (1 - heightRatio))
-      newOffsetY = (viewHeight * newScale * (1 - paddingScale)) / 2
+      // newOffsetX = (viewWidth - frameWidth) / newScale
+      // newOffsetY = (viewHeight * newScale * (1 - paddingScale)) / 2
       // console.log(viewHeight - viewHeight * (1 - paddingScale))
     }
 
+    console.log(newScale)
+
+    // let p = canvasToScreen(newScale, 0, 0, 0, 0)
+    let p = canvasToScreen(newScale, 0, 0, frameWidth, frameHeight)
+
+    console.log('v ', viewWidth, viewHeight)
+    console.log('f ', frameWidth, frameHeight)
+    console.log('s ', frameWidth * newScale, frameHeight * newScale)
+    console.log(viewHeight - frameHeight * newScale)
+    // console.log(p)
+    newOffsetX = (viewWidth - frameWidth * newScale) / (dpr * 2)
+    newOffsetY = (viewHeight - frameHeight * newScale) / (dpr * 2)
     // console.log({...this.virtualRect})
     // console.log(centerX, frame.x)
     console.log(newOffsetX, newOffsetY);

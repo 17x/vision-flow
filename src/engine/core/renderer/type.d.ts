@@ -1,5 +1,3 @@
-import {RectangleProps} from "../modules/shapes/rectangle.ts"
-
 /*
 export interface RectangleRenderProps extends RectangleProps {
   x: number
@@ -20,6 +18,10 @@ export interface RectangleRenderProps extends RectangleProps {
   rotation: number
 }*/
 
+export interface RectangleProps {
+
+}
+
 export interface RectangleRenderProps {
   x: number
   y: number
@@ -33,6 +35,7 @@ export interface RectangleRenderProps {
   opacity?: RectangleProps['opacity']
   gradient?: RectangleProps['gradient']
   rotation?: RectangleProps['rotation']
+  lineCap?: RectangleProps['lineCap']
 }
 
 /*
@@ -52,7 +55,6 @@ export type OrderedProps = [
   gradient: Gradient,
   rotation: number,
 ]*/
-
 
 interface TextRenderProps {
   x: number;

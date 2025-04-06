@@ -11,7 +11,7 @@ import {HistoryActionType} from "./history/type"
 import batchReplaceModules from "./helpers/batchReplaceModules.ts"
 import Viewport from "./viewport/viewport.ts"
 
-import {rectsOverlap} from "../core/utils.ts";
+import {rectsOverlap} from "../core/utils.ts"
 
 // import {isInsideRect} from "./viewport/helper.ts";
 
@@ -297,6 +297,7 @@ class Editor {
     this.action.destroy()
     this.selectionManager.destroy()
     this.history.destroy()
+    this.viewport.destroy()
     this.moduleMap.clear()
     // @ts-ignore
     // this.panableContainer = null

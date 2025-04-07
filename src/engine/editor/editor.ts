@@ -1,5 +1,5 @@
 import SelectionManager from './selection/selectionManager.ts'
-import {BasicEditorAreaSize, ActionCode, MoveDirection, EventHandlers} from './type'
+import {BasicEditorAreaSize, ActionCode, EventHandlers} from './type'
 import History from './history/history.ts'
 import Rectangle from '../core/modules/shapes/rectangle.ts'
 import deepClone from '../../utilities/deepClone.ts'
@@ -42,7 +42,6 @@ class Editor {
   visibleModuleMap: ModuleMap
   private id: UID
   // private size: Size;
-  dpr: DPR
   container: HTMLDivElement
   events: EventHandlers = {}
   private action: Action
@@ -60,7 +59,7 @@ class Editor {
   // private zoomSpeed: number = 0.1
 
   constructor({
-                container, data, dpr = 2, zoom = 1, events = {},
+                container, data, dpr = 2, events = {},
               }: EditorProps) {
     this.moduleMap = data.modules.reduce<ModuleMap>(
       (previousValue, currentValue) => {
@@ -239,7 +238,6 @@ class Editor {
 
   batchModify(from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryOperationType) {
     let modulesMap = null
-    const moveStep = 5
 
     if (from === 'all') {
       modulesMap = this.moduleMap
@@ -265,11 +263,13 @@ class Editor {
     this.events.onSelectionUpdated?.(this.selectionManager.selectedModules, this.selectionManager.getIfUnique())
 
     if (historyCode) {
-      this.history.add({
-        type: historyCode,
-        modules: [...modulesMap.values()].map(mod => mod.getDetails()),
-        selectModules: this.selectionManager.getSelected(),
-      })
+      /*this.history.add({
+        type: 'modify',
+        payload: {
+          changes:{},
+          selectedModules: this.selectionManager.getSelected(),
+        },
+      })*/
     }
   }
 
@@ -343,8 +343,6 @@ class Editor {
     this.canvas = null
     // @ts-ignore
     this.ctx = null
-    // @ts-ignore
-    this.dpr = null
     // @ts-ignore
     this.zoom = null
     // @ts-ignore

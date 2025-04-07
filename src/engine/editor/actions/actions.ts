@@ -1,5 +1,5 @@
-import {ActionCode} from '../type'
 import Editor from '../editor.ts'
+import {EditorEvents, EditorEventType} from './type'
 
 // type EventsFunction = (e: KeyboardEvent, additionalInformation?: unknown) => unknown
 type EventsFunction = () => unknown
@@ -7,24 +7,14 @@ type EventsFunction = () => unknown
 class Action {
   private lock: boolean
   private editor: Editor
-  readonly eventsMap: Map<ActionCode, EventsFunction[]> = new Map([
-    ['selectAll', []],
-    ['copy', []],
-    ['paste', []],
-    ['duplicate', []],
-    ['delete', []],
-    ['escape', []],
-    ['modifyModules', []],
-    ['undo', []],
-    ['redo', []],
-  ])
+  readonly eventsMap: Map<EditorEventType, EventsFunction[]> = new Map([])
 
   constructor(editor: Editor) {
     this.editor = editor
     this.lock = false
   }
 
-  public subscribe(eventName: ActionCode, callback: EventsFunction) {
+  public subscribe(eventName: EditorEventType, callback: EventsFunction) {
     if (this.eventsMap.has(eventName)) {
       this.eventsMap.get(eventName)!.push(callback)
     } else {
@@ -32,7 +22,7 @@ class Action {
     }
   }
 
-  public unsubscribe(eventName: ActionCode, callback: EventsFunction) {
+  public unsubscribe(eventName: EditorEventType, callback: EventsFunction) {
     if (this.eventsMap.has(eventName)) {
       const arr = this.eventsMap.get(eventName)!
 
@@ -47,45 +37,52 @@ class Action {
     }
   }
 
-  public dispatcher(code: ActionCode, data: never) {
+  public dispatcher(type: EditorEvents['type'], data?: never) {
     if (this.lock) return
     const MODULE_MOVE_STEP = 5
     this.lock = true
 
-    switch (code) {
-      case 'selectAll':
+    switch (type) {
+      case 'editor-initialized':
+        break
+
+      case 'module-select-all':
         this.editor.selectionManager.selectAll()
         break
 
-      case 'select':
+      case 'module-add':
         this.editor.selectionManager.replace(data as Set<UID>)
         break
 
-      case 'copy':
+      case 'module-select':
+        this.editor.selectionManager.replace(data as Set<UID>)
+        break
+
+      case 'module-copy':
         this.editor.selectionManager.copySelected()
         break
 
-      case 'delete':
+      case 'module-delete':
         this.editor.selectionManager.removeSelected()
         break
 
-      case 'duplicate':
+      case 'module-duplicate':
         this.editor.selectionManager.duplicateSelected()
         break
 
-      case 'escape':
+      case 'module-escape':
         this.editor.selectionManager.clear()
         break
 
-      case 'paste':
+      case 'module-paste':
         this.editor.selectionManager.pasteCopied()
         break
 
-      case 'redo':
+      case 'module-redo':
         this.editor.history.redo()
         break
 
-      case 'undo':
+      case 'module-undo':
         this.editor.history.undo()
         break
 
@@ -93,15 +90,15 @@ class Action {
         this.editor.viewport.zoomTo(data)
         break
 
-      case 'moveUp':
-      case 'moveRight':
-      case 'moveDown':
-      case 'moveLeft':
+      case 'module-move-up':
+      case 'module-move-right':
+      case 'module-move-left':
+      case 'module-move-down':
         this.editor.batchMove(
           this.editor.selectionManager.getSelected(),
           {
-            x: (code === 'moveLeft' && -MODULE_MOVE_STEP) || (code === 'moveRight' && MODULE_MOVE_STEP) || 0,
-            y: (code === 'moveUp' && -MODULE_MOVE_STEP) || (code === 'moveDown' && MODULE_MOVE_STEP) || 0,
+            x: (type === 'moveLeft' && -MODULE_MOVE_STEP) || (type === 'moveRight' && MODULE_MOVE_STEP) || 0,
+            y: (type === 'moveUp' && -MODULE_MOVE_STEP) || (type === 'moveDown' && MODULE_MOVE_STEP) || 0,
           },
           'history-move',
         )
@@ -109,16 +106,85 @@ class Action {
 
       default:
         // Optionally handle unknown codes
-        console.warn(`Unknown code: ${code}`)
+        console.warn(`Unknown code: ${type}`)
     }
 
-    if (this.eventsMap.has(code)) {
-      this.eventsMap.get(code)!.forEach((cb) => {
+    if (this.eventsMap.has(type)) {
+      this.eventsMap.get(type)!.forEach((cb) => {
         cb()
       })
     }
 
     this.lock = false
+  }
+
+  public execute(type: EditorEventType, data: never) {
+  /*  switch (type) {
+      case 'editor-initialized':
+        break
+
+      case 'module-select-all':
+        this.editor.selectionManager.selectAll()
+        break
+
+      case 'module-add':
+        this.editor.selectionManager.replace(data as Set<UID>)
+        break
+
+      case 'module-select':
+        this.editor.selectionManager.replace(data as Set<UID>)
+        break
+
+      case 'module-copy':
+        this.editor.selectionManager.copySelected()
+        break
+
+      case 'module-delete':
+        this.editor.selectionManager.removeSelected()
+        break
+
+      case 'module-duplicate':
+        this.editor.selectionManager.duplicateSelected()
+        break
+
+      case 'module-escape':
+        this.editor.selectionManager.clear()
+        break
+
+      case 'module-paste':
+        this.editor.selectionManager.pasteCopied()
+        break
+
+      case 'module-redo':
+        this.editor.history.redo()
+        break
+
+      case 'module-undo':
+        this.editor.history.undo()
+        break
+
+      case 'zoom':
+        this.editor.viewport.zoomTo(data)
+        break
+
+      case 'module-move-up':
+      case 'module-move-right':
+      case 'module-move-left':
+      case 'module-move-down':
+        this.editor.batchMove(
+          this.editor.selectionManager.getSelected(),
+          {
+            x: (type === 'moveLeft' && -MODULE_MOVE_STEP) || (type === 'moveRight' && MODULE_MOVE_STEP) || 0,
+            y: (type === 'moveUp' && -MODULE_MOVE_STEP) || (type === 'moveDown' && MODULE_MOVE_STEP) || 0,
+          },
+          'history-move',
+        )
+        break
+
+      default:
+        // Optionally handle unknown codes
+        console.warn(`Unknown code: ${type}`)
+    }*/
   }
 
   public destroy() {

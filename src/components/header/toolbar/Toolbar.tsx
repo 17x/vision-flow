@@ -2,7 +2,7 @@ import {useSelector} from "react-redux"
 import {RootState} from "../../../redux/store.ts"
 import {LayerDown, LayerToBottom, LayerToTop, LayerUp} from "./Icons/LayerIcons.tsx"
 import {Fragment, ReactNode, useContext} from "react"
-import {ActionCode} from "../../../engine/editor/type"
+import {ModuleOperationType} from "../../../engine/editor/type"
 import EditorContext from "../../editorContext/EditorContext.tsx"
 import {NamedIcon} from "../../lib/icon/icon.tsx"
 
@@ -48,7 +48,7 @@ const Toolbar: React.FC = () => {
                     title={id}
                     onClick={() => {
                       // console.log(id)
-                      executeAction(id as ActionCode)
+                      executeAction(id as ModuleOperationType)
                     }}
                     className={'relative ml-1 rounded-sm mr-1 flex items-center cursor-pointer justify-center w-6 h-6 opacity-50   hover:bg-gray-200  hover:opacity-100 disabled:text-gray-200 disabled:cursor-default'}>
               {Icon}

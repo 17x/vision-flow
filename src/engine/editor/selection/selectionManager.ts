@@ -139,16 +139,16 @@ class SelectionManager {
     })
 
     const newModules = this.editor.batchCreate(temp)
-    this.editor.batchAdd(newModules, 'duplicate')
+    this.editor.batchAdd(newModules, 'history-duplicate')
     this.isSelectAll = false
     this.replace(new Set(newModules.keys()))
   }
 
   public removeSelected(): void {
     if (this.isSelectAll) {
-      this.editor.batchDelete('all', 'delete')
+      this.editor.batchDelete('all', 'history-delete')
     } else {
-      this.editor.batchDelete(this.selectedModules, 'delete')
+      this.editor.batchDelete(this.selectedModules, 'history-delete')
     }
 
     this.editor.selectionManager.clear()

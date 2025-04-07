@@ -1,15 +1,15 @@
 import React, {useContext, useEffect} from 'react'
-import {ActionCode, MoveDirection} from "../engine/editor/type"
+import {ModuleOperationType, ModuleMoveDirection} from "../engine/editor/type"
 import EditorContext from "./editorContext/EditorContext.tsx"
 
 const ShortcutListener: React.FC = () => {
   const {executeAction, focused} = useContext(EditorContext)
 
   const handleKeyPress = (e: KeyboardEvent) => {
-    let shortcutCode: ActionCode | null = null
+    let shortcutCode: ModuleOperationType | null = null
     const {key, ctrlKey, metaKey, shiftKey} = e
 
-    const arrowKeys: { [key: string]: MoveDirection } = {
+    const arrowKeys: { [key: string]: ModuleMoveDirection } = {
       ArrowUp: 'moveUp',
       ArrowDown: 'moveDown',
       ArrowLeft: 'moveLeft',
@@ -17,35 +17,35 @@ const ShortcutListener: React.FC = () => {
     }
 
     if (key === 'a' && (ctrlKey || metaKey)) {
-      shortcutCode = 'selectAll'
+      shortcutCode = 'module-select-all'
     }
 
     if (key === 'c' && (ctrlKey || metaKey) && !shiftKey) {
-      shortcutCode = 'copy'
+      shortcutCode = 'module-copy'
     }
 
     if (key === 'v' && (ctrlKey || metaKey)) {
-      shortcutCode = 'paste'
+      shortcutCode = 'module-paste'
     }
 
     if (key === 'd' && (ctrlKey || metaKey)) {
-      shortcutCode = 'duplicate'
+      shortcutCode = 'module-duplicate'
     }
 
     if (key === 'Delete' || key === 'Backspace') {
-      shortcutCode = 'delete'
+      shortcutCode = 'module-delete'
     }
 
     if (key === 'Escape') {
-      shortcutCode = 'escape'
+      shortcutCode = 'module-escape'
     }
 
     if (key === 'z' && (ctrlKey || metaKey)) {
-      shortcutCode = 'undo'
+      shortcutCode = 'module-undo'
     }
 
     if (key === 'z' && shiftKey && (ctrlKey || metaKey)) {
-      shortcutCode = 'redo'
+      shortcutCode = 'module-redo'
     }
 
     if (arrowKeys[key]) {

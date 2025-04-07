@@ -1,35 +1,32 @@
-import {ModuleProps} from "../core/modules/modules"
-import History from "./history/history.ts"
+import {ModuleProps} from '../core/modules/modules'
+import History from './history/history.ts'
 
 export type BasicEditorAreaSize = {
   width: 1000
   height: 1000
 }
 
-export interface Line {
-  start: Point
-  end: Point
-}
+export type ModuleMoveDirection =
+  'module-move-up' |
+  'module-move-down' |
+  'module-move-left' |
+  'module-move-right'
 
-export type MoveDirection =
-  'moveUp'
-  | 'moveDown'
-  | 'moveLeft'
-  | 'moveRight'
-
-export type ActionCode =
-  'selectAll'
-  | 'select'
-  | 'copy'
-  | 'paste'
-  | 'redo'
-  | 'undo'
-  | 'duplicate'
-  | 'delete'
-  | 'escape'
-  | 'modifyModules'
-  | 'zoom'
-  | MoveDirection
+export type ModuleOperationType =
+  'module-select-all'
+  | 'module-select'
+  | 'module-copy'
+  | 'module-paste'
+  | 'module-redo'
+  | 'module-undo'
+  | 'module-duplicate'
+  | 'module-delete'
+  | 'module-escape'
+  | 'module-modify'
+  | 'module-move'
+  | 'module-move-start'
+  | 'module-move-end'
+  | ModuleMoveDirection
 
 export type ModifyModule = Partial<ModuleProps>
 // export type ModifyModuleMap = Map<UID, ModifyModule>

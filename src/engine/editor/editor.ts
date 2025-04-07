@@ -1,5 +1,5 @@
 import SelectionManager from './selection/selectionManager.ts'
-import {BasicEditorAreaSize, ActionCode, EventHandlers} from './type'
+import {BasicEditorAreaSize, ModuleOperationType, EventHandlers} from './type'
 import History from './history/history.ts'
 import Rectangle from '../core/modules/shapes/rectangle.ts'
 import deepClone from '../../utilities/deepClone.ts'
@@ -12,7 +12,6 @@ import batchReplaceModules from './helpers/batchReplaceModules.ts'
 import Viewport from './viewport/viewport.ts'
 
 import {rectsOverlap} from '../core/utils.ts'
-
 
 export interface EditorDataProps {
   id: UID;
@@ -78,13 +77,13 @@ class Editor {
     // const ctx = canvas.getContext("2d")
     // const wrapper = document.createElement("div")
 
-    this.container = container
-
-    this.viewport = new Viewport(this)
     this.action = new Action(this)
+    this.container = container
+    this.viewport = new Viewport(this)
     this.selectionManager = new SelectionManager(this)
     this.history = new History(this)
-    // this.render()
+
+    this.action.dispatcher('editor-initialized')
   }
 
   private createModuleId(): UID {
@@ -313,7 +312,7 @@ class Editor {
     return new Map(this.visibleModuleMap)
   }
 
-  public execute(code: ActionCode, data: unknown = null) {
+  public execute(code: ModuleOperationType, data: unknown = null) {
     // @ts-ignore
     this.action.dispatcher(code, data)
   }

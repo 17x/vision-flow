@@ -1,6 +1,10 @@
 import render from '../../core/renderer/mainCanvasRenderer.ts'
 import Editor from '../editor.ts'
-import {generateScrollBars, initViewportDom, updateScrollBars} from './domManipulations.ts'
+import {
+  generateScrollBars,
+  initViewportDom,
+  updateScrollBars,
+} from './domManipulations.ts'
 import handleMouseDown from './eventHandlers/mouseDown.ts'
 import handlePointerMove from './eventHandlers/pointerMove.ts'
 import handleMouseUp from './eventHandlers/mouseUp.ts'
@@ -12,7 +16,11 @@ import resetCanvas from './resetCanvas.tsx'
 import selectionRender from './selectionRender.ts'
 import {screenToCanvas} from '../../lib/lib.ts'
 import {RectangleRenderProps} from '../../core/renderer/type'
-import {createBoundingRect, createFrame, fitRectToViewport} from './helper.ts'
+import {
+  createBoundingRect,
+  createFrame,
+  fitRectToViewport,
+} from './helper.ts'
 
 type ViewportManipulationType =
   | 'static'
@@ -128,7 +136,10 @@ class Viewport {
       this.rect!.width,
       this.rect!.height,
     )
-    const {x: mouseVirtualX, y: mouseVirtualY} = this.screenToCanvas(this.mouseMovePoint.x, this.mouseMovePoint.y)
+    const {x: mouseVirtualX, y: mouseVirtualY} = this.screenToCanvas(
+      this.mouseMovePoint.x,
+      this.mouseMovePoint.y,
+    )
     const width = maxX - minX
     const height = maxY - minY
 
@@ -194,7 +205,7 @@ class Viewport {
       width: this.rect!.width * dpr,
       height: this.rect!.height * dpr,
     }
-/*    console.log(
+    /*    console.log(
       pointX,
       pointY,
       rect,
@@ -234,10 +245,14 @@ class Viewport {
     if (newScale === 'fit') {
       this.fitFrame()
     } else {
-      this.zoomAtPoint({
-        x: this.rect!.width / 2,
-        y: this.rect!.height / 2,
-      }, newScale, true)
+      this.zoomAtPoint(
+        {
+          x: this.rect!.width / 2,
+          y: this.rect!.height / 2,
+        },
+        newScale,
+        true,
+      )
     }
   }
 
@@ -313,7 +328,12 @@ class Viewport {
      }, 50)*/
     // console.log(testFrame)
     // console.log(frame)
-    const viewportRect = createBoundingRect(0, 0, rect!.width * dpr, rect!.height * dpr)
+    const viewportRect = createBoundingRect(
+      0,
+      0,
+      rect!.width * dpr,
+      rect!.height * dpr,
+    )
     const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect)
 
     // console.log(virtualRect)

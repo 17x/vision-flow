@@ -85,6 +85,8 @@ class History extends DoublyLinkedList {
         break
     }
 
+    super.back()
+    
     if (!quiet) {
       // restore selected modules
       if (selectedModules === 'all') {
@@ -95,8 +97,6 @@ class History extends DoublyLinkedList {
 
       this.editor.events.onHistoryUpdated?.(this)
     }
-
-    super.back()
 
     return this.current as HistoryNode
   }

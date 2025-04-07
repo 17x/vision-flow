@@ -61,12 +61,14 @@ class History extends DoublyLinkedList {
       case 'modify':
 
         break
+
       case 'move':
         this.editor.batchMove(payload.selectedModules, {
           x: -payload.delta.x,
           y: -payload.delta.y,
         })
         break
+
       case 'reorder':
         break
       case 'group':
@@ -84,30 +86,16 @@ class History extends DoublyLinkedList {
         break
     }
 
-    // restore selected modules
-    if (selectedModules === 'all') {
-      this.editor.selectionManager.selectAll()
-    } else {
-      this.editor.selectionManager.replace(selectedModules)
-    }
-    /*
-    if (
-      type === 'paste'
-      || type === 'add'
-      || type === 'duplicate'
-    ) {
-      this.editor.batchDelete(arrayToSet(modules!))
-    } else if (type === 'delete') {
-      this.editor.batchAdd(this.editor.batchCreate(modules!))
-    } else if (type === 'modify') {
-      console.log('modify', modules)
-      this.editor.batchReplaceModules(modules)
-    }
-*/
-    /*if (!quiet) {
-      this.editor.selectionManager.replace(selectModules)
+    if (!quiet) {
+      // restore selected modules
+      if (selectedModules === 'all') {
+        this.editor.selectionManager.selectAll()
+      } else {
+        this.editor.selectionManager.replace(selectedModules)
+      }
+
       this.editor.events.onHistoryUpdated?.(this)
-    }*/
+    }
 
     super.back()
 

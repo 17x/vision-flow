@@ -43,7 +43,6 @@ class History extends DoublyLinkedList {
     } = current.data
 
     const {selectedModules} = payload
-    // console.log(type, payload)
     let modules: HistoryModules | null = null
 
     switch (type) {
@@ -146,8 +145,6 @@ class History extends DoublyLinkedList {
         break
 
       case 'delete':
-        // modules = payload.modules
-
         this.editor.batchDelete(extractIdSetFromArray(payload.modules))
 
         break
@@ -185,8 +182,13 @@ class History extends DoublyLinkedList {
         if (localCurrent === targetNode) break
       }
 
-      const {selectModules} = targetNode.data
-      this.editor.selectionManager.replace(selectModules)
+      const {selectedModules} = targetNode.data.payload
+
+      if (selectedModules === 'all') {
+        this.editor.selectionManager.selectAll()
+      } else {
+        this.editor.selectionManager.replace(selectedModules)
+      }
       this.editor.events.onHistoryUpdated?.(this)
     } else {
       // do sth...

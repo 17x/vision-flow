@@ -86,7 +86,7 @@ class History extends DoublyLinkedList {
     }
 
     super.back()
-    
+    this.editor.updateVisibleModuleMap(this.editor.viewport.virtualRect)
     if (!quiet) {
       // restore selected modules
       if (selectedModules === 'all') {
@@ -150,6 +150,8 @@ class History extends DoublyLinkedList {
         break
     }
 
+    this.editor.updateVisibleModuleMap(this.editor.viewport.virtualRect)
+
     if (!quiet) {
       if (selectedModules === 'all') {
         this.editor.selectionManager.selectAll()
@@ -183,6 +185,8 @@ class History extends DoublyLinkedList {
       }
 
       const {selectedModules} = targetNode.data.payload
+
+      this.editor.updateVisibleModuleMap(this.editor.viewport.virtualRect)
 
       if (selectedModules === 'all') {
         this.editor.selectionManager.selectAll()

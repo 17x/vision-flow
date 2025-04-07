@@ -95,9 +95,9 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
 
         this.wrapper.releasePointerCapture(e.pointerId)
         this.drawCrossLine = this.drawCrossLineDefault
-        this.updateVirtualRect()
-        this.resetSelectionCanvas()
-        this.renderSelectionCanvas()
+        // this.updateVirtualRect()
+        // this.resetSelectionCanvas()
+        // this.renderSelectionCanvas()
       }
     }
       break

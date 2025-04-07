@@ -1,5 +1,5 @@
-import Editor from "../editor.ts"
-import typeCheck from "../../../utilities/typeCheck.ts"
+import Editor from '../editor.ts'
+import typeCheck from '../../../utilities/typeCheck.ts'
 
 const CopyDeltaX = 50
 const CopyDeltaY = 100
@@ -29,10 +29,10 @@ class SelectionManager {
 
     let eventCallBackData = null
 
-    if(idSet.size === 1) {
+    if (idSet.size === 1) {
       const first = [...idSet.values()][0]
 
-      if(this.editor.moduleMap.has(first)) {
+      if (this.editor.moduleMap.has(first)) {
         eventCallBackData = this.editor.moduleMap.get(first).getDetails()
         // console.log(eventCallBackData)
       }
@@ -51,7 +51,11 @@ class SelectionManager {
           this.selectedModules.delete(id)
           break
         case 'toggle':
-          this.selectedModules.has(id) ? this.selectedModules.delete(id) : this.selectedModules.add(id)
+          if (this.selectedModules.has(id)) {
+            this.selectedModules.delete(id)
+          } else {
+            this.selectedModules.add(id)
+          }
           break
         case 'replace':
           this.selectedModules.add(id) // Add the new selection
@@ -59,7 +63,7 @@ class SelectionManager {
       }
     })
 
-    this.render()
+    this.update()
     this.editor.events.onSelectionUpdated?.(idSet, eventCallBackData)
   }
 
@@ -82,14 +86,14 @@ class SelectionManager {
   public selectAll(): void {
     this.selectedModules.clear()
     this.isSelectAll = true
-    this.render()
+    this.update()
     this.editor.events.onSelectionUpdated?.('all', null)
   }
 
   public clear(): void {
     this.selectedModules.clear()
     this.isSelectAll = false
-    this.render()
+    this.update()
     this.editor.events.onSelectionUpdated?.(new Set(), null)
   }
 
@@ -150,16 +154,8 @@ class SelectionManager {
   }
 
   public update() {
-    let p2: ModuleProps | null = null
-
-    if (this.selectedModules.size === 1) {
-      this.selectedModules.forEach((id) => {
-        p2 = (this.editor.moduleMap.get(id) as ModuleType).getDetails()
-      })
-    }
-
+    
     this.render()
-    this.editor.events.onSelectionUpdated?.(this.selectedModules, p2)
   }
 
   render() {
@@ -175,7 +171,7 @@ class SelectionManager {
     this.selectedModules.clear()
     // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     this.isDestroyed = true
-    console.log("SelectionModule destroyed.")
+    console.log('SelectionModule destroyed.')
   }
 }
 

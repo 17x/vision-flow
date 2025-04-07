@@ -37,7 +37,18 @@ export type EditorAction = {
   children?: EditorAction[];
 };
 
+/*
 export interface ViewportInfo extends Size {
+  offsetX: number
+  offsetY: number
+  scale: number
+  dx: number
+  dy: number
+  status: string
+}
+*/
+
+export interface WorldInfo extends Size {
   offsetX: number
   offsetY: number
   scale: number
@@ -47,16 +58,17 @@ export interface ViewportInfo extends Size {
 }
 
 type HistoryUpdatedHandler = (history: History) => void;
-/**
- *
- */
 type ModulesUpdatedHandler = (moduleMap: ModuleMap) => void;
 type SelectionUpdatedHandler = (selected: Set<UID> | 'all', selectedProps?: ModuleProps) => void;
-type ViewportUpdatedHandler = (viewportInfo: ViewportInfo) => void;
+type ViewportUpdatedHandler = (viewportInfo: BoundingRect) => void;
+type WorldUpdatedHandler = (worldInfo: WorldInfo) => void;
+type WorldMouseMoveUpdatedHandler = (point:Point) => void;
 
 export declare type EventHandlers = {
   onHistoryUpdated?: HistoryUpdatedHandler
   onModulesUpdated?: ModulesUpdatedHandler
   onSelectionUpdated?: SelectionUpdatedHandler
   onViewportUpdated?: ViewportUpdatedHandler
+  onWorldUpdated?: WorldUpdatedHandler
+  onWorldMouseMove?: WorldMouseMoveUpdatedHandler
 }

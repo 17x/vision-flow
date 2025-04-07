@@ -23,7 +23,7 @@ function handleWheel(this: Viewport, event: WheelEvent) {
     this.translateViewport(translateX, translateY)
   }
 
-  this.updateVirtualRect()
+  this.updateWorldRect()
 }
 
 const detectGestures = (() => {

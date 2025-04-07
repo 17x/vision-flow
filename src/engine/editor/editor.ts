@@ -42,7 +42,7 @@ class Editor {
   // private size: Size;
   container: HTMLDivElement
   events: EventHandlers = {}
-  private action: Action
+  readonly action: Action
   history: History
   // public panableContainer: PanableContainer
   selectionManager: SelectionManager
@@ -83,7 +83,24 @@ class Editor {
     this.selectionManager = new SelectionManager(this)
     this.history = new History(this)
 
-    this.action.dispatcher('editor-initialized')
+    // this.action.dispatch('editor-initialized')
+    this.init()
+  }
+
+  private init() {
+    this.action.subscribe('world-mouse-move', (data) => {
+      // console.log(point)
+      this.events.onWorldMouseMove?.(data as Point)
+    })
+    this.action.subscribe('world-zoom', (worldRect) => {
+      this.updateVisibleModuleMap(worldRect)
+      this.events.onViewportUpdated?.(worldRect)
+    })
+
+    this.action.subscribe('world-shift', (worldRect) => {
+      this.updateVisibleModuleMap(worldRect)
+      // this.events.onViewportUpdated?.(worldRect)
+    })
   }
 
   private createModuleId(): UID {
@@ -120,7 +137,7 @@ class Editor {
       this.moduleMap.set(mod.id, mod)
     })
 
-    this.updateVisibleModuleMap(this.viewport.virtualRect)
+    this.updateVisibleModuleMap(this.viewport.worldRect)
     this.events.onModulesUpdated?.(this.moduleMap)
 
     this.render()
@@ -195,7 +212,7 @@ class Editor {
       })
     }
 
-    this.updateVisibleModuleMap(this.viewport.virtualRect)
+    this.updateVisibleModuleMap(this.viewport.worldRect)
     this.render()
     this.events.onModulesUpdated?.(this.moduleMap)
 
@@ -296,13 +313,13 @@ class Editor {
     return [...Object.values(this.moduleMap)]
   }
 
-  updateVisibleModuleMap(virtualRect: BoundingRect) {
+  updateVisibleModuleMap(worldRect: BoundingRect) {
     this.visibleModuleMap.clear()
 
     this.moduleMap.forEach((module) => {
       const boundingRect = module.getBoundingRect() as BoundingRect
 
-      if (rectsOverlap(boundingRect, virtualRect)) {
+      if (rectsOverlap(boundingRect, worldRect)) {
         this.visibleModuleMap.set(module.id, module)
       }
     })
@@ -314,7 +331,7 @@ class Editor {
 
   public execute(code: ModuleOperationType, data: unknown = null) {
     // @ts-ignore
-    this.action.dispatcher(code, data)
+    this.action.dispatch(code, data)
   }
 
   render() {

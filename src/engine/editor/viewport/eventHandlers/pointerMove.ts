@@ -11,6 +11,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
   this.mouseMovePoint.y = e.clientY - this.rect!.y
   this.hoveredModules.clear()
   this.drawCrossLine = false
+  this.dispatchWorldPoint()
 
   switch (this.manipulationStatus) {
     case 'selecting': {
@@ -60,7 +61,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
         this.editor.moduleMap.get(id).y += y
       })
 
-      this.editor.updateVisibleModuleMap(this.virtualRect)
+      this.editor.updateVisibleModuleMap(this.worldRect)
 
       this.render()
     }
@@ -95,7 +96,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
 
         this.wrapper.releasePointerCapture(e.pointerId)
         this.drawCrossLine = this.drawCrossLineDefault
-        this.updateVirtualRect()
+        this.updateWorldRect()
         // this.resetSelectionCanvas()
         // this.renderSelectionCanvas()
       }

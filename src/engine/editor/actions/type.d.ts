@@ -1,12 +1,15 @@
-import {ModuleOperationType} from '../type'
-import {ViewportEventType} from '../viewport/type'
-import {HistoryOperationType} from '../history/type'
+// import {ModuleOperationType} from '../type'
+// import {ViewportEventType} from '../viewport/type'
+// import {HistoryOperationType} from '../history/type'
 
-type EditorEventType =
+/*type EditorEventType =
   | 'editor-initialized'
   | ModuleOperationType
   | HistoryOperationType
-  | ViewportEventType;
+  | ViewportEventType;*/
+
+type EditorEventType = EditorEvents['type']
+type EditorEventData = EditorEvents['data']
 
 export type EditorEvents =
   | EditorInitializedEvent
@@ -44,7 +47,8 @@ export type EditorEvents =
   | ViewportMouseMoveEvent
   | ViewportMouseUpEvent
   | WorldZoomEvent
-  | WorldShiftEvent;
+  | WorldShiftEvent
+  | WorldMouseMoveEvent
 
 export interface EditorInitializedEvent {
   type: 'editor-initialized';
@@ -58,7 +62,7 @@ export interface ModuleSelectAllEvent {
 
 export interface ModuleSelectEvent {
   type: 'module-select';
-  data: Set<UID>;
+  data: never;
 }
 
 export interface ModuleCopyEvent {
@@ -198,7 +202,7 @@ export interface HistoryCompositeEvent {
 
 export interface ViewportResizeEvent {
   type: 'viewport-resize';
-  data: never;
+  data?: null;
 }
 
 export interface ViewportMouseDownEvent {
@@ -212,7 +216,7 @@ export interface ViewportMouseMoveEvent {
 }
 
 export interface ViewportMouseUpEvent {
-  type: 'viewport-mouse-up';
+  type: 'viewport-mouse-up'
   data: never;
 }
 
@@ -221,7 +225,12 @@ export interface WorldZoomEvent {
   data: never;
 }
 
+export interface WorldMouseMoveEvent {
+  type: 'world-mouse-move'
+  data: Point
+}
+
 export interface WorldShiftEvent {
   type: 'world-shift';
-  data: never;
+  data: BoundingRect
 }

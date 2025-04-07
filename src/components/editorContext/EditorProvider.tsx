@@ -25,6 +25,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const editorRef = useRef<Editor>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [historyArray, setHistoryArray] = useState<HistoryNode[]>([])
+  const [worldPoint, setWorldPoint] = useState<Point>({x: 0, y: 0})
   const [sortedModules, setSortedModules] = useState<ModuleType[]>([])
   const [selectedProps, setSelectedProps] = useState<ModuleProps>(null)
   const [selectedModules, setSelectedModules] = useState<UID[]>([])
@@ -56,10 +57,29 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           modules: [],
         },
         events: {
-          onHistoryUpdated,
-          onModulesUpdated,
-          onSelectionUpdated,
-          onViewportUpdated,
+          onHistoryUpdated: (historyTree) => {
+            setHistoryArray(historyTree!.toArray())
+
+            if (historyTree.current) {
+              setHistoryCurrent(historyTree.current.id)
+            }
+          },
+          onModulesUpdated: (moduleMap) => {
+            // console.log(Array.from(moduleMap.values()))
+            const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
+
+            setSortedModules(arr)
+          },
+          onSelectionUpdated: (selected, props) => {
+            setSelectedModules(Array.from(selected))
+            setSelectedProps(props)
+          },
+          onViewportUpdated: (viewportInfo) => {
+            setViewport(viewportInfo)
+          },
+          onWorldMouseMove: (point) => {
+            setWorldPoint(point)
+          },
         },
       })
 
@@ -87,30 +107,6 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 
   const handleFocus = () => setFocused(true)
   const handleBlur = () => setFocused(false)
-
-  const onSelectionUpdated: SelectionUpdatedHandler = (selected, props) => {
-    setSelectedModules(Array.from(selected))
-    setSelectedProps(props)
-  }
-
-  const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
-    setHistoryArray(historyTree!.toArray())
-
-    if (historyTree.current) {
-      setHistoryCurrent(historyTree.current.id)
-    }
-  }
-
-  const onModulesUpdated: ModulesUpdatedHandler = (moduleMap) => {
-    // console.log(Array.from(moduleMap.values()))
-    const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
-
-    setSortedModules(arr)
-  }
-
-  const onViewportUpdated: ViewportUpdatedHandler = (viewportInfo) => {
-    setViewport(viewportInfo)
-  }
 
   const applyHistoryNode = (node: HistoryNode) => {
     if (editorRef.current) {
@@ -148,7 +144,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
                  editor-container={'true'}
                  className={'relative overflow-hidden flex w-full h-full'}
             ></div>
-            <StatusBar/>
+            <StatusBar worldPoint={worldPoint}/>
           </div>
 
           <div style={{width: 200}} className={'h-full flex-shrink-0 border-l border-gray-200'}>

@@ -33,7 +33,7 @@ type ViewportManipulationType =
 
 class Viewport {
   readonly editor: Editor
-  readonly resizeInterval: number = 17
+  readonly resizeInterval: number = 1
   readonly resizeObserver: ResizeObserver
   readonly wrapper: HTMLDivElement
   readonly scrollBarX: HTMLDivElement
@@ -56,7 +56,7 @@ class Viewport {
   mouseMovePoint: Point = {x: 0, y: 0}
   offset: Point = {x: 0, y: 0}
   rect: Rect | undefined
-  virtualRect: BoundingRect = {
+  worldRect: BoundingRect = {
     x: 0,
     y: 0,
     width: 0,
@@ -107,6 +107,10 @@ class Viewport {
     initViewportDom.call(this)
     this.resizeObserver.observe(this.editor.container)
     this.setupEvents()
+    this.editor.action.subscribe('viewport-resize', this.onViewportResize.bind(this))
+    this.editor.action.subscribe('world-shift', this.render.bind(this))
+    // this.editor.action.subscribe('world-shift', this.onWorldShift)
+    // this.editor.action.subscribe('world-zoom', () => {    })
   }
 
   setupEvents() {
@@ -130,20 +134,27 @@ class Viewport {
     })
   }
 
-  updateVirtualRect() {
+  dispatchWorldPoint() {
+    this.editor.action.dispatch({
+      type: 'world-mouse-move',
+      data: this.screenToCanvas(this.mouseMovePoint.x, this.mouseMovePoint.y),
+    })
+  }
+
+  updateWorldRect() {
     const {x: minX, y: minY} = this.screenToCanvas(0, 0)
     const {x: maxX, y: maxY} = this.screenToCanvas(
       this.rect!.width,
       this.rect!.height,
     )
-    const {x: mouseVirtualX, y: mouseVirtualY} = this.screenToCanvas(
-      this.mouseMovePoint.x,
-      this.mouseMovePoint.y,
-    )
+    /*    const {x: mouseVirtualX, y: mouseVirtualY} = this.screenToCanvas(
+          this.mouseMovePoint.x,
+          this.mouseMovePoint.y,
+        )*/
     const width = maxX - minX
     const height = maxY - minY
 
-    this.virtualRect = {
+    this.worldRect = {
       x: minX,
       y: minY,
       width,
@@ -156,9 +167,14 @@ class Viewport {
       left: minX,
     }
 
-    this.editor.updateVisibleModuleMap(this.virtualRect)
-    this.editor.selectionManager.updateVisibleSelectedModules()
-    this.editor.events.onViewportUpdated?.({
+    this.editor.action.dispatch({
+      type: 'world-shift',
+      data: this.worldRect,
+    })
+
+    // this.editor.updateVisibleModuleMap(this.worldRect)
+    // this.editor.selectionManager.updateVisibleSelectedModules()
+    /*this.editor.events.onViewportUpdated?.({
       offsetX: this.offset.x,
       offsetY: this.offset.y,
       scale: this.scale,
@@ -167,7 +183,7 @@ class Viewport {
       status: this.manipulationStatus,
       width,
       height,
-    })
+    })*/
   }
 
   /*
@@ -237,7 +253,7 @@ class Viewport {
     this.offset.x = newOffsetX
     this.offset.y = newOffsetY
     this.render()
-    this.updateVirtualRect()
+    this.updateWorldRect()
   }
 
   zoomTo(newScale: number | 'fit') {
@@ -265,7 +281,7 @@ class Viewport {
   translateViewport(x: number, y: number) {
     this.offset.x += x
     this.offset.y += y
-    this.updateVirtualRect()
+    this.updateWorldRect()
     this.render()
   }
 
@@ -279,17 +295,18 @@ class Viewport {
     clearTimeout(this.resizeTimeout)
 
     this.domResizing = true
-    this.resizeTimeout = setTimeout(
-      this.onResize.bind(this),
+    this.resizeTimeout = setTimeout(() => {
+        this.editor.action.dispatch({type: 'viewport-resize'})
+      },
       this.resizeInterval,
     )
   }
 
-  onResize() {
+  onViewportResize() {
     this.domResizing = false
-    this.updateCanvasSize()
-    this.updateVirtualRect()
-    this.render()
+    // this.updateCanvasSize()
+    this.updateWorldRect()
+    // this.render()
 
     if (!this.initialized) {
       this.initialized = true
@@ -343,7 +360,7 @@ class Viewport {
     this.offset.x = offsetX
     this.offset.y = offsetY
     this.render()
-    this.updateVirtualRect()
+    this.updateWorldRect()
   }
 
   resetMainCanvas() {

@@ -1,26 +1,52 @@
 {
-  "init": {
-    "label": "初期化",
-    "tooltip": "ファイルを初期化する"
-  },
-  "addModules": {
-    "label": "モジュールを追加",
-    "tooltip": "ファイルに新しいモジュールを追加する"
-  },
-  "deleteModules": {
-    "label": "モジュールを削除",
-    "tooltip": "ファイルからモジュールを削除する"
-  },
-  "pasteModules": {
-    "label": "モジュールを貼り付け",
-    "tooltip": "ファイルにモジュールを貼り付ける"
-  },
-  "duplicateModules": {
-    "label": "モジュールを複製",
-    "tooltip": "選択したモジュールを複製する"
-  },
-  "modifyModules": {
-    "label": "モジュールを修正",
-    "tooltip": "モジュールのプロパティを修正する"
+  "history": {
+    "init": {
+      "label": "初期化",
+      "tooltip": "ファイルを初期化する"
+    },
+    "add": {
+      "label": "追加",
+      "tooltip": "ファイルにモジュールを追加する"
+    },
+    "delete": {
+      "label": "削除",
+      "tooltip": "ファイルからモジュールを削除する"
+    },
+    "paste": {
+      "label": "貼り付け",
+      "tooltip": "ファイルにモジュールを貼り付ける"
+    },
+    "duplicate": {
+      "label": "複製",
+      "tooltip": "選択したモジュールを複製する"
+    },
+    "modify": {
+      "label": "修正",
+      "tooltip": "モジュールのプロパティを修正する"
+    },
+    "move": {
+      "label": "移動",
+      "tooltip": "モジュールを移動する"
+    },
+    "reorder": {
+      "label": "並べ替え",
+      "tooltip": "モジュールを並べ替える"
+    },
+    "select": {
+      "label": "選択",
+      "tooltip": "モジュールを選択する"
+    },
+    "group": {
+      "label": "グループ化",
+      "tooltip": "モジュールをグループ化する"
+    },
+    "ungroup": {
+      "label": "グループ化解除",
+      "tooltip": "モジュールのグループ化を解除する"
+    },
+    "composite": {
+      "label": "複合操作",
+      "tooltip": "複合操作"
+    }
   }
 }

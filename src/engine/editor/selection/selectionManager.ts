@@ -34,7 +34,7 @@ class SelectionManager {
 
       if(this.editor.moduleMap.has(first)) {
         eventCallBackData = this.editor.moduleMap.get(first).getDetails()
-        console.log(eventCallBackData)
+        // console.log(eventCallBackData)
       }
     }
 
@@ -102,7 +102,7 @@ class SelectionManager {
 
   public pasteCopied(): void {
     const newModules = this.editor.batchCreate(this.copiedItems)
-    this.editor.batchAdd(newModules, 'pasteModules')
+    this.editor.batchAdd(newModules, 'paste')
     this.replace(new Set(newModules.keys()))
     this.updateCopiedItemsDelta()
   }
@@ -122,16 +122,16 @@ class SelectionManager {
     })
 
     const newModules = this.editor.batchCreate(temp)
-    this.editor.batchAdd(newModules, 'duplicateModules')
+    this.editor.batchAdd(newModules, 'duplicate')
     this.isSelectAll = false
     this.replace(new Set(newModules.keys()))
   }
 
   public removeSelected(): void {
     if (this.isSelectAll) {
-      this.editor.batchDelete('all', 'deleteModules')
+      this.editor.batchDelete('all', 'delete')
     } else {
-      this.editor.batchDelete(this.selectedModules, 'deleteModules')
+      this.editor.batchDelete(this.selectedModules, 'delete')
     }
 
     this.editor.selectionManager.clear()

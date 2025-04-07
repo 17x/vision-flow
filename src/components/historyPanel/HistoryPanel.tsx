@@ -1,7 +1,7 @@
-import {useContext, useEffect, useRef} from "react"
-import EditorContext from "../editorContext/EditorContext.tsx"
-import {useTranslation} from "react-i18next"
-import {I18nHistoryDataItem} from "../../i18n/type"
+import {useContext, useEffect, useRef} from 'react'
+import EditorContext from '../editorContext/EditorContext.tsx'
+import {useTranslation} from 'react-i18next'
+import {I18nHistoryDataItem} from '../../i18n/type'
 
 export const HistoryPanel = () => {
   const {historyArray, historyCurrent, applyHistoryNode} = useContext(EditorContext)
@@ -12,18 +12,18 @@ export const HistoryPanel = () => {
     if (targetRef.current) {
       // const targetElement = targetRef.current
 
-    /*  const _timer = setTimeout(() => {
-        targetElement.scrollIntoView({
-          // behavior: "smooth",
-          block: "nearest",
-          inline: "nearest"
-        })
-      }, 0)*/
+      /*  const _timer = setTimeout(() => {
+          targetElement.scrollIntoView({
+            // behavior: "smooth",
+            block: "nearest",
+            inline: "nearest"
+          })
+        }, 0)*/
 
       return () => {
-       /* if (_timer) {
-          clearTimeout(_timer)
-        }*/
+        /* if (_timer) {
+           clearTimeout(_timer)
+         }*/
       }
     }
   }, [historyArray, historyCurrent])
@@ -36,7 +36,8 @@ export const HistoryPanel = () => {
           {
             historyArray.map((historyNode, index) => {
                 const isCurr = historyNode === historyCurrent
-                const {label, tooltip} = t(historyNode.data.type, {returnObjects: true}) as I18nHistoryDataItem
+                const prefixI18NKey = 'history.' + historyNode.data.type
+                const {label, tooltip} = t(prefixI18NKey, {returnObjects: true}) as I18nHistoryDataItem
 
                 return <div key={index}
                             title={tooltip}
@@ -49,7 +50,7 @@ export const HistoryPanel = () => {
                             className={` px-2 py-1 cursor-pointer text-xs hover:bg-gray-400 hover:text-white ${isCurr ? 'bg-gray-400 text-white' : ''}`}>
                   <span>{label}</span>
                 </div>
-              }
+              },
             )
           }
         </div>

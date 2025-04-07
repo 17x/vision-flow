@@ -1,17 +1,17 @@
-import SelectionManager from "./selection/selectionManager.ts"
-import {BasicEditorAreaSize, ActionCode, MoveDirection, EventHandlers} from "./type"
-import History from "./history/history.ts"
-import Rectangle from "../core/modules/shapes/rectangle.ts"
-import deepClone from "../../utilities/deepClone.ts"
-import typeCheck from "../../utilities/typeCheck.ts"
-import TypeCheck from "../../utilities/typeCheck.ts"
-import Action from "./actions"
-import Connector from "../core/modules/connectors/connector.ts"
-import {HistoryActionType} from "./history/type"
-import batchReplaceModules from "./helpers/batchReplaceModules.ts"
-import Viewport from "./viewport/viewport.ts"
+import SelectionManager from './selection/selectionManager.ts'
+import {BasicEditorAreaSize, ActionCode, MoveDirection, EventHandlers} from './type'
+import History from './history/history.ts'
+import Rectangle from '../core/modules/shapes/rectangle.ts'
+import deepClone from '../../utilities/deepClone.ts'
+import typeCheck from '../../utilities/typeCheck.ts'
+import TypeCheck from '../../utilities/typeCheck.ts'
+import Action from './actions'
+import Connector from '../core/modules/connectors/connector.ts'
+import {HistoryOperationType} from './history/type'
+import batchReplaceModules from './helpers/batchReplaceModules.ts'
+import Viewport from './viewport/viewport.ts'
 
-import {rectsOverlap} from "../core/utils.ts"
+import {rectsOverlap} from '../core/utils.ts'
 
 // import {isInsideRect} from "./viewport/helper.ts";
 
@@ -60,7 +60,7 @@ class Editor {
   // private zoomSpeed: number = 0.1
 
   constructor({
-                container, data, dpr = 2, zoom = 1, events = {}
+                container, data, dpr = 2, zoom = 1, events = {},
               }: EditorProps) {
     this.moduleMap = data.modules.reduce<ModuleMap>(
       (previousValue, currentValue) => {
@@ -68,7 +68,7 @@ class Editor {
 
         return previousValue
       },
-      new Map<UID, ModuleType>()
+      new Map<UID, ModuleType>(),
     )
     this.visibleModuleMap = new Map()
     this.id = data.id
@@ -118,19 +118,22 @@ class Editor {
     return newMap
   }
 
-  batchAdd(modules: ModuleMap, historyCode?: HistoryActionType) {
+  batchAdd(modules: ModuleMap, historyCode?: Extract<HistoryOperationType, 'add' | 'paste' | 'duplicate'>) {
     modules.forEach(mod => {
       this.moduleMap.set(mod.id, mod)
     })
 
     if (historyCode) {
-      // console.log([...modules.values()].map(mod => mod.getDetails()))
       const moduleProps = [...modules.values()].map(mod => mod.getDetails())
+      this.selectionManager.getSelected()
+
       this.history.add({
           type: historyCode,
-          modules: moduleProps,
-          selectModules: new Set(moduleProps.map(m => m.id))
-        }
+          payload: {
+            modules: moduleProps,
+            selectedModules: this.selectionManager.getSelected(),
+          },
+        },
       )
     }
 
@@ -172,7 +175,7 @@ class Editor {
     return result
   }
 
-  batchDelete(from: 'all' | Set<UID>, historyCode?: HistoryActionType) {
+  batchDelete(from: 'all' | Set<UID>, historyCode?: HistoryOperationType) {
     let backup: ModuleProps[] = []
 
     if (from === 'all') {
@@ -189,7 +192,7 @@ class Editor {
       this.history.add({
         type: historyCode,
         modules: backup,
-        selectModules: this.selectionManager.getSelected()
+        selectModules: this.selectionManager.getSelected(),
       })
     }
 
@@ -200,7 +203,41 @@ class Editor {
     return backup
   }
 
-  batchModify(from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryActionType) {
+  //
+  batchMove(from: 'all' | Set<UID>, delta: Point, historyCode?: Extract<HistoryOperationType, 'move'>) {
+    let modulesMap: ModuleMap | null = null
+
+    if (from === 'all') {
+      modulesMap = this.moduleMap
+    } else if (typeCheck(from) === 'set') {
+      modulesMap = this.getModulesByIdSet(from)
+    } else {
+      return false
+    }
+    console.log(delta)
+    modulesMap.forEach((module: ModuleProps) => {
+      module.x += delta.x
+      module.y += delta.y
+    })
+
+    this.render()
+    this.events.onModulesUpdated?.(this.moduleMap)
+    this.events.onSelectionUpdated?.(this.selectionManager.selectedModules, this.selectionManager.getIfUnique())
+
+    if (historyCode) {
+      this.history.add({
+        type: 'move',
+        payload: {
+          delta,
+          selectedModules: from,
+          modules: [],
+        },
+
+      })
+    }
+  }
+
+  batchModify(from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryOperationType) {
     let modulesMap = null
     const moveStep = 5
 
@@ -214,18 +251,9 @@ class Editor {
 
     modulesMap.forEach((module: ModuleProps) => {
       Object.keys(data).forEach((key) => {
-        const code = data['code'] as MoveDirection
         const value = data[key]
 
-        if (code === 'moveUp') {
-          module.y -= moveStep
-        } else if (code === 'moveDown') {
-          module.y += moveStep
-        } else if (code === 'moveLeft') {
-          module.x -= moveStep
-        } else if (code === 'moveRight') {
-          module.x += moveStep
-        } else if (typeof value === 'string' || typeof value === 'number') {
+        if (typeof value === 'string' || typeof value === 'number') {
           module[key] = value
         }
       })
@@ -240,7 +268,7 @@ class Editor {
       this.history.add({
         type: historyCode,
         modules: [...modulesMap.values()].map(mod => mod.getDetails()),
-        selectModules: this.selectionManager.getSelected()
+        selectModules: this.selectionManager.getSelected(),
       })
     }
   }

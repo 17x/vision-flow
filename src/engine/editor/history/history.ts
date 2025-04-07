@@ -1,7 +1,7 @@
-import Editor from "../editor.ts"
-import DoublyLinkedList, {HistoryNode} from "./DoublyLinkedList.ts"
-import {arrayToSet} from "../../core/convert.ts"
-import {HistoryNodeData} from "./type"
+import Editor from '../editor.ts'
+import DoublyLinkedList, {HistoryNode} from './DoublyLinkedList.ts'
+import {extractIdSetFromArray} from './helpers.ts'
+import {HistoryModules, HistoryOperation} from './type'
 
 class History extends DoublyLinkedList {
   private editor: Editor
@@ -15,17 +15,19 @@ class History extends DoublyLinkedList {
   init() {
     this.append({
       type: 'init',
-      modules: [],
-      selectModules: new Set()
+      payload: {
+        state: null,
+        selectedModules: [],
+      },
     })
 
     this.editor.events.onHistoryUpdated?.(this)
   }
 
   // Add a History node after the current
-  add(data: HistoryNodeData): void {
-    super.detach()
-    super.append(data)
+  add(data: HistoryOperation): void {
+    this.detach()
+    this.append(data)
 
     this.editor.events.onHistoryUpdated?.(this)
   }
@@ -37,27 +39,72 @@ class History extends DoublyLinkedList {
 
     const {
       type,
-      modules = [],
-      selectModules = new Set()
+      payload,
     } = current.data
 
+    const {selectedModules} = payload
+    // console.log(type, payload)
+    let modules: HistoryModules | null = null
+
+    switch (type) {
+      case 'init':
+        break
+      case 'add':
+      case 'paste':
+      case 'duplicate':
+
+        // delete modules from added
+        this.editor.batchDelete(extractIdSetFromArray(payload.modules))
+
+        break
+
+      case 'modify':
+
+        break
+      case 'move':
+        // this.editor.batchMove()
+        break
+      case 'reorder':
+        break
+      case 'group':
+        break
+      case 'ungroup':
+        break
+      case 'composite':
+        break
+
+      case 'delete':
+        modules = payload.modules
+
+        this.editor.batchAdd(this.editor.batchCreate(modules!))
+
+        break
+    }
+
+    // restore selected modules
+    if (selectedModules === 'all') {
+      this.editor.selectionManager.selectAll()
+    } else {
+      this.editor.selectionManager.replace(selectedModules)
+    }
+    /*
     if (
-      type === 'pasteModules'
-      || type === 'addModules'
-      || type === 'duplicateModules'
+      type === 'paste'
+      || type === 'add'
+      || type === 'duplicate'
     ) {
       this.editor.batchDelete(arrayToSet(modules!))
-    } else if (type === 'deleteModules') {
+    } else if (type === 'delete') {
       this.editor.batchAdd(this.editor.batchCreate(modules!))
-    } else if (type === 'modifyModules') {
+    } else if (type === 'modify') {
       console.log('modify', modules)
       this.editor.batchReplaceModules(modules)
     }
-
-    if (!quiet) {
+*/
+    /*if (!quiet) {
       this.editor.selectionManager.replace(selectModules)
       this.editor.events.onHistoryUpdated?.(this)
-    }
+    }*/
 
     super.back()
 
@@ -72,13 +119,13 @@ class History extends DoublyLinkedList {
     const {
       type,
       modules = [],
-      selectModules = new Set()
+      selectModules = new Set(),
     } = current.data
 
     if (
       type === 'pasteModules'
       || type === 'addModules'
-      || type === 'duplicateModules'
+      || type === 'duplicate'
     ) {
       this.editor.batchAdd(this.editor.batchCreate(modules!))
     } else if (type === 'deleteModules') {
@@ -141,3 +188,5 @@ class History extends DoublyLinkedList {
 }
 
 export default History
+
+

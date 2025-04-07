@@ -1,12 +1,12 @@
-import {HistoryNodeData, HistoryNext, HistoryPrev} from "./type"
+import {HistoryOperation, HistoryNext, HistoryPrev} from "./type"
 
 class HistoryNode {
-  data: HistoryNodeData
+  data: HistoryOperation
   prev: HistoryPrev
   next: HistoryNext
   id: number
 
-  constructor(prev: HistoryPrev, next: HistoryNext, data: HistoryNodeData, id = -1) {
+  constructor(prev: HistoryPrev, next: HistoryNext, data: HistoryOperation, id = -1) {
     this.data = data
     this.prev = prev
     this.next = next
@@ -40,7 +40,7 @@ class DoublyLinkedList {
   /*
   * Create a new node and connect it to the last
   * */
-  protected append(data: HistoryNodeData): HistoryNode {
+  protected append(data: HistoryOperation): HistoryNode {
     let newNode
     const {tail} = this
 

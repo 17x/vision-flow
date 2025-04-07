@@ -1,5 +1,5 @@
-import {ActionCode} from "../type"
-import Editor from "../editor.ts"
+import {ActionCode} from '../type'
+import Editor from '../editor.ts'
 
 // type EventsFunction = (e: KeyboardEvent, additionalInformation?: unknown) => unknown
 type EventsFunction = () => unknown
@@ -16,7 +16,7 @@ class Action {
     ['escape', []],
     ['modifyModules', []],
     ['undo', []],
-    ['redo', []]
+    ['redo', []],
   ])
 
   constructor(editor: Editor) {
@@ -49,7 +49,7 @@ class Action {
 
   public dispatcher(code: ActionCode, data: never) {
     if (this.lock) return
-
+    const MODULE_MOVE_STEP = 5
     this.lock = true
 
     switch (code) {
@@ -97,11 +97,14 @@ class Action {
       case 'moveRight':
       case 'moveDown':
       case 'moveLeft':
-        const selectedModules = this.editor.selectionManager.getSelected()
-
-        this.editor.batchModify(selectedModules, {
-          code,
-        }, 'modifyModules')
+        this.editor.batchMove(
+          this.editor.selectionManager.getSelected(),
+          {
+            x: (code === 'moveLeft' && -MODULE_MOVE_STEP) || (code === 'moveRight' && MODULE_MOVE_STEP) || 0,
+            y: (code === 'moveUp' && -MODULE_MOVE_STEP) || (code === 'moveDown' && MODULE_MOVE_STEP) || 0,
+          },
+          'move',
+        )
         break
 
       default:

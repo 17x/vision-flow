@@ -1,7 +1,7 @@
-import Viewport from "../viewport.ts"
-import {updateSelectionBox} from "../domManipulations.ts"
-import Rectangle from "../../../core/modules/shapes/rectangle.ts";
-import {generateBoundingRectFromTwoPoints, isInsideRotatedRect, rectInside} from "../../../core/utils.ts";
+import Viewport from '../viewport.ts'
+import {updateSelectionBox} from '../domManipulations.ts'
+import Rectangle from '../../../core/modules/shapes/rectangle.ts'
+import {generateBoundingRectFromTwoPoints, isInsideRotatedRect, rectInside} from '../../../core/utils.ts'
 
 export default function handlePointerMove(this: Viewport, e: PointerEvent) {
   if (this.domResizing) return
@@ -20,7 +20,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       const pointA = this.screenToCanvas(rect.x, rect.y)
       const pointB = this.screenToCanvas(rect.x + rect.width, rect.y + rect.height)
       const virtualSelectionRect: BoundingRect = generateBoundingRectFromTwoPoints(pointA, pointB)
-      let idSet: Set<UID> = new Set()
+      const idSet: Set<UID> = new Set()
 
       this.editor.visibleModuleMap.forEach((module) => {
         if (module.type === 'rectangle') {
@@ -48,7 +48,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
 
       break
 
-    case 'dragging':
+    case 'dragging': {
       this.wrapper.setPointerCapture(e.pointerId)
 
       const x = e.movementX * this.dpr / this.scale
@@ -58,9 +58,9 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
         this.editor.moduleMap.get(id).x += x
         this.editor.moduleMap.get(id).y += y
       })
-      // this.updateVirtualRect()
 
       this.render()
+    }
       break
 
     case 'resizing':

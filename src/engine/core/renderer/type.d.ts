@@ -1,6 +1,8 @@
-import {RectangleProps} from "../modules/shapes/rectangle.ts";
+import {RectangleProps} from '../modules/shapes/rectangle.ts'
 
-export interface RectangleRenderProps extends RectangleProps {}
+export interface RectangleRenderProps extends Omit<RectangleProps, 'id' | 'layer' | 'type'> {
+  shadow?: string
+}
 
 /*
 export type OrderedProps = [

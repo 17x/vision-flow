@@ -183,8 +183,8 @@ class Viewport {
     const minScale = 0.1
     const maxScale = 5
     let newScale = scale + zoom
-    const offsetX = 0
-    const offsetY = 0
+    // const offsetX = 0
+    // const offsetY = 0
     const pointX = point.x * scale
     const pointY = point.y * scale
     const rect = {

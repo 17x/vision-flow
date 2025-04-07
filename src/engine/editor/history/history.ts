@@ -17,7 +17,7 @@ class History extends DoublyLinkedList {
       type: 'init',
       payload: {
         state: null,
-        selectedModules: [],
+        selectedModules: 'all',
       },
     })
 

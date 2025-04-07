@@ -1,3 +1,4 @@
+/*
 import {CircleRenderProps, RectangleRenderProps} from "../../core/renderer/type"
 import Rectangle from "../../core/modules/shapes/rectangle.ts"
 import {getBoxControlPoints} from "./helper.ts"
@@ -7,6 +8,7 @@ import SelectionManager from "./selectionManager.ts"
 
 function render(this: SelectionManager) {
   const enableRotationHandle = this.selectedModules.size === 1
+  console.log(this)
 
   const BatchDrawer = (modules: ModuleMap) => {
     const {ctx} = this
@@ -75,4 +77,4 @@ function render(this: SelectionManager) {
   }
 }
 
-export default render
+export default render*/

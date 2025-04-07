@@ -109,31 +109,64 @@ class History extends DoublyLinkedList {
 
     const {
       type,
-      modules = [],
-      selectModules = new Set(),
+      payload,
     } = current.data
+    const {selectedModules} = payload
 
-    if (
-      type === 'pasteModules'
-      || type === 'addModules'
-      || type === 'duplicate'
-    ) {
-      this.editor.batchAdd(this.editor.batchCreate(modules!))
-    } else if (type === 'deleteModules') {
-      this.editor.batchDelete(new Set(modules.map(m => m.id)))
-    } else if (type === 'modifyModules') {
-      this.editor.batchReplaceModules(modules)
+    switch (type) {
+      case 'init':
+        break
+      case 'add':
+      case 'paste':
+      case 'duplicate':
+
+        // delete modules from added
+        this.editor.batchAdd(this.editor.batchCreate(payload.modules))
+
+        break
+
+      case 'modify':
+
+        break
+
+      case 'move':
+        this.editor.batchMove(payload.selectedModules, {
+          x: -payload.delta.x,
+          y: -payload.delta.y,
+        })
+        break
+
+      case 'reorder':
+        break
+      case 'group':
+        break
+      case 'ungroup':
+        break
+      case 'composite':
+        break
+
+      case 'delete':
+        // modules = payload.modules
+
+        this.editor.batchDelete(extractIdSetFromArray(payload.modules))
+
+        break
     }
 
     if (!quiet) {
-      this.editor.selectionManager.replace(selectModules)
+      if (selectedModules === 'all') {
+        this.editor.selectionManager.selectAll()
+      } else {
+        this.editor.selectionManager.replace(selectedModules)
+      }
+
       this.editor.events.onHistoryUpdated?.(this)
     }
 
     return this.current as HistoryNode
   }
 
-  moveCurrentById(targetNode: HistoryNode) {
+  moveCurrentToTargetById(targetNode: HistoryNode) {
     const relativePosition = super.compareToCurrentPosition(targetNode)
 
     if (!relativePosition || relativePosition === 'equal') return

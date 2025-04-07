@@ -123,6 +123,11 @@ class Editor {
       this.moduleMap.set(mod.id, mod)
     })
 
+    this.updateVisibleModuleMap(this.viewport.virtualRect)
+    this.events.onModulesUpdated?.(this.moduleMap)
+
+    this.render()
+
     if (historyCode) {
       const moduleProps = [...modules.values()].map(mod => mod.getDetails())
       this.selectionManager.getSelected()
@@ -136,11 +141,6 @@ class Editor {
         },
       )
     }
-
-    this.updateVisibleModuleMap(this.viewport.virtualRect)
-    this.events.onModulesUpdated?.(this.moduleMap)
-
-    this.render()
   }
 
   batchCopy(from: 'all' | Set<UID>, removeId = false, addOn?: { string: unknown }): ModuleProps[] {
@@ -175,7 +175,7 @@ class Editor {
     return result
   }
 
-  batchDelete(from: 'all' | Set<UID>, historyCode?: HistoryOperationType) {
+  batchDelete(from: 'all' | Set<UID>, historyCode?: Extract<HistoryOperationType, 'delete'>) {
     let backup: ModuleProps[] = []
 
     if (from === 'all') {
@@ -190,9 +190,11 @@ class Editor {
 
     if (historyCode) {
       this.history.add({
-        type: historyCode,
-        modules: backup,
-        selectModules: this.selectionManager.getSelected(),
+        type: 'delete',
+        payload: {
+          modules: backup,
+          selectedModules: this.selectionManager.getSelected(),
+        },
       })
     }
 
@@ -203,7 +205,6 @@ class Editor {
     return backup
   }
 
-  //
   batchMove(from: 'all' | Set<UID>, delta: Point, historyCode?: Extract<HistoryOperationType, 'move'>) {
     let modulesMap: ModuleMap | null = null
 
@@ -214,7 +215,7 @@ class Editor {
     } else {
       return false
     }
-    console.log(delta)
+
     modulesMap.forEach((module: ModuleProps) => {
       module.x += delta.x
       module.y += delta.y

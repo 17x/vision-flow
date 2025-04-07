@@ -114,7 +114,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 
   const applyHistoryNode = (node: HistoryNode) => {
     if (editorRef.current) {
-      editorRef.current.history.moveCurrentById(node)
+      editorRef.current.history.moveCurrentToTargetById(node)
     }
   }
 

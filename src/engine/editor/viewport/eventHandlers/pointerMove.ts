@@ -13,7 +13,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
   this.drawCrossLine = false
 
   switch (this.manipulationStatus) {
-    case 'selecting':
+    case 'selecting': {
       this.wrapper.setPointerCapture(e.pointerId)
 
       const rect = generateBoundingRectFromTwoPoints(this.mouseDownPoint, this.mouseMovePoint)
@@ -41,6 +41,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       updateSelectionBox(this.selectionBox, rect)
       this.resetSelectionCanvas()
       this.renderSelectionCanvas()
+    }
       break
 
     case 'panning':
@@ -59,6 +60,8 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
         this.editor.moduleMap.get(id).y += y
       })
 
+      this.editor.updateVisibleModuleMap(this.virtualRect)
+
       this.render()
     }
       break
@@ -69,7 +72,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
     case 'rotating':
       break
 
-    case 'static':
+    case 'static': {
       const MOVE_THROTTLE = 10
       const moved = Math.abs(this.mouseMovePoint.x - this.mouseDownPoint.x) > MOVE_THROTTLE ||
         Math.abs(this.mouseMovePoint.y - this.mouseDownPoint.y) > MOVE_THROTTLE
@@ -91,15 +94,12 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
         })
 
         this.wrapper.releasePointerCapture(e.pointerId)
-        this.drawCrossLine = true
+        this.drawCrossLine = this.drawCrossLineDefault
         this.updateVirtualRect()
         this.resetSelectionCanvas()
         this.renderSelectionCanvas()
       }
-
-      // this.updateVirtualRect()
-      // this.resetSelectionCanvas()
-      // this.renderSelectionCanvas()
+    }
       break
   }
 }

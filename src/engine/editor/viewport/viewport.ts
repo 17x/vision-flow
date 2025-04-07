@@ -1,28 +1,28 @@
-import render from "../../core/renderer/mainCanvasRenderer.ts"
-import Editor from "../editor.ts"
-import {generateScrollBars, initViewportDom, updateScrollBars,} from "./domManipulations.ts"
-import handleMouseDown from "./eventHandlers/mouseDown.ts"
-import handlePointerMove from "./eventHandlers/pointerMove.ts"
-import handleMouseUp from "./eventHandlers/mouseUp.ts"
-import handleKeyDown from "./eventHandlers/keyDown.ts"
-import handleKeyUp from "./eventHandlers/keyUp.ts"
-import handleWheel from "./eventHandlers/wheel.ts"
-import handleContextMenu from "./eventHandlers/contextMenu.ts"
-import resetCanvas from "./resetCanvas.tsx"
-import selectionRender from "./selectionRender.ts"
-import {screenToCanvas} from "../../lib/lib.ts"
-import {RectangleRenderProps} from "../../core/renderer/type"
-import {createBoundingRect, createFrame, fitRectToViewport} from "./helper.ts"
+import render from '../../core/renderer/mainCanvasRenderer.ts'
+import Editor from '../editor.ts'
+import {generateScrollBars, initViewportDom, updateScrollBars} from './domManipulations.ts'
+import handleMouseDown from './eventHandlers/mouseDown.ts'
+import handlePointerMove from './eventHandlers/pointerMove.ts'
+import handleMouseUp from './eventHandlers/mouseUp.ts'
+import handleKeyDown from './eventHandlers/keyDown.ts'
+import handleKeyUp from './eventHandlers/keyUp.ts'
+import handleWheel from './eventHandlers/wheel.ts'
+import handleContextMenu from './eventHandlers/contextMenu.ts'
+import resetCanvas from './resetCanvas.tsx'
+import selectionRender from './selectionRender.ts'
+import {screenToCanvas} from '../../lib/lib.ts'
+import {RectangleRenderProps} from '../../core/renderer/type'
+import {createBoundingRect, createFrame, fitRectToViewport} from './helper.ts'
 
 // import {drawCrossLine, isInsideRect} from "./helper.ts"
 type ViewportManipulationType =
-  | "static"
-  | "panning"
-  | "dragging"
-  | "resizing"
-  | "rotating"
-  | "zooming"
-  | "selecting";
+  | 'static'
+  | 'panning'
+  | 'dragging'
+  | 'resizing'
+  | 'rotating'
+  | 'zooming'
+  | 'selecting';
 
 class Viewport {
   readonly editor: Editor
@@ -43,7 +43,7 @@ class Viewport {
   hoveredModules: Set<UID> = new Set()
   handlingModules: Set<UID> = new Set()
   zooming = false
-  manipulationStatus: ViewportManipulationType = "static"
+  manipulationStatus: ViewportManipulationType = 'static'
   frame: Partial<RectangleRenderProps> & BoundingRect = createFrame('A4')
   mouseDownPoint: Point = {x: 0, y: 0}
   mouseMovePoint: Point = {x: 0, y: 0}
@@ -65,16 +65,17 @@ class Viewport {
   resizeTimeout: number | undefined
   scale = 1
   enableCrossLine = true
+  drawCrossLineDefault = false
   drawCrossLine = false
 
   // transform: Transform
 
   constructor(editor: Editor) {
     const {scrollBarX, scrollBarY} = generateScrollBars()
-    const selectionCanvas: HTMLCanvasElement = document.createElement("canvas")
-    const mainCanvas: HTMLCanvasElement = document.createElement("canvas")
-    const selectionCtx = selectionCanvas.getContext("2d")
-    const mainCtx = mainCanvas.getContext("2d")
+    const selectionCanvas: HTMLCanvasElement = document.createElement('canvas')
+    const mainCanvas: HTMLCanvasElement = document.createElement('canvas')
+    const selectionCtx = selectionCanvas.getContext('2d')
+    const mainCtx = mainCanvas.getContext('2d')
 
     // this.transform = {scale: 1, offsetX: 0, offsetY: 0}
     this.selectionCanvas = selectionCanvas
@@ -84,8 +85,8 @@ class Viewport {
     this.editor = editor
     this.scrollBarX = scrollBarX
     this.scrollBarY = scrollBarY
-    this.selectionBox = document.createElement("div")
-    this.wrapper = document.createElement("div")
+    this.selectionBox = document.createElement('div')
+    this.wrapper = document.createElement('div')
     this.resizeThrottle = this.resizeThrottle.bind(this)
     this.resizeObserver = new ResizeObserver(this.resizeThrottle)
     this.updateCanvasSize = this.updateCanvasSize.bind(this)
@@ -104,20 +105,20 @@ class Viewport {
   setupEvents() {
     const {signal} = this.eventsController
 
-    window.addEventListener("mousedown", handleMouseDown.bind(this), {
+    window.addEventListener('mousedown', handleMouseDown.bind(this), {
       signal,
     })
-    window.addEventListener("mouseup", handleMouseUp.bind(this), {signal})
-    window.addEventListener("keydown", handleKeyDown.bind(this), {signal})
-    window.addEventListener("keyup", handleKeyUp.bind(this), {signal})
-    window.addEventListener("wheel", handleWheel.bind(this), {
+    window.addEventListener('mouseup', handleMouseUp.bind(this), {signal})
+    window.addEventListener('keydown', handleKeyDown.bind(this), {signal})
+    window.addEventListener('keyup', handleKeyUp.bind(this), {signal})
+    window.addEventListener('wheel', handleWheel.bind(this), {
       signal,
       passive: false,
     })
-    this.wrapper.addEventListener("pointermove", handlePointerMove.bind(this), {
+    this.wrapper.addEventListener('pointermove', handlePointerMove.bind(this), {
       signal,
     })
-    this.wrapper.addEventListener("contextmenu", handleContextMenu.bind(this), {
+    this.wrapper.addEventListener('contextmenu', handleContextMenu.bind(this), {
       signal,
     })
   }
@@ -126,7 +127,7 @@ class Viewport {
     const {x: minX, y: minY} = this.screenToCanvas(0, 0)
     const {x: maxX, y: maxY} = this.screenToCanvas(
       this.rect!.width,
-      this.rect!.height
+      this.rect!.height,
     )
     const {x: mouseVirtualX, y: mouseVirtualY} = this.screenToCanvas(this.mouseMovePoint.x, this.mouseMovePoint.y)
     const width = maxX - minX
@@ -154,7 +155,7 @@ class Viewport {
       dy: mouseVirtualY,
       status: this.manipulationStatus,
       width,
-      height
+      height,
     })
   }
 
@@ -196,7 +197,7 @@ class Viewport {
     console.log(
       pointX,
       pointY,
-      rect
+      rect,
     )
     if (zoomTo) {
       newScale = zoom
@@ -265,7 +266,7 @@ class Viewport {
     this.domResizing = true
     this.resizeTimeout = setTimeout(
       this.onResize.bind(this),
-      this.resizeInterval
+      this.resizeInterval,
     )
   }
 
@@ -298,7 +299,7 @@ class Viewport {
       offset.x * dpr,
       offset.y * dpr,
       x * dpr,
-      y * dpr
+      y * dpr,
     )
   }
 
@@ -366,10 +367,10 @@ class Viewport {
     // this.unSetupEvents()
     this.eventsController.abort()
 
-    this.wrapper.style.width = "100%"
-    this.wrapper.style.height = "100%"
+    this.wrapper.style.width = '100%'
+    this.wrapper.style.height = '100%'
     this.wrapper.remove()
-    this.editor.container.innerHTML = ""
+    this.editor.container.innerHTML = ''
   }
 }
 

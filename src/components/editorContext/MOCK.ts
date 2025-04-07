@@ -19,9 +19,9 @@ export const createMockData = (editor: Editor) => {
     radius: 0,
     rotation: 0,
   }
+  // const MOCK_ELE_LEN = 1
   // const MOCK_ELE_LEN = 1000
-  const MOCK_ELE_LEN = 1
-  // const MOCK_ELE_LEN = 20000
+  const MOCK_ELE_LEN = 20000
   const shiftSpeed = 10
   // const MOCK_ELE_LEN = 2
   // @ts-ignore

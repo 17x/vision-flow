@@ -18,8 +18,8 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       this.wrapper.setPointerCapture(e.pointerId)
 
       const rect = generateBoundingRectFromTwoPoints(this.mouseDownPoint, this.mouseMovePoint)
-      const pointA = this.screenToCanvas(rect.x, rect.y)
-      const pointB = this.screenToCanvas(rect.x + rect.width, rect.y + rect.height)
+      const pointA = this.getWorldPointByViewportPoint(rect.x, rect.y)
+      const pointB = this.getWorldPointByViewportPoint(rect.x + rect.width, rect.y + rect.height)
       const virtualSelectionRect: BoundingRect = generateBoundingRectFromTwoPoints(pointA, pointB)
       const idSet: Set<UID> = new Set()
 
@@ -81,7 +81,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       if (this.handlingModules.size > 0 && moved) {
         this.manipulationStatus = 'dragging'
       } else {
-        const virtualPoint = this.screenToCanvas(this.mouseMovePoint.x, this.mouseMovePoint.y)
+        const virtualPoint = this.getWorldPointByViewportPoint(this.mouseMovePoint.x, this.mouseMovePoint.y)
 
         this.editor.getVisibleModuleMap().forEach((module) => {
           if (module.type === 'rectangle') {
@@ -96,7 +96,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
 
         this.wrapper.releasePointerCapture(e.pointerId)
         this.drawCrossLine = this.drawCrossLineDefault
-        this.updateWorldRect()
+        // this.updateWorldRect()
         // this.resetSelectionCanvas()
         // this.renderSelectionCanvas()
       }

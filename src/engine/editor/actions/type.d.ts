@@ -48,6 +48,7 @@ export type EditorEvents =
   | ViewportMouseUpEvent
   | WorldZoomEvent
   | WorldShiftEvent
+  | WorldUpdateEvent
   | WorldMouseMoveEvent
 
 export interface EditorInitializedEvent {
@@ -228,6 +229,11 @@ export interface WorldZoomEvent {
 export interface WorldMouseMoveEvent {
   type: 'world-mouse-move'
   data: Point
+}
+
+export interface WorldUpdateEvent {
+  type: 'world-update'
+  data: BoundingRect
 }
 
 export interface WorldShiftEvent {

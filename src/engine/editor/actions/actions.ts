@@ -1,4 +1,4 @@
-import Editor from '../editor.ts'
+// import Editor from '../editor.ts'
 import {EditorEventData, EditorEvents, EditorEventType} from './type'
 
 type EventsCallback = (data: EditorEventData) => void
@@ -8,7 +8,7 @@ class Action {
   // private editor: Editor
   readonly eventsMap: Map<EditorEventType, EventsCallback[]> = new Map()
 
-  constructor(editor: Editor) {
+  constructor(/*editor: Editor*/) {
     // this.editor = editor
     this.lock = false
   }
@@ -37,16 +37,15 @@ class Action {
   }
 
   public dispatch({type, data}: EditorEvents) {
-    if (this.lock) return
-    this.lock = true
+    if (type !== 'world-mouse-move') {
+      console.log('action: ', type)
+    }
 
     if (this.eventsMap.has(type)) {
       this.eventsMap.get(type)!.forEach((cb) => {
         cb(data as EditorEventData)
       })
     }
-
-    this.lock = false
   }
 
   public execute(type: EditorEventType, data: never) {

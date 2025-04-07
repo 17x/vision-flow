@@ -89,10 +89,9 @@ class Editor {
 
   private init() {
     this.action.subscribe('world-mouse-move', (data) => {
-      // console.log(point)
       this.events.onWorldMouseMove?.(data as Point)
     })
-    this.action.subscribe('world-zoom', (worldRect) => {
+    this.action.subscribe('world-update', (worldRect) => {
       this.updateVisibleModuleMap(worldRect)
       this.events.onViewportUpdated?.(worldRect)
     })

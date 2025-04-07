@@ -21,6 +21,7 @@ import {
   createFrame,
   fitRectToViewport,
 } from './helper.ts'
+import {generateBoundingRectFromTwoPoints} from '../../core/utils.ts'
 
 type ViewportManipulationType =
   | 'static'
@@ -55,19 +56,9 @@ class Viewport {
   mouseDownPoint: Point = {x: 0, y: 0}
   mouseMovePoint: Point = {x: 0, y: 0}
   offset: Point = {x: 0, y: 0}
-  rect: Rect | undefined
-  worldRect: BoundingRect = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    cx: 0,
-    cy: 0,
-  }
+  rect: BoundingRect = generateBoundingRectFromTwoPoints({x: 0, y: 0}, {x: 0, y: 0})
+  viewportRect: BoundingRect = generateBoundingRectFromTwoPoints({x: 0, y: 0}, {x: 0, y: 0})
+  worldRect: BoundingRect = generateBoundingRectFromTwoPoints({x: 0, y: 0}, {x: 0, y: 0})
   domResizing: boolean = false
   resizeTimeout: number | undefined
   scale = 1
@@ -84,7 +75,6 @@ class Viewport {
     const selectionCtx = selectionCanvas.getContext('2d')
     const mainCtx = mainCanvas.getContext('2d')
 
-    // this.transform = {scale: 1, offsetX: 0, offsetY: 0}
     this.selectionCanvas = selectionCanvas
     this.mainCanvas = mainCanvas
     this.selectionCTX = selectionCtx as CanvasRenderingContext2D
@@ -96,21 +86,60 @@ class Viewport {
     this.wrapper = document.createElement('div')
     this.resizeThrottle = this.resizeThrottle.bind(this)
     this.resizeObserver = new ResizeObserver(this.resizeThrottle)
-    this.updateCanvasSize = this.updateCanvasSize.bind(this)
+    // this.updateViewport = this.updateViewport.bind(this)
     this.eventsController = new AbortController()
 
     this.init()
   }
 
   init() {
-    this.updateCanvasSize()
     initViewportDom.call(this)
     this.resizeObserver.observe(this.editor.container)
     this.setupEvents()
-    this.editor.action.subscribe('viewport-resize', this.onViewportResize.bind(this))
+
+    this.editor.action.subscribe('viewport-resize', () => {
+      this.domResizing = false
+      this.updateViewport()
+
+      if (!this.initialized) {
+        const {frame, viewportRect} = this
+        const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect)
+
+        this.scale = scale
+        this.offset.x = offsetX
+        this.offset.y = offsetY
+        this.initialized = true
+      }
+
+      this.updateWorldRect()
+      this.editor.action.dispatch({type: 'world-update', data: {...this.worldRect}})
+      // this.render()
+    })
     this.editor.action.subscribe('world-shift', this.render.bind(this))
+    this.editor.action.subscribe('world-update', () => {
+      /*this.domResizing = false
+      this.updateViewport()
+      this.updateWorldRect()
+
+      if (!this.initialized) {
+        this.initialized = true
+        this.fitFrame()
+      }*/
+    })
+
     // this.editor.action.subscribe('world-shift', this.onWorldShift)
     // this.editor.action.subscribe('world-zoom', () => {    })
+  }
+
+  resizeThrottle() {
+    clearTimeout(this.resizeTimeout)
+
+    this.domResizing = true
+    this.resizeTimeout = setTimeout(() => {
+        this.editor.action.dispatch({type: 'viewport-resize'})
+      },
+      this.resizeInterval,
+    )
   }
 
   setupEvents() {
@@ -134,43 +163,16 @@ class Viewport {
     })
   }
 
-  dispatchWorldPoint() {
-    this.editor.action.dispatch({
-      type: 'world-mouse-move',
-      data: this.screenToCanvas(this.mouseMovePoint.x, this.mouseMovePoint.y),
-    })
-  }
-
   updateWorldRect() {
-    const {x: minX, y: minY} = this.screenToCanvas(0, 0)
-    const {x: maxX, y: maxY} = this.screenToCanvas(
-      this.rect!.width,
-      this.rect!.height,
-    )
-    /*    const {x: mouseVirtualX, y: mouseVirtualY} = this.screenToCanvas(
-          this.mouseMovePoint.x,
-          this.mouseMovePoint.y,
-        )*/
-    const width = maxX - minX
-    const height = maxY - minY
+    const {width, height} = this.viewportRect
+    const p1 = this.getWorldPointByViewportPoint(0, 0)
+    const p2 = this.getWorldPointByViewportPoint(width, height)
 
-    this.worldRect = {
-      x: minX,
-      y: minY,
-      width,
-      height,
-      cx: minX + width / 2,
-      cy: minY + height / 2,
-      top: minY,
-      right: maxX,
-      bottom: maxY,
-      left: minX,
-    }
-
-    this.editor.action.dispatch({
-      type: 'world-shift',
-      data: this.worldRect,
-    })
+    this.worldRect = generateBoundingRectFromTwoPoints(p1, p2)
+    /*   this.editor.action.dispatch({
+         type: 'world-update',
+         data: this.worldRect,
+       })*/
 
     // this.editor.updateVisibleModuleMap(this.worldRect)
     // this.editor.selectionManager.updateVisibleSelectedModules()
@@ -178,12 +180,17 @@ class Viewport {
       offsetX: this.offset.x,
       offsetY: this.offset.y,
       scale: this.scale,
-      dx: mouseVirtualX,
-      dy: mouseVirtualY,
-      status: this.manipulationStatus,
       width,
       height,
+      status: this.manipulationStatus,
     })*/
+  }
+
+  dispatchWorldPoint() {
+    this.editor.action.dispatch({
+      type: 'world-mouse-move',
+      data: this.getWorldPointByViewportPoint(this.mouseMovePoint.x, this.mouseMovePoint.y),
+    })
   }
 
   /*
@@ -239,7 +246,7 @@ class Viewport {
     const zoomFactor = clampedScale / scale
 
     // Convert screen point to canvas coordinates before zoom
-    const canvasPoint = this.screenToCanvas(point.x, point.y)
+    const canvasPoint = this.getWorldPointByViewportPoint(point.x, point.y)
 
     // Calculate the offset adjustment so that the zoom is centered around the point
     const newOffsetX = canvasPoint.x - (canvasPoint.x - offset.x) * zoomFactor
@@ -264,7 +271,7 @@ class Viewport {
       this.zoomAtPoint(
         {
           x: this.rect!.width / 2,
-          y: this.rect!.height / 2,
+          y: this.viewportRect.height / 2,
         },
         newScale,
         true,
@@ -291,41 +298,26 @@ class Viewport {
     updateScrollBars(scrollBarX, scrollBarY)
   }
 
-  resizeThrottle() {
-    clearTimeout(this.resizeTimeout)
+  updateViewport() {
+    const {dpr, mainCanvas, selectionCanvas} = this
+    const rect = this.editor.container.getBoundingClientRect().toJSON()
+    const {x, y, width, height} = rect
+    const viewportWidth = width * dpr
+    const viewportHeight = height * dpr
 
-    this.domResizing = true
-    this.resizeTimeout = setTimeout(() => {
-        this.editor.action.dispatch({type: 'viewport-resize'})
-      },
-      this.resizeInterval,
+    this.rect = {...rect, cx: x + width / 2, cy: y + height / 2}
+    this.viewportRect = generateBoundingRectFromTwoPoints(
+      {x: 0, y: 0},
+      {x: viewportWidth, y: viewportHeight},
     )
+
+    mainCanvas.width = selectionCanvas.width = viewportWidth
+    mainCanvas.height = selectionCanvas.height = viewportHeight
   }
 
-  onViewportResize() {
-    this.domResizing = false
-    // this.updateCanvasSize()
-    this.updateWorldRect()
-    // this.render()
-
-    if (!this.initialized) {
-      this.initialized = true
-      this.fitFrame()
-    }
-    // this.mainCTX.fillStyle = '#000000'
-    // this.mainCTX.fillRect(0, 0, 300, 300)
-  }
-
-  updateCanvasSize() {
-    this.rect = this.editor.container.getBoundingClientRect()
-    this.mainCanvas.width = this.rect.width * this.dpr
-    this.mainCanvas.height = this.rect.height * this.dpr
-    this.selectionCanvas.width = this.rect.width * this.dpr
-    this.selectionCanvas.height = this.rect.height * this.dpr
-  }
-
-  screenToCanvas(x: number, y: number) {
+  getWorldPointByViewportPoint(x: number, y: number) {
     const {dpr, offset, scale} = this
+
     return screenToCanvas(
       scale,
       offset.x * dpr,
@@ -336,7 +328,8 @@ class Viewport {
   }
 
   fitFrame() {
-    const {dpr, frame, rect} = this
+    console.log('fit')
+    // const {frame, viewportRect} = this
     /* const testFrame = generateBoundingRectFromRotatedRect({
        x: 800,
        y: 800,
@@ -345,13 +338,8 @@ class Viewport {
      }, 50)*/
     // console.log(testFrame)
     // console.log(frame)
-    const viewportRect = createBoundingRect(
-      0,
-      0,
-      rect!.width * dpr,
-      rect!.height * dpr,
-    )
-    const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect)
+
+    // const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect)
 
     // console.log(virtualRect)
     // console.log(scale, offsetX, offsetY)
@@ -359,8 +347,8 @@ class Viewport {
     this.scale = scale
     this.offset.x = offsetX
     this.offset.y = offsetY
-    this.render()
-    this.updateWorldRect()
+    // this.render()
+    // this.updateWorldRect()
   }
 
   resetMainCanvas() {

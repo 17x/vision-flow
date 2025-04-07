@@ -1,14 +1,14 @@
 export const generateBoundingRectFromRotatedRect = ({x, y, width, height}: Rect, rotation: number): BoundingRect => {
-  const centerX = x + width / 2;
-  const centerY = y + height / 2;
-  const rad = (rotation * Math.PI) / 180;
-  const cos = Math.cos(rad);
-  const sin = Math.sin(rad);
+  const centerX = x + width / 2
+  const centerY = y + height / 2
+  const rad = (rotation * Math.PI) / 180
+  const cos = Math.cos(rad)
+  const sin = Math.sin(rad)
 
-  const rotatedWidth = Math.abs(width * cos) + Math.abs(height * sin);
-  const rotatedHeight = Math.abs(width * sin) + Math.abs(height * cos);
-  const rectX = centerX - rotatedWidth / 2;
-  const rectY = centerY - rotatedHeight / 2;
+  const rotatedWidth = Math.abs(width * cos) + Math.abs(height * sin)
+  const rotatedHeight = Math.abs(width * sin) + Math.abs(height * cos)
+  const rectX = centerX - rotatedWidth / 2
+  const rectY = centerY - rotatedHeight / 2
 
   return generateBoundingRectFromRect({
     x: rectX,
@@ -19,7 +19,7 @@ export const generateBoundingRectFromRotatedRect = ({x, y, width, height}: Rect,
 }
 
 export const generateBoundingRectFromRect = (rect: Rect): BoundingRect => {
-  const {x, y, width, height} = rect;
+  const {x, y, width, height} = rect
 
   return {
     x,
@@ -32,22 +32,22 @@ export const generateBoundingRectFromRect = (rect: Rect): BoundingRect => {
     right: x + width,
     cx: x + width / 2,
     cy: y + height / 2,
-  };
-};
+  }
+}
 
 export const generateBoundingRectFromTwoPoints = (p1: Point, p2: Point): BoundingRect => {
-  const minX = Math.min(p1.x, p2.x);
-  const maxX = Math.max(p1.x, p2.x);
-  const minY = Math.min(p1.y, p2.y);
-  const maxY = Math.max(p1.y, p2.y);
+  const minX = Math.min(p1.x, p2.x)
+  const maxX = Math.max(p1.x, p2.x)
+  const minY = Math.min(p1.y, p2.y)
+  const maxY = Math.max(p1.y, p2.y)
 
   return generateBoundingRectFromRect({
     x: minX,
     y: minY,
     width: maxX - minX,
     height: maxY - minY,
-  });
-};
+  })
+}
 
 export function rectsOverlap(r1: BoundingRect, r2: BoundingRect): boolean {
   return !(
@@ -64,7 +64,7 @@ export function rectInside(inner: BoundingRect, outer: BoundingRect): boolean {
     inner.right <= outer.right &&
     inner.top >= outer.top &&
     inner.bottom <= outer.bottom
-  );
+  )
 }
 
 export const isInsideRotatedRect = ({x: mouseX, y: mouseY}: Point, rect: Rect, rotation: number): boolean => {
@@ -72,7 +72,7 @@ export const isInsideRotatedRect = ({x: mouseX, y: mouseY}: Point, rect: Rect, r
     x: centerX,
     y: centerY,
     width,
-    height
+    height,
   } = rect
   if (width <= 0 || height <= 0) {
     return false // Invalid rectangle dimensions
@@ -114,4 +114,4 @@ export const isInsideRotatedRect = ({x: mouseX, y: mouseY}: Point, rect: Rect, r
   )
 }
 
-export const isNegativeZero = (x: number) => x === 0 && (1 / x) === -Infinity;
+export const isNegativeZero = (x: number) => x === 0 && (1 / x) === -Infinity

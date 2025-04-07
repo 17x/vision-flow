@@ -1,3 +1,4 @@
+
 interface CloneOptions {
   clonePrototype?: boolean;
 }

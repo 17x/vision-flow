@@ -1,5 +1,6 @@
 import Viewport from '../viewport.ts'
 import {updateSelectionBox} from '../domManipulations.ts'
+import {copy} from '../../../lib/lib.ts'
 
 function handleMouseUp(this: Viewport, e: MouseEvent) {
   const x = e.clientX - this.rect!.x
@@ -28,7 +29,7 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
         this.editor.moduleMap.get(id).x -= x
         this.editor.moduleMap.get(id).y -= y
       })
-      this.editor.batchMove(this.handlingModules, {x, y}, 'move')
+      this.editor.batchMove(copy(this.handlingModules), {x, y}, 'move')
       this.editor.selectionManager.replace(this.handlingModules)
     }
       break

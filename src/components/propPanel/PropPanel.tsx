@@ -1,5 +1,5 @@
-import {useContext, useEffect} from "react"
-import EditorContext from "../editorContext/EditorContext.tsx"
+import {useContext, useEffect} from 'react'
+import EditorContext from '../editorContext/EditorContext.tsx'
 
 const PropPanel = () => {
   const {selectedProps} = useContext(EditorContext)
@@ -24,6 +24,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
   // const [props, setProps] = useState(initialProps)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e)
     // const {name, type, value, checked} = e.target
     /* setProps((prev) => ({
        ...prev,
@@ -41,7 +42,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           <input
             type="number"
             name="x"
-            value={props.x}
+            defaultValue={props.x}
             onChange={handleChange}
             className="w-16 px-2 py-1 text-black rounded"
           />
@@ -51,7 +52,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           <input
             type="number"
             name="y"
-            value={props.y}
+            defaultValue={props.y}
             onChange={handleChange}
             className="w-16 px-2 py-1 text-black rounded"
           />
@@ -61,7 +62,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           <input
             type="number"
             name="width"
-            value={props.width}
+            defaultValue={props.width}
             onChange={handleChange}
             className="w-16 px-2 py-1 text-black rounded"
           />
@@ -71,7 +72,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           <input
             type="number"
             name="height"
-            value={props.height}
+            defaultValue={props.height}
             onChange={handleChange}
             className="w-16 px-2 py-1 text-black rounded"
           />
@@ -81,7 +82,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           <input
             type="number"
             name="radius"
-            value={props.radius}
+            defaultValue={props.radius}
             onChange={handleChange}
             className="w-16 px-2 py-1 text-black rounded"
           />
@@ -95,7 +96,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           <input
             type="checkbox"
             name="enableFill"
-            checked={props.enableFill}
+            defaultChecked={props.enableFill}
             onChange={handleChange}
             className="ml-2"
           />
@@ -105,7 +106,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           <input
             type="color"
             name="fillColor"
-            value={props.fillColor}
+            defaultValue={props.fillColor}
             onChange={handleChange}
             className="w-10 h-10 p-1 rounded"
           />
@@ -115,7 +116,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           <input
             type="checkbox"
             name="enableLine"
-            checked={props.enableLine}
+            defaultChecked={props.enableLine}
             onChange={handleChange}
             className="ml-2"
           />
@@ -125,7 +126,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           <input
             type="color"
             name="lineColor"
-            value={props.lineColor}
+            defaultValue={props.lineColor}
             onChange={handleChange}
             className="w-10 h-10 p-1 rounded"
           />
@@ -139,7 +140,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           <input
             type="checkbox"
             name="shadow"
-            checked={props.shadow}
+            defaultChecked={props.shadow}
             onChange={handleChange}
             className="ml-2"
           />
@@ -149,7 +150,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           <input
             type="number"
             name="opacity"
-            value={props.opacity}
+            defaultValue={props.opacity}
             onChange={handleChange}
             className="w-16 px-2 py-1 text-black rounded"
           />
@@ -159,7 +160,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           <input
             type="number"
             name="layer"
-            value={props.layer}
+            defaultValue={props.layer}
             onChange={handleChange}
             className="w-16 px-2 py-1 text-black rounded"
           />

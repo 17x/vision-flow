@@ -1,3 +1,5 @@
+import typeCheck from '../../utilities/typeCheck.ts'
+
 export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Point[] => {
   const halfW = w / 2
   const halfH = h / 2
@@ -71,7 +73,7 @@ export const drawCrossLine = ({
                                 scale,
                                 dpr,
                                 offset: {x: offsetX, y: offsetY},
-                                virtualRect: {left: minX, top: minY, right: maxX, bottom: maxY}
+                                virtualRect: {left: minX, top: minY, right: maxX, bottom: maxY},
                               }: DrawCrossLineProps): void => {
   const textOffsetX = 10 / (dpr * scale)
   const textOffsetY = 10 / (dpr * scale)
@@ -85,14 +87,14 @@ export const drawCrossLine = ({
   ctx.font = `${24 / scale}px sans-serif`
   // ctx.setLineDash([3 * dpr * scale, 5 * dpr * scale])
   ctx.fillStyle = textColor
-  ctx.shadowColor = crossLineColor;
-  ctx.shadowBlur = 1;
+  ctx.shadowColor = crossLineColor
+  ctx.shadowBlur = 1
 
   ctx.fillText(`${Math.floor(x)}, ${Math.floor(y)}`, x + textOffsetX, y - textOffsetY, 200 / scale)
   ctx.lineWidth = 2 / (dpr * scale)
   ctx.strokeStyle = crossLineColor
   ctx.shadowColor = textShadowColor
-  ctx.shadowBlur = 0;
+  ctx.shadowBlur = 0
   ctx.beginPath()
   ctx.moveTo(minX, y)
   ctx.lineTo(maxX, y)
@@ -102,3 +104,10 @@ export const drawCrossLine = ({
   ctx.restore()
 }
 
+export const copy = <T>(obj: T): T => {
+  if (typeCheck(obj) === 'set') {
+    return new Set([...(obj as Set<never>)]) as T
+  } else {
+    throw new Error('Unsupported type: Not a Set')
+  }
+}

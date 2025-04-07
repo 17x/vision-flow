@@ -28,7 +28,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [sortedModules, setSortedModules] = useState<ModuleType[]>([])
   const [selectedProps, setSelectedProps] = useState<ModuleProps>(null)
   const [selectedModules, setSelectedModules] = useState<UID[]>([])
-  const [historyCurrent, setHistoryCurrent] = useState<HistoryNode>({} as HistoryNode)
+  const [historyCurrent, setHistoryCurrent] = useState<HistoryNode['id']>(0)
   const [viewport, setViewport] = useState<ViewportInfo>({
     width: 0,
     height: 0,
@@ -97,7 +97,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     setHistoryArray(historyTree!.toArray())
 
     if (historyTree.current) {
-      setHistoryCurrent(historyTree.current)
+      setHistoryCurrent(historyTree.current.id)
     }
   }
 

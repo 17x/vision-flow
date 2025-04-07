@@ -35,7 +35,7 @@ export const HistoryPanel = () => {
         <div className={'flex flex-col m-2 border border-gray-200 min-h-40 bg-gray-100'}>
           {
             historyArray.map((historyNode, index) => {
-                const isCurr = historyNode === historyCurrent
+                const isCurr = historyNode.id === historyCurrent
                 const prefixI18NKey = 'history.' + historyNode.data.type
                 const {label, tooltip} = t(prefixI18NKey, {returnObjects: true}) as I18nHistoryDataItem
 

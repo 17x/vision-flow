@@ -311,6 +311,7 @@ class Editor {
   }
 
   public execute(code: ActionCode, data: unknown = null) {
+    // @ts-ignore
     this.action.dispatcher(code, data)
   }
 

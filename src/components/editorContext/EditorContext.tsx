@@ -6,7 +6,7 @@ import {ActionCode, ViewportInfo} from "../../engine/editor/type"
 interface EditorContextType {
   focused: boolean
   historyArray: HistoryNode[]
-  historyCurrent: HistoryNode
+  historyCurrent: HistoryNode['id']
   selectedModules: UID[]
   selectedProps: ModuleProps
   editorRef: React.RefObject<Editor | null>
@@ -18,7 +18,7 @@ interface EditorContextType {
 const EditorContext = createContext<EditorContextType>({
   focused: false,
   historyArray: [] as HistoryNode[],
-  historyCurrent: {} as HistoryNode,
+  historyCurrent: 0,
   selectedModules: [],
   selectedProps: {},
   editorRef: {} as React.RefObject<Editor>,

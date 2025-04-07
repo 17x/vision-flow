@@ -97,8 +97,6 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     setHistoryArray(historyTree!.toArray())
 
     if (historyTree.current) {
-      console.log(historyTree.current)
-      // console.log('id',historyTree.current.id)
       setHistoryCurrent(historyTree.current.id)
     }
   }

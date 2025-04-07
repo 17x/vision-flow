@@ -62,7 +62,10 @@ class History extends DoublyLinkedList {
 
         break
       case 'move':
-        // this.editor.batchMove()
+        this.editor.batchMove(payload.selectedModules, {
+          x: -payload.delta.x,
+          y: -payload.delta.y,
+        })
         break
       case 'reorder':
         break

@@ -104,7 +104,7 @@ interface MoveOperation {
   type: 'move'
   payload: {
     delta: { x: number, y: number } // amount by which to move (x and y deltas)
-    modules: HistoryModules // ids of the modules to move
+    // modules: HistoryModules // ids of the modules to move
     selectedModules: HistorySelectedModules
   }
 }

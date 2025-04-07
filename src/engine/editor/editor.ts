@@ -229,8 +229,7 @@ class Editor {
         type: 'move',
         payload: {
           delta,
-          selectedModules: from,
-          modules: [],
+          selectedModules: from
         },
 
       })

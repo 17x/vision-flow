@@ -40,10 +40,11 @@ const detectGestures = (() => {
   let translateX = 0
   let translateY = 0
   let gestureLock = false
+  const zoomSpeedA = 0.01
+  const zoomSpeedB = 0.1
 
   return (event: WheelEvent) => {
     const {deltaX, deltaY, altKey} = event
-
     if (_timer) {
       clearTimeout(_timer)
     }
@@ -102,13 +103,13 @@ const detectGestures = (() => {
      */
     if (gestureLock) {
       // console.log('hit')
-      zoomFactor = deltaY > 0 ? -0.01 : 0.01
+      zoomFactor = deltaY > 0 ? -zoomSpeedA : zoomSpeedA
       zooming = true
     } else if (Math.abs(deltaX) >= 40 && isNegativeZero(deltaY)) {
       // Mouse horizontal scrolling
       // console.log('hor scroll', deltaX)
       if (altKey) {
-        zoomFactor = deltaX < 0 ? 0.01 : -0.01
+        zoomFactor = deltaX < 0 ? zoomSpeedB : -zoomSpeedB
       } else {
         scrolling = true
         translateX = -deltaX
@@ -117,7 +118,7 @@ const detectGestures = (() => {
       // Vertical scrolling
       // console.log('ver scrolling', deltaX)
       if (altKey) {
-        zoomFactor = deltaY < 0 ? 0.01 : -0.01
+        zoomFactor = deltaY < 0 ? zoomSpeedA : -zoomSpeedA
       } else {
         scrolling = true
         translateY = -deltaY
@@ -127,13 +128,17 @@ const detectGestures = (() => {
       if (altKey) {
         const max = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY
 
-        zoomFactor = max < 0 ? 0.01 : -0.01
+        zoomFactor = max < 0 ? zoomSpeedA : -zoomSpeedA
       } else {
         // console.log('panning')
         panning = true
         translateX = -deltaX
         translateY = -deltaY
       }
+    }
+
+    if (zooming && altKey) {
+      zoomFactor = zoomFactor < 0 ? -zoomSpeedB : zoomSpeedB
     }
 
     _timer = setTimeout(() => {

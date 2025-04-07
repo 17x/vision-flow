@@ -54,44 +54,44 @@ class Action {
 
     switch (code) {
       case 'selectAll':
-        this.editor.selectionManager.selectAll();
-        break;
+        this.editor.selectionManager.selectAll()
+        break
 
       case 'select':
-        this.editor.selectionManager.replace(data as Set<UID>);
-        break;
+        this.editor.selectionManager.replace(data as Set<UID>)
+        break
 
       case 'copy':
-        this.editor.selectionManager.copySelected();
-        break;
+        this.editor.selectionManager.copySelected()
+        break
 
       case 'delete':
-        this.editor.selectionManager.removeSelected();
-        break;
+        this.editor.selectionManager.removeSelected()
+        break
 
       case 'duplicate':
-        this.editor.selectionManager.duplicateSelected();
-        break;
+        this.editor.selectionManager.duplicateSelected()
+        break
 
       case 'escape':
-        this.editor.selectionManager.clear();
-        break;
+        this.editor.selectionManager.clear()
+        break
 
       case 'paste':
-        this.editor.selectionManager.pasteCopied();
-        break;
+        this.editor.selectionManager.pasteCopied()
+        break
 
       case 'redo':
-        this.editor.history.redo();
-        break;
+        this.editor.history.redo()
+        break
 
       case 'undo':
-        this.editor.history.undo();
-        break;
+        this.editor.history.undo()
+        break
 
       case 'zoom':
-        this.editor.viewport.zoomTo(data);
-        break;
+        this.editor.viewport.zoomTo(data)
+        break
 
       case 'moveUp':
       case 'moveRight':
@@ -102,11 +102,11 @@ class Action {
         this.editor.batchModify(selectedModules, {
           code,
         }, 'modifyModules')
-        break;
+        break
 
       default:
         // Optionally handle unknown codes
-        console.warn(`Unknown code: ${code}`);
+        console.warn(`Unknown code: ${code}`)
     }
 
     if (this.eventsMap.has(code)) {

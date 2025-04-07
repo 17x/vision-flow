@@ -1,11 +1,11 @@
 import Editor from "../editor.ts"
-import typeCheck from "../../../utilities/typeCheck.ts";
+import typeCheck from "../../../utilities/typeCheck.ts"
 
 const CopyDeltaX = 50
 const CopyDeltaY = 100
 
 class SelectionManager {
-  selectedModules: Set<UID> = new Set()
+  readonly selectedModules: Set<UID> = new Set()
   resizeHandleSize: number = 10
   activeResizeHandle: { x: number, y: number } | null = null
   isDestroyed: boolean = false
@@ -25,49 +25,58 @@ class SelectionManager {
   }
 
   public modifySelection(idSet: Set<UID>, action: 'add' | 'delete' | 'toggle' | 'replace') {
-    if (typeCheck(idSet) !== 'set' || idSet.size <= 0) return;
+    if (typeCheck(idSet) !== 'set' || idSet.size <= 0) return
 
-    let eventCallBackData = idSet.size === 1 ? this.editor.moduleMap.get([...idSet.values()][0]).getDetails() : null
+    let eventCallBackData = null
+
+    if(idSet.size === 1) {
+      const first = [...idSet.values()][0]
+
+      if(this.editor.moduleMap.has(first)) {
+        eventCallBackData = this.editor.moduleMap.get(first).getDetails()
+        console.log(eventCallBackData)
+      }
+    }
 
     if (action === 'replace') {
-      this.selectedModules.clear();
+      this.selectedModules.clear()
     }
 
     idSet.forEach((id) => {
       switch (action) {
         case 'add':
-          this.selectedModules.add(id);
-          break;
+          this.selectedModules.add(id)
+          break
         case 'delete':
-          this.selectedModules.delete(id);
-          break;
+          this.selectedModules.delete(id)
+          break
         case 'toggle':
-          this.selectedModules.has(id) ? this.selectedModules.delete(id) : this.selectedModules.add(id);
-          break;
+          this.selectedModules.has(id) ? this.selectedModules.delete(id) : this.selectedModules.add(id)
+          break
         case 'replace':
-          this.selectedModules.add(id); // Add the new selection
-          break;
+          this.selectedModules.add(id) // Add the new selection
+          break
       }
-    });
+    })
 
-    this.render();
-    this.editor.events.onSelectionUpdated?.(idSet, eventCallBackData);
+    this.render()
+    this.editor.events.onSelectionUpdated?.(idSet, eventCallBackData)
   }
 
   public add(idSet: Set<UID>) {
-    this.modifySelection(idSet, 'add');
+    this.modifySelection(idSet, 'add')
   }
 
   public delete(idSet: Set<UID>) {
-    this.modifySelection(idSet, 'delete');
+    this.modifySelection(idSet, 'delete')
   }
 
   public toggle(idSet: Set<UID>) {
-    this.modifySelection(idSet, 'toggle');
+    this.modifySelection(idSet, 'toggle')
   }
 
   public replace(idSet: Set<UID>) {
-    this.modifySelection(idSet, 'replace');
+    this.modifySelection(idSet, 'replace')
   }
 
   public selectAll(): void {
@@ -137,7 +146,7 @@ class SelectionManager {
 
   public getIfUnique() {
     if (this.selectedModules.size === 1) return [...this.selectedModules.values()][0]
-    return null;
+    return null
   }
 
   public update() {

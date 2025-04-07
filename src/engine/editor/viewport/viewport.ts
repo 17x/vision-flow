@@ -339,7 +339,7 @@ class Viewport {
       render({
         ctx: this.mainCTX,
         frame: this.frame,
-        modules: this.editor.visibleModuleMap,
+        modules: this.editor.getVisibleModuleMap(),
       })
     }
 

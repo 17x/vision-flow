@@ -1,11 +1,13 @@
 import Editor from '../editor.ts'
 import typeCheck from '../../../utilities/typeCheck.ts'
+import {extractIdSetFromArray} from '../history/helpers.ts'
 
 const CopyDeltaX = 50
 const CopyDeltaY = 100
 
 class SelectionManager {
   readonly selectedModules: Set<UID> = new Set()
+  readonly visibleSelectedModules: Set<UID> = new Set()
   resizeHandleSize: number = 10
   activeResizeHandle: { x: number, y: number } | null = null
   isDestroyed: boolean = false
@@ -154,8 +156,32 @@ class SelectionManager {
   }
 
   public update() {
-    
+    this.updateVisibleSelectedModules()
     this.render()
+  }
+
+  public updateVisibleSelectedModules() {
+    this.visibleSelectedModules.clear()
+
+    if (this.isSelectAll) {
+      const idSet = extractIdSetFromArray([...this.editor.getVisibleModuleMap()])
+
+      idSet.forEach((id) => {
+        this.visibleSelectedModules.add(id)
+      })
+
+      return
+    }
+
+    this.editor.getVisibleModuleMap().forEach((module) => {
+      if (this.selectedModules.has(module.id)) {
+        this.visibleSelectedModules.add(module.id)
+      }
+    })
+  }
+
+  public getVisibleSelectedModules() {
+    return new Set(this.visibleSelectedModules)
   }
 
   render() {

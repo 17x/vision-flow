@@ -67,12 +67,12 @@ function selectionRender(this: Viewport) {
   }
 
   if (selectionManager.isSelectAll) {
-    BatchDrawer(selectionManager.editor.visibleModuleMap)
+    BatchDrawer(selectionManager.editor.getVisibleModuleMap())
   } else {
     const selectedModulesMap: ModuleMap = new Map()
 
     selectionManager.selectedModules.forEach(id => {
-      selectionManager.editor.visibleModuleMap.forEach((module) => {
+      selectionManager.editor.getVisibleModuleMap().forEach((module) => {
         if (module.id === id) {
           selectedModulesMap.set(module.id, module)
         }

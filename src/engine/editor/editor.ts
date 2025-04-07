@@ -39,7 +39,7 @@ export interface EditorProps {
 class Editor {
   private moduleCounter = 0
   moduleMap: ModuleMap
-  visibleModuleMap: ModuleMap
+  private visibleModuleMap: ModuleMap
   private id: UID
   // private size: Size;
   container: HTMLDivElement
@@ -308,6 +308,10 @@ class Editor {
         this.visibleModuleMap.set(module.id, module)
       }
     })
+  }
+
+  getVisibleModuleMap(): ModuleMap {
+    return new Map(this.visibleModuleMap)
   }
 
   public execute(code: ActionCode, data: unknown = null) {

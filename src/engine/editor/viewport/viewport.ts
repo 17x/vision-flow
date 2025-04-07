@@ -194,11 +194,11 @@ class Viewport {
       width: this.rect!.width * dpr,
       height: this.rect!.height * dpr,
     }
-    console.log(
+/*    console.log(
       pointX,
       pointY,
       rect,
-    )
+    )*/
     if (zoomTo) {
       newScale = zoom
     }

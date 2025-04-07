@@ -4,7 +4,7 @@ import {LayerDown, LayerToBottom, LayerToTop, LayerUp} from "./Icons/LayerIcons.
 import {Fragment, ReactNode, useContext} from "react"
 import {ActionCode} from "../../../engine/editor/type"
 import EditorContext from "../../editorContext/EditorContext.tsx"
-import {NamedIcon} from "../../lib/icon/icon.tsx";
+import {NamedIcon} from "../../lib/icon/icon.tsx"
 
 const IconSize = 20
 const IconColor = 'text-black'

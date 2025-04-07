@@ -12,7 +12,7 @@ const resetCanvas = (ctx: CanvasRenderingContext2D, dpr: DPR, scale: number, {x,
   const transform: TransformType = [
     scale, 0, 0, scale, x * dpr, y * dpr,
   ]
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.setTransform(1, 0, 0, 1, 0, 0)
   ctx.clearRect(
     0,
     0,

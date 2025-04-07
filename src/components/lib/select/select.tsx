@@ -1,4 +1,4 @@
-import React, {FC, useState} from "react";
+import React, {FC, useState} from "react"
 import {LuGlobe} from 'react-icons/lu'
 
 interface SelectProps {

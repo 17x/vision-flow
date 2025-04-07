@@ -1,6 +1,6 @@
-import Select from "../lib/select/select.tsx";
-import {useTranslation} from "react-i18next";
-import {useState} from "react";
+import Select from "../lib/select/select.tsx"
+import {useTranslation} from "react-i18next"
+import {useState} from "react"
 
 type LanguageCode = 'en' | 'cn' | 'jp'
 
@@ -10,7 +10,7 @@ const LanguageSwitcher: React.FC = () => {
     "en": "English",
     "cn": "中文",
     "jp": "日本語"
-  };
+  }
 
   const {i18n} = useTranslation()
 

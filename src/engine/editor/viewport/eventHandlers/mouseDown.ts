@@ -14,7 +14,7 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
   } else {
     // hit modules
     if (this.hoveredModules.size > 0) {
-      const lastId = [...this.hoveredModules][this.hoveredModules.size - 1];
+      const lastId = [...this.hoveredModules][this.hoveredModules.size - 1]
 
       if (this.editor.selectionManager.isSelectAll) {
         this.editor.moduleMap.forEach(module => {

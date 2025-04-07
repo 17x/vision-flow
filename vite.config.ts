@@ -20,7 +20,7 @@ export default defineConfig({
         manualChunks(id) {
           // Example: Split vendor libraries into separate chunks
           if (id.includes('node_modules')) {
-            return 'vendor'; // All node_modules are bundled into 'vendor.js'
+            return 'vendor' // All node_modules are bundled into 'vendor.js'
           }
         }
       }

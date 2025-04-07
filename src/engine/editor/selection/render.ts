@@ -1,7 +1,6 @@
 /*
 import {CircleRenderProps, RectangleRenderProps} from "../../core/renderer/type"
 import Rectangle from "../../core/modules/shapes/rectangle.ts"
-import {getBoxControlPoints} from "./helper.ts"
 import rectRender from "../../core/renderer/rectRender.ts"
 import circleRender from "../../core/renderer/circleRender.ts"
 import SelectionManager from "./selectionManager.ts"

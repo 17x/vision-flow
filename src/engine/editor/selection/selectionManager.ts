@@ -1,6 +1,8 @@
 import Editor from '../editor.ts'
 import typeCheck from '../../../utilities/typeCheck.ts'
 import {extractIdSetFromArray} from '../history/helpers.ts'
+import {getBoxControlPoints} from '../../lib/lib.ts'
+import {RectangleProps} from '../../core/modules/shapes/rectangle.ts'
 
 const CopyDeltaX = 50
 const CopyDeltaY = 100
@@ -156,6 +158,7 @@ class SelectionManager {
   }
 
   public update() {
+    console.log(9)
     this.updateVisibleSelectedModules()
     this.render()
   }
@@ -164,18 +167,33 @@ class SelectionManager {
     this.visibleSelectedModules.clear()
 
     if (this.isSelectAll) {
-      const idSet = extractIdSetFromArray([...this.editor.getVisibleModuleMap()])
+      const idSet = extractIdSetFromArray([...this.editor.getVisibleModuleMap().values()])
+      // console.log('idSet',this.editor.getVisibleModuleMap())
 
       idSet.forEach((id) => {
         this.visibleSelectedModules.add(id)
       })
-
-      return
+    } else {
+      this.editor.getVisibleModuleMap().forEach((module) => {
+        if (this.selectedModules.has(module.id)) {
+          this.visibleSelectedModules.add(module.id)
+        }
+      })
     }
 
-    this.editor.getVisibleModuleMap().forEach((module) => {
-      if (this.selectedModules.has(module.id)) {
-        this.visibleSelectedModules.add(module.id)
+    // create manipulation handlers
+    this.visibleSelectedModules.forEach(id => {
+      const module: ModuleType = this.editor.moduleMap.get(id)
+
+      if (module) {
+        // console.log(module)
+        if (module.type === 'rectangle') {
+          // console.log(module.get)
+          const {x, y, width, height, rotation} = module as RectangleProps
+
+          const points = getBoxControlPoints(x, y, width, height, rotation)
+          console.log(points)
+        }
       }
     })
   }

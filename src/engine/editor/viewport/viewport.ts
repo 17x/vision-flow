@@ -14,7 +14,6 @@ import {screenToCanvas} from '../../lib/lib.ts'
 import {RectangleRenderProps} from '../../core/renderer/type'
 import {createBoundingRect, createFrame, fitRectToViewport} from './helper.ts'
 
-// import {drawCrossLine, isInsideRect} from "./helper.ts"
 type ViewportManipulationType =
   | 'static'
   | 'panning'
@@ -147,6 +146,7 @@ class Viewport {
     }
 
     this.editor.updateVisibleModuleMap(this.virtualRect)
+    this.editor.selectionManager.updateVisibleSelectedModules()
     this.editor.events.onViewportUpdated?.({
       offsetX: this.offset.x,
       offsetY: this.offset.y,

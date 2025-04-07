@@ -22,7 +22,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       const virtualSelectionRect: BoundingRect = generateBoundingRectFromTwoPoints(pointA, pointB)
       const idSet: Set<UID> = new Set()
 
-      this.editor.visibleModuleMap.forEach((module) => {
+      this.editor.getVisibleModuleMap().forEach((module) => {
         if (module.type === 'rectangle') {
           const boundingRect = module.getBoundingRect() as BoundingRect
 
@@ -82,7 +82,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       } else {
         const virtualPoint = this.screenToCanvas(this.mouseMovePoint.x, this.mouseMovePoint.y)
 
-        this.editor.visibleModuleMap.forEach((module) => {
+        this.editor.getVisibleModuleMap().forEach((module) => {
           if (module.type === 'rectangle') {
             const {x, y, width, height, rotation} = (module as Rectangle)
             const f = isInsideRotatedRect(virtualPoint, {x, y, width, height}, rotation)
@@ -95,7 +95,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
 
         this.wrapper.releasePointerCapture(e.pointerId)
         this.drawCrossLine = this.drawCrossLineDefault
-        // this.updateVirtualRect()
+        this.updateVirtualRect()
         // this.resetSelectionCanvas()
         // this.renderSelectionCanvas()
       }

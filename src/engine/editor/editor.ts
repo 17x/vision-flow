@@ -13,7 +13,6 @@ import Viewport from './viewport/viewport.ts'
 
 import {rectsOverlap} from '../core/utils.ts'
 
-// import {isInsideRect} from "./viewport/helper.ts";
 
 export interface EditorDataProps {
   id: UID;

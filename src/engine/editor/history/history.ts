@@ -14,7 +14,7 @@ class History extends DoublyLinkedList {
 
   init() {
     this.append({
-      type: 'init',
+      type: 'history-init',
       payload: {
         state: null,
         selectedModules: 'all',
@@ -46,38 +46,38 @@ class History extends DoublyLinkedList {
     let modules: HistoryModules | null = null
 
     switch (type) {
-      case 'init':
+      case 'history-init':
         break
-      case 'add':
-      case 'paste':
-      case 'duplicate':
+      case 'history-add':
+      case 'history-paste':
+      case 'history-duplicate':
 
         // delete modules from added
         this.editor.batchDelete(extractIdSetFromArray(payload.modules))
 
         break
 
-      case 'modify':
+      case 'history-modify':
 
         break
 
-      case 'move':
+      case 'history-move':
         this.editor.batchMove(payload.selectedModules, {
           x: -payload.delta.x,
           y: -payload.delta.y,
         })
         break
 
-      case 'reorder':
+      case 'history-reorder':
         break
-      case 'group':
+      case 'history-group':
         break
-      case 'ungroup':
+      case 'history-ungroup':
         break
-      case 'composite':
+      case 'history-composite':
         break
 
-      case 'delete':
+      case 'history-delete':
         modules = payload.modules
 
         this.editor.batchAdd(this.editor.batchCreate(modules!))
@@ -113,38 +113,38 @@ class History extends DoublyLinkedList {
     const {selectedModules} = payload
 
     switch (type) {
-      case 'init':
+      case 'history-init':
         break
-      case 'add':
-      case 'paste':
-      case 'duplicate':
+      case 'history-add':
+      case 'history-paste':
+      case 'history-duplicate':
 
         // delete modules from added
         this.editor.batchAdd(this.editor.batchCreate(payload.modules))
 
         break
 
-      case 'modify':
+      case 'history-modify':
 
         break
 
-      case 'move':
+      case 'history-move':
         this.editor.batchMove(payload.selectedModules, {
           x: payload.delta.x,
           y: payload.delta.y,
         })
         break
 
-      case 'reorder':
+      case 'history-reorder':
         break
-      case 'group':
+      case 'history-group':
         break
-      case 'ungroup':
+      case 'history-ungroup':
         break
-      case 'composite':
+      case 'history-composite':
         break
 
-      case 'delete':
+      case 'history-delete':
         this.editor.batchDelete(extractIdSetFromArray(payload.modules))
 
         break

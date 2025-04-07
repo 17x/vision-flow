@@ -28,7 +28,7 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
         this.editor.moduleMap.get(id).x -= x
         this.editor.moduleMap.get(id).y -= y
       })
-      this.editor.batchMove(new Set(this.handlingModules), {x, y}, 'move')
+      this.editor.batchMove(new Set(this.handlingModules), {x, y}, 'history-move')
       this.editor.selectionManager.replace(this.handlingModules)
     }
       break

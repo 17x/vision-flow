@@ -103,7 +103,7 @@ class Action {
             x: (code === 'moveLeft' && -MODULE_MOVE_STEP) || (code === 'moveRight' && MODULE_MOVE_STEP) || 0,
             y: (code === 'moveUp' && -MODULE_MOVE_STEP) || (code === 'moveDown' && MODULE_MOVE_STEP) || 0,
           },
-          'move',
+          'history-move',
         )
         break
 

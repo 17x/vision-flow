@@ -44,5 +44,5 @@ export const createMockData = (editor: Editor) => {
     })
   const instantiations = editor.batchCreate(modulesData)
 
-  editor.batchAdd(instantiations, 'add')
+  editor.batchAdd(instantiations, 'history-add')
 }

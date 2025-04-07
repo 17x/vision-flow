@@ -1,50 +1,50 @@
 {
   "history": {
-    "init": {
+    "history-init": {
       "label": "Init",
       "tooltip": "Initialize the file"
     },
-    "add": {
+    "history-add": {
       "label": "Add",
       "tooltip": "Add modules to the file"
     },
-    "delete": {
+    "history-delete": {
       "label": "Delete",
       "tooltip": "Delete modules from the file"
     },
-    "paste": {
+    "history-paste": {
       "label": "Paste",
       "tooltip": "Paste modules into the file"
     },
-    "duplicate": {
+    "history-duplicate": {
       "label": "Duplicate",
       "tooltip": "Duplicate selected modules"
     },
-    "modify": {
+    "history-modify": {
       "label": "Modify",
       "tooltip": "Modify the properties of modules"
     },
-    "move": {
+    "history-move": {
       "label": "Move",
       "tooltip": "Move modules"
     },
-    "reorder": {
+    "history-reorder": {
       "label": "Reorder",
       "tooltip": "Reorder modules"
     },
-    "select": {
+    "history-select": {
       "label": "Select",
       "tooltip": "Select modules"
     },
-    "group": {
+    "history-group": {
       "label": "Group",
       "tooltip": "Group modules"
     },
-    "ungroup": {
+    "history-ungroup": {
       "label": "Ungroup",
       "tooltip": "Ungroup modules"
     },
-    "composite": {
+    "history-composite": {
       "label": "Composite",
       "tooltip": "Composite operation"
     }

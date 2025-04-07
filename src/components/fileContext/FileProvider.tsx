@@ -84,7 +84,7 @@ const FileProvider: FC = () => {
       createFile,
       handleCreating,
     }}>
-      <div className={'w-full h-full flex flex-col'}>
+      <div className={'w-full h-full flex flex-col select-none'}>
         <div className={'flex justify-between'}>
           <Files/>
          <LanguageSwitcher />

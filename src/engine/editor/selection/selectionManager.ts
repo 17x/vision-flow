@@ -7,9 +7,18 @@ import {RectangleProps} from '../../core/modules/shapes/rectangle.ts'
 const CopyDeltaX = 50
 const CopyDeltaY = 100
 
+type OperationHandlerType = 'resize' | 'rotate'
+
+interface OperationHandler {
+  id: UID
+  type: OperationHandlerType
+  data: never
+}
+
 class SelectionManager {
   readonly selectedModules: Set<UID> = new Set()
   readonly visibleSelectedModules: Set<UID> = new Set()
+  readonly operationHandlers: Set<OperationHandler> = new Set()
   resizeHandleSize: number = 10
   activeResizeHandle: { x: number, y: number } | null = null
   isDestroyed: boolean = false
@@ -110,7 +119,7 @@ class SelectionManager {
 
   public pasteCopied(): void {
     const newModules = this.editor.batchCreate(this.copiedItems)
-    this.editor.batchAdd(newModules, 'paste')
+    this.editor.batchAdd(newModules, 'history-paste')
     this.replace(new Set(newModules.keys()))
     this.updateCopiedItemsDelta()
   }
@@ -165,6 +174,7 @@ class SelectionManager {
 
   public updateVisibleSelectedModules() {
     this.visibleSelectedModules.clear()
+    this.operationHandlers.clear()
 
     if (this.isSelectAll) {
       const idSet = extractIdSetFromArray([...this.editor.getVisibleModuleMap().values()])
@@ -189,10 +199,24 @@ class SelectionManager {
         // console.log(module)
         if (module.type === 'rectangle') {
           // console.log(module.get)
-          const {x, y, width, height, rotation} = module as RectangleProps
+          const {x, y, id, width, height, rotation} = module as RectangleProps
 
           const points = getBoxControlPoints(x, y, width, height, rotation)
-          console.log(points)
+          // console.log(points)
+          points.forEach(point => {
+
+            this.operationHandlers.add(
+              {
+                id,
+                type: 'resize',
+                data: {
+                  ...point,
+                  r: this.editor.viewport.scale,
+                },
+              },
+            )
+          })
+
         }
       }
     })

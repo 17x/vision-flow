@@ -5,7 +5,7 @@ import Rectangle from '../core/modules/shapes/rectangle.ts'
 import deepClone from '../../utilities/deepClone.ts'
 import typeCheck from '../../utilities/typeCheck.ts'
 import TypeCheck from '../../utilities/typeCheck.ts'
-import Action from './actions'
+import Action from './actions/actions.ts'
 import Connector from '../core/modules/connectors/connector.ts'
 import {HistoryOperationType} from './history/type'
 import batchReplaceModules from './helpers/batchReplaceModules.ts'
@@ -116,7 +116,7 @@ class Editor {
     return newMap
   }
 
-  batchAdd(modules: ModuleMap, historyCode?: Extract<HistoryOperationType, 'add' | 'paste' | 'duplicate'>) {
+  batchAdd(modules: ModuleMap, historyCode?: Extract<HistoryOperationType, 'history-add' | 'history-paste' | 'history-duplicate'>) {
     modules.forEach(mod => {
       this.moduleMap.set(mod.id, mod)
     })
@@ -173,7 +173,7 @@ class Editor {
     return result
   }
 
-  batchDelete(from: 'all' | Set<UID>, historyCode?: Extract<HistoryOperationType, 'delete'>) {
+  batchDelete(from: 'all' | Set<UID>, historyCode?: Extract<HistoryOperationType, 'history-delete'>) {
     let backup: ModuleProps[] = []
 
     if (from === 'all') {
@@ -188,7 +188,7 @@ class Editor {
 
     if (historyCode) {
       this.history.add({
-        type: 'delete',
+        type: 'history-delete',
         payload: {
           modules: backup,
           selectedModules: this.selectionManager.getSelected(),
@@ -203,7 +203,7 @@ class Editor {
     return backup
   }
 
-  batchMove(from: 'all' | Set<UID>, delta: Point, historyCode?: Extract<HistoryOperationType, 'move'>) {
+  batchMove(from: 'all' | Set<UID>, delta: Point, historyCode?: Extract<HistoryOperationType, 'history-move'>) {
     let modulesMap: ModuleMap | null = null
 
     if (from === 'all') {
@@ -225,7 +225,7 @@ class Editor {
 
     if (historyCode) {
       this.history.add({
-        type: 'move',
+        type: 'history-move',
         payload: {
           delta,
           selectedModules: from,

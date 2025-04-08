@@ -21,7 +21,7 @@ export const createMockData = (editor: Editor) => {
   }
   // const MOCK_ELE_LEN = 1
   // const MOCK_ELE_LEN = 1000
-  const MOCK_ELE_LEN = 20000
+  const MOCK_ELE_LEN = 200
   const shiftSpeed = 10
   // const MOCK_ELE_LEN = 2
   // @ts-ignore
@@ -30,18 +30,29 @@ export const createMockData = (editor: Editor) => {
     return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`
   }
 
-  const modulesData = Array.from({length: MOCK_ELE_LEN})
-    .map((_, i) => {
-      return {
-        ...baseRectData,
-        // fillColor: getRandomHexColor(),
-        fillColor: '#ed1c24',
-        x: baseX + (i * shiftSpeed),
-        y: baseY + (i * shiftSpeed),
-        layer: i + 1,
-        rotation: i + 10,
-      }
+  const getRandomNumber = (max: number): string => {
+    return Math.floor(Math.random() * max)
+  }
+
+  const modulesData = []
+
+  for (let i = 0; i < MOCK_ELE_LEN; i++) {
+    const x =   getRandomNumber(1000)
+    const y =  getRandomNumber(1414)
+    // x: baseX + (i * shiftSpeed),
+    //   y: baseY + (i * shiftSpeed),
+    // console.log(x)
+    modulesData.push({
+      ...baseRectData,
+      // fillColor: getRandomHexColor(),
+      fillColor: '#ed1c24',
+      x,
+      y,
+      layer: i + 1,
+      rotation: i + 10,
     })
+  }
+
   const instantiations = editor.batchCreate(modulesData)
 
   editor.batchAdd(instantiations, 'history-add')

@@ -3,7 +3,7 @@ import typeCheck from '../../../utilities/typeCheck.ts'
 import Editor from '../editor.ts'
 import {RectangleProps} from '../../core/modules/shapes/rectangle.ts'
 import {getBoxControlPoints} from '../../lib/lib.ts'
-import {SelectionModifyData} from '../actions/type'
+// import {SelectionModifyData} from '../actions/type'
 
 export function modifySelection(this: Editor, idSet: Set<UID>, action: SelectionActionMode) {
   if (typeCheck(idSet) !== 'set' || idSet.size <= 0) return
@@ -13,8 +13,8 @@ export function modifySelection(this: Editor, idSet: Set<UID>, action: Selection
   if (idSet.size === 1) {
     const first = [...idSet.values()][0]
 
-    if (this.editor.moduleMap.has(first)) {
-      eventCallBackData = this.editor.moduleMap.get(first).getDetails()
+    if (this.moduleMap.has(first)) {
+      eventCallBackData = this.moduleMap.get(first).getDetails()
       // console.log(eventCallBackData)
     }
   }
@@ -45,7 +45,7 @@ export function modifySelection(this: Editor, idSet: Set<UID>, action: Selection
   })
 
   // this.update()
-  this.editor.events.onSelectionUpdated?.(idSet, eventCallBackData)
+  // this.events.onSelectionUpdated?.(idSet, eventCallBackData)
 }
 
 export function updateVisibleSelectedModules(this: Editor) {

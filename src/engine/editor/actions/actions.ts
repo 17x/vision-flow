@@ -39,7 +39,7 @@ class Action {
   }
 
   public dispatch({type, data}: EditorEvents) {
-    if (type !== 'world-mouse-move') {
+    if (!['world-mouse-move', 'visible-selected-update', 'selection-modify'].includes(type)) {
       console.log('action: ', type)
     }
 

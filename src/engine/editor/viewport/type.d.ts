@@ -8,6 +8,15 @@ export type ViewportEventType =
   | 'world-zoom'
   | 'world-shift'
 
+export type ViewportManipulationType =
+  | 'static'
+  | 'panning'
+  | 'dragging'
+  | 'resizing'
+  | 'rotating'
+  | 'zooming'
+  | 'selecting'
+
 export interface Viewport {
   // editor: Editor
   resizeObserver: ResizeObserver
@@ -26,7 +35,7 @@ export interface Viewport {
   // hoveredModules: Set<UID>
   // handlingModules: Set<UID>
   zooming: number
-  manipulationStatus: ViewportManipulationType
+  // manipulationStatus: ViewportManipulationType
   frame: Partial<RectangleRenderProps> & BoundingRect
   mouseDownPoint: Point
   mouseMovePoint: Point

@@ -1,27 +1,27 @@
-import Viewport from "../viewport.ts"
+import Editor from '../../editor.ts'
 
-function handleMouseDown(this: Viewport, e: MouseEvent) {
-  const inViewport = e.target === this.wrapper
+function handleMouseDown(this: Editor, e: MouseEvent) {
+  const inViewport = e.target === this.viewport.wrapper
   const isLeftClick = e.button === 0
 
-  if (!inViewport || !isLeftClick || this.domResizing) return
+  if (!inViewport || !isLeftClick) return
 
-  this.mouseDownPoint.x = e.clientX - this.rect!.x
-  this.mouseDownPoint.y = e.clientY - this.rect!.y
+  this.viewport.mouseDownPoint.x = e.clientX - this.viewport.rect!.x
+  this.viewport.mouseDownPoint.y = e.clientY - this.viewport.rect!.y
 
-  if (this.spaceKeyDown) {
+  if (this.viewport.spaceKeyDown) {
     this.manipulationStatus = 'panning'
   } else {
     // hit modules
     if (this.hoveredModules.size > 0) {
       const lastId = [...this.hoveredModules][this.hoveredModules.size - 1]
 
-      if (this.editor.isSelectAll) {
-        this.editor.moduleMap.forEach(module => {
+      if (this.isSelectAll) {
+        this.moduleMap.forEach(module => {
           this.handlingModules.add(module.id)
         })
-      } else if (this.editor.selectedModules.has(lastId)) {
-        this.editor.selectedModules.forEach(id => {
+      } else if (this.selectedModules.has(lastId)) {
+        this.selectedModules.forEach(id => {
           this.handlingModules.add(id)
         })
       } else {

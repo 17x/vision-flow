@@ -24,9 +24,8 @@ export function createViewport(this: Editor): Viewport {
   const mainCTX = mainCanvas.getContext('2d') as CanvasRenderingContext2D
   const eventsController = new AbortController()
   const resizeObserver = new ResizeObserver(throttle(() => {
-    console.log(this)
     this.action.dispatch({type: 'viewport-resize', data: null})
-  }, 100))
+  }, 17))
   const {signal} = eventsController
   const mouseDownPoint = {x: 0, y: 0}
   const mouseMovePoint = {x: 0, y: 0}
@@ -56,7 +55,7 @@ export function createViewport(this: Editor): Viewport {
     // handlingModules: undefined,
     // hoveredModules: undefined,
     initialized: false,
-    manipulationStatus: undefined,
+    // manipulationStatus: undefined,
     scale: 1,
     spaceKeyDown: false,
     zooming: 0,

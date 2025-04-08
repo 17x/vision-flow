@@ -2,7 +2,6 @@ import {ModuleOperationType, EventHandlers} from './type'
 import History from './history/history.ts'
 import Action from './actions/actions.ts'
 import {HistoryOperationType} from './history/type'
-
 import {generateBoundingRectFromTwoPoints, rectsOverlap} from '../core/utils.ts'
 import {batchAdd, batchCopy, batchCreate, batchDelete, batchModify, batchMove} from './modules/modules.ts'
 import {OperationHandler, SelectionActionMode} from './selection/type'
@@ -11,15 +10,8 @@ import {updateScrollBars} from './viewport/domManipulations.ts'
 import resetCanvas from './viewport/resetCanvas.tsx'
 import render from '../core/renderer/mainCanvasRenderer.ts'
 import selectionRender from './viewport/selectionRender.ts'
-import handleMouseDown from './viewport/eventHandlers/mouseDown.ts'
-import handleMouseUp from './viewport/eventHandlers/mouseUp.ts'
-import handleKeyDown from './viewport/eventHandlers/keyDown.ts'
-import handleKeyUp from './viewport/eventHandlers/keyUp.ts'
-import handleWheel from './viewport/eventHandlers/wheel.ts'
-import handlePointerMove from './viewport/eventHandlers/pointerMove.ts'
-import handleContextMenu from './viewport/eventHandlers/contextMenu.ts'
 import {screenToCanvas} from '../lib/lib.ts'
-import {Viewport} from './viewport/type'
+import {Viewport, ViewportManipulationType} from './viewport/type'
 import {createViewport} from './viewport/createViewport.ts'
 import {SelectionModifyData} from './actions/type'
 import {fitRectToViewport} from './viewport/helper.ts'
@@ -38,12 +30,6 @@ export interface EditorInterface {
   data: EditorDataProps
   events?: EventHandlers
   config?: EditorConfig
-
-  // theme: ThemeShape
-  // dpr?: DPR;
-  // zoom?: ZoomRatio;
-  // logicResolution?: Resolution;
-  // physicalResolution?: Resolution;
 }
 
 const CopyDeltaX = 50
@@ -66,13 +52,16 @@ class Editor {
   isSelectAll: boolean = false
   resizeHandleSize: number = 10
   copiedItems: ModuleProps[] = []
+  hoveredModules: Set<UID> = new Set()
+  handlingModules: Set<UID> = new Set()
+  manipulationStatus: ViewportManipulationType = 'static'
 
   constructor({
                 container,
                 data,
                 events = {},
                 config = {
-                  dpr: 1,
+                  dpr: 2,
                 },
               }: EditorInterface) {
 
@@ -372,11 +361,6 @@ class Editor {
   }
 
   // viewport
-
-  initViewport() {
-
-  }
-
   renderModules() {
     const animate = () => {
       render({
@@ -396,27 +380,6 @@ class Editor {
     }
 
     requestAnimationFrame(animate)
-  }
-
-  setupEvents() {
-    const {signal} = this.viewport.eventsController
-
-    window.addEventListener('mousedown', handleMouseDown.bind(this), {
-      signal,
-    })
-    window.addEventListener('mouseup', handleMouseUp.bind(this), {signal})
-    window.addEventListener('keydown', handleKeyDown.bind(this), {signal})
-    window.addEventListener('keyup', handleKeyUp.bind(this), {signal})
-    window.addEventListener('wheel', handleWheel.bind(this), {
-      signal,
-      passive: false,
-    })
-    this.viewport.wrapper.addEventListener('pointermove', handlePointerMove.bind(this), {
-      signal,
-    })
-    this.viewport.wrapper.addEventListener('contextmenu', handleContextMenu.bind(this), {
-      signal,
-    })
   }
 
   updateWorldRect() {
@@ -498,7 +461,7 @@ class Editor {
     this.viewport.offset.x = newOffsetX
     this.viewport.offset.y = newOffsetY
     // this.viewport.render()
-    this.viewport.updateWorldRect()
+    this.updateWorldRect()
   }
 
   zoomTo(newScale: number | 'fit') {
@@ -531,7 +494,7 @@ class Editor {
   }
 
   updateScrollBar() {
-    const {scrollBarX, scrollBarY} = this
+    const {scrollBarX, scrollBarY} = this.viewport
 
     updateScrollBars(scrollBarX, scrollBarY)
   }

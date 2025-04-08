@@ -22,7 +22,7 @@ import {
 import {generateBoundingRectFromTwoPoints} from '../../core/utils.ts'
 import {initSelection} from '../selection/helper.ts'*/
 import {RectangleRenderProps} from '../../core/renderer/type'
-
+/*
 type ViewportManipulationType =
   | 'static'
   | 'panning'
@@ -30,7 +30,7 @@ type ViewportManipulationType =
   | 'resizing'
   | 'rotating'
   | 'zooming'
-  | 'selecting';
+  | 'selecting';*/
 /*
 class Viewport1 {
  /!* readonly editor: Editor

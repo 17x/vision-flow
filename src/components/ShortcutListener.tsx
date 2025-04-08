@@ -41,11 +41,11 @@ const ShortcutListener: React.FC = () => {
     }
 
     if (key === 'z' && (ctrlKey || metaKey)) {
-      shortcutCode = 'module-undo'
+      shortcutCode = 'history-undo'
     }
 
     if (key === 'z' && shiftKey && (ctrlKey || metaKey)) {
-      shortcutCode = 'module-redo'
+      shortcutCode = 'history-redo'
     }
 
     if (arrowKeys[key]) {

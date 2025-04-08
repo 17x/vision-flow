@@ -30,28 +30,12 @@ export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): Module
   return newMap
 }
 
-export function batchAdd(this: Editor, modules: ModuleMap, historyCode?: Extract<HistoryOperationType, 'history-add' | 'history-paste' | 'history-duplicate'>) {
-  console.log(modules)
+export function batchAdd(this: Editor, modules: ModuleMap) {
   modules.forEach(mod => {
     this.moduleMap.set(mod.id, mod)
   })
 
-  // this.updateVisibleModuleMap(this.viewport.worldRect)
   this.events.onModulesUpdated?.(this.moduleMap)
-
-  if (historyCode) {
-    const moduleProps = [...modules.values()].map(mod => mod.getDetails())
-    this.getSelected()
-
-    this.history.add({
-        type: historyCode,
-        payload: {
-          modules: moduleProps,
-          selectedModules: this.getSelected(),
-        },
-      },
-    )
-  }
 }
 
 export function batchCopy(this: Editor, from: 'all' | Set<UID>, removeId = false, addOn?: {
@@ -88,7 +72,7 @@ export function batchCopy(this: Editor, from: 'all' | Set<UID>, removeId = false
   return result
 }
 
-export function batchDelete(this: Editor, from: 'all' | Set<UID>, historyCode?: Extract<HistoryOperationType, 'history-delete'>) {
+export function batchDelete(this: Editor, from: 'all' | Set<UID>): ModuleProps[] {
   let backup: ModuleProps[] = []
 
   if (from === 'all') {
@@ -101,24 +85,10 @@ export function batchDelete(this: Editor, from: 'all' | Set<UID>, historyCode?: 
     })
   }
 
-  if (historyCode) {
-    this.history.add({
-      type: 'history-delete',
-      payload: {
-        modules: backup,
-        selectedModules: this.getSelected(),
-      },
-    })
-  }
-
-  // this.updateVisibleModuleMap(this.viewport.worldRect)
-  // this.render()
-  // this.events.onModulesUpdated?.(this.moduleMap)
-
   return backup
 }
 
-export function batchMove(this: Editor, from: 'all' | Set<UID>, delta: Point, historyCode?: Extract<HistoryOperationType, 'history-move'>) {
+export function batchMove(this: Editor, from: 'all' | Set<UID>, delta: Point) {
   let modulesMap: ModuleMap | null = null
 
   if (from === 'all') {
@@ -136,7 +106,7 @@ export function batchMove(this: Editor, from: 'all' | Set<UID>, delta: Point, hi
 
   this.events.onModulesUpdated?.(this.moduleMap)
   this.events.onSelectionUpdated?.(this.selectedModules, this.getIfUnique())
-
+/*
   if (historyCode) {
     this.history.add({
       type: 'history-move',
@@ -146,7 +116,7 @@ export function batchMove(this: Editor, from: 'all' | Set<UID>, delta: Point, hi
       },
 
     })
-  }
+  }*/
 }
 
 export function batchModify(this: Editor, from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryOperationType) {

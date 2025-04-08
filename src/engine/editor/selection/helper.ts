@@ -86,10 +86,6 @@ export function updateVisibleSelectedModules(this: Editor) {
 
 export function initSelection(this: Editor) {
 
-  this.action.on('visible-module-update', () => {
-    this.dispatchVisibleSelectedModules()
-  })
-
   this.action.on('select-all', () => {
     this.selectedModules.clear()
     this.isSelectAll = true

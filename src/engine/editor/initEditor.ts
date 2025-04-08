@@ -2,6 +2,9 @@ import {fitRectToViewport} from './viewport/helper.ts'
 import resetCanvas from './viewport/resetCanvas.tsx'
 import {SelectionModifyData} from './actions/type'
 import Editor from './editor.ts'
+import {redo} from './history/redo.ts'
+import {undo} from './history/undo.ts'
+import {pick} from './history/pick.ts'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
@@ -62,6 +65,7 @@ export function initEditor(this: Editor) {
   })
 
   this.action.on('visible-module-update', () => {
+    this.dispatchVisibleSelectedModules()
     resetCanvas(this.viewport.mainCTX, this.viewport.dpr, this.viewport.scale, this.viewport.offset)
     this.renderModules()
   })
@@ -69,10 +73,6 @@ export function initEditor(this: Editor) {
   this.action.on('visible-selected-update', (data) => {
     resetCanvas(this.viewport.selectionCTX, this.viewport.dpr, this.viewport.scale, this.viewport.offset)
     this.renderSelections(data.idSet as Set<UID>)
-  })
-
-  this.action.on('visible-module-update', () => {
-    this.dispatchVisibleSelectedModules()
   })
 
   this.action.on('select-all', () => {
@@ -83,6 +83,7 @@ export function initEditor(this: Editor) {
   })
 
   this.action.on('selection-clear', () => {
+
     this.selectedModules.clear()
     this.isSelectAll = false
     this.dispatchVisibleSelectedModules()
@@ -98,12 +99,20 @@ export function initEditor(this: Editor) {
   })
 
   this.action.on('selection-delete', () => {
-    this.batchDelete(this.isSelectAll ? 'all' : this.selectedModules, 'history-delete')
+    const backup = this.batchDelete(this.isSelectAll ? 'all' : this.selectedModules)
     this.selectedModules.clear()
     this.isSelectAll = false
     this.dispatchVisibleSelectedModules()
     this.updateVisibleModuleMap()
     this.action.dispatch({type: 'visible-module-update'})
+
+    this.history.add({
+      type: 'history-delete',
+      payload: {
+        modules: backup,
+        selectedModules: this.getSelected(),
+      },
+    })
   })
 
   this.action.on('selection-copy', () => {
@@ -113,7 +122,7 @@ export function initEditor(this: Editor) {
 
   this.action.on('selection-paste', () => {
     const newModules = this.batchCreate(this.copiedItems)
-    this.batchAdd(newModules, 'history-paste')
+    this.batchAdd(newModules)
     this.replace(new Set(newModules.keys()))
     this.updateCopiedItemsDelta()
 
@@ -137,25 +146,45 @@ export function initEditor(this: Editor) {
     })
 
     const newModules = this.batchCreate(temp)
-    this.batchAdd(newModules, 'history-duplicate')
+    this.batchAdd(newModules)
     this.isSelectAll = false
     this.replace(new Set(newModules.keys()))
 
     this.dispatchVisibleSelectedModules()
     this.updateVisibleModuleMap()
     this.action.dispatch({type: 'visible-module-update'})
+
+    const moduleProps = [...newModules.values()].map(mod => mod.getDetails())
+    // this.getSelected()
+
+    this.history.add({
+        type: 'history-add',
+        payload: {
+          modules: moduleProps,
+          selectedModules: this.getSelected(),
+        },
+      },
+    )
   })
 
-  /*
-      this.action.on('module-delete', () => {
-        this.selectedModules.clear()
-        this.isSelectAll = false
-        this.dispatchVisibleSelectedModules()
-      })*/
+  this.action.on('history-undo', () => {
+    undo.call(this, true)
+    this.updateVisibleModuleMap()
+    this.action.dispatch({type: 'visible-module-update'})
+    this.events.onHistoryUpdated?.(this.history)
+  })
 
-  /*this.action.on('module-delete', () => {
-    // this.batchDelete()
-    this.updateVisibleModuleMap(this.viewport.worldRect)
-    this.action.dispatch({type: 'visible-module-update', data: this.getVisibleModuleMap()})
-  })*/
+  this.action.on('history-redo', () => {
+    redo.call(this, true)
+    this.updateVisibleModuleMap()
+    this.action.dispatch({type: 'visible-module-update'})
+    this.events.onHistoryUpdated?.(this.history)
+  })
+
+  this.action.on('history-pick', (data) => {
+    pick.call(this, data)
+    this.updateVisibleModuleMap()
+    this.action.dispatch({type: 'visible-module-update'})
+    this.events.onHistoryUpdated?.(this.history)
+  })
 }

@@ -105,7 +105,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 
   const applyHistoryNode = (node: HistoryNode) => {
     if (editorRef.current) {
-      editorRef.current.history.moveCurrentToTargetById(node)
+      editorRef.current.execute('history-pick',node)
     }
   }
 

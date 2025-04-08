@@ -31,9 +31,6 @@ export interface EditorInterface {
   config?: EditorConfig
 }
 
-const CopyDeltaX = 50
-const CopyDeltaY = 100
-
 class Editor {
   readonly id: UID
   config: EditorConfig
@@ -98,16 +95,16 @@ class Editor {
     return batchCreate.call(this, moduleDataList)
   }
 
-  batchAdd(modules: ModuleMap, historyCode?: Extract<HistoryOperationType, 'history-add' | 'history-paste' | 'history-duplicate'>) {
-    return batchAdd.call(this, modules, historyCode)
+  batchAdd(modules: ModuleMap) {
+    return batchAdd.call(this, modules)
   }
 
   batchCopy(from: 'all' | Set<UID>, removeId = false, addOn?: { string: unknown }): ModuleProps[] {
     return batchCopy.call(this, from, removeId, addOn)
   }
 
-  batchDelete(from: 'all' | Set<UID>, historyCode?: Extract<HistoryOperationType, 'history-delete'>) {
-    return batchDelete.call(this, from, historyCode)
+  batchDelete(from: 'all' | Set<UID>) {
+    return batchDelete.call(this, from)
   }
 
   batchMove(from: 'all' | Set<UID>, delta: Point, historyCode?: Extract<HistoryOperationType, 'history-move'>) {
@@ -232,7 +229,7 @@ class Editor {
       render({
         ctx: this.viewport.mainCTX,
         frame: this.viewport.frame,
-        modules: this.getVisibleModuleMap(),
+        modules: this.visibleModuleMap,
       })
     }
 

@@ -1,8 +1,8 @@
 import Editor from '../../engine/editor/editor.ts'
 
 export const createMockData = (editor: Editor) => {
-  const baseX = 100
-  const baseY = 100
+  // const baseX = 100
+  // const baseY = 100
   const baseRectData: Omit<ShapePropsType, 'id' | 'layer'> = {
     type: 'rectangle',
     x: 100,
@@ -22,7 +22,7 @@ export const createMockData = (editor: Editor) => {
   // const MOCK_ELE_LEN = 1
   // const MOCK_ELE_LEN = 1000
   const MOCK_ELE_LEN = 200
-  const shiftSpeed = 10
+  // const shiftSpeed = 10
   // const MOCK_ELE_LEN = 2
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -30,15 +30,15 @@ export const createMockData = (editor: Editor) => {
     return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`
   }
 
-  const getRandomNumber = (max: number): string => {
+  const getRandomNumber = (max: number): number => {
     return Math.floor(Math.random() * max)
   }
 
   const modulesData = []
 
   for (let i = 0; i < MOCK_ELE_LEN; i++) {
-    const x =   getRandomNumber(1000)
-    const y =  getRandomNumber(1414)
+    const x = getRandomNumber(1000)
+    const y = getRandomNumber(1414)
     // x: baseX + (i * shiftSpeed),
     //   y: baseY + (i * shiftSpeed),
     // console.log(x)
@@ -55,5 +55,13 @@ export const createMockData = (editor: Editor) => {
 
   const instantiations = editor.batchCreate(modulesData)
 
-  editor.batchAdd(instantiations, 'history-add')
+  editor.batchAdd(instantiations)
+  editor.history.add({
+      type: 'history-add',
+      payload: {
+        modules: [...instantiations.values()].map(mod => mod.getDetails()),
+        selectedModules: editor.getSelected(),
+      },
+    },
+  )
 }

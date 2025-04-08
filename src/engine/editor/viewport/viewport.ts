@@ -93,48 +93,6 @@ class Viewport1 {
   }
 /!*
 
-  initViewport() {
-    initViewportDom.call(this)
-    this.viewport.resizeObserver.observe(this.viewport.container)
-    this.viewport.setupEvents()
-
-    this.viewport.action.on('viewport-resize', () => {
-      this.viewport.domResizing = false
-      this.viewport.updateViewport()
-
-      if (!this.viewport.initialized) {
-        const {frame, viewportRect} = this
-        const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect)
-
-        this.viewport.scale = scale
-        this.viewport.offset.x = offsetX
-        this.viewport.offset.y = offsetY
-        this.viewport.initialized = true
-      }
-
-      this.viewport.updateWorldRect()
-      this.viewport.action.dispatch({type: 'world-update', data: {...this.viewport.worldRect}})
-      // this.viewport.render()
-    })
-
-    this.viewport.action.on('world-shift', () => {
-      this.viewport.updateWorldRect()
-      this.viewport.action.dispatch({type: 'world-update', data: {...this.viewport.worldRect}})
-    })
-
-    // this.viewport.action.subscribe('world-update', () => { })
-    // this.viewport.action.subscribe('world-zoom', () => {    })
-
-    this.viewport.action.on('visible-module-update', () => {
-      resetCanvas(this.viewport.mainCTX, this.viewport.dpr, this.viewport.scale, this.viewport.offset)
-      this.viewport.renderModules()
-    })
-
-    this.viewport.action.on('visible-selected-update', (data) => {
-      resetCanvas(this.viewport.selectionCTX, this.viewport.dpr, this.viewport.scale, this.viewport.offset)
-      this.viewport.renderSelections(data.idSet as Set<UID>)
-    })
-  }
 
   initSelection() {
     initSelection.call(this)

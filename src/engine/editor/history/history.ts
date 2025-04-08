@@ -32,9 +32,10 @@ class History extends DoublyLinkedList {
     this.editor.events.onHistoryUpdated?.(this)
   }
 
+/*
   undo(quiet = false): HistoryNode | false {
     const current = this.current
-
+    console.log(current)
     if (!current) return false
 
     const {
@@ -164,8 +165,9 @@ class History extends DoublyLinkedList {
 
     return this.current as HistoryNode
   }
+*/
 
-  moveCurrentToTargetById(targetNode: HistoryNode) {
+  /*moveCurrentToTargetById(targetNode: HistoryNode) {
     const relativePosition = super.compareToCurrentPosition(targetNode)
 
     if (!relativePosition || relativePosition === 'equal') return
@@ -197,7 +199,7 @@ class History extends DoublyLinkedList {
     } else {
       // do sth...
     }
-  }
+  }*/
 
   toArray(): HistoryNode[] {
     const list: HistoryNode[] = []
@@ -214,6 +216,17 @@ class History extends DoublyLinkedList {
     }
 
     return list
+  }
+
+  public compareToCurrentPosition (node: HistoryNode) {
+    return super.compareToCurrentPosition(node)
+  }
+  public forward(): HistoryNode | false {
+    return super.forward()
+  }
+
+  public back(): HistoryNode | false {
+    return super.back()
   }
 }
 

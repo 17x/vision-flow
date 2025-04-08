@@ -10,6 +10,7 @@ export type ViewportEventType =
 
 export type ViewportManipulationType =
   | 'static'
+  | 'mousedown'
   | 'panning'
   | 'dragging'
   | 'resizing'
@@ -34,7 +35,7 @@ export interface Viewport {
   spaceKeyDown: boolean
   // hoveredModules: Set<UID>
   // handlingModules: Set<UID>
-  zooming: number
+  zooming: boolean
   // manipulationStatus: ViewportManipulationType
   frame: Partial<RectangleRenderProps> & BoundingRect
   mouseDownPoint: Point

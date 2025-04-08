@@ -21,7 +21,7 @@ import {
 } from './helper.ts'
 import {generateBoundingRectFromTwoPoints} from '../../core/utils.ts'
 import {initSelection} from '../selection/helper.ts'*/
-import {RectangleRenderProps} from '../../core/renderer/type'
+// import {RectangleRenderProps} from '../../core/renderer/type'
 /*
 type ViewportManipulationType =
   | 'static'
@@ -122,12 +122,6 @@ class Viewport1 {
       this.viewport.action.dispatch({type: 'world-update', data: {...this.viewport.worldRect}})
     })
 
-    this.viewport.action.on('viewport-panning', (data) => {
-      this.viewport.offset.x += (data as Point).x
-      this.viewport.offset.y += (data as Point).y
-      this.viewport.updateWorldRect()
-      this.viewport.action.dispatch({type: 'world-update', data: {...this.viewport.worldRect}})
-    })
     // this.viewport.action.subscribe('world-update', () => { })
     // this.viewport.action.subscribe('world-zoom', () => {    })
 

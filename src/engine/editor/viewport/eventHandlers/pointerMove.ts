@@ -32,6 +32,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const virtualSelectionRect: BoundingRect = generateBoundingRectFromTwoPoints(pointA, pointB)
       const idSet: Set<UID> = new Set()
       let mode: SelectionActionMode = 'replace'
+
       this.getVisibleModuleMap().forEach((module) => {
         if (module.type === 'rectangle') {
           const boundingRect = module.getBoundingRect() as BoundingRect
@@ -58,7 +59,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
 
     case 'panning':
       action.dispatch({
-        type: 'viewport-panning',
+        type: 'world-shift',
         data: {
           x: e.movementX,
           y: e.movementY,
@@ -90,32 +91,39 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     case 'rotating':
       break
 
-    case 'static': {
+    case 'mousedown': {
       const MOVE_THROTTLE = 10
       const moved = Math.abs(viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) > MOVE_THROTTLE ||
         Math.abs(viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) > MOVE_THROTTLE
-      console.log(handlingModules)
-      if (handlingModules.size > 0 && moved) {
-        this.manipulationStatus = 'dragging'
-      } else {
-        const virtualPoint = this.getWorldPointByViewportPoint(viewport.mouseMovePoint.x, viewport.mouseMovePoint.y)
 
-        this.getVisibleModuleMap().forEach((module) => {
-          if (module.type === 'rectangle') {
-            const {x, y, width, height, rotation} = (module as Rectangle)
-            const f = isInsideRotatedRect(virtualPoint, {x, y, width, height}, rotation)
-
-            if (f) {
-              hoveredModules.add(module.id)
-            }
-          }
-        })
-
-        console.log('release')
-        viewport.wrapper.releasePointerCapture(e.pointerId)
-        viewport.drawCrossLine = viewport.drawCrossLineDefault
+      if (moved) {
+        if (handlingModules.size > 0) {
+          this.manipulationStatus = 'dragging'
+        } else {
+          this.manipulationStatus = 'selecting'
+        }
       }
     }
+      break
+
+    case 'static': {
+      const virtualPoint = this.getWorldPointByViewportPoint(viewport.mouseMovePoint.x, viewport.mouseMovePoint.y)
+
+      this.getVisibleModuleMap().forEach((module) => {
+        if (module.type === 'rectangle') {
+          const {x, y, width, height, rotation} = (module as Rectangle)
+          const f = isInsideRotatedRect(virtualPoint, {x, y, width, height}, rotation)
+
+          if (f) {
+            hoveredModules.add(module.id)
+          }
+        }
+      })
+
+      viewport.wrapper.releasePointerCapture(e.pointerId)
+      viewport.drawCrossLine = viewport.drawCrossLineDefault
+    }
+
       break
   }
 }

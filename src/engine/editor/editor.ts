@@ -81,6 +81,7 @@ class Editor {
       },
       new Map<UID, ModuleType>(),
     )
+
     this.init()
   }
 
@@ -104,23 +105,37 @@ class Editor {
       }
 
       this.updateWorldRect()
-      this.action.dispatch({type: 'world-update', data: {...this.viewport.worldRect}})
-      // this.viewport.render()
+      this.action.dispatch({type: 'world-update'})
     })
 
-    this.action.on('world-shift', () => {
-      this.updateWorldRect()
-      this.action.dispatch({type: 'world-update', data: {...this.viewport.worldRect}})
+    this.action.on('world-mouse-move', (data) => {
+      this.events.onWorldMouseMove?.(data as Point)
     })
 
-    this.action.on('viewport-panning', (data) => {
-      this.viewport.offset.x += (data as Point).x
-      this.viewport.offset.y += (data as Point).y
+    this.action.on('world-update', () => {
       this.updateWorldRect()
-      this.action.dispatch({type: 'world-update', data: {...this.viewport.worldRect}})
+      this.updateVisibleModuleMap(this.viewport.worldRect as BoundingRect)
+      this.events.onViewportUpdated?.(this.viewport.worldRect as BoundingRect)
+      this.action.dispatch({type: 'visible-module-update', data: this.getVisibleModuleMap()})
     })
-    // this.action.subscribe('world-update', () => { })
-    // this.action.subscribe('world-zoom', () => {    })
+
+    this.action.on('world-zoom', (data) => {
+      console.log(data)
+      // this.updateVisibleModuleMap(worldRect as BoundingRect)
+      // this.events.onViewportUpdated?.(worldRect as BoundingRect)
+      // this.action.dispatch({type: 'visible-module-update', data: this.getVisibleModuleMap()})
+    })
+
+    this.action.on('world-shift', (data) => {
+      const {x, y} = data as Point
+      this.viewport.offset.x += x
+      this.viewport.offset.y += y
+      this.action.dispatch({type: 'world-update'})
+
+      // this.updateVisibleModuleMap(worldRect as BoundingRect)
+      // this.events.onViewportUpdated?.(worldRect as BoundingRect)
+      // this.action.dispatch({type: 'visible-module-update', data: this.getVisibleModuleMap()})
+    })
 
     this.action.on('visible-module-update', () => {
       resetCanvas(this.viewport.mainCTX, this.viewport.dpr, this.viewport.scale, this.viewport.offset)
@@ -155,28 +170,18 @@ class Editor {
       this.isSelectAll = false
       this.dispatchVisibleSelectedModules()
     })
+
     this.action.on('module-delete', () => {
       this.selectedModules.clear()
       this.isSelectAll = false
       this.dispatchVisibleSelectedModules()
     })
 
-    this.action.on('world-mouse-move', (data) => {
-      this.events.onWorldMouseMove?.(data as Point)
-    })
-
-    this.action.on('world-update', (worldRect) => {
-      this.updateVisibleModuleMap(worldRect as BoundingRect)
-      this.events.onViewportUpdated?.(worldRect as BoundingRect)
-      this.action.dispatch({type: 'visible-module-update', data: this.getVisibleModuleMap()})
-    })
-
     this.action.on('module-delete', () => {
       // this.batchDelete()
-      this.updateVisibleModuleMap(this.getWorldRect())
+      this.updateVisibleModuleMap(this.viewport.worldRect)
       this.action.dispatch({type: 'visible-module-update', data: this.getVisibleModuleMap()})
     })
-
   }
 
   get createModuleId(): UID {
@@ -447,7 +452,7 @@ class Editor {
     const zoomFactor = clampedScale / scale
 
     // Convert screen point to canvas coordinates before zoom
-    const canvasPoint = this.viewport.getWorldPointByViewportPoint(point.x, point.y)
+    const canvasPoint = this.getWorldPointByViewportPoint(point.x, point.y)
 
     // Calculate the offset adjustment so that the zoom is centered around the point
     const newOffsetX = canvasPoint.x - (canvasPoint.x - offset.x) * zoomFactor
@@ -467,9 +472,9 @@ class Editor {
   zoomTo(newScale: number | 'fit') {
     console.log(newScale)
     if (newScale === 'fit') {
-      this.viewport.fitFrame()
+      this.fitFrame()
     } else {
-      this.viewport.zoomAtPoint(
+      this.zoomAtPoint(
         {
           x: this.viewport.rect!.width / 2,
           y: this.viewport.viewportRect.height / 2,
@@ -483,7 +488,7 @@ class Editor {
   setTranslateViewport(x: number, y: number) {
     this.viewport.offset.x = 0
     this.viewport.offset.y = 0
-    this.viewport.translateViewport(x, y)
+    this.translateViewport(x, y)
   }
 
   translateViewport(x: number, y: number) {

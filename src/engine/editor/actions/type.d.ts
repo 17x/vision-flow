@@ -40,7 +40,6 @@ export type EditorEvents =
   | ViewportMouseDownEvent
   | ViewportMouseMoveEvent
   | ViewportMouseUpEvent
-  | ViewportPanningEvent
   | WorldZoomEvent
   | WorldShiftEvent
   | WorldUpdateEvent
@@ -97,8 +96,10 @@ export type ViewportResizeEvent = EventBase<'viewport-resize', null>;
 export type ViewportMouseDownEvent = EventBase<'viewport-mouse-down', never>;
 export type ViewportMouseMoveEvent = EventBase<'viewport-mouse-move', never>;
 export type ViewportMouseUpEvent = EventBase<'viewport-mouse-up', never>;
-export type ViewportPanningEvent = EventBase<'viewport-panning', Point>;
-export type WorldZoomEvent = EventBase<'world-zoom', never>;
-export type WorldShiftEvent = EventBase<'world-shift', BoundingRect>;
-export type WorldUpdateEvent = EventBase<'world-update', BoundingRect>;
+export type WorldZoomEvent = EventBase<'world-zoom', {
+  zoomFactor: number,
+  physicalPoint: Point
+}>
+export type WorldShiftEvent = EventBase<'world-shift', Point>;
+export type WorldUpdateEvent = EventBase<'world-update'>;
 export type WorldMouseMoveEvent = EventBase<'world-mouse-move', Point>;

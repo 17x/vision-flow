@@ -15,7 +15,6 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
     // hit modules
     if (this.hoveredModules.size > 0) {
       const lastId = [...this.hoveredModules][this.hoveredModules.size - 1]
-
       if (this.isSelectAll) {
         this.moduleMap.forEach(module => {
           this.handlingModules.add(module.id)
@@ -28,7 +27,7 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
         this.handlingModules.add(lastId)
       }
     } else {
-      this.manipulationStatus = 'selecting'
+      this.manipulationStatus = 'mousedown'
       if (!(e.ctrlKey || e.shiftKey || e.metaKey)) {
         // this.editor.clear()
       }

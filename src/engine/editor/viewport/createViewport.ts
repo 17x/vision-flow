@@ -58,7 +58,7 @@ export function createViewport(this: Editor): Viewport {
     // manipulationStatus: undefined,
     scale: 1,
     spaceKeyDown: false,
-    zooming: 0,
+    zooming: false,
     dpr: this.config.dpr,
     frame: createFrame('A4'),
     offset: {x: 0, y: 0},

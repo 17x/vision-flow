@@ -1,10 +1,9 @@
-import Viewport from "../viewport.ts"
+import {isNegativeZero} from '../../../core/utils.ts'
+import Editor from '../../editor.ts'
 
-import {isNegativeZero} from "../../../core/utils.ts"
-
-function handleWheel(this: Viewport, event: WheelEvent) {
+function handleWheel(this: Editor, event: WheelEvent) {
   // Prevent page zoom
-  if (event.target as HTMLElement !== this.wrapper) return
+  if (event.target as HTMLElement !== this.viewport.wrapper) return
   // console.log(this.manipulationStatus)
   event.preventDefault()
   event.stopPropagation()
@@ -13,14 +12,27 @@ function handleWheel(this: Viewport, event: WheelEvent) {
 
   // console.log(`${zooming ? 'zooming' : ''} ${panning ? 'panning' : ''} ${scrolling ? 'scrolling' : ''} `)
 
-  this.zooming = zooming
+  this.viewport.zooming = zooming
 
   if (zooming) {
     console.log(zoomFactor)
-    this.zoomAtPoint(this.mouseMovePoint, zoomFactor)
+    this.action.dispatch({
+      type: 'world-zoom',
+      data: {
+        zoomFactor,
+        physicalPoint: this.viewport.mouseMovePoint,
+      },
+    })
+    // this.zoomAtPoint(this.viewport.mouseMovePoint, zoomFactor)
     // this.setTranslateViewport(shiftX, shiftY)
   } else if (panning || scrolling) {
-    this.translateViewport(translateX, translateY)
+    this.action.dispatch({
+      type: 'world-shift',
+      data: {
+        x: translateX, y: translateY,
+      },
+    })
+    // this.translateViewport(translateX, translateY)
   }
 
   this.updateWorldRect()

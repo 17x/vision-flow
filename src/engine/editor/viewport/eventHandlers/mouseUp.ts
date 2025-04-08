@@ -2,14 +2,16 @@ import {updateSelectionBox} from '../domManipulations.ts'
 import Editor from '../../editor.ts'
 
 function handleMouseUp(this: Editor, e: MouseEvent) {
-  const x = e.clientX - this.viewport.rect!.x
-  const y = e.clientY - this.viewport.rect!.y
+  const {handlingModules, manipulationStatus, moduleMap, viewport} = this
+  const x = e.clientX - viewport.rect!.x
+  const y = e.clientY - viewport.rect!.y
 
-  this.viewport.mouseMovePoint.x = x
-  this.viewport.mouseMovePoint.y = y
+  viewport.mouseMovePoint.x = x
+  viewport.mouseMovePoint.y = y
 
-  switch (this.manipulationStatus) {
+  switch (manipulationStatus) {
     case 'selecting':
+      console.log(this.handlingModules)
       // this.viewport.resetSelectionCanvas()
       // this.viewport.renderSelectionCanvas()
       break
@@ -20,16 +22,17 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       break
 
     case 'dragging': {
-      const x = (this.viewport.mouseMovePoint.x - this.viewport.mouseDownPoint.x) * this.viewport.dpr / this.viewport.scale
-      const y = (this.viewport.mouseMovePoint.y - this.viewport.mouseDownPoint.y) * this.viewport.dpr / this.viewport.scale
+      const x = (viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) * viewport.dpr / viewport.scale
+      const y = (viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) * viewport.dpr / viewport.scale
 
       // move back to origin position and do the move again
-      this.handlingModules.forEach((id) => {
-        this.moduleMap.get(id).x -= x
-        this.moduleMap.get(id).y -= y
+      handlingModules.forEach((id) => {
+        moduleMap.get(id).x -= x
+        moduleMap.get(id).y -= y
       })
-      this.batchMove(new Set(this.handlingModules), {x, y}, 'history-move')
-      this.replace(this.handlingModules)
+
+      this.batchMove(new Set(handlingModules), {x, y}, 'history-move')
+      this.replace(handlingModules)
     }
       break
 
@@ -39,19 +42,32 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
     case 'rotating':
       break
 
+    case 'mousedown':
+      this.action.dispatch({
+        type: 'selection-clear',
+      })
+      break
     case 'static':
+      /*console.log(this.handlingModules)
+      if (this.hoveredModules.size === 0) {
+        this.action.dispatch({
+          type: 'selection-clear',
+          data: null,
+        })
+      }*/
+      // console.log()
       if (e.ctrlKey || e.metaKey || e.shiftKey) {
-        this.toggle(this.handlingModules)
+        this.toggle(handlingModules)
       } else {
-        this.replace(this.handlingModules)
+        this.replace(handlingModules)
       }
 
       break
   }
 
-  this.handlingModules.clear()
+  handlingModules.clear()
   this.manipulationStatus = 'static'
-  updateSelectionBox(this.viewport.selectionBox, {x: 0, y: 0, width: 0, height: 0}, false)
+  updateSelectionBox(viewport.selectionBox, {x: 0, y: 0, width: 0, height: 0}, false)
 }
 
 export default handleMouseUp

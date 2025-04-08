@@ -4,13 +4,9 @@ import {EditorEventData, EditorEvents, EditorEventType} from './type'
 type EventsCallback = (data: EditorEventData) => void
 
 class Action {
-  // private lock: boolean
-  // private editor: Editor
   readonly eventsMap: Map<EditorEventType, EventsCallback[]> = new Map()
 
-  constructor(/*editor: Editor*/) {
-    // this.editor = editor
-    // this.lock = false
+  constructor() {
   }
 
   // subscribe
@@ -39,7 +35,7 @@ class Action {
   }
 
   public dispatch({type, data}: EditorEvents) {
-    if (!['world-mouse-move', 'visible-selected-update', 'selection-modify'].includes(type)) {
+    if (![ 'world-shift', 'world-mouse-move', 'visible-selected-update', 'selection-modify'].includes(type)) {
       console.log('action: ', type)
     }
 
@@ -133,10 +129,6 @@ class Action {
 
   public destroy() {
     this.eventsMap.clear()
-
-    // @ts-expect-error
-    this.editor = null
-    this.lock = false
   }
 }
 

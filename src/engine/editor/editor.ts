@@ -8,10 +8,10 @@ import TypeCheck from '../../utilities/typeCheck.ts'
 import Action from './actions/actions.ts'
 import Connector from '../core/modules/connectors/connector.ts'
 import {HistoryOperationType} from './history/type'
-/*import batchReplaceModules from './helpers/batchReplaceModules.ts'*/
 import Viewport from './viewport/viewport.ts'
 
 import {rectsOverlap} from '../core/utils.ts'
+import {batchAdd, batchCopy, batchCreate, batchDelete, batchModify, batchMove} from './modules/modules.ts'
 
 export interface EditorDataProps {
   id: UID;
@@ -24,32 +24,30 @@ export const basicEditorAreaSize: BasicEditorAreaSize = {
 }
 
 export interface EditorProps {
-  container: HTMLDivElement;
-  data: EditorDataProps;
-  // theme: ThemeShape
-  dpr?: DPR;
-  zoom?: ZoomRatio;
-  logicResolution?: Resolution;
-  physicalResolution?: Resolution;
+  container: HTMLDivElement
+  data: EditorDataProps
   events?: EventHandlers
+  // theme: ThemeShape
+  // dpr?: DPR;
+  // zoom?: ZoomRatio;
+  // logicResolution?: Resolution;
+  // physicalResolution?: Resolution;
 }
 
 class Editor {
-  private moduleCounter = 0
-  moduleMap: ModuleMap
-  private visibleModuleMap: ModuleMap
   private id: UID
-  // private size: Size;
+  private moduleCounter = 0
+  readonly moduleMap: ModuleMap
+  private readonly visibleModuleMap: ModuleMap
+  readonly action: Action
   container: HTMLDivElement
   events: EventHandlers = {}
-  readonly action: Action
   history: History
   // public panableContainer: PanableContainer
   selectionManager: SelectionManager
   // private wrapper: HTMLDivElement
   viewport: Viewport
-  // @ts-expect-error
-  private zoom: ZoomRatio
+  // private zoom: ZoomRatio
   // private ctx: CanvasRenderingContext2D
   scale: number = 1
   // private minScale: number = 0.5
@@ -57,27 +55,22 @@ class Editor {
   // private zoomSpeed: number = 0.1
 
   constructor({
-                container, data, dpr = 2, events = {},
+                container,
+                data, /*dpr = 2, */
+                events = {},
               }: EditorProps) {
     this.moduleMap = data.modules.reduce<ModuleMap>(
-      (previousValue, currentValue) => {
-        previousValue.set(currentValue.id, currentValue)
+      (acc, curr) => {
+        acc.set(curr.id, curr)
 
-        return previousValue
+        return acc
       },
       new Map<UID, ModuleType>(),
     )
     this.visibleModuleMap = new Map()
     this.id = data.id
-    // this.size = data.size;
-    // this.wrapper = wrapper
-    this.scale = dpr
     this.events = events
-    // const canvas = document.createElement("canvas")
-    // const ctx = canvas.getContext("2d")
-    // const wrapper = document.createElement("div")
-
-    this.action = new Action(this)
+    this.action = new Action()
     this.container = container
     this.viewport = new Viewport(this)
     this.selectionManager = new SelectionManager(this)
@@ -109,194 +102,33 @@ class Editor {
     })*/
   }
 
-  private createModuleId(): UID {
+  get createModuleId(): UID {
     return this.id + '-' + (++this.moduleCounter)
   }
 
   batchCreate(moduleDataList: ModuleProps[]): ModuleMap {
-    const clonedData = deepClone(moduleDataList) as ModuleProps[]
-    const newMap: ModuleMap = new Map()
-    const create = (data: ModuleProps) => {
-      if (!data.id) {
-        data.id = this.createModuleId()
-      }
-
-      if (data.type === 'rectangle') {
-        return new Rectangle(data)
-      }
-      if (data.type === 'connector') {
-        return new Connector(data)
-      }
-    }
-
-    clonedData.forEach(data => {
-      const module = create.call(this, data)
-
-      newMap.set(data.id, module as ModuleType)
-    })
-
-    return newMap
+    return batchCreate.call(this, moduleDataList)
   }
 
   batchAdd(modules: ModuleMap, historyCode?: Extract<HistoryOperationType, 'history-add' | 'history-paste' | 'history-duplicate'>) {
-    modules.forEach(mod => {
-      this.moduleMap.set(mod.id, mod)
-    })
-
-    this.updateVisibleModuleMap(this.viewport.worldRect)
-    this.events.onModulesUpdated?.(this.moduleMap)
-
-    this.render()
-
-    if (historyCode) {
-      const moduleProps = [...modules.values()].map(mod => mod.getDetails())
-      this.selectionManager.getSelected()
-
-      this.history.add({
-          type: historyCode,
-          payload: {
-            modules: moduleProps,
-            selectedModules: this.selectionManager.getSelected(),
-          },
-        },
-      )
-    }
+    return batchAdd.call(this, modules, historyCode)
   }
 
   batchCopy(from: 'all' | Set<UID>, removeId = false, addOn?: { string: unknown }): ModuleProps[] {
-    const result: ModuleProps[] = []
-    let modulesMap: ModuleMap = new Map()
-
-    if (from === 'all') {
-      modulesMap = this.moduleMap
-    } else if (typeCheck(from) === 'set') {
-      from.forEach(id => {
-        const mod = this.moduleMap.get(id)
-        if (mod) {
-          modulesMap.set(id, mod)
-        }
-      })
-    }
-
-    modulesMap.forEach(mod => {
-      const data: ModuleProps = mod.getDetails()
-
-      if (removeId) {
-        delete data.id
-      }
-
-      if (TypeCheck(addOn) === 'object') {
-        Object.assign(data, addOn)
-      }
-
-      result.push(data)
-    })
-
-    return result
+    return batchCopy.call(this, from, removeId, addOn)
   }
 
   batchDelete(from: 'all' | Set<UID>, historyCode?: Extract<HistoryOperationType, 'history-delete'>) {
-    let backup: ModuleProps[] = []
-
-    if (from === 'all') {
-      backup = this.batchCopy('all')
-      this.moduleMap.clear()
-    } else if (typeCheck(from) === 'set') {
-      backup = this.batchCopy(from)
-      backup.forEach(module => {
-        this.moduleMap.delete(module.id)
-      })
-    }
-
-    if (historyCode) {
-      this.history.add({
-        type: 'history-delete',
-        payload: {
-          modules: backup,
-          selectedModules: this.selectionManager.getSelected(),
-        },
-      })
-    }
-
-    this.updateVisibleModuleMap(this.viewport.worldRect)
-    this.render()
-    this.events.onModulesUpdated?.(this.moduleMap)
-
-    return backup
+    return batchDelete.call(this, from, historyCode)
   }
 
   batchMove(from: 'all' | Set<UID>, delta: Point, historyCode?: Extract<HistoryOperationType, 'history-move'>) {
-    let modulesMap: ModuleMap | null = null
-
-    if (from === 'all') {
-      modulesMap = this.moduleMap
-    } else if (typeCheck(from) === 'set') {
-      modulesMap = this.getModulesByIdSet(from)
-    } else {
-      return false
-    }
-
-    modulesMap.forEach((module: ModuleProps) => {
-      module.x += delta.x
-      module.y += delta.y
-    })
-
-    this.render()
-    this.events.onModulesUpdated?.(this.moduleMap)
-    this.events.onSelectionUpdated?.(this.selectionManager.selectedModules, this.selectionManager.getIfUnique())
-
-    if (historyCode) {
-      this.history.add({
-        type: 'history-move',
-        payload: {
-          delta,
-          selectedModules: from,
-        },
-
-      })
-    }
+    batchMove.call(this, from, delta, historyCode)
   }
 
   batchModify(from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryOperationType) {
-    let modulesMap = null
-
-    if (from === 'all') {
-      modulesMap = this.moduleMap
-    } else if (typeCheck(from) === 'set') {
-      modulesMap = this.getModulesByIdSet(from)
-    } else {
-      return false
-    }
-
-    modulesMap.forEach((module: ModuleProps) => {
-      Object.keys(data).forEach((key) => {
-        const value = data[key]
-
-        if (typeof value === 'string' || typeof value === 'number') {
-          module[key] = value
-        }
-      })
-    })
-
-    // this.selectionManager.render()
-    this.render()
-    this.events.onModulesUpdated?.(this.moduleMap)
-    this.events.onSelectionUpdated?.(this.selectionManager.selectedModules, this.selectionManager.getIfUnique())
-
-    if (historyCode) {
-      /*this.history.add({
-        type: 'modify',
-        payload: {
-          changes:{},
-          selectedModules: this.selectionManager.getSelected(),
-        },
-      })*/
-    }
+    batchModify.call(this, from, data, historyCode)
   }
-
-  /*  batchReplaceModules(moduleList: ModuleProps[]) {
-      batchReplaceModules.bind(this, moduleList)
-    }*/
 
   getModulesByLayerIndex() {
 
@@ -341,7 +173,6 @@ class Editor {
   }
 
   render() {
-    // this.viewport.render()
   }
 
   //eslint-disable-block
@@ -353,30 +184,6 @@ class Editor {
     this.history.destroy()
     this.viewport.destroy()
     this.moduleMap.clear()
-    // @ts-ignore
-    // this.panableContainer = null
-    // @ts-ignore
-    this.action = null
-    // @ts-ignore
-    this.selectionManager = null
-    // @ts-ignore
-    this.crossLine = null
-    // @ts-ignore
-    this.history = null
-    // @ts-ignore
-    this.moduleMap = null
-    // @ts-ignore
-    this.canvas = null
-    // @ts-ignore
-    this.ctx = null
-    // @ts-ignore
-    this.zoom = null
-    // @ts-ignore
-    this.id = null
-    // @ts-ignore
-    this.events = null
-    // @ts-ignore
-    this.container = null
   }
 
 }

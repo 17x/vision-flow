@@ -12,12 +12,12 @@ class SelectionManager {
   readonly selectedModules: Set<UID> = new Set()
   readonly visibleSelectedModules: Set<UID> = new Set()
   readonly operationHandlers: Set<OperationHandler> = new Set()
+  isSelectAll: boolean = false
   resizeHandleSize: number = 10
   activeResizeHandle: { x: number, y: number } | null = null
   isDestroyed: boolean = false
   editor: Editor
   copiedItems: ModuleProps[] = []
-  isSelectAll: boolean = false
 
   constructor(editor: Editor) {
     this.editor = editor

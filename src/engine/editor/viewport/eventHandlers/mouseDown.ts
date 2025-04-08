@@ -25,6 +25,8 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
       } else {
         this.draggingModules.add(lastId)
       }
+
+      this.manipulationStatus = 'dragging'
     } else {
       this.manipulationStatus = 'mousedown'
       if (!(e.ctrlKey || e.shiftKey || e.metaKey)) {

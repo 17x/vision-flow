@@ -70,7 +70,6 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
 
     case 'dragging': {
       viewport.wrapper.setPointerCapture(e.pointerId)
-      console.log('drag')
       const x = e.movementX * viewport.dpr / viewport.scale
       const y = e.movementY * viewport.dpr / viewport.scale
 
@@ -79,9 +78,10 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
         moduleMap.get(id).y += y
       })
 
-      // this.updateVisibleModuleMap(this.viewport.worldRect)
-
-      // this.viewport.render()
+      // use dispatch temporary
+      this.action.dispatch({
+        type: 'visible-module-update',
+      })
     }
       break
 
@@ -96,7 +96,6 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const MOVE_THROTTLE = 1
       const moved = Math.abs(viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) > MOVE_THROTTLE ||
         Math.abs(viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) > MOVE_THROTTLE
-
 
       if (moved) {
         if (draggingModules.size > 0) {

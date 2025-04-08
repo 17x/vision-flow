@@ -15,16 +15,15 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
     // hit modules
     if (this.hoveredModules.size > 0) {
       const lastId = [...this.hoveredModules][this.hoveredModules.size - 1]
+
       if (this.isSelectAll) {
         this.moduleMap.forEach(module => {
-          this.handlingModules.add(module.id)
+          this.draggingModules.add(module.id)
         })
       } else if (this.selectedModules.has(lastId)) {
-        this.selectedModules.forEach(id => {
-          this.handlingModules.add(id)
-        })
+        this.draggingModules = new Set(this.selectedModules)
       } else {
-        this.handlingModules.add(lastId)
+        this.draggingModules.add(lastId)
       }
     } else {
       this.manipulationStatus = 'mousedown'

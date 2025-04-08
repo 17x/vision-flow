@@ -49,7 +49,7 @@ class Editor {
   resizeHandleSize: number = 10
   copiedItems: ModuleProps[] = []
   hoveredModules: Set<UID> = new Set()
-  handlingModules: Set<UID> = new Set()
+  draggingModules: Set<UID> = new Set()
   manipulationStatus: ViewportManipulationType = 'static'
   CopyDeltaX = 50
   CopyDeltaY = 100

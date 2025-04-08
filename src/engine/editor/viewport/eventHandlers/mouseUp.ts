@@ -2,7 +2,7 @@ import {updateSelectionBox} from '../domManipulations.ts'
 import Editor from '../../editor.ts'
 
 function handleMouseUp(this: Editor, e: MouseEvent) {
-  const {handlingModules, manipulationStatus, moduleMap, viewport} = this
+  const {draggingModules, manipulationStatus, moduleMap, viewport} = this
   const x = e.clientX - viewport.rect!.x
   const y = e.clientY - viewport.rect!.y
 
@@ -11,7 +11,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
 
   switch (manipulationStatus) {
     case 'selecting':
-      console.log(this.handlingModules)
+      console.log(this.draggingModules)
       // this.viewport.resetSelectionCanvas()
       // this.viewport.renderSelectionCanvas()
       break
@@ -26,13 +26,13 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       const y = (viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) * viewport.dpr / viewport.scale
 
       // move back to origin position and do the move again
-      handlingModules.forEach((id) => {
+      draggingModules.forEach((id) => {
         moduleMap.get(id).x -= x
         moduleMap.get(id).y -= y
       })
 
-      this.batchMove(new Set(handlingModules), {x, y})
-      this.replace(handlingModules)
+      this.batchMove(new Set(draggingModules), {x, y})
+      this.replace(draggingModules)
     }
       break
 
@@ -57,15 +57,15 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       }*/
       // console.log()
       if (e.ctrlKey || e.metaKey || e.shiftKey) {
-        this.toggle(handlingModules)
+        this.toggle(draggingModules)
       } else {
-        this.replace(handlingModules)
+        this.replace(draggingModules)
       }
 
       break
   }
 
-  handlingModules.clear()
+  draggingModules.clear()
   this.manipulationStatus = 'static'
   updateSelectionBox(viewport.selectionBox, {x: 0, y: 0, width: 0, height: 0}, false)
 }

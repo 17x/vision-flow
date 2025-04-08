@@ -7,7 +7,7 @@ import Editor from '../../editor.ts'
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
   const {
     action,
-    handlingModules,
+    draggingModules,
     moduleMap,
     viewport,
     hoveredModules,
@@ -70,11 +70,11 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
 
     case 'dragging': {
       viewport.wrapper.setPointerCapture(e.pointerId)
-
+      console.log('drag')
       const x = e.movementX * viewport.dpr / viewport.scale
       const y = e.movementY * viewport.dpr / viewport.scale
 
-      handlingModules.forEach((id) => {
+      draggingModules.forEach((id) => {
         moduleMap.get(id).x += x
         moduleMap.get(id).y += y
       })
@@ -92,12 +92,14 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       break
 
     case 'mousedown': {
-      const MOVE_THROTTLE = 10
+
+      const MOVE_THROTTLE = 1
       const moved = Math.abs(viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) > MOVE_THROTTLE ||
         Math.abs(viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) > MOVE_THROTTLE
 
+
       if (moved) {
-        if (handlingModules.size > 0) {
+        if (draggingModules.size > 0) {
           this.manipulationStatus = 'dragging'
         } else {
           this.manipulationStatus = 'selecting'
@@ -119,6 +121,8 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
           }
         }
       })
+
+      // console.log(hoveredModules)
 
       viewport.wrapper.releasePointerCapture(e.pointerId)
       viewport.drawCrossLine = viewport.drawCrossLineDefault

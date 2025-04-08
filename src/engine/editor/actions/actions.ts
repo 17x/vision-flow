@@ -75,7 +75,7 @@ class Action {
           this.editor.removeSelected()
           break
 
-        case 'module-duplicate':
+        case 'selection-duplicate':
           this.editor.duplicateSelected()
           break
 
@@ -83,7 +83,7 @@ class Action {
           this.editor.clear()
           break
 
-        case 'module-paste':
+        case 'selection-paste':
           this.editor.pasteCopied()
           break
 

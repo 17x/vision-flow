@@ -25,7 +25,7 @@ export function createViewport(this: Editor): Viewport {
   const eventsController = new AbortController()
   const resizeObserver = new ResizeObserver(throttle(() => {
     this.action.dispatch({type: 'viewport-resize', data: null})
-  }, 17))
+  }, 200))
   const {signal} = eventsController
   const mouseDownPoint = {x: 0, y: 0}
   const mouseMovePoint = {x: 0, y: 0}

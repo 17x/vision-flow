@@ -39,12 +39,11 @@ export function modifySelection(this: Editor, idSet: Set<UID>, action: Selection
         }
         break
       case 'replace':
-        this.selectedModules.add(id) // Add the new selection
+        this.selectedModules.add(id)
         break
     }
   })
 
-  // this.update()
   // this.events.onSelectionUpdated?.(idSet, eventCallBackData)
 }
 

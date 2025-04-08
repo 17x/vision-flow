@@ -15,6 +15,7 @@ import {Viewport, ViewportManipulationType} from './viewport/type'
 import {createViewport} from './viewport/createViewport.ts'
 import {SelectionModifyData} from './actions/type'
 import {fitRectToViewport} from './viewport/helper.ts'
+import {destroyViewport} from './viewport/destroyViewport.ts'
 
 export interface EditorDataProps {
   id: UID;
@@ -164,6 +165,14 @@ class Editor {
       // this.events.onSelectionUpdated?.('all', null)
     })
 
+    this.action.on('selection-clear', () => {
+      this.selectedModules.clear()
+      this.isSelectAll = false
+      this.dispatchVisibleSelectedModules()
+      this.updateVisibleModuleMap()
+      this.action.dispatch({type: 'visible-module-update'})
+    })
+
     this.action.on('selection-modify', (data) => {
       const {mode, idSet} = data as SelectionModifyData
 
@@ -179,6 +188,47 @@ class Editor {
       this.updateVisibleModuleMap()
       this.action.dispatch({type: 'visible-module-update'})
     })
+
+    this.action.on('selection-copy', () => {
+      this.copiedItems = this.batchCopy(this.isSelectAll ? 'all' : this.selectedModules, true)
+      this.updateCopiedItemsDelta()
+    })
+
+    this.action.on('selection-paste', () => {
+      const newModules = this.batchCreate(this.copiedItems)
+      this.batchAdd(newModules, 'history-paste')
+      this.replace(new Set(newModules.keys()))
+      this.updateCopiedItemsDelta()
+
+      this.dispatchVisibleSelectedModules()
+      this.updateVisibleModuleMap()
+      this.action.dispatch({type: 'visible-module-update'})
+    })
+
+    this.action.on('selection-duplicate', () => {
+      let temp: ModuleProps[]
+
+      if (this.isSelectAll) {
+        temp = this.batchCopy('all', true)
+      } else {
+        temp = this.batchCopy(this.selectedModules, true)
+      }
+
+      temp.forEach(copiedItem => {
+        copiedItem!.x += CopyDeltaX
+        copiedItem!.y += CopyDeltaY
+      })
+
+      const newModules = this.batchCreate(temp)
+      this.batchAdd(newModules, 'history-duplicate')
+      this.isSelectAll = false
+      this.replace(new Set(newModules.keys()))
+
+      this.dispatchVisibleSelectedModules()
+      this.updateVisibleModuleMap()
+      this.action.dispatch({type: 'visible-module-update'})
+    })
+
     /*
         this.action.on('module-delete', () => {
           this.selectedModules.clear()
@@ -317,51 +367,6 @@ class Editor {
     this.events.onSelectionUpdated?.('all', null)
   }
 
-  public copySelected(): void {
-    this.copiedItems = []
-
-    this.copiedItems = this.batchCopy(this.isSelectAll ? 'all' : this.selectedModules, true)
-    this.updateCopiedItemsDelta()
-  }
-
-  public pasteCopied(): void {
-    const newModules = this.batchCreate(this.copiedItems)
-    this.batchAdd(newModules, 'history-paste')
-    this.replace(new Set(newModules.keys()))
-    this.updateCopiedItemsDelta()
-  }
-
-  public duplicateSelected(): void {
-    let temp: ModuleProps[]
-
-    if (this.isSelectAll) {
-      temp = this.batchCopy('all', true)
-    } else {
-      temp = this.batchCopy(this.selectedModules, true)
-    }
-
-    temp.forEach(copiedItem => {
-      copiedItem!.x += CopyDeltaX
-      copiedItem!.y += CopyDeltaY
-    })
-
-    const newModules = this.batchCreate(temp)
-    this.batchAdd(newModules, 'history-duplicate')
-    this.isSelectAll = false
-    this.replace(new Set(newModules.keys()))
-  }
-
-  /*
-    public removeSelected(): void {
-      if (this.isSelectAll) {
-        this.batchDelete('all', 'history-delete')
-      } else {
-        this.batchDelete(this.selectedModules, 'history-delete')
-      }
-
-      // this.clear()
-    }*/
-
   private updateCopiedItemsDelta(): void {
     this.copiedItems.forEach(copiedItem => {
       copiedItem!.x += CopyDeltaX
@@ -402,10 +407,6 @@ class Editor {
     const p2 = this.getWorldPointByViewportPoint(width, height)
 
     this.viewport.worldRect = generateBoundingRectFromTwoPoints(p1, p2)
-  }
-
-  getWorldRect() {
-    return {...this.viewport.worldRect}
   }
 
   /*
@@ -610,12 +611,9 @@ class Editor {
 
   //eslint-disable-block
   destroy() {
-    // this.removeEventListeners()
-    // this.panableContainer.destroy()
+    destroyViewport.call(this)
     this.action.destroy()
-    this.destroy()
     this.history.destroy()
-    // destoryViewport(this.viewport)
     this.moduleMap.clear()
   }
 

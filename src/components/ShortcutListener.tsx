@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from 'react'
-import {ModuleOperationType, ModuleMoveDirection} from "../engine/editor/type"
-import EditorContext from "./editorContext/EditorContext.tsx"
+import {ModuleOperationType, ModuleMoveDirection} from '../engine/editor/type'
+import EditorContext from './editorContext/EditorContext.tsx'
 
 const ShortcutListener: React.FC = () => {
   const {executeAction, focused} = useContext(EditorContext)
@@ -25,11 +25,11 @@ const ShortcutListener: React.FC = () => {
     }
 
     if (key === 'v' && (ctrlKey || metaKey)) {
-      shortcutCode = 'module-paste'
+      shortcutCode = 'selection-paste'
     }
 
     if (key === 'd' && (ctrlKey || metaKey)) {
-      shortcutCode = 'module-duplicate'
+      shortcutCode = 'selection-duplicate'
     }
 
     if (key === 'Delete' || key === 'Backspace') {
@@ -71,6 +71,5 @@ const ShortcutListener: React.FC = () => {
 
   return null
 }
-
 
 export default ShortcutListener

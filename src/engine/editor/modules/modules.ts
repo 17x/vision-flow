@@ -39,8 +39,6 @@ export function batchAdd(this: Editor, modules: ModuleMap, historyCode?: Extract
   // this.updateVisibleModuleMap(this.viewport.worldRect)
   this.events.onModulesUpdated?.(this.moduleMap)
 
-  this.render()
-
   if (historyCode) {
     const moduleProps = [...modules.values()].map(mod => mod.getDetails())
     this.getSelected()
@@ -136,7 +134,6 @@ export function batchMove(this: Editor, from: 'all' | Set<UID>, delta: Point, hi
     module.y += delta.y
   })
 
-  this.render()
   this.events.onModulesUpdated?.(this.moduleMap)
   this.events.onSelectionUpdated?.(this.selectedModules, this.getIfUnique())
 
@@ -174,7 +171,6 @@ export function batchModify(this: Editor, from: 'all' | Set<UID>, data: Partial<
   })
 
   // this.render()
-  this.render()
   this.events.onModulesUpdated?.(this.moduleMap)
   this.events.onSelectionUpdated?.(this.selectedModules, this.getIfUnique())
 

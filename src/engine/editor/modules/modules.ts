@@ -36,20 +36,20 @@ export function batchAdd(this: Editor, modules: ModuleMap, historyCode?: Extract
     this.moduleMap.set(mod.id, mod)
   })
 
-  this.updateVisibleModuleMap(this.viewport.worldRect)
+  // this.updateVisibleModuleMap(this.viewport.worldRect)
   this.events.onModulesUpdated?.(this.moduleMap)
 
   this.render()
 
   if (historyCode) {
     const moduleProps = [...modules.values()].map(mod => mod.getDetails())
-    this.selectionManager.getSelected()
+    this.getSelected()
 
     this.history.add({
         type: historyCode,
         payload: {
           modules: moduleProps,
-          selectedModules: this.selectionManager.getSelected(),
+          selectedModules: this.getSelected(),
         },
       },
     )
@@ -108,13 +108,13 @@ export function batchDelete(this: Editor, from: 'all' | Set<UID>, historyCode?: 
       type: 'history-delete',
       payload: {
         modules: backup,
-        selectedModules: this.selectionManager.getSelected(),
+        selectedModules: this.getSelected(),
       },
     })
   }
 
-  this.updateVisibleModuleMap(this.viewport.worldRect)
-  this.render()
+  // this.updateVisibleModuleMap(this.viewport.worldRect)
+  // this.render()
   this.events.onModulesUpdated?.(this.moduleMap)
 
   return backup
@@ -138,7 +138,7 @@ export function batchMove(this: Editor, from: 'all' | Set<UID>, delta: Point, hi
 
   this.render()
   this.events.onModulesUpdated?.(this.moduleMap)
-  this.events.onSelectionUpdated?.(this.selectionManager.selectedModules, this.selectionManager.getIfUnique())
+  this.events.onSelectionUpdated?.(this.selectedModules, this.getIfUnique())
 
   if (historyCode) {
     this.history.add({
@@ -173,17 +173,17 @@ export function batchModify(this: Editor, from: 'all' | Set<UID>, data: Partial<
     })
   })
 
-  // this.selectionManager.render()
+  // this.render()
   this.render()
   this.events.onModulesUpdated?.(this.moduleMap)
-  this.events.onSelectionUpdated?.(this.selectionManager.selectedModules, this.selectionManager.getIfUnique())
+  this.events.onSelectionUpdated?.(this.selectedModules, this.getIfUnique())
 
   if (historyCode) {
     /*this.history.add({
       type: 'modify',
       payload: {
         changes:{},
-        selectedModules: this.selectionManager.getSelected(),
+        selectedModules: this.getSelected(),
       },
     })*/
   }

@@ -86,13 +86,13 @@ class History extends DoublyLinkedList {
     }
 
     super.back()
-    this.editor.updateVisibleModuleMap(this.editor.viewport.worldRect)
+    // this.editor.updateVisibleModuleMap(this.editor.viewport.worldRect)
     if (!quiet) {
       // restore selected modules
       if (selectedModules === 'all') {
-        this.editor.selectionManager.selectAll()
+        this.editor.selectAll()
       } else {
-        this.editor.selectionManager.replace(selectedModules)
+        this.editor.replace(selectedModules)
       }
 
       this.editor.events.onHistoryUpdated?.(this)
@@ -150,13 +150,13 @@ class History extends DoublyLinkedList {
         break
     }
 
-    this.editor.updateVisibleModuleMap(this.editor.viewport.worldRect)
+    // this.editor.updateVisibleModuleMap(this.editor.viewport.worldRect)
 
     if (!quiet) {
       if (selectedModules === 'all') {
-        this.editor.selectionManager.selectAll()
+        this.editor.selectAll()
       } else {
-        this.editor.selectionManager.replace(selectedModules)
+        this.editor.replace(selectedModules)
       }
 
       this.editor.events.onHistoryUpdated?.(this)
@@ -186,12 +186,12 @@ class History extends DoublyLinkedList {
 
       const {selectedModules} = targetNode.data.payload
 
-      this.editor.updateVisibleModuleMap(this.editor.viewport.worldRect)
+      // this.editor.updateVisibleModuleMap(this.editor.viewport.worldRect)
 
       if (selectedModules === 'all') {
-        this.editor.selectionManager.selectAll()
+        this.editor.selectAll()
       } else {
-        this.editor.selectionManager.replace(selectedModules)
+        this.editor.replace(selectedModules)
       }
       this.editor.events.onHistoryUpdated?.(this)
     } else {

@@ -2,18 +2,17 @@ import {CircleRenderProps, RectangleRenderProps} from '../../core/renderer/type'
 import Rectangle from '../../core/modules/shapes/rectangle.ts'
 import rectRender from '../../core/renderer/rectRender.ts'
 import circleRender from '../../core/renderer/circleRender.ts'
-import Viewport from './viewport.ts'
 import {drawCrossLine, getBoxControlPoints} from '../../lib/lib.ts'
+import Editor from '../editor.ts'
 
-function selectionRender(this: Viewport, idSet: Set<UID>) {
+function selectionRender(this: Editor, idSet: Set<UID>) {
   if (!idSet || idSet.size === 0) return
 
-  const {selectionCTX: ctx, editor, dpr, offset, worldRect, scale: scale, mouseMovePoint} = this
-  const {selectionManager} = editor
-  const enableRotationHandle = selectionManager.selectedModules.size === 1
+  const {selectionCTX: ctx, dpr, offset, worldRect, scale: scale, mouseMovePoint} = this.viewport
+  const enableRotationHandle = this.selectedModules.size === 1
   // const idSet = selectionManager.getVisibleSelectedModules()
-  const modules = editor.getModulesByIdSet(idSet)
-  const l = selectionManager.resizeHandleSize / 2
+  const modules = this.getModulesByIdSet(idSet)
+  const l = this.resizeHandleSize / 2
   const rects: RectangleRenderProps[] = []
   const dots: CircleRenderProps[] = []
   const fillColor = '#5491f8'
@@ -56,7 +55,7 @@ function selectionRender(this: Viewport, idSet: Set<UID>) {
   circleRender(ctx, dots)
 
   // if (this.enableCrossLine && this.drawCrossLine) {
-  if (this.enableCrossLine && this.drawCrossLine) {
+  if (this.viewport.enableCrossLine && this.viewport.drawCrossLine) {
     drawCrossLine({
       ctx,
       mousePoint: mouseMovePoint,

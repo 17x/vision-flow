@@ -11,7 +11,7 @@ function batchReplaceModules(this: Editor, moduleList: ModuleProps[]) {
 
   this.render()
   this.events.onModulesUpdated?.(this.moduleMap)
-  this.selectionManager.render()
+  this.render()
 }
 
 export default batchReplaceModules*/

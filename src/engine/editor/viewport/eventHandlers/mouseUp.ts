@@ -29,7 +29,7 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
         this.editor.moduleMap.get(id).y -= y
       })
       this.editor.batchMove(new Set(this.handlingModules), {x, y}, 'history-move')
-      this.editor.selectionManager.replace(this.handlingModules)
+      this.editor.replace(this.handlingModules)
     }
       break
 
@@ -41,9 +41,9 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
 
     case 'static':
       if (e.ctrlKey || e.metaKey || e.shiftKey) {
-        this.editor.selectionManager.toggle(this.handlingModules)
+        this.editor.toggle(this.handlingModules)
       } else {
-        this.editor.selectionManager.replace(this.handlingModules)
+        this.editor.replace(this.handlingModules)
       }
 
       break

@@ -60,35 +60,35 @@ class Action {
           break
 
         case 'select-all':
-          this.editor.selectionManager.selectAll()
+          this.editor.selectAll()
           break
 
         case 'module-add':
-          this.editor.selectionManager.replace(data as Set<UID>)
+          this.editor.replace(data as Set<UID>)
           break
 
         case 'selection-modify':
-          this.editor.selectionManager.replace(data as Set<UID>)
+          this.editor.replace(data as Set<UID>)
           break
 
         case 'selection-copy':
-          this.editor.selectionManager.copySelected()
+          this.editor.copySelected()
           break
 
         case 'module-delete':
-          this.editor.selectionManager.removeSelected()
+          this.editor.removeSelected()
           break
 
         case 'module-duplicate':
-          this.editor.selectionManager.duplicateSelected()
+          this.editor.duplicateSelected()
           break
 
         case 'selection-clear':
-          this.editor.selectionManager.clear()
+          this.editor.clear()
           break
 
         case 'module-paste':
-          this.editor.selectionManager.pasteCopied()
+          this.editor.pasteCopied()
           break
 
         case 'module-redo':
@@ -108,7 +108,7 @@ class Action {
         case 'module-move-left':
         case 'module-move-down':
           this.editor.batchMove(
-            this.editor.selectionManager.getSelected(),
+            this.editor.getSelected(),
             {
               x: (type === 'moveLeft' && -MODULE_MOVE_STEP) || (type === 'moveRight' && MODULE_MOVE_STEP) || 0,
               y: (type === 'moveUp' && -MODULE_MOVE_STEP) || (type === 'moveDown' && MODULE_MOVE_STEP) || 0,

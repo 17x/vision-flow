@@ -1,32 +1,31 @@
-import Viewport from '../viewport.ts'
 import {updateSelectionBox} from '../domManipulations.ts'
 import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 import {generateBoundingRectFromTwoPoints, isInsideRotatedRect, rectInside} from '../../../core/utils.ts'
 import {SelectionActionMode} from '../../selection/type'
+import Editor from '../../editor.ts'
 
-export default function handlePointerMove(this: Viewport, e: PointerEvent) {
-  if (this.domResizing) return
-  this.mouseMovePoint.x = e.clientX - this.rect!.x
-  this.mouseMovePoint.y = e.clientY - this.rect!.y
-  this.hoveredModules.clear()
-  this.drawCrossLine = false
+export default function handlePointerMove(this: Editor, e: PointerEvent) {
+  this.viewport.mouseMovePoint.x = e.clientX - this.viewport.rect!.x
+  this.viewport.mouseMovePoint.y = e.clientY - this.viewport.rect!.y
+  this.viewport.hoveredModules.clear()
+  this.viewport.drawCrossLine = false
 
-  this.editor.action.dispatch({
+  this.viewport.editor.action.dispatch({
     type: 'world-mouse-move',
-    data: this.getWorldPointByViewportPoint(this.mouseMovePoint.x, this.mouseMovePoint.y),
+    data: this.viewport.getWorldPointByViewportPoint(this.viewport.mouseMovePoint.x, this.viewport.mouseMovePoint.y),
   })
 
-  switch (this.manipulationStatus) {
+  switch (this.viewport.manipulationStatus) {
     case 'selecting': {
-      this.wrapper.setPointerCapture(e.pointerId)
+      this.viewport.wrapper.setPointerCapture(e.pointerId)
 
-      const rect = generateBoundingRectFromTwoPoints(this.mouseDownPoint, this.mouseMovePoint)
-      const pointA = this.getWorldPointByViewportPoint(rect.x, rect.y)
-      const pointB = this.getWorldPointByViewportPoint(rect.x + rect.width, rect.y + rect.height)
+      const rect = generateBoundingRectFromTwoPoints(this.viewport.mouseDownPoint, this.viewport.mouseMovePoint)
+      const pointA = this.viewport.getWorldPointByViewportPoint(rect.x, rect.y)
+      const pointB = this.viewport.getWorldPointByViewportPoint(rect.x + rect.width, rect.y + rect.height)
       const virtualSelectionRect: BoundingRect = generateBoundingRectFromTwoPoints(pointA, pointB)
       const idSet: Set<UID> = new Set()
       let mode: SelectionActionMode = 'replace'
-      this.editor.getVisibleModuleMap().forEach((module) => {
+      this.viewport.editor.getVisibleModuleMap().forEach((module) => {
         if (module.type === 'rectangle') {
           const boundingRect = module.getBoundingRect() as BoundingRect
 
@@ -40,17 +39,17 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
         mode = 'add'
       }
 
-      this.editor.action.dispatch({
+      this.viewport.editor.action.dispatch({
         type: 'selection-modify', data: {mode, idSet},
       })
-      updateSelectionBox(this.selectionBox, rect)
-      // this.resetSelectionCanvas()
-      // this.renderSelectionCanvas()
+      updateSelectionBox(this.viewport.selectionBox, rect)
+      // this.viewport.resetSelectionCanvas()
+      // this.viewport.renderSelectionCanvas()
     }
       break
 
     case 'panning':
-      this.editor.action.dispatch({
+      this.viewport.editor.action.dispatch({
         type: 'viewport-panning',
         data: {
           x: e.movementX,
@@ -61,19 +60,19 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       break
 
     case 'dragging': {
-      this.wrapper.setPointerCapture(e.pointerId)
+      this.viewport.wrapper.setPointerCapture(e.pointerId)
 
-      const x = e.movementX * this.dpr / this.scale
-      const y = e.movementY * this.dpr / this.scale
+      const x = e.movementX * this.viewport.dpr / this.viewport.scale
+      const y = e.movementY * this.viewport.dpr / this.viewport.scale
 
-      this.handlingModules.forEach((id) => {
-        this.editor.moduleMap.get(id).x += x
-        this.editor.moduleMap.get(id).y += y
+      this.viewport.handlingModules.forEach((id) => {
+        this.viewport.editor.moduleMap.get(id).x += x
+        this.viewport.editor.moduleMap.get(id).y += y
       })
 
-      this.editor.updateVisibleModuleMap(this.worldRect)
+      // this.viewport.editor.updateVisibleModuleMap(this.viewport.worldRect)
 
-      // this.render()
+      // this.viewport.render()
     }
       break
 
@@ -85,27 +84,27 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
 
     case 'static': {
       const MOVE_THROTTLE = 10
-      const moved = Math.abs(this.mouseMovePoint.x - this.mouseDownPoint.x) > MOVE_THROTTLE ||
-        Math.abs(this.mouseMovePoint.y - this.mouseDownPoint.y) > MOVE_THROTTLE
+      const moved = Math.abs(this.viewport.mouseMovePoint.x - this.viewport.mouseDownPoint.x) > MOVE_THROTTLE ||
+        Math.abs(this.viewport.mouseMovePoint.y - this.viewport.mouseDownPoint.y) > MOVE_THROTTLE
 
-      if (this.handlingModules.size > 0 && moved) {
-        this.manipulationStatus = 'dragging'
+      if (this.viewport.handlingModules.size > 0 && moved) {
+        this.viewport.manipulationStatus = 'dragging'
       } else {
-        const virtualPoint = this.getWorldPointByViewportPoint(this.mouseMovePoint.x, this.mouseMovePoint.y)
+        const virtualPoint = this.viewport.getWorldPointByViewportPoint(this.viewport.mouseMovePoint.x, this.viewport.mouseMovePoint.y)
 
-        this.editor.getVisibleModuleMap().forEach((module) => {
+        this.viewport.editor.getVisibleModuleMap().forEach((module) => {
           if (module.type === 'rectangle') {
             const {x, y, width, height, rotation} = (module as Rectangle)
             const f = isInsideRotatedRect(virtualPoint, {x, y, width, height}, rotation)
 
             if (f) {
-              this.hoveredModules.add(module.id)
+              this.viewport.hoveredModules.add(module.id)
             }
           }
         })
 
-        this.wrapper.releasePointerCapture(e.pointerId)
-        this.drawCrossLine = this.drawCrossLineDefault
+        this.viewport.wrapper.releasePointerCapture(e.pointerId)
+        this.viewport.drawCrossLine = this.viewport.drawCrossLineDefault
       }
     }
       break

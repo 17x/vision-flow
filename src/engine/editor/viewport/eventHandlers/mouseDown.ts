@@ -16,12 +16,12 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
     if (this.hoveredModules.size > 0) {
       const lastId = [...this.hoveredModules][this.hoveredModules.size - 1]
 
-      if (this.editor.selectionManager.isSelectAll) {
+      if (this.editor.isSelectAll) {
         this.editor.moduleMap.forEach(module => {
           this.handlingModules.add(module.id)
         })
-      } else if (this.editor.selectionManager.selectedModules.has(lastId)) {
-        this.editor.selectionManager.selectedModules.forEach(id => {
+      } else if (this.editor.selectedModules.has(lastId)) {
+        this.editor.selectedModules.forEach(id => {
           this.handlingModules.add(id)
         })
       } else {
@@ -30,7 +30,7 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
     } else {
       this.manipulationStatus = 'selecting'
       if (!(e.ctrlKey || e.shiftKey || e.metaKey)) {
-        // this.editor.selectionManager.clear()
+        // this.editor.clear()
       }
     }
   }

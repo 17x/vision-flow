@@ -1,4 +1,4 @@
-import Shape, {ShapeProps} from "./shape.ts"
+import Shape, {ShapeProps} from './shape.ts'
 
 export interface RectangleProps extends ShapeProps {}
 

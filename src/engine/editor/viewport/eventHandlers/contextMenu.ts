@@ -3,7 +3,14 @@ import Editor from '../../editor.ts'
 function handleContextMenu(this: Editor, e: MouseEvent) {
   const dataName = 'editor-contextmenu-dom'
   const contextMenuDom = document.createElement('div')
-  console.log(this.hoveredModules)
+
+  e.preventDefault()
+  e.stopPropagation()
+
+  if (e.ctrlKey) {
+    return false
+  }
+  // console.log(this.hoveredModules)
   const lastId = [...this.hoveredModules][this.hoveredModules.size - 1]
   const remove = (event: MouseEvent) => {
     const dom = event.target as HTMLElement
@@ -90,8 +97,6 @@ function handleContextMenu(this: Editor, e: MouseEvent) {
   this.viewport.wrapper.append(contextMenuDom)
   window.addEventListener('mousedown', remove)
 
-  e.preventDefault()
-  e.stopPropagation()
 }
 
 export default handleContextMenu

@@ -1,5 +1,5 @@
-import Base, {BasicModuleProps} from "../base.ts"
-import {generateBoundingRectFromRotatedRect} from "../../utils.ts"
+import Base, {BasicModuleProps} from '../base.ts'
+import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
 
 export interface ShapeProps extends BasicModuleProps {
   x: number
@@ -17,8 +17,8 @@ export interface ShapeProps extends BasicModuleProps {
 }
 
 class Shape extends Base {
-  readonly x: number
-  readonly y: number
+  private x: number
+  private y: number
   width: number
   height: number
   readonly fillColor: FillColor
@@ -64,10 +64,10 @@ class Shape extends Base {
   }
 
   getBoundingRect() {
-    const {x: centerX, y: centerY, width, height, rotation} = this
+    const {x: cx, y: cy, width, height, rotation} = this
 
-    const x = centerX - width / 2
-    const y = centerY - height / 2
+    const x = cx - width / 2
+    const y = cy - height / 2
 
     if (rotation === 0) {
       return {
@@ -79,12 +79,17 @@ class Shape extends Base {
         top: y,
         right: x + width,
         bottom: y + height,
-        centerX,
-        centerY,
+        cx,
+        cy,
       }
     }
 
     return generateBoundingRectFromRotatedRect({x, y, width, height}, rotation)
+  }
+
+  move(x: number, y: number) {
+    this.x += x
+    this.y += y
   }
 }
 

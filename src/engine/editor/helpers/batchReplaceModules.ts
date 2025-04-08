@@ -1,3 +1,4 @@
+/*
 import Editor from "../editor.ts"
 
 function batchReplaceModules(this: Editor, moduleList: ModuleProps[]) {
@@ -13,4 +14,4 @@ function batchReplaceModules(this: Editor, moduleList: ModuleProps[]) {
   this.selectionManager.render()
 }
 
-export default batchReplaceModules
+export default batchReplaceModules*/

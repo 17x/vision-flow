@@ -13,7 +13,8 @@ class Action {
     this.lock = false
   }
 
-  public subscribe(eventName: EditorEventType, callback: EventsCallback) {
+  // subscribe
+  public on(eventName: EditorEventType, callback: EventsCallback) {
     if (this.eventsMap.has(eventName)) {
       this.eventsMap.get(eventName)!.push(callback)
     } else {
@@ -21,7 +22,8 @@ class Action {
     }
   }
 
-  public unsubscribe(eventName: EditorEventType, callback: EventsCallback) {
+  // unsubscribe
+  public off(eventName: EditorEventType, callback: EventsCallback) {
     if (this.eventsMap.has(eventName)) {
       const arr = this.eventsMap.get(eventName)!
 

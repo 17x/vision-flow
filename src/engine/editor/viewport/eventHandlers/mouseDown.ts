@@ -30,7 +30,7 @@ function handleMouseDown(this: Viewport, e: MouseEvent) {
     } else {
       this.manipulationStatus = 'selecting'
       if (!(e.ctrlKey || e.shiftKey || e.metaKey)) {
-        this.editor.selectionManager.clear()
+        // this.editor.selectionManager.clear()
       }
     }
   }

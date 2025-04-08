@@ -2,16 +2,19 @@ import Viewport from '../viewport.ts'
 import {updateSelectionBox} from '../domManipulations.ts'
 import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 import {generateBoundingRectFromTwoPoints, isInsideRotatedRect, rectInside} from '../../../core/utils.ts'
+import {SelectionActionMode} from '../../selection/type'
 
 export default function handlePointerMove(this: Viewport, e: PointerEvent) {
   if (this.domResizing) return
-  // if (this.zooming) return
-  // console.log(this.zooming,this.manipulationStatus)
   this.mouseMovePoint.x = e.clientX - this.rect!.x
   this.mouseMovePoint.y = e.clientY - this.rect!.y
   this.hoveredModules.clear()
   this.drawCrossLine = false
-  this.dispatchWorldPoint()
+
+  this.editor.action.dispatch({
+    type: 'world-mouse-move',
+    data: this.getWorldPointByViewportPoint(this.mouseMovePoint.x, this.mouseMovePoint.y),
+  })
 
   switch (this.manipulationStatus) {
     case 'selecting': {
@@ -22,7 +25,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       const pointB = this.getWorldPointByViewportPoint(rect.x + rect.width, rect.y + rect.height)
       const virtualSelectionRect: BoundingRect = generateBoundingRectFromTwoPoints(pointA, pointB)
       const idSet: Set<UID> = new Set()
-
+      let mode: SelectionActionMode = 'replace'
       this.editor.getVisibleModuleMap().forEach((module) => {
         if (module.type === 'rectangle') {
           const boundingRect = module.getBoundingRect() as BoundingRect
@@ -33,20 +36,27 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
         }
       })
 
-      if (!(e.ctrlKey || e.shiftKey || e.metaKey)) {
-        this.editor.selectionManager.replace(idSet)
-      } else {
-        this.editor.selectionManager.toggle(idSet)
+      if ((e.ctrlKey || e.shiftKey || e.metaKey)) {
+        mode = 'add'
       }
 
+      this.editor.action.dispatch({
+        type: 'module-select', data: {mode, idSet},
+      })
       updateSelectionBox(this.selectionBox, rect)
-      this.resetSelectionCanvas()
-      this.renderSelectionCanvas()
+      // this.resetSelectionCanvas()
+      // this.renderSelectionCanvas()
     }
       break
 
     case 'panning':
-      this.translateViewport(e.movementX, e.movementY)
+      this.editor.action.dispatch({
+        type: 'viewport-panning',
+        data: {
+          x: e.movementX,
+          y: e.movementY,
+        },
+      })
 
       break
 
@@ -63,7 +73,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
 
       this.editor.updateVisibleModuleMap(this.worldRect)
 
-      this.render()
+      // this.render()
     }
       break
 
@@ -96,9 +106,6 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
 
         this.wrapper.releasePointerCapture(e.pointerId)
         this.drawCrossLine = this.drawCrossLineDefault
-        // this.updateWorldRect()
-        // this.resetSelectionCanvas()
-        // this.renderSelectionCanvas()
       }
     }
       break

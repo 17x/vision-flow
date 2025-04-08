@@ -8,11 +8,15 @@
   | HistoryOperationType
   | ViewportEventType;*/
 
+import {SelectionActionMode} from '../selection/type'
+
 type EditorEventType = EditorEvents['type']
 type EditorEventData = EditorEvents['data']
 
 export type EditorEvents =
   | EditorInitializedEvent
+  | EditorVisibleModuleUpdate
+  | EditorVisibleSelectionUpdate
   | ModuleSelectAllEvent
   | ModuleSelectEvent
   | ModuleCopyEvent
@@ -46,6 +50,7 @@ export type EditorEvents =
   | ViewportMouseDownEvent
   | ViewportMouseMoveEvent
   | ViewportMouseUpEvent
+  | ViewportPanningEvent
   | WorldZoomEvent
   | WorldShiftEvent
   | WorldUpdateEvent
@@ -56,9 +61,32 @@ export interface EditorInitializedEvent {
   data: never;
 }
 
+export interface EditorVisibleModuleUpdate {
+  type: 'editor-visible-module-update';
+  data: ModuleMap
+}
+
+export interface EditorVisibleSelectionUpdate {
+  type: 'editor-visible-selection-update';
+  data: {
+    idSet: Set<UID>
+    operators: never
+  }
+}
+
 export interface ModuleSelectAllEvent {
   type: 'module-select-all';
-  data: never;
+  data: null;
+}
+
+export interface ModuleSelectData {
+  mode: SelectionActionMode
+  idSet: Set<UID>
+}
+
+export interface ModuleSelectEvent {
+  type: 'module-select';
+  data: ModuleSelectData
 }
 
 export interface ModuleSelectEvent {
@@ -219,6 +247,11 @@ export interface ViewportMouseMoveEvent {
 export interface ViewportMouseUpEvent {
   type: 'viewport-mouse-up'
   data: never;
+}
+
+export interface ViewportPanningEvent {
+  type: 'viewport-panning'
+  data: Point
 }
 
 export interface WorldZoomEvent {

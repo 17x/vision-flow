@@ -5,11 +5,13 @@ import circleRender from '../../core/renderer/circleRender.ts'
 import Viewport from './viewport.ts'
 import {drawCrossLine, getBoxControlPoints} from '../../lib/lib.ts'
 
-function selectionRender(this: Viewport) {
+function selectionRender(this: Viewport, idSet: Set<UID>) {
+  if (!idSet || idSet.size === 0) return
+
   const {selectionCTX: ctx, editor, dpr, offset, worldRect, scale: scale, mouseMovePoint} = this
   const {selectionManager} = editor
   const enableRotationHandle = selectionManager.selectedModules.size === 1
-  const idSet = selectionManager.getVisibleSelectedModules()
+  // const idSet = selectionManager.getVisibleSelectedModules()
   const modules = editor.getModulesByIdSet(idSet)
   const l = selectionManager.resizeHandleSize / 2
   const rects: RectangleRenderProps[] = []
@@ -17,7 +19,6 @@ function selectionRender(this: Viewport) {
   const fillColor = '#5491f8'
   const lineColor = '#5491f8'
   // const dotLineWidth = 1
-
   if (enableRotationHandle) {
     // selectionManager.ctx.translate(item.x + item.size / 2, item.y + item.size / 2); // Move origin to center of item
     // selectionManager.ctx.rotate(item.rotation); // Apply rotation
@@ -54,6 +55,7 @@ function selectionRender(this: Viewport) {
   rectRender(ctx, rects)
   circleRender(ctx, dots)
 
+  // if (this.enableCrossLine && this.drawCrossLine) {
   if (this.enableCrossLine && this.drawCrossLine) {
     drawCrossLine({
       ctx,

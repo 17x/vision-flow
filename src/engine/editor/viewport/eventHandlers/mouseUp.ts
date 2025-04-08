@@ -10,8 +10,8 @@ function handleMouseUp(this: Viewport, e: MouseEvent) {
 
   switch (this.manipulationStatus) {
     case 'selecting':
-      this.resetSelectionCanvas()
-      this.renderSelectionCanvas()
+      // this.resetSelectionCanvas()
+      // this.renderSelectionCanvas()
       break
 
     case 'panning':

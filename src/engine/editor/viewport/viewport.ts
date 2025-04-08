@@ -97,7 +97,7 @@ class Viewport {
     this.resizeObserver.observe(this.editor.container)
     this.setupEvents()
 
-    this.editor.action.subscribe('viewport-resize', () => {
+    this.editor.action.on('viewport-resize', () => {
       this.domResizing = false
       this.updateViewport()
 
@@ -115,20 +115,51 @@ class Viewport {
       this.editor.action.dispatch({type: 'world-update', data: {...this.worldRect}})
       // this.render()
     })
-    this.editor.action.subscribe('world-shift', this.render.bind(this))
-    this.editor.action.subscribe('world-update', () => {
-      /*this.domResizing = false
-      this.updateViewport()
-      this.updateWorldRect()
 
-      if (!this.initialized) {
-        this.initialized = true
-        this.fitFrame()
-      }*/
+    this.editor.action.on('world-shift', () => {
+      this.updateWorldRect()
+      this.editor.action.dispatch({type: 'world-update', data: {...this.worldRect}})
     })
 
-    // this.editor.action.subscribe('world-shift', this.onWorldShift)
+    this.editor.action.on('viewport-panning', (data) => {
+      this.offset.x += (data as Point).x
+      this.offset.y += (data as Point).y
+      this.updateWorldRect()
+      this.editor.action.dispatch({type: 'world-update', data: {...this.worldRect}})
+    })
+    // this.editor.action.subscribe('world-update', () => { })
     // this.editor.action.subscribe('world-zoom', () => {    })
+
+    this.editor.action.on('editor-visible-module-update', () => {
+      resetCanvas(this.mainCTX, this.dpr, this.scale, this.offset)
+      this.renderModules()
+    })
+
+    this.editor.action.on('editor-visible-selection-update', (data) => {
+      resetCanvas(this.selectionCTX, this.dpr, this.scale, this.offset)
+      this.renderSelections(data.idSet as Set<UID>)
+    })
+  }
+
+  renderModules() {
+    const animate = () => {
+      render({
+        ctx: this.mainCTX,
+        frame: this.frame,
+        modules: this.editor.getVisibleModuleMap(),
+      })
+    }
+
+    requestAnimationFrame(animate)
+  }
+
+  renderSelections(modules: Set<UID>) {
+    console.log(modules)
+    const animate = () => {
+      selectionRender.call(this, modules)
+    }
+
+    requestAnimationFrame(animate)
   }
 
   resizeThrottle() {
@@ -169,28 +200,10 @@ class Viewport {
     const p2 = this.getWorldPointByViewportPoint(width, height)
 
     this.worldRect = generateBoundingRectFromTwoPoints(p1, p2)
-    /*   this.editor.action.dispatch({
-         type: 'world-update',
-         data: this.worldRect,
-       })*/
-
-    // this.editor.updateVisibleModuleMap(this.worldRect)
-    // this.editor.selectionManager.updateVisibleSelectedModules()
-    /*this.editor.events.onViewportUpdated?.({
-      offsetX: this.offset.x,
-      offsetY: this.offset.y,
-      scale: this.scale,
-      width,
-      height,
-      status: this.manipulationStatus,
-    })*/
   }
 
-  dispatchWorldPoint() {
-    this.editor.action.dispatch({
-      type: 'world-mouse-move',
-      data: this.getWorldPointByViewportPoint(this.mouseMovePoint.x, this.mouseMovePoint.y),
-    })
+  getWorldRect() {
+    return {...this.worldRect}
   }
 
   /*
@@ -259,7 +272,7 @@ class Viewport {
     this.scale = clampedScale
     this.offset.x = newOffsetX
     this.offset.y = newOffsetY
-    this.render()
+    // this.render()
     this.updateWorldRect()
   }
 
@@ -288,8 +301,8 @@ class Viewport {
   translateViewport(x: number, y: number) {
     this.offset.x += x
     this.offset.y += y
-    this.updateWorldRect()
-    this.render()
+    // this.updateWorldRect()
+    // this.render()
   }
 
   updateScrollBar() {
@@ -343,16 +356,12 @@ class Viewport {
 
     // console.log(virtualRect)
     // console.log(scale, offsetX, offsetY)
-
-    this.scale = scale
-    this.offset.x = offsetX
-    this.offset.y = offsetY
+    /*
+        this.scale = scale
+        this.offset.x = offsetX
+        this.offset.y = offsetY*/
     // this.render()
     // this.updateWorldRect()
-  }
-
-  resetMainCanvas() {
-    resetCanvas(this.mainCTX, this.dpr, this.scale, this.offset)
   }
 
   resetSelectionCanvas() {
@@ -379,12 +388,12 @@ class Viewport {
     requestAnimationFrame(animate)
   }
 
-  render() {
-    this.resetMainCanvas()
-    this.resetSelectionCanvas()
-    this.renderMainCanvas()
-    this.renderSelectionCanvas()
-  }
+  /*  render() {
+      this.resetMainCanvas()
+      this.resetSelectionCanvas()
+      this.renderMainCanvas()
+      this.renderSelectionCanvas()
+    }*/
 
   destroy() {
     clearTimeout(this.resizeTimeout)

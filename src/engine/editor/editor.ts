@@ -8,7 +8,7 @@ import TypeCheck from '../../utilities/typeCheck.ts'
 import Action from './actions/actions.ts'
 import Connector from '../core/modules/connectors/connector.ts'
 import {HistoryOperationType} from './history/type'
-import batchReplaceModules from './helpers/batchReplaceModules.ts'
+/*import batchReplaceModules from './helpers/batchReplaceModules.ts'*/
 import Viewport from './viewport/viewport.ts'
 
 import {rectsOverlap} from '../core/utils.ts'
@@ -88,18 +88,24 @@ class Editor {
   }
 
   private init() {
-    this.action.subscribe('world-mouse-move', (data) => {
+    this.action.on('world-mouse-move', (data) => {
       this.events.onWorldMouseMove?.(data as Point)
     })
-    this.action.subscribe('world-update', (worldRect) => {
-      this.updateVisibleModuleMap(worldRect)
-      this.events.onViewportUpdated?.(worldRect)
+
+    this.action.on('world-update', (worldRect) => {
+      this.updateVisibleModuleMap(worldRect as BoundingRect)
+      this.events.onViewportUpdated?.(worldRect as BoundingRect)
+      this.action.dispatch({type: 'editor-visible-module-update', data: this.getVisibleModuleMap()})
     })
 
-    this.action.subscribe('world-shift', (worldRect) => {
-      this.updateVisibleModuleMap(worldRect)
-      // this.events.onViewportUpdated?.(worldRect)
+    this.action.on('module-delete', () => {
+      this.updateVisibleModuleMap(this.viewport.getWorldRect())
+      this.action.dispatch({type: 'editor-visible-module-update', data: this.getVisibleModuleMap()})
     })
+
+    /*this.action.on('world-shift', (worldRect) => {
+      this.updateVisibleModuleMap(worldRect as BoundingRect)
+    })*/
   }
 
   private createModuleId(): UID {
@@ -287,9 +293,9 @@ class Editor {
     }
   }
 
-  batchReplaceModules(moduleList: ModuleProps[]) {
-    batchReplaceModules.bind(this, moduleList)
-  }
+  /*  batchReplaceModules(moduleList: ModuleProps[]) {
+      batchReplaceModules.bind(this, moduleList)
+    }*/
 
   getModulesByLayerIndex() {
 
@@ -334,7 +340,7 @@ class Editor {
   }
 
   render() {
-    this.viewport.render()
+    // this.viewport.render()
   }
 
   //eslint-disable-block

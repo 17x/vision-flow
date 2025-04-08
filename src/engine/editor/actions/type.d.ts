@@ -16,6 +16,7 @@ export type EditorEvents =
   | ModuleDuplicateEvent
   | ModuleDeleteEvent
   | SelectionClearEvent
+  | SelectionDeleteEvent
   | ModuleModifyEvent
   | ModuleMoveEvent
   | ModuleMoveStartEvent
@@ -63,6 +64,7 @@ export type VisibleSelectedUpdate = EventBase<'visible-selected-update', { idSet
 export type SelectionModifyEvent = EventBase<'selection-modify', SelectionModifyData>
 export type SelectionClearEvent = EventBase<'selection-clear', null>;
 export type SelectionCopyEvent = EventBase<'selection-copy', never>;
+export type SelectionDeleteEvent = EventBase<'selection-delete', never>;
 export type SelectAllEvent = EventBase<'select-all', null>;
 
 export type ModulePasteEvent = EventBase<'module-paste', never>;

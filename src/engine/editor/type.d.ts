@@ -16,6 +16,7 @@ export type ModuleOperationType =
   'select-all'
   | 'selection-modify'
   | 'selection-copy'
+  | 'selection-delete'
   | 'module-paste'
   | 'module-redo'
   | 'module-undo'
@@ -62,7 +63,7 @@ type ModulesUpdatedHandler = (moduleMap: ModuleMap) => void;
 type SelectionUpdatedHandler = (selected: Set<UID> | 'all', selectedProps?: ModuleProps) => void;
 type ViewportUpdatedHandler = (viewportInfo: BoundingRect) => void;
 type WorldUpdatedHandler = (worldInfo: WorldInfo) => void;
-type WorldMouseMoveUpdatedHandler = (point:Point) => void;
+type WorldMouseMoveUpdatedHandler = (point: Point) => void;
 
 export declare type EventHandlers = {
   onHistoryUpdated?: HistoryUpdatedHandler

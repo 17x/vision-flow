@@ -114,16 +114,24 @@ class Editor {
 
     this.action.on('world-update', () => {
       this.updateWorldRect()
-      this.updateVisibleModuleMap(this.viewport.worldRect as BoundingRect)
+      this.updateVisibleModuleMap()
       this.events.onViewportUpdated?.(this.viewport.worldRect as BoundingRect)
       this.action.dispatch({type: 'visible-module-update', data: this.getVisibleModuleMap()})
     })
 
     this.action.on('world-zoom', (data) => {
       console.log(data)
-      // this.updateVisibleModuleMap(worldRect as BoundingRect)
+      const {
+        zoomFactor,
+        physicalPoint,
+      } = data
+      const {scale, offset} = this.zoomAtPoint(physicalPoint, zoomFactor)
+
+      this.viewport.scale = scale
+      this.viewport.offset.x = offset.x
+      this.viewport.offset.y = offset.y
+      this.action.dispatch({type: 'world-update'})
       // this.events.onViewportUpdated?.(worldRect as BoundingRect)
-      // this.action.dispatch({type: 'visible-module-update', data: this.getVisibleModuleMap()})
     })
 
     this.action.on('world-shift', (data) => {
@@ -132,9 +140,7 @@ class Editor {
       this.viewport.offset.y += y
       this.action.dispatch({type: 'world-update'})
 
-      // this.updateVisibleModuleMap(worldRect as BoundingRect)
       // this.events.onViewportUpdated?.(worldRect as BoundingRect)
-      // this.action.dispatch({type: 'visible-module-update', data: this.getVisibleModuleMap()})
     })
 
     this.action.on('visible-module-update', () => {
@@ -165,23 +171,26 @@ class Editor {
       this.dispatchVisibleSelectedModules()
     })
 
-    this.action.on('selection-clear', () => {
+    this.action.on('selection-delete', () => {
+      this.batchDelete(this.selectedModules, 'history-delete')
       this.selectedModules.clear()
       this.isSelectAll = false
       this.dispatchVisibleSelectedModules()
+      this.updateVisibleModuleMap()
+      this.action.dispatch({type: 'visible-module-update'})
     })
+    /*
+        this.action.on('module-delete', () => {
+          this.selectedModules.clear()
+          this.isSelectAll = false
+          this.dispatchVisibleSelectedModules()
+        })*/
 
-    this.action.on('module-delete', () => {
-      this.selectedModules.clear()
-      this.isSelectAll = false
-      this.dispatchVisibleSelectedModules()
-    })
-
-    this.action.on('module-delete', () => {
+    /*this.action.on('module-delete', () => {
       // this.batchDelete()
       this.updateVisibleModuleMap(this.viewport.worldRect)
       this.action.dispatch({type: 'visible-module-update', data: this.getVisibleModuleMap()})
-    })
+    })*/
   }
 
   get createModuleId(): UID {
@@ -233,13 +242,13 @@ class Editor {
     return [...Object.values(this.moduleMap)]
   }
 
-  updateVisibleModuleMap(worldRect: BoundingRect) {
+  updateVisibleModuleMap() {
     this.visibleModuleMap.clear()
 
     this.moduleMap.forEach((module) => {
       const boundingRect = module.getBoundingRect() as BoundingRect
 
-      if (rectsOverlap(boundingRect, worldRect)) {
+      if (rectsOverlap(boundingRect, this.viewport.worldRect)) {
         this.visibleModuleMap.set(module.id, module)
       }
     })
@@ -419,7 +428,13 @@ class Editor {
     }
   */
 
-  zoomAtPoint(point: Point, zoom: number, zoomTo: boolean = false) {
+  zoomAtPoint(point: Point, zoom: number, zoomTo: boolean = false): {
+    scale: number,
+    offset: {
+      x: number,
+      y: number,
+    },
+  } {
     const {offset, scale, dpr} = this.viewport
     const minScale = 0.1
     const maxScale = 5
@@ -462,11 +477,19 @@ class Editor {
     // const newOffsetY = offset.y - (canvasPoint.y * (zoomFactor - 1))
 
     // Apply updated values
-    this.viewport.scale = clampedScale
-    this.viewport.offset.x = newOffsetX
-    this.viewport.offset.y = newOffsetY
+    // this.viewport.scale = clampedScale
+    // this.viewport.offset.x = newOffsetX
+    // this.viewport.offset.y = newOffsetY
+
+    return {
+      scale: clampedScale,
+      offset: {
+        x: newOffsetX,
+        y: newOffsetY,
+      },
+    }
     // this.viewport.render()
-    this.updateWorldRect()
+    // this.updateWorldRect()
   }
 
   zoomTo(newScale: number | 'fit') {

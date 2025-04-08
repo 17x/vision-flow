@@ -33,7 +33,7 @@ const ShortcutListener: React.FC = () => {
     }
 
     if (key === 'Delete' || key === 'Backspace') {
-      shortcutCode = 'module-delete'
+      shortcutCode = 'selection-delete'
     }
 
     if (key === 'Escape') {

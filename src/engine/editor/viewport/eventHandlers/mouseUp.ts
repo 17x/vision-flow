@@ -43,11 +43,13 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       break
 
     case 'mousedown':
+      console.log(this.draggingModules)
       this.action.dispatch({
         type: 'selection-clear',
       })
       break
     case 'static':
+      // console.log(this.hoveredModules)
       /*console.log(this.handlingModules)
       if (this.hoveredModules.size === 0) {
         this.action.dispatch({

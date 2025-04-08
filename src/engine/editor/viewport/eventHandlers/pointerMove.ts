@@ -41,7 +41,7 @@ export default function handlePointerMove(this: Viewport, e: PointerEvent) {
       }
 
       this.editor.action.dispatch({
-        type: 'module-select', data: {mode, idSet},
+        type: 'selection-modify', data: {mode, idSet},
       })
       updateSelectionBox(this.selectionBox, rect)
       // this.resetSelectionCanvas()

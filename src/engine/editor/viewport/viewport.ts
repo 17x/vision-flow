@@ -130,12 +130,12 @@ class Viewport {
     // this.editor.action.subscribe('world-update', () => { })
     // this.editor.action.subscribe('world-zoom', () => {    })
 
-    this.editor.action.on('editor-visible-module-update', () => {
+    this.editor.action.on('visible-module-update', () => {
       resetCanvas(this.mainCTX, this.dpr, this.scale, this.offset)
       this.renderModules()
     })
 
-    this.editor.action.on('editor-visible-selection-update', (data) => {
+    this.editor.action.on('visible-selected-update', (data) => {
       resetCanvas(this.selectionCTX, this.dpr, this.scale, this.offset)
       this.renderSelections(data.idSet as Set<UID>)
     })
@@ -154,7 +154,7 @@ class Viewport {
   }
 
   renderSelections(modules: Set<UID>) {
-    console.log(modules)
+    // console.log(modules)
     const animate = () => {
       selectionRender.call(this, modules)
     }

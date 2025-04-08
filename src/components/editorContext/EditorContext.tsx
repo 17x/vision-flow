@@ -11,7 +11,7 @@ interface EditorContextType {
   selectedProps: ModuleProps
   editorRef: React.RefObject<Editor | null>
   applyHistoryNode: (node: HistoryNode) => void
-  executeAction: (code: ModuleOperationType, data: never) => void
+  executeAction: (code: ModuleOperationType, data?: never) => void
   viewport: ViewportInfo
 }
 

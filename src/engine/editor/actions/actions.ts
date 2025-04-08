@@ -4,13 +4,13 @@ import {EditorEventData, EditorEvents, EditorEventType} from './type'
 type EventsCallback = (data: EditorEventData) => void
 
 class Action {
-  private lock: boolean
+  // private lock: boolean
   // private editor: Editor
   readonly eventsMap: Map<EditorEventType, EventsCallback[]> = new Map()
 
   constructor(/*editor: Editor*/) {
     // this.editor = editor
-    this.lock = false
+    // this.lock = false
   }
 
   // subscribe
@@ -50,12 +50,16 @@ class Action {
     }
   }
 
-  public execute(type: EditorEventType, data: never) {
+  public execute({type, data}: EditorEvents) {
+    // console.log('execute: ', type, data)
+    // @ts-ignore
+    this.dispatch({type, data})
+
     /*  switch (type) {
         case 'editor-initialized':
           break
 
-        case 'module-select-all':
+        case 'select-all':
           this.editor.selectionManager.selectAll()
           break
 
@@ -63,11 +67,11 @@ class Action {
           this.editor.selectionManager.replace(data as Set<UID>)
           break
 
-        case 'module-select':
+        case 'selection-modify':
           this.editor.selectionManager.replace(data as Set<UID>)
           break
 
-        case 'module-copy':
+        case 'selection-copy':
           this.editor.selectionManager.copySelected()
           break
 
@@ -79,7 +83,7 @@ class Action {
           this.editor.selectionManager.duplicateSelected()
           break
 
-        case 'module-escape':
+        case 'selection-clear':
           this.editor.selectionManager.clear()
           break
 

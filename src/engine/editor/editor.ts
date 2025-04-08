@@ -95,12 +95,13 @@ class Editor {
     this.action.on('world-update', (worldRect) => {
       this.updateVisibleModuleMap(worldRect as BoundingRect)
       this.events.onViewportUpdated?.(worldRect as BoundingRect)
-      this.action.dispatch({type: 'editor-visible-module-update', data: this.getVisibleModuleMap()})
+      this.action.dispatch({type: 'visible-module-update', data: this.getVisibleModuleMap()})
     })
 
     this.action.on('module-delete', () => {
+      // this.batchDelete()
       this.updateVisibleModuleMap(this.viewport.getWorldRect())
-      this.action.dispatch({type: 'editor-visible-module-update', data: this.getVisibleModuleMap()})
+      this.action.dispatch({type: 'visible-module-update', data: this.getVisibleModuleMap()})
     })
 
     /*this.action.on('world-shift', (worldRect) => {
@@ -334,9 +335,9 @@ class Editor {
     return new Map(this.visibleModuleMap)
   }
 
-  public execute(code: ModuleOperationType, data: unknown = null) {
+  public execute(type: ModuleOperationType, data: unknown = null) {
     // @ts-ignore
-    this.action.dispatch(code, data)
+    this.action.execute({type, data})
   }
 
   render() {

@@ -1,31 +1,21 @@
-// import {ModuleOperationType} from '../type'
-// import {ViewportEventType} from '../viewport/type'
-// import {HistoryOperationType} from '../history/type'
-
-/*type EditorEventType =
-  | 'editor-initialized'
-  | ModuleOperationType
-  | HistoryOperationType
-  | ViewportEventType;*/
-
 import {SelectionActionMode} from '../selection/type'
 
-type EditorEventType = EditorEvents['type']
-type EditorEventData = EditorEvents['data']
+type EditorEventType = EditorEvents['type'];
+type EditorEventData = EditorEvents['data'];
 
 export type EditorEvents =
   | EditorInitializedEvent
-  | EditorVisibleModuleUpdate
-  | EditorVisibleSelectionUpdate
-  | ModuleSelectAllEvent
-  | ModuleSelectEvent
-  | ModuleCopyEvent
+  | VisibleModuleUpdate
+  | VisibleSelectedUpdate
+  | SelectAllEvent
+  | SelectionModifyEvent
+  | SelectionCopyEvent
   | ModulePasteEvent
   | ModuleRedoEvent
   | ModuleUndoEvent
   | ModuleDuplicateEvent
   | ModuleDeleteEvent
-  | ModuleEscapeEvent
+  | SelectionClearEvent
   | ModuleModifyEvent
   | ModuleMoveEvent
   | ModuleMoveStartEvent
@@ -54,222 +44,61 @@ export type EditorEvents =
   | WorldZoomEvent
   | WorldShiftEvent
   | WorldUpdateEvent
-  | WorldMouseMoveEvent
+  | WorldMouseMoveEvent;
 
-export interface EditorInitializedEvent {
-  type: 'editor-initialized';
-  data: never;
+export interface EventBase<T, P> {
+  type: T;
+  data: P;
 }
 
-export interface EditorVisibleModuleUpdate {
-  type: 'editor-visible-module-update';
-  data: ModuleMap
+export interface SelectionModifyData {
+  mode: SelectionActionMode;
+  idSet: Set<UID>;
 }
 
-export interface EditorVisibleSelectionUpdate {
-  type: 'editor-visible-selection-update';
-  data: {
-    idSet: Set<UID>
-    operators: never
-  }
-}
+export type EditorInitializedEvent = EventBase<'editor-initialized', never>
 
-export interface ModuleSelectAllEvent {
-  type: 'module-select-all';
-  data: null;
-}
+export type VisibleModuleUpdate = EventBase<'visible-module-update', ModuleMap>
+export type VisibleSelectedUpdate = EventBase<'visible-selected-update', { idSet: Set<UID>; operators: never }>
 
-export interface ModuleSelectData {
-  mode: SelectionActionMode
-  idSet: Set<UID>
-}
+export type SelectionModifyEvent = EventBase<'selection-modify', SelectionModifyData>
+export type SelectionClearEvent = EventBase<'selection-clear', null>;
+export type SelectionCopyEvent = EventBase<'selection-copy', never>;
+export type SelectAllEvent = EventBase<'select-all', null>;
 
-export interface ModuleSelectEvent {
-  type: 'module-select';
-  data: ModuleSelectData
-}
+export type ModulePasteEvent = EventBase<'module-paste', never>;
+export type ModuleRedoEvent = EventBase<'module-redo', never>;
+export type ModuleUndoEvent = EventBase<'module-undo', never>;
+export type ModuleDuplicateEvent = EventBase<'module-duplicate', never>;
+export type ModuleDeleteEvent = EventBase<'module-delete', never>;
+export type ModuleModifyEvent = EventBase<'module-modify', never>;
+export type ModuleMoveEvent = EventBase<'module-move', never>;
+export type ModuleMoveStartEvent = EventBase<'module-move-start', never>;
+export type ModuleMoveEndEvent = EventBase<'module-move-end', never>;
+export type ModuleMoveUpEvent = EventBase<'module-move-up', never>;
+export type ModuleMoveDownEvent = EventBase<'module-move-down', never>;
+export type ModuleMoveLeftEvent = EventBase<'module-move-left', never>;
+export type ModuleMoveRightEvent = EventBase<'module-move-right', never>;
 
-export interface ModuleSelectEvent {
-  type: 'module-select';
-  data: never;
-}
+export type HistoryInitEvent = EventBase<'history-init', never>;
+export type HistoryAddEvent = EventBase<'history-add', never>;
+export type HistoryDeleteEvent = EventBase<'history-delete', never>;
+export type HistoryPasteEvent = EventBase<'history-paste', never>;
+export type HistoryDuplicateEvent = EventBase<'history-duplicate', never>;
+export type HistoryModifyEvent = EventBase<'history-modify', never>;
+export type HistoryMoveEvent = EventBase<'history-move', never>;
+export type HistoryReorderEvent = EventBase<'history-reorder', never>;
+export type HistorySelectEvent = EventBase<'history-select', never>;
+export type HistoryGroupEvent = EventBase<'history-group', never>;
+export type HistoryUngroupEvent = EventBase<'history-ungroup', never>;
+export type HistoryCompositeEvent = EventBase<'history-composite', never>;
 
-export interface ModuleCopyEvent {
-  type: 'module-copy';
-  data: never;
-}
-
-export interface ModulePasteEvent {
-  type: 'module-paste';
-  data: never;
-}
-
-export interface ModuleRedoEvent {
-  type: 'module-redo';
-  data: never;
-}
-
-export interface ModuleUndoEvent {
-  type: 'module-undo';
-  data: never;
-}
-
-export interface ModuleDuplicateEvent {
-  type: 'module-duplicate';
-  data: never;
-}
-
-export interface ModuleDeleteEvent {
-  type: 'module-delete';
-  data: never;
-}
-
-export interface ModuleEscapeEvent {
-  type: 'module-escape';
-  data: never;
-}
-
-export interface ModuleModifyEvent {
-  type: 'module-modify';
-  data: never;
-}
-
-export interface ModuleMoveEvent {
-  type: 'module-move';
-  data: never;
-}
-
-export interface ModuleMoveStartEvent {
-  type: 'module-move-start';
-  data: never;
-}
-
-export interface ModuleMoveEndEvent {
-  type: 'module-move-end';
-  data: never;
-}
-
-export interface ModuleMoveUpEvent {
-  type: 'module-move-up';
-  data: never;
-}
-
-export interface ModuleMoveDownEvent {
-  type: 'module-move-down';
-  data: never;
-}
-
-export interface ModuleMoveLeftEvent {
-  type: 'module-move-left';
-  data: never;
-}
-
-export interface ModuleMoveRightEvent {
-  type: 'module-move-right';
-  data: never;
-}
-
-export interface HistoryInitEvent {
-  type: 'history-init';
-  data: never;
-}
-
-export interface HistoryAddEvent {
-  type: 'history-add';
-  data: never;
-}
-
-export interface HistoryDeleteEvent {
-  type: 'history-delete';
-  data: never;
-}
-
-export interface HistoryPasteEvent {
-  type: 'history-paste';
-  data: never;
-}
-
-export interface HistoryDuplicateEvent {
-  type: 'history-duplicate';
-  data: never;
-}
-
-export interface HistoryModifyEvent {
-  type: 'history-modify';
-  data: never;
-}
-
-export interface HistoryMoveEvent {
-  type: 'history-move';
-  data: never;
-}
-
-export interface HistoryReorderEvent {
-  type: 'history-reorder';
-  data: never;
-}
-
-export interface HistorySelectEvent {
-  type: 'history-select';
-  data: never;
-}
-
-export interface HistoryGroupEvent {
-  type: 'history-group';
-  data: never;
-}
-
-export interface HistoryUngroupEvent {
-  type: 'history-ungroup';
-  data: never;
-}
-
-export interface HistoryCompositeEvent {
-  type: 'history-composite';
-  data: never;
-}
-
-export interface ViewportResizeEvent {
-  type: 'viewport-resize';
-  data?: null;
-}
-
-export interface ViewportMouseDownEvent {
-  type: 'viewport-mouse-down';
-  data: never;
-}
-
-export interface ViewportMouseMoveEvent {
-  type: 'viewport-mouse-move';
-  data: never;
-}
-
-export interface ViewportMouseUpEvent {
-  type: 'viewport-mouse-up'
-  data: never;
-}
-
-export interface ViewportPanningEvent {
-  type: 'viewport-panning'
-  data: Point
-}
-
-export interface WorldZoomEvent {
-  type: 'world-zoom';
-  data: never;
-}
-
-export interface WorldMouseMoveEvent {
-  type: 'world-mouse-move'
-  data: Point
-}
-
-export interface WorldUpdateEvent {
-  type: 'world-update'
-  data: BoundingRect
-}
-
-export interface WorldShiftEvent {
-  type: 'world-shift';
-  data: BoundingRect
-}
+export type ViewportResizeEvent = EventBase<'viewport-resize', null>;
+export type ViewportMouseDownEvent = EventBase<'viewport-mouse-down', never>;
+export type ViewportMouseMoveEvent = EventBase<'viewport-mouse-move', never>;
+export type ViewportMouseUpEvent = EventBase<'viewport-mouse-up', never>;
+export type ViewportPanningEvent = EventBase<'viewport-panning', Point>;
+export type WorldZoomEvent = EventBase<'world-zoom', never>;
+export type WorldShiftEvent = EventBase<'world-shift', BoundingRect>;
+export type WorldUpdateEvent = EventBase<'world-update', BoundingRect>;
+export type WorldMouseMoveEvent = EventBase<'world-mouse-move', Point>;

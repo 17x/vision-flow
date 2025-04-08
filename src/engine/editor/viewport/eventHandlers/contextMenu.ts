@@ -1,7 +1,5 @@
 import Viewport from '../viewport.ts'
 
-// import {updateSelectionBox} from "../domManipulations.ts"
-
 function handleContextMenu(this: Viewport, e: MouseEvent) {
   const dataName = 'editor-contextmenu-dom'
   const contextMenuDom = document.createElement('div')
@@ -11,10 +9,9 @@ function handleContextMenu(this: Viewport, e: MouseEvent) {
       // console.log(event.target!.dataset.action)
       const code = event.target!.dataset.action
 
-      console.log(code)
       if (code === 'select-all') {
         this.editor.action.dispatch({
-          type: 'module-select-all',
+          type: 'select-all',
           data: null,
         })
       }

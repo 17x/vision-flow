@@ -10,18 +10,18 @@ const ShortcutListener: React.FC = () => {
     const {key, ctrlKey, metaKey, shiftKey} = e
 
     const arrowKeys: { [key: string]: ModuleMoveDirection } = {
-      ArrowUp: 'moveUp',
-      ArrowDown: 'moveDown',
-      ArrowLeft: 'moveLeft',
-      ArrowRight: 'moveRight',
+      ArrowUp: 'module-move-up',
+      ArrowDown: 'module-move-down',
+      ArrowLeft: 'module-move-left',
+      ArrowRight: 'module-move-right',
     }
 
     if (key === 'a' && (ctrlKey || metaKey)) {
-      shortcutCode = 'module-select-all'
+      shortcutCode = 'select-all'
     }
 
     if (key === 'c' && (ctrlKey || metaKey) && !shiftKey) {
-      shortcutCode = 'module-copy'
+      shortcutCode = 'selection-copy'
     }
 
     if (key === 'v' && (ctrlKey || metaKey)) {
@@ -37,7 +37,7 @@ const ShortcutListener: React.FC = () => {
     }
 
     if (key === 'Escape') {
-      shortcutCode = 'module-escape'
+      shortcutCode = 'selection-clear'
     }
 
     if (key === 'z' && (ctrlKey || metaKey)) {

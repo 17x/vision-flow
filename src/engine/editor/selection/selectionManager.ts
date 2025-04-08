@@ -3,7 +3,7 @@ import typeCheck from '../../../utilities/typeCheck.ts'
 import {getBoxControlPoints} from '../../lib/lib.ts'
 import {RectangleProps} from '../../core/modules/shapes/rectangle.ts'
 import {OperationHandler, SelectionActionMode} from './type'
-import {ModuleSelectData} from '../actions/type'
+import {SelectionModifyData} from '../actions/type'
 
 const CopyDeltaX = 50
 const CopyDeltaY = 100
@@ -25,53 +25,86 @@ class SelectionManager {
   }
 
   init() {
-    this.editor.action.on('editor-visible-module-update', (/*visibleModuleMap*/) => {
-      // this.updateVisibleSelectedModules(visibleModuleMap as ModuleMap)
-      this.updateVisibleSelectedModules()
-      this.editor.action.dispatch({
-        type: 'editor-visible-selection-update',
-        data: {
-          idSet: this.getVisibleSelectedModules(),
-          operators: this.operationHandlers,
-        },
-      })
+    this.editor.action.on('visible-module-update', () => {
+      this.dispatchVisibleSelectedModules()
     })
 
-    this.editor.action.on('module-select-all', () => {
+    this.editor.action.on('select-all', () => {
       this.selectedModules.clear()
       this.isSelectAll = true
-
-      // this.updateVisibleSelectedModules(visibleModuleMap as ModuleMap)
-      this.updateVisibleSelectedModules()
-      this.editor.action.dispatch({
-        type: 'editor-visible-selection-update',
-        data: {
-          idSet: this.getVisibleSelectedModules(),
-          operators: this.operationHandlers,
-        },
-      })
-
-      this.editor.events.onSelectionUpdated?.('all', null)
+      this.dispatchVisibleSelectedModules()
+      // this.editor.events.onSelectionUpdated?.('all', null)
     })
 
-    this.editor.action.on('module-select', (data) => {
-      // console.log(data.mode as SelectionActionMode)
-      const {mode, idSet} = data as ModuleSelectData
+    this.editor.action.on('selection-modify', (data) => {
+      const {mode, idSet} = data as SelectionModifyData
 
-      if (mode === 'toggle') {
-
-        console.log(mode, idSet)
-      }
       this.modifySelection(idSet, mode)
-      this.updateVisibleSelectedModules()
-      this.editor.action.dispatch({
-        type: 'editor-visible-selection-update',
-        data: {
-          idSet: this.getVisibleSelectedModules(),
-          operators: this.operationHandlers,
-        },
-      })
+      this.dispatchVisibleSelectedModules()
     })
+
+    this.editor.action.on('selection-clear', () => {
+      this.selectedModules.clear()
+      this.isSelectAll = false
+      this.dispatchVisibleSelectedModules()
+    })
+    this.editor.action.on('module-delete', () => {
+      this.selectedModules.clear()
+      this.isSelectAll = false
+      this.dispatchVisibleSelectedModules()
+    })
+  }
+
+  dispatchVisibleSelectedModules() {
+    this.updateVisibleSelectedModules()
+    this.editor.action.dispatch({
+      type: 'visible-selected-update',
+      data: {
+        idSet: this.getVisibleSelectedModules(),
+        operators: this.operationHandlers,
+      },
+    })
+  }
+
+  public updateVisibleSelectedModules() {
+    const visibleModuleMap = this.editor.getVisibleModuleMap()
+    this.visibleSelectedModules.clear()
+    this.operationHandlers.clear()
+
+    visibleModuleMap.forEach(module => {
+      if (module.type === 'rectangle') {
+        const {x, y, id, width, height, rotation} = module as RectangleProps
+        const points = getBoxControlPoints(x, y, width, height, rotation)
+
+        points.forEach(point => {
+          // create manipulation handlers
+          this.operationHandlers.add(
+            {
+              id,
+              type: 'resize',
+              data: {
+                ...point,
+                r: this.editor.viewport.scale,
+              },
+            },
+          )
+        })
+      }
+
+      if (this.isSelectAll) {
+        visibleModuleMap.forEach(module => {
+          this.visibleSelectedModules.add(module.id)
+        })
+      } else {
+        if (this.selectedModules.has(module.id)) {
+          this.visibleSelectedModules.add(module.id)
+        }
+      }
+    })
+  }
+
+  public getVisibleSelectedModules() {
+    return new Set(this.visibleSelectedModules)
   }
 
   public getSelected(): Set<UID> | 'all' {
@@ -147,13 +180,6 @@ class SelectionManager {
     this.editor.events.onSelectionUpdated?.('all', null)
   }
 
-/*  public clear(): void {
-    this.selectedModules.clear()
-    this.isSelectAll = false
-    // this.update()
-    this.editor.events.onSelectionUpdated?.(new Set(), null)
-  }*/
-
   public copySelected(): void {
     this.copiedItems = []
 
@@ -188,15 +214,16 @@ class SelectionManager {
     this.replace(new Set(newModules.keys()))
   }
 
-  public removeSelected(): void {
-    if (this.isSelectAll) {
-      this.editor.batchDelete('all', 'history-delete')
-    } else {
-      this.editor.batchDelete(this.selectedModules, 'history-delete')
-    }
+  /*
+    public removeSelected(): void {
+      if (this.isSelectAll) {
+        this.editor.batchDelete('all', 'history-delete')
+      } else {
+        this.editor.batchDelete(this.selectedModules, 'history-delete')
+      }
 
-    // this.editor.selectionManager.clear()
-  }
+      // this.editor.selectionManager.clear()
+    }*/
 
   private updateCopiedItemsDelta(): void {
     this.copiedItems.forEach(copiedItem => {
@@ -214,47 +241,6 @@ class SelectionManager {
     console.log(9)
     // this.updateVisibleSelectedModules()
     this.render()
-  }
-
-  public updateVisibleSelectedModules(/*visibleModuleMap: ModuleMap*/) {
-    const visibleModuleMap = this.editor.getVisibleModuleMap()
-    this.visibleSelectedModules.clear()
-    this.operationHandlers.clear()
-
-    visibleModuleMap.forEach(module => {
-      if (module.type === 'rectangle') {
-        const {x, y, id, width, height, rotation} = module as RectangleProps
-        const points = getBoxControlPoints(x, y, width, height, rotation)
-
-        points.forEach(point => {
-          // create manipulation handlers
-          this.operationHandlers.add(
-            {
-              id,
-              type: 'resize',
-              data: {
-                ...point,
-                r: this.editor.viewport.scale,
-              },
-            },
-          )
-        })
-      }
-
-      if (this.isSelectAll) {
-        visibleModuleMap.forEach(module => {
-          this.visibleSelectedModules.add(module.id)
-        })
-      } else {
-        if (this.selectedModules.has(module.id)) {
-          this.visibleSelectedModules.add(module.id)
-        }
-      }
-    })
-  }
-
-  public getVisibleSelectedModules() {
-    return new Set(this.visibleSelectedModules)
   }
 
   render() {

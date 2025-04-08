@@ -8,11 +8,6 @@ import {HistoryNode} from '../../engine/editor/history/DoublyLinkedList.ts'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 import {
   ModuleOperationType,
-  HistoryUpdatedHandler,
-  ModulesUpdatedHandler,
-  SelectionUpdatedHandler,
-  ViewportInfo,
-  ViewportUpdatedHandler,
 } from '../../engine/editor/type'
 import Header from '../header/Header.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
@@ -152,7 +147,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
             <LayerPanel data={sortedModules}
                         selected={selectedModules}
                         handleSelectModule={id => {
-                          executeAction('module-select', new Set([id]))
+                          executeAction('selection-modify', new Set([id]))
                         }}/>
             <HistoryPanel/>
           </div>

@@ -1,7 +1,7 @@
 import React, {createContext} from 'react'
-import Editor from "../../engine/editor/editor.ts"
-import {HistoryNode} from "../../engine/editor/history/DoublyLinkedList.ts"
-import {ModuleOperationType, ViewportInfo} from "../../engine/editor/type"
+import Editor from '../../engine/editor/editor.ts'
+import {HistoryNode} from '../../engine/editor/history/DoublyLinkedList.ts'
+import {ModuleMoveDirection, ModuleOperationType, ViewportInfo} from '../../engine/editor/type'
 
 interface EditorContextType {
   focused: boolean
@@ -11,7 +11,7 @@ interface EditorContextType {
   selectedProps: ModuleProps
   editorRef: React.RefObject<Editor | null>
   applyHistoryNode: (node: HistoryNode) => void
-  executeAction: (code: ModuleOperationType, data?: never) => void
+  executeAction: (code: ModuleOperationType, data?: ModuleMoveDirection | never) => void
   viewport: ViewportInfo
 }
 
@@ -36,8 +36,8 @@ const EditorContext = createContext<EditorContextType>({
     scale: 1,
     dx: 0,
     dy: 0,
-    status: ''
-  }
+    status: '',
+  },
 })
 
 export default EditorContext

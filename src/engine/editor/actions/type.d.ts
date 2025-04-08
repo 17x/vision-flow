@@ -1,5 +1,6 @@
 import {SelectionActionMode} from '../selection/type'
 import {HistoryNode} from '../history/DoublyLinkedList.ts'
+import {ModuleMoveDirection} from '../type'
 
 type EditorEventType = EditorEvents['type'];
 type EditorEventData = EditorEvents['data'];
@@ -13,13 +14,14 @@ export type EditorEvents =
   | SelectionCopyEvent
   | SelectionPasteEvent
   | SelectionDuplicateEvent
+  | SelectionMove
+  | SelectionClearEvent
+  | SelectionDeleteEvent
   | ModulePasteEvent
   | ModuleRedoEvent
   | ModuleUndoEvent
   | ModuleDuplicateEvent
   | ModuleDeleteEvent
-  | SelectionClearEvent
-  | SelectionDeleteEvent
   | ModuleModifyEvent
   | ModuleMoveEvent
   | ModuleMoveStartEvent
@@ -61,6 +63,7 @@ export type SelectionCopyEvent = EventBase<'selection-copy', never>;
 export type SelectionPasteEvent = EventBase<'selection-paste', never>;
 export type SelectionDuplicateEvent = EventBase<'selection-duplicate', never>;
 export type SelectionDeleteEvent = EventBase<'selection-delete', never>;
+export type SelectionMove = EventBase<'selection-move', ModuleMoveDirection>;
 export type SelectAllEvent = EventBase<'select-all', null>;
 
 export type ModulePasteEvent = EventBase<'selection-paste', never>;
@@ -80,18 +83,6 @@ export type ModuleMoveRightEvent = EventBase<'module-move-right', never>;
 export type HistoryRedoEvent = EventBase<'history-redo', null>;
 export type HistoryUndoEvent = EventBase<'history-undo', null>;
 export type HistoryPickEvent = EventBase<'history-pick', HistoryNode>
-/*export type HistoryInitEvent = EventBase<'history-init', never>;
-export type HistoryAddEvent = EventBase<'history-add', never>;
-export type HistoryDeleteEvent = EventBase<'history-delete', never>;
-export type HistoryPasteEvent = EventBase<'history-paste', never>;
-export type HistoryDuplicateEvent = EventBase<'history-duplicate', never>;
-export type HistoryModifyEvent = EventBase<'history-modify', never>;
-export type HistoryMoveEvent = EventBase<'history-move', never>;
-export type HistoryReorderEvent = EventBase<'history-reorder', never>;
-export type HistorySelectEvent = EventBase<'history-select', never>;
-export type HistoryGroupEvent = EventBase<'history-group', never>;
-export type HistoryUngroupEvent = EventBase<'history-ungroup', never>;
-export type HistoryCompositeEvent = EventBase<'history-composite', never>;*/
 
 export type ViewportResizeEvent = EventBase<'viewport-resize', null>;
 export type ViewportMouseDownEvent = EventBase<'viewport-mouse-down', never>;

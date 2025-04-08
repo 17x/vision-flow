@@ -107,8 +107,8 @@ class Editor {
     return batchDelete.call(this, from)
   }
 
-  batchMove(from: 'all' | Set<UID>, delta: Point, historyCode?: Extract<HistoryOperationType, 'history-move'>) {
-    batchMove.call(this, from, delta, historyCode)
+  batchMove(from: 'all' | Set<UID>, delta: Point) {
+    batchMove.call(this, from, delta)
   }
 
   batchModify(from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryOperationType) {

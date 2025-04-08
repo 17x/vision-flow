@@ -18,6 +18,7 @@ export type ModuleOperationType =
   | 'selection-copy'
   | 'selection-delete'
   | 'selection-paste'
+  | 'selection-move'
   | 'history-redo'
   | 'history-undo'
   | 'history-pick'

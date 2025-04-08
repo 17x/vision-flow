@@ -104,19 +104,8 @@ export function batchMove(this: Editor, from: 'all' | Set<UID>, delta: Point) {
     module.y += delta.y
   })
 
-  this.events.onModulesUpdated?.(this.moduleMap)
-  this.events.onSelectionUpdated?.(this.selectedModules, this.getIfUnique())
-/*
-  if (historyCode) {
-    this.history.add({
-      type: 'history-move',
-      payload: {
-        delta,
-        selectedModules: from,
-      },
-
-    })
-  }*/
+  // this.events.onModulesUpdated?.(this.moduleMap)
+  // this.events.onSelectionUpdated?.(this.selectedModules, this.getIfUnique())
 }
 
 export function batchModify(this: Editor, from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryOperationType) {

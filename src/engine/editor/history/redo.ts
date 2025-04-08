@@ -9,7 +9,7 @@ export function redo(this: Editor, quiet: boolean = false): HistoryNode | false 
 
   const {type, payload} = this.history.current!.data
   const {selectedModules} = payload
-  console.log(selectedModules)
+
   switch (type) {
     case 'history-init':
       break

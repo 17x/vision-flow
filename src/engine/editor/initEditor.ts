@@ -5,6 +5,7 @@ import Editor from './editor.ts'
 import {redo} from './history/redo.ts'
 import {undo} from './history/undo.ts'
 import {pick} from './history/pick.ts'
+import {ModuleMoveDirection} from './type'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
@@ -165,6 +166,49 @@ export function initEditor(this: Editor) {
         },
       },
     )
+  })
+
+  this.action.on('selection-move', (data: ModuleMoveDirection) => {
+    let backup: 'all' | Set<UID>
+
+    const MODULE_MOVE_STEP = 5
+    console.log(data)
+    const delta = {x: 0, y: 0}
+    switch (data) {
+      case 'module-move-down':
+        delta.y = MODULE_MOVE_STEP
+        break
+      case 'module-move-up':
+        delta.y = -MODULE_MOVE_STEP
+        break
+      case 'module-move-left':
+        delta.x = -MODULE_MOVE_STEP
+        break
+      case 'module-move-right':
+        delta.x = MODULE_MOVE_STEP
+        break
+    }
+
+    if (this.isSelectAll) {
+      this.batchMove('all', delta)
+      backup = 'all'
+    } else {
+      backup = new Set(this.selectedModules)
+      this.batchMove(this.selectedModules, delta)
+    }
+
+    this.dispatchVisibleSelectedModules()
+    this.updateVisibleModuleMap()
+    this.action.dispatch({type: 'visible-module-update'})
+
+    this.history.add({
+      type: 'history-move',
+      payload: {
+        delta,
+        selectedModules: backup,
+      },
+
+    })
   })
 
   this.action.on('history-undo', () => {

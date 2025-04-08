@@ -31,7 +31,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
         moduleMap.get(id).y -= y
       })
 
-      this.batchMove(new Set(handlingModules), {x, y}, 'history-move')
+      this.batchMove(new Set(handlingModules), {x, y})
       this.replace(handlingModules)
     }
       break

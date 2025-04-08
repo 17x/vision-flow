@@ -113,7 +113,7 @@ export function batchDelete(this: Editor, from: 'all' | Set<UID>, historyCode?: 
 
   // this.updateVisibleModuleMap(this.viewport.worldRect)
   // this.render()
-  this.events.onModulesUpdated?.(this.moduleMap)
+  // this.events.onModulesUpdated?.(this.moduleMap)
 
   return backup
 }

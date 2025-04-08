@@ -98,7 +98,7 @@ export function initEditor(this: Editor) {
   })
 
   this.action.on('selection-delete', () => {
-    this.batchDelete(this.selectedModules, 'history-delete')
+    this.batchDelete(this.isSelectAll ? 'all' : this.selectedModules, 'history-delete')
     this.selectedModules.clear()
     this.isSelectAll = false
     this.dispatchVisibleSelectedModules()

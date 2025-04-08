@@ -10,7 +10,9 @@ import {ModuleMoveDirection} from './type'
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
 
+  // const shadow = container.attachShadow({mode: 'open'})
   container.appendChild(viewport.wrapper)
+
   viewport.resizeObserver.observe(container)
 
   action.on('viewport-resize', () => {
@@ -122,6 +124,8 @@ export function initEditor(this: Editor) {
   })
 
   this.action.on('selection-paste', () => {
+    if (this.copiedItems.length === 0) return
+
     const newModules = this.batchCreate(this.copiedItems)
     this.batchAdd(newModules)
     this.replace(new Set(newModules.keys()))
@@ -169,11 +173,12 @@ export function initEditor(this: Editor) {
   })
 
   this.action.on('selection-move', (data: ModuleMoveDirection) => {
-    let backup: 'all' | Set<UID>
+    if (!this.isSelectAll && this.selectedModules.size === 0) return
 
     const MODULE_MOVE_STEP = 5
-    console.log(data)
     const delta = {x: 0, y: 0}
+    let backup: 'all' | Set<UID>
+
     switch (data) {
       case 'module-move-down':
         delta.y = MODULE_MOVE_STEP

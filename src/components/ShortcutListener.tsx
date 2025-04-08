@@ -66,7 +66,7 @@ const ShortcutListener: React.FC = () => {
   }
 
   useEffect(() => {
-    if (!focused) return
+    // if (!focused) return
 
     window.addEventListener('keydown', handleKeyPress)
 

@@ -50,7 +50,8 @@ class Editor {
   copiedItems: ModuleProps[] = []
   hoveredModules: Set<UID> = new Set()
   draggingModules: Set<UID> = new Set()
-  selectingModules: Set<UID> = new Set()
+  _selectingModules: Set<UID> = new Set()
+  _lastSelectedOne: UID | null = null
   selectedShadow: Set<UID> = new Set()
   manipulationStatus: ViewportManipulationType = 'static'
   CopyDeltaX = 50

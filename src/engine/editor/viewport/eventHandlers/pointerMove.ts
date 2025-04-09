@@ -1,8 +1,9 @@
 import {updateSelectionBox} from '../domManipulations.ts'
-import Rectangle from '../../../core/modules/shapes/rectangle.ts'
-import {generateBoundingRectFromTwoPoints, isInsideRotatedRect, rectInside} from '../../../core/utils.ts'
+// import Rectangle from '../../../core/modules/shapes/rectangle.ts'
+import {generateBoundingRectFromTwoPoints, rectInside} from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
 import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
+import {updateHoveredModules} from './funcs.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
   const {
@@ -12,7 +13,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     viewport,
     hoveredModules,
     selectedShadow,
-    selectingModules,
+    _selectingModules,
   } = this
   viewport.mouseMovePoint.x = e.clientX - viewport.rect!.x
   viewport.mouseMovePoint.y = e.clientY - viewport.rect!.y
@@ -41,7 +42,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
         }
       })
 
-      const selectingChanged = !areSetsEqual(selectingModules, _selecting)
+      const selectingChanged = !areSetsEqual(_selectingModules, _selecting)
 
       updateSelectionBox(viewport.selectionBox, rect)
 
@@ -54,7 +55,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
        */
       if (!selectingChanged) return
 
-      this.selectingModules = _selecting
+      this._selectingModules = _selecting
 
       const SD = getSymmetricDifference(selectedShadow, _selecting)
 
@@ -127,19 +128,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       break
 
     case 'static': {
-      const virtualPoint = this.getWorldPointByViewportPoint(viewport.mouseMovePoint.x, viewport.mouseMovePoint.y)
-
-      hoveredModules.clear()
-      this.getVisibleModuleMap().forEach((module) => {
-        if (module.type === 'rectangle') {
-          const {x, y, width, height, rotation} = (module as Rectangle)
-          const f = isInsideRotatedRect(virtualPoint, {x, y, width, height}, rotation)
-
-          if (f) {
-            hoveredModules.add(module.id)
-          }
-        }
-      })
+      updateHoveredModules.call(this)
 
       // console.log(hoveredModules)
 

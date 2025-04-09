@@ -1,21 +1,29 @@
 import Editor from '../../editor.ts'
+import {updateHoveredModules} from './funcs.ts'
 
 function handleMouseDown(this: Editor, e: MouseEvent) {
-  const {shiftKey, clientY, target, button, clientX, metaKey, ctrlKey} = e
-  const inViewport = target === this.viewport.wrapper
+  const {shiftKey, clientY, target, /*button,*/ clientX, metaKey, ctrlKey} = e
+
+  if (!(target === this.viewport.wrapper)) return
+  // const inViewport = target === this.viewport.wrapper
   // const isLeftClick = button === 0
   const modifyKey = ctrlKey || metaKey || shiftKey
-  const closestId = [...this.hoveredModules][this.hoveredModules.size - 1]
 
-  if (!inViewport) return
+  const x = clientX - this.viewport.rect!.x
+  const y = clientY - this.viewport.rect!.y
 
-  this.viewport.mouseDownPoint.x = clientX - this.viewport.rect!.x
-  this.viewport.mouseDownPoint.y = clientY - this.viewport.rect!.y
+  this.viewport.mouseDownPoint.x = x
+  this.viewport.mouseDownPoint.y = y
+  this.viewport.mouseMovePoint.x = x
+  this.viewport.mouseMovePoint.y = y
+  updateHoveredModules.call(this)
   e.preventDefault()
 
   if (this.viewport.spaceKeyDown) {
     return this.manipulationStatus = 'panning'
   }
+
+  const closestId = [...this.hoveredModules][this.hoveredModules.size - 1]
 
   // Click on blank area and not doing multi-selection
   if (!closestId) {
@@ -62,6 +70,8 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
         idSet: new Set([closestId]),
       },
     })
+    this._lastSelectedOne = closestId
+
     this.draggingModules.add(closestId)
   } else {
     // Dragging already selected module(s)

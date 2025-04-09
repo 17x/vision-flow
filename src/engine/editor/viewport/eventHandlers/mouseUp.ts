@@ -2,22 +2,17 @@ import {updateSelectionBox} from '../domManipulations.ts'
 import Editor from '../../editor.ts'
 
 function handleMouseUp(this: Editor, e: MouseEvent) {
-  const {draggingModules, manipulationStatus, moduleMap, selectingModules, selectedShadow, viewport} = this
+  const {draggingModules, manipulationStatus, moduleMap, _selectingModules, selectedShadow, viewport} = this
   const x = e.clientX - viewport.rect!.x
   const y = e.clientY - viewport.rect!.y
-  // const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
-  console.log('up',manipulationStatus)
+  const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
+  // console.log('up',manipulationStatus)
   viewport.mouseMovePoint.x = x
   viewport.mouseMovePoint.y = y
 
   switch (manipulationStatus) {
     case 'selecting':
-      /*      console.warn(this.selectedShadow)
-            console.warn(this.selectingModules)
-            console.warn(this.draggingModules)
-            console.warn(this.selectedModules)*/
-      // this.viewport.resetSelectionCanvas()
-      // this.viewport.renderSelectionCanvas()
+
       break
 
     case 'panning':
@@ -28,9 +23,10 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
     case 'dragging': {
       const x = (viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) * viewport.dpr / viewport.scale
       const y = (viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) * viewport.dpr / viewport.scale
+      const moved = !(x === 0 && y === 0)
 
       // mouse stay static
-      if (!(x === 0 && y === 0)) {
+      if (moved) {
         // move back to origin position and do the move again
         draggingModules.forEach((id) => {
           moduleMap.get(id).x -= x
@@ -44,6 +40,20 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
             delta: {x, y},
           },
         })
+      } else {
+        const closestId = [...this.hoveredModules][this.hoveredModules.size - 1]
+        // console.log(closestId)
+        console.log(this._lastSelectedOne)
+        console.log(closestId)
+        if (closestId && modifyKey && closestId === this._lastSelectedOne) {
+          this.action.dispatch({
+            type: 'selection-modify',
+            data: {
+              mode: 'toggle',
+              idSet: new Set([closestId]),
+            },
+          })
+        }
       }
 
     }
@@ -82,8 +92,9 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
 
   draggingModules.clear()
   selectedShadow.clear()
-  selectingModules.clear()
+  _selectingModules.clear()
   this.manipulationStatus = 'static'
+  this._lastSelectedOne = null
   updateSelectionBox(viewport.selectionBox, {x: 0, y: 0, width: 0, height: 0}, false)
 }
 

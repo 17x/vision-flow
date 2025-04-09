@@ -104,10 +104,10 @@ export const drawCrossLine = ({
   ctx.restore()
 }
 
-export const copy = <T>(obj: T): T => {
-  if (typeCheck(obj) === 'set') {
-    return new Set([...(obj as Set<never>)]) as T
-  } else {
-    throw new Error('Unsupported type: Not a Set')
+export const areSetsEqual = <T>(setA: Set<T>, setB: Set<T>): boolean => {
+  if (setA.size !== setB.size) return false
+  for (const item of setA) {
+    if (!setB.has(item)) return false
   }
+  return true
 }

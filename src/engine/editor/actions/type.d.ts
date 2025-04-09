@@ -94,4 +94,4 @@ export type WorldZoomEvent = EventBase<'world-zoom', {
 }>
 export type WorldShiftEvent = EventBase<'world-shift', Point>;
 export type WorldUpdateEvent = EventBase<'world-update'>;
-export type WorldMouseMoveEvent = EventBase<'world-mouse-move', Point>;
+export type WorldMouseMoveEvent = EventBase<'world-mouse-move'>;

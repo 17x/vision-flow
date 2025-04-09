@@ -3,6 +3,7 @@ import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 import {generateBoundingRectFromTwoPoints, isInsideRotatedRect, rectInside} from '../../../core/utils.ts'
 import {SelectionActionMode} from '../../selection/type'
 import Editor from '../../editor.ts'
+import {areSetsEqual} from '../../../lib/lib.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
   const {
@@ -11,49 +12,53 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     moduleMap,
     viewport,
     hoveredModules,
+    selectingModules,
   } = this
   viewport.mouseMovePoint.x = e.clientX - viewport.rect!.x
   viewport.mouseMovePoint.y = e.clientY - viewport.rect!.y
   viewport.drawCrossLine = false
   hoveredModules.clear()
 
-  action.dispatch({
-    type: 'world-mouse-move',
-    data: this.getWorldPointByViewportPoint(viewport.mouseMovePoint.x, viewport.mouseMovePoint.y),
-  })
+  action.dispatch({type: 'world-mouse-move'})
 
   switch (this.manipulationStatus) {
     case 'selecting': {
       viewport.wrapper.setPointerCapture(e.pointerId)
-
       const rect = generateBoundingRectFromTwoPoints(viewport.mouseDownPoint, viewport.mouseMovePoint)
       const pointA = this.getWorldPointByViewportPoint(rect.x, rect.y)
-      const pointB = this.getWorldPointByViewportPoint(rect.x + rect.width, rect.y + rect.height)
+      const pointB = this.getWorldPointByViewportPoint(rect.right, rect.bottom)
       const virtualSelectionRect: BoundingRect = generateBoundingRectFromTwoPoints(pointA, pointB)
-      const idSet: Set<UID> = new Set()
-      let mode: SelectionActionMode = 'replace'
+      const _localSelectionModules: Set<UID> = new Set()
+      const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
+      const mode: SelectionActionMode = modifyKey ? 'toggle' : 'replace'
 
       this.getVisibleModuleMap().forEach((module) => {
         if (module.type === 'rectangle') {
           const boundingRect = module.getBoundingRect() as BoundingRect
 
           if (rectInside(boundingRect, virtualSelectionRect)) {
-            idSet.add(module.id)
+            _localSelectionModules.add(module.id)
           }
         }
       })
 
-      if ((e.ctrlKey || e.shiftKey || e.metaKey)) {
-        mode = 'add'
-      }
-
-      action.dispatch({
-        type: 'selection-modify', data: {mode, idSet},
-      })
+      const equal = areSetsEqual(selectingModules, _localSelectionModules)
 
       updateSelectionBox(viewport.selectionBox, rect)
-      // this.viewport.resetSelectionCanvas()
-      // this.viewport.renderSelectionCanvas()
+      console.log(equal)
+
+      if (equal) {
+        if (_localSelectionModules.size === 0) return
+
+      } else {
+        this.selectingModules = _localSelectionModules
+        action.dispatch({
+          type: 'selection-modify', data: {mode, _localSelectionModules},
+        })
+        console.log(_localSelectionModules,mode,this.selectedModules)
+
+      }
+
     }
       break
 

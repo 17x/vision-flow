@@ -5,74 +5,68 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
   const inViewport = target === this.viewport.wrapper
   const isLeftClick = button === 0
   const modifyKey = ctrlKey || metaKey || shiftKey
+  const closestId = [...this.hoveredModules][this.hoveredModules.size - 1]
 
   if (!inViewport || !isLeftClick) return
 
   this.viewport.mouseDownPoint.x = clientX - this.viewport.rect!.x
   this.viewport.mouseDownPoint.y = clientY - this.viewport.rect!.y
+  e.preventDefault()
 
   if (this.viewport.spaceKeyDown) {
-    this.manipulationStatus = 'panning'
-    return
+    return this.manipulationStatus = 'panning'
   }
 
-  if (this.hoveredModules.size > 0) {
-    const closetId = [...this.hoveredModules][this.hoveredModules.size - 1]
-
-    if (this.isSelectAll) {
-      this.moduleMap.forEach(module => {
-        this.draggingModules.add(module.id)
-      })
-    } else {
-      if (closetId) {
-        if (modifyKey) {
-          if (this.selectedModules.has(closetId)) {
-            this.draggingModules = new Set(this.selectedModules)
-            this.draggingModules.delete(closetId)
-          } else {
-
-            this.draggingModules = new Set(this.selectedModules)
-            this.draggingModules.add(closetId)
-
-            this.action.dispatch({
-              type: 'selection-modify',
-              data: {
-                mode: 'toggle',
-                idSet: new Set([closetId]),
-              },
-            })
-
-            this.action.dispatch({
-              type: 'selection-modify',
-              data: {
-                mode: 'replace',
-                idSet: new Set([closetId]),
-              },
-            })
-
-          }
-
-        }
-      } else {
-        console.log(11)
-        if (modifyKey) {
-          console.log('on blank A')
-        } else {
-          console.log('on blank No')
-
-        }
-      }
-    }
-
-    this.manipulationStatus = 'dragging'
-    e.preventDefault()
-  } else {
+  // Click on blank area and not doing multi-selection
+  if (!closestId) {
+    // Determine clear selected modules
     if (!modifyKey) {
       this.action.dispatch({type: 'selection-clear'})
     }
 
-    this.manipulationStatus = 'mousedown'
+    return this.manipulationStatus = 'selecting'
   }
+
+  this.manipulationStatus = 'dragging'
+
+  // Drag all
+  if (this.isSelectAll) {
+    this.moduleMap.forEach(module => {
+      this.draggingModules.add(module.id)
+    })
+
+    return
+  }
+
+  // this.draggingModules = new Set(this.selectedModules)
+  const isSelected = this.selectedModules.has(closestId)
+
+  if (this.selectedModules.size === 0 || (!isSelected && !modifyKey)) {
+    // Initial selection or replace selection without modifier key
+    this.action.dispatch({
+      type: 'selection-modify',
+      data: {
+        mode: 'replace',
+        idSet: new Set([closestId]),
+      },
+    })
+    this.draggingModules = new Set([closestId])
+  } else if (!isSelected && modifyKey) {
+    // Add to existing selection
+    this.draggingModules = new Set(this.selectedModules)
+    this.action.dispatch({
+      type: 'selection-modify',
+      data: {
+        mode: 'add',
+        idSet: new Set([closestId]),
+      },
+    })
+    this.draggingModules.add(closestId)
+  } else {
+    // Dragging already selected module(s)
+    this.draggingModules = new Set(this.selectedModules)
+  }
+
 }
 
 export default handleMouseDown

@@ -22,7 +22,7 @@ export function modifySelection(this: Editor, idSet: Set<UID>, action: Selection
   if (action === 'replace') {
     this.selectedModules.clear()
   }
-
+  console.log(action)
   idSet.forEach((id) => {
     switch (action) {
       case 'add':
@@ -42,6 +42,8 @@ export function modifySelection(this: Editor, idSet: Set<UID>, action: Selection
         this.selectedModules.add(id)
         break
     }
+
+    console.log(this.selectingModules)
   })
 
   // this.events.onSelectionUpdated?.(idSet, eventCallBackData)

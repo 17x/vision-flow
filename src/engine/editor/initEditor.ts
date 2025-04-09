@@ -32,8 +32,9 @@ export function initEditor(this: Editor) {
     this.action.dispatch({type: 'world-update'})
   })
 
-  this.action.on('world-mouse-move', (data) => {
-    this.events.onWorldMouseMove?.(data as Point)
+  this.action.on('world-mouse-move', () => {
+    const p = this.getWorldPointByViewportPoint(this.viewport.mouseMovePoint.x, this.viewport.mouseMovePoint.y)
+    this.events.onWorldMouseMove?.(p as Point)
   })
 
   this.action.on('world-update', () => {

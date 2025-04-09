@@ -127,13 +127,23 @@ export function initEditor(this: Editor) {
     if (this.copiedItems.length === 0) return
 
     const newModules = this.batchCreate(this.copiedItems)
+    const idSet = new Set(newModules.keys())
+
     this.batchAdd(newModules)
-    this.replace(new Set(newModules.keys()))
+    this.replace(idSet)
     this.updateCopiedItemsDelta()
 
     this.dispatchVisibleSelectedModules()
     this.updateVisibleModuleMap()
     this.action.dispatch({type: 'visible-module-update'})
+
+    this.history.add({
+      type: 'history-paste',
+      payload: {
+        modules: [...newModules.values()].map(mod => mod.getDetails()),
+        selectedModules: this.getSelected(),
+      },
+    })
   })
 
   this.action.on('selection-duplicate', () => {
@@ -163,7 +173,7 @@ export function initEditor(this: Editor) {
     // this.getSelected()
 
     this.history.add({
-        type: 'history-add',
+        type: 'history-duplicate',
         payload: {
           modules: moduleProps,
           selectedModules: this.getSelected(),
@@ -237,7 +247,7 @@ export function initEditor(this: Editor) {
     this.events.onHistoryUpdated?.(this.history)
   })
 
-  this.action.on('context-menu', ({idSet,position}) => {
-    this.events.onContextMenu?.(idSet,position)
+  this.action.on('context-menu', ({idSet, position}) => {
+    this.events.onContextMenu?.(idSet, position)
   })
 }

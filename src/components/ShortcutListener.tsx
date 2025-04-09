@@ -15,7 +15,7 @@ const ShortcutListener: React.FC = () => {
       ArrowLeft: 'module-move-left',
       ArrowRight: 'module-move-right',
     }
-    const moveData = arrowKeys[key]
+    const moveDirection = arrowKeys[key]
 
     if (key === 'a' && (ctrlKey || metaKey)) {
       shortcutCode = 'select-all'
@@ -49,15 +49,15 @@ const ShortcutListener: React.FC = () => {
       shortcutCode = 'history-redo'
     }
 
-    if (moveData) {
+    if (moveDirection) {
       // shortcutCode = arrowKeys[key]
       shortcutCode = 'selection-move'
     }
 
     if (!shortcutCode) return
 
-    if (moveData) {
-      executeAction(shortcutCode, moveData)
+    if (moveDirection) {
+      executeAction(shortcutCode, {direction: moveDirection})
     } else {
       executeAction(shortcutCode)
     }

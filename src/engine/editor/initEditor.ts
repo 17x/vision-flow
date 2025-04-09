@@ -1,6 +1,6 @@
 import {fitRectToViewport} from './viewport/helper.ts'
 import resetCanvas from './viewport/resetCanvas.tsx'
-import {SelectionModifyData} from './actions/type'
+import {SelectionModifyData, SelectionMoveData} from './actions/type'
 import Editor from './editor.ts'
 import {redo} from './history/redo.ts'
 import {undo} from './history/undo.ts'
@@ -173,14 +173,15 @@ export function initEditor(this: Editor) {
     )
   })
 
-  this.action.on('selection-move', (data: ModuleMoveDirection) => {
+  this.action.on('selection-move', ({direction, delta = {x: 0, y: 0}}: SelectionMoveData) => {
     if (!this.isSelectAll && this.selectedModules.size === 0) return
 
     const MODULE_MOVE_STEP = 5
-    const delta = {x: 0, y: 0}
+    console.log(direction, delta)
+
     let backup: 'all' | Set<UID>
 
-    switch (data) {
+    switch (direction) {
       case 'module-move-down':
         delta.y = MODULE_MOVE_STEP
         break
@@ -213,7 +214,6 @@ export function initEditor(this: Editor) {
         delta,
         selectedModules: backup,
       },
-
     })
   })
 

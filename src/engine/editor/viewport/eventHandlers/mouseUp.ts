@@ -11,10 +11,10 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
 
   switch (manipulationStatus) {
     case 'selecting':
-/*      console.warn(this.selectedShadow)
-      console.warn(this.selectingModules)
-      console.warn(this.draggingModules)
-      console.warn(this.selectedModules)*/
+      /*      console.warn(this.selectedShadow)
+            console.warn(this.selectingModules)
+            console.warn(this.draggingModules)
+            console.warn(this.selectedModules)*/
       // this.viewport.resetSelectionCanvas()
       // this.viewport.renderSelectionCanvas()
       break
@@ -34,7 +34,14 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
         moduleMap.get(id).y -= y
       })
 
-      this.batchMove(new Set(draggingModules), {x, y})
+      this.action.dispatch({
+        type: 'selection-move',
+        data: {
+          direction: 'module-move-shift',
+          delta: {x, y},
+        },
+      })
+      // this.batchMove(new Set(draggingModules), {x, y})
       this.replace(draggingModules)
     }
       break

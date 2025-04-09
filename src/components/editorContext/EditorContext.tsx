@@ -1,7 +1,8 @@
 import React, {createContext} from 'react'
 import Editor from '../../engine/editor/editor.ts'
 import {HistoryNode} from '../../engine/editor/history/DoublyLinkedList.ts'
-import {ModuleMoveDirection, ModuleOperationType, ViewportInfo} from '../../engine/editor/type'
+import {ModuleOperationType, ViewportInfo} from '../../engine/editor/type'
+import {SelectionMoveData} from '../../engine/editor/actions/type'
 
 interface EditorContextType {
   focused: boolean
@@ -11,7 +12,7 @@ interface EditorContextType {
   selectedProps: ModuleProps
   editorRef: React.RefObject<Editor | null>
   applyHistoryNode: (node: HistoryNode) => void
-  executeAction: (code: ModuleOperationType, data?: ModuleMoveDirection | never) => void
+  executeAction: (code: ModuleOperationType, data?: SelectionMoveData | never) => void
   viewport: ViewportInfo
 }
 

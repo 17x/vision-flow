@@ -10,7 +10,8 @@ export type ModuleMoveDirection =
   'module-move-up' |
   'module-move-down' |
   'module-move-left' |
-  'module-move-right'
+  'module-move-right'|
+  'module-move-shift'
 
 export type ModuleOperationType =
   'select-all'

@@ -63,7 +63,11 @@ export type SelectionCopyEvent = EventBase<'selection-copy', never>;
 export type SelectionPasteEvent = EventBase<'selection-paste', never>;
 export type SelectionDuplicateEvent = EventBase<'selection-duplicate', never>;
 export type SelectionDeleteEvent = EventBase<'selection-delete', never>;
-export type SelectionMove = EventBase<'selection-move', ModuleMoveDirection>;
+export type SelectionMoveData = {
+  direction: ModuleMoveDirection
+  delta?: Point
+}
+export type SelectionMove = EventBase<'selection-move', SelectionMoveData>;
 export type SelectAllEvent = EventBase<'select-all', null>;
 
 export type ModulePasteEvent = EventBase<'selection-paste', never>;

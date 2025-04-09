@@ -50,76 +50,30 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       /**
        * Simple logic
        * If with modifyKey
-       *    original-selected merge selecting
+       *    original-selected Symmetric Difference selecting
        * else
        *    original-selected merge selecting
        */
-      if (!selectingChanged) {
-        return
-      }
+      if (!selectingChanged) return
 
       this.selectingModules = _selecting
 
-        const SD = getSymmetricDifference(selectedShadow, _selecting)
-      if (modifyKey) {
+      const SD = getSymmetricDifference(selectedShadow, _selecting)
 
+      if (modifyKey) {
         action.dispatch({
           type: 'selection-modify', data: {mode: 'replace', idSet: SD},
         })
       } else {
         if (_selecting.size === 0 && selectedShadow.size === 0) {
-          action.dispatch({
-            type: 'selection-clear',
-          })
-          return
+          return action.dispatch({type: 'selection-clear'})
         }
         const newSet = new Set([...selectedShadow, ..._selecting])
-        // console.warn(newSet)
+
         action.dispatch({
           type: 'selection-modify', data: {mode: 'replace', idSet: newSet},
         })
-        console.warn('selectedModules', Date.now(), _selecting)
       }
-
-      // console.warn(this.selectedModules)
-
-      // return
-      // Selecting nothing now
-      /* if (_selecting.size === 0) {
-         // remove selected if existing
-         if (this.selectedShadow.size === 0) {
-           if (!modifyKey) {
-             action.dispatch({type: 'selection-clear'})
-           } else {
-             action.dispatch({
-               type: 'selection-modify', data: {mode: 'replace', idSet: this.selectedShadow},
-             })
-           }
-         } else {
-           action.dispatch({
-             type: 'selection-modify', data: {mode: 'replace', idSet: this.selectedShadow},
-           })
-         }
-       } else {
-         if (selectingChanged) {
-           action.dispatch({
-             type: 'selection-modify', data: {mode: 'delete', idSet: this.selectingModules},
-           })
-
-           if (modifyKey) {
-             action.dispatch({
-               type: 'selection-modify', data: {mode: 'toggle', idSet: _selecting},
-             })
-           } else {
-             action.dispatch({
-               type: 'selection-modify', data: {mode: 'add', idSet: _selecting},
-             })
-           }
-
-         }
-       }*/
-
-      // this.selectingModules = _selecting
     }
       break
 

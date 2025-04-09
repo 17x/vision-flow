@@ -74,7 +74,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
           return
         }
         const newSet = new Set([...selectedShadow, ..._selecting])
-        console.warn(newSet)
+        // console.warn(newSet)
         action.dispatch({
           type: 'selection-modify', data: {mode: 'replace', idSet: newSet},
         })

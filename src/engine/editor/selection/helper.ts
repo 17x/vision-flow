@@ -43,6 +43,8 @@ export function modifySelection(this: Editor, idSet: Set<UID>, action: Selection
     }
   })
 
+  this.isSelectAll = this.selectedModules.size === this.moduleMap.size
+  // console.log(this.selectedModules.size,this.moduleMap.size)
   // this.events.onSelectionUpdated?.(idSet, eventCallBackData)
 }
 

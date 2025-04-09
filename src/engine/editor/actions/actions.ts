@@ -36,8 +36,8 @@ class Action {
 
   public dispatch({type, data}: EditorEvents) {
     if ([''].includes(type)) {
-      console.info('action: ', type)
     }
+      console.info('action: ', type)
 
     if (this.eventsMap.has(type)) {
       this.eventsMap.get(type)!.forEach((cb) => {

@@ -34,6 +34,7 @@ const FileProvider: FC = () => {
   const listFileMap = () => Array.from(fileMap.current.values())
 
   const switchFile = (id: UID) => {
+    console.log(fileList)
     setCurrentFileId(id)
   }
 
@@ -66,6 +67,7 @@ const FileProvider: FC = () => {
     fileMap.current.set(file.id, file)
     updateFileList()
     setCurrentFileId(file.id)
+
   }
 
   const handleCreating = (v: boolean) => {

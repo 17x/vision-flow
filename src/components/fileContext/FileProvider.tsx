@@ -1,10 +1,10 @@
-import {FC, useEffect, useRef, useState} from "react"
-import CreateFile from "../CreateFile.tsx"
-import FileContext, {FileMap, FileType} from "./FileContext.tsx"
-import EditorProvider from "../editorContext/EditorProvider.tsx"
-import MOCK_FILE_MAP from "../../mock.ts"
-import Files from "../files/Files.tsx"
-import LanguageSwitcher from "../language/languageSwitcher.tsx"
+import {FC, useEffect, useRef, useState} from 'react'
+import CreateFile from '../CreateFile.tsx'
+import FileContext, {FileMap, FileType} from './FileContext.tsx'
+import EditorProvider from '../editorContext/EditorProvider.tsx'
+import MOCK_FILE_MAP from '../../mock.ts'
+import Files from '../files/Files.tsx'
+import LanguageSwitcher from '../language/languageSwitcher.tsx'
 
 const FileProvider: FC = () => {
   const fileMap = useRef<FileMap>(new Map())
@@ -13,7 +13,7 @@ const FileProvider: FC = () => {
   const [fileList, setFileList] = useState<FileType[]>([])
   const fileLen = fileMap.current.size
   const showCreateFile = fileLen === 0 || creating
-
+  console.log(currentFileId)
   useEffect(() => {
     if (MOCK_FILE_MAP.size > 0) {
       fileMap.current = MOCK_FILE_MAP
@@ -60,7 +60,6 @@ const FileProvider: FC = () => {
 
       setCurrentFileId(fileList[newOpenFileIndex].id)
     }
-
   }
 
   const createFile = (file: FileType) => {
@@ -87,15 +86,15 @@ const FileProvider: FC = () => {
       <div className={'w-full h-full flex flex-col select-none'}>
         <div className={'flex justify-between'}>
           <Files/>
-         <LanguageSwitcher />
+          <LanguageSwitcher/>
         </div>
-        
+
         <div className={'flex-1 overflow-hidden min-h-[600px]'}>
           {
             fileList.map(file =>
               file.id === currentFileId ?
                 <EditorProvider key={file.id} file={file}/>
-                : undefined
+                : undefined,
             )
           }
         </div>

@@ -75,6 +75,9 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           onWorldMouseMove: (point) => {
             setWorldPoint(point)
           },
+          onContextMenu:(idSet)=>{
+            console.log(idSet)
+          }
         },
       })
 

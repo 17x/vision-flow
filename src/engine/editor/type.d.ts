@@ -10,7 +10,7 @@ export type ModuleMoveDirection =
   'module-move-up' |
   'module-move-down' |
   'module-move-left' |
-  'module-move-right'|
+  'module-move-right' |
   'module-move-shift'
 
 export type ModuleOperationType =
@@ -67,6 +67,7 @@ type SelectionUpdatedHandler = (selected: Set<UID> | 'all', selectedProps?: Modu
 type ViewportUpdatedHandler = (viewportInfo: BoundingRect) => void;
 type WorldUpdatedHandler = (worldInfo: WorldInfo) => void;
 type WorldMouseMoveUpdatedHandler = (point: Point) => void;
+type ContextMenuHandler = (idSet: Set<UID>) => void;
 
 export declare type EventHandlers = {
   onHistoryUpdated?: HistoryUpdatedHandler
@@ -75,4 +76,5 @@ export declare type EventHandlers = {
   onViewportUpdated?: ViewportUpdatedHandler
   onWorldUpdated?: WorldUpdatedHandler
   onWorldMouseMove?: WorldMouseMoveUpdatedHandler
+  onContextMenu?: ContextMenuHandler
 }

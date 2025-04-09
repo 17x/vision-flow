@@ -237,4 +237,8 @@ export function initEditor(this: Editor) {
     this.action.dispatch({type: 'visible-module-update'})
     this.events.onHistoryUpdated?.(this.history)
   })
+
+  this.action.on('context-menu', (data) => {
+    this.events.onContextMenu?.(data)
+  })
 }

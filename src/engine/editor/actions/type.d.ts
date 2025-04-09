@@ -41,6 +41,7 @@ export type EditorEvents =
   | WorldShiftEvent
   | WorldUpdateEvent
   | WorldMouseMoveEvent
+  | ContextMenuEvent
 
 export interface EventBase<T, P> {
   type: T;
@@ -99,3 +100,8 @@ export type WorldZoomEvent = EventBase<'world-zoom', {
 export type WorldShiftEvent = EventBase<'world-shift', Point>;
 export type WorldUpdateEvent = EventBase<'world-update'>;
 export type WorldMouseMoveEvent = EventBase<'world-mouse-move'>;
+
+export type ContextMenuEvent = EventBase<'context-menu', {
+  idSet: Set<UID>
+  position: Position
+}>;

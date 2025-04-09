@@ -10,8 +10,32 @@ function handleContextMenu(this: Editor, e: MouseEvent) {
   if (e.ctrlKey) {
     return false
   }
-  // console.log(this.hoveredModules)
+
   const lastId = [...this.hoveredModules][this.hoveredModules.size - 1]
+  const selectedIdSet = this.getSelectedIdSet()
+
+  if (lastId) {
+    if (selectedIdSet.has(lastId)) {
+      this.action.dispatch({
+        type: 'context-menu',
+        data: {
+          idSet: selectedIdSet,
+          position: {...this.viewport.mouseMovePoint},
+        },
+      })
+    } else {
+      this.action.dispatch({
+        type: 'context-menu',
+        data: {
+          idSet: new Set([lastId]),
+          position: {...this.viewport.mouseMovePoint},
+        },
+      })
+    }
+  }
+
+  return
+  // console.log(this.hoveredModules)
   const remove = (event: MouseEvent) => {
     const dom = event.target as HTMLElement
     // console.log(dom)
@@ -96,7 +120,6 @@ function handleContextMenu(this: Editor, e: MouseEvent) {
 
   this.viewport.wrapper.append(contextMenuDom)
   window.addEventListener('mousedown', remove)
-
 }
 
 export default handleContextMenu

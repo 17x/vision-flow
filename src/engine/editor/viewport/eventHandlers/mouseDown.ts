@@ -37,20 +37,23 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
   }
 
   this.manipulationStatus = 'dragging'
+  const realSelected = this.getSelectedIdSet()
 
   // Drag all
   if (this.isSelectAll) {
-    this.moduleMap.forEach(module => {
-      this.draggingModules.add(module.id)
+    realSelected.forEach(id => {
+      this.draggingModules.add(id)
     })
+
+    this._deselection = closestId
 
     return
   }
 
   // this.draggingModules = new Set(this.selectedModules)
-  const isSelected = this.selectedModules.has(closestId)
+  const isSelected = realSelected.has(closestId)
 
-  if (this.selectedModules.size === 0 || (!isSelected && !modifyKey)) {
+  if (realSelected.size === 0 || (!isSelected && !modifyKey)) {
     // Initial selection or replace selection without modifier key
     this.action.dispatch({
       type: 'selection-modify',
@@ -61,11 +64,14 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
     })
     this.draggingModules = new Set([closestId])
   } else if (modifyKey) {
+    this.draggingModules = new Set(realSelected)
+
     if (isSelected) {
+      console.log('isSelected', isSelected)
       this._deselection = closestId
+      this.draggingModules.add(closestId)
     } else {
       // Add to existing selection
-      this.draggingModules = new Set(this.selectedModules)
       this.action.dispatch({
         type: 'selection-modify',
         data: {
@@ -74,11 +80,11 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
         },
       })
     }
-
     this.draggingModules.add(closestId)
+
   } else {
     // Dragging already selected module(s)
-    this.draggingModules = new Set(this.selectedModules)
+    this.draggingModules = new Set(realSelected)
   }
 
 }

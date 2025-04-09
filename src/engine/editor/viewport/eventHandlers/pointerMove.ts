@@ -3,7 +3,7 @@ import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 import {generateBoundingRectFromTwoPoints, isInsideRotatedRect, rectInside} from '../../../core/utils.ts'
 import {SelectionActionMode} from '../../selection/type'
 import Editor from '../../editor.ts'
-import {areSetsEqual} from '../../../lib/lib.ts'
+import {areSetsEqual, getIntersection, getSymmetricDifference} from '../../../lib/lib.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
   const {
@@ -12,6 +12,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     moduleMap,
     viewport,
     hoveredModules,
+    selectedShadow,
     selectingModules,
   } = this
   viewport.mouseMovePoint.x = e.clientX - viewport.rect!.x
@@ -42,48 +43,83 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
         }
       })
 
-      const selectingNotChanged = areSetsEqual(this.selectingModules, _selecting)
+      const selectingChanged = !areSetsEqual(this.selectingModules, _selecting)
 
       updateSelectionBox(viewport.selectionBox, rect)
 
-      this.selectedShadow = new Set(_selecting)
-
-      // Selecting nothing now
-      if (_selecting.size === 0) {
-        // remove selected if existing
-        if (this.selectedShadow.size === 0) {
-          if (!modifyKey) {
-            action.dispatch({type: 'selection-clear'})
-          }else{
-            console.log('replace')
-            action.dispatch({
-              type: 'selection-modify', data: {mode: 'replace', idSet: this.selectedShadow},
-            })
-          }
-        } else {
-          action.dispatch({
-            type: 'selection-modify', data: {mode: 'replace', idSet: this.selectedShadow},
-          })
-        }
-      } else {
-        if (!selectingNotChanged) {
-          action.dispatch({
-            type: 'selection-modify', data: {mode: 'delete', idSet: this.selectingModules},
-          })
-
-          if (modifyKey) {
-            action.dispatch({
-              type: 'selection-modify', data: {mode: 'toggle', idSet: _selecting},
-            })
-          } else {
-            action.dispatch({
-              type: 'selection-modify', data: {mode: 'add', idSet: _selecting},
-            })
-          }
-
-          this.selectingModules = _selecting
-        }
+      /**
+       * Simple logic
+       * If with modifyKey
+       *    original-selected merge selecting
+       * else
+       *    original-selected merge selecting
+       */
+      if (!selectingChanged) {
+        return
       }
+
+      this.selectingModules = _selecting
+
+        const SD = getSymmetricDifference(selectedShadow, _selecting)
+      if (modifyKey) {
+
+        action.dispatch({
+          type: 'selection-modify', data: {mode: 'replace', idSet: SD},
+        })
+      } else {
+        if (_selecting.size === 0 && selectedShadow.size === 0) {
+          action.dispatch({
+            type: 'selection-clear',
+          })
+          return
+        }
+        const newSet = new Set([...selectedShadow, ..._selecting])
+        console.warn(newSet)
+        action.dispatch({
+          type: 'selection-modify', data: {mode: 'replace', idSet: newSet},
+        })
+        console.warn('selectedModules', Date.now(), _selecting)
+      }
+
+      // console.warn(this.selectedModules)
+
+      // return
+      // Selecting nothing now
+      /* if (_selecting.size === 0) {
+         // remove selected if existing
+         if (this.selectedShadow.size === 0) {
+           if (!modifyKey) {
+             action.dispatch({type: 'selection-clear'})
+           } else {
+             action.dispatch({
+               type: 'selection-modify', data: {mode: 'replace', idSet: this.selectedShadow},
+             })
+           }
+         } else {
+           action.dispatch({
+             type: 'selection-modify', data: {mode: 'replace', idSet: this.selectedShadow},
+           })
+         }
+       } else {
+         if (selectingChanged) {
+           action.dispatch({
+             type: 'selection-modify', data: {mode: 'delete', idSet: this.selectingModules},
+           })
+
+           if (modifyKey) {
+             action.dispatch({
+               type: 'selection-modify', data: {mode: 'toggle', idSet: _selecting},
+             })
+           } else {
+             action.dispatch({
+               type: 'selection-modify', data: {mode: 'add', idSet: _selecting},
+             })
+           }
+
+         }
+       }*/
+
+      // this.selectingModules = _selecting
     }
       break
 

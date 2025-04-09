@@ -11,7 +11,10 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
 
   switch (manipulationStatus) {
     case 'selecting':
-      console.log(this.draggingModules)
+/*      console.warn(this.selectedShadow)
+      console.warn(this.selectingModules)
+      console.warn(this.draggingModules)
+      console.warn(this.selectedModules)*/
       // this.viewport.resetSelectionCanvas()
       // this.viewport.renderSelectionCanvas()
       break

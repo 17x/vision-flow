@@ -35,8 +35,8 @@ class Action {
   }
 
   public dispatch({type, data}: EditorEvents) {
-    if (![ 'world-shift', 'world-mouse-move', 'visible-selected-update', /*'selection-modify'*/].includes(type)) {
-      console.log('action: ', type)
+    if ([''].includes(type)) {
+      console.info('action: ', type)
     }
 
     if (this.eventsMap.has(type)) {

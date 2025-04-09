@@ -111,3 +111,16 @@ export const areSetsEqual = <T>(setA: Set<T>, setB: Set<T>): boolean => {
   }
   return true
 }
+
+export const getSymmetricDifference = <T>(setA: Set<T>, setB: Set<T>): Set<T> => {
+  const result = new Set<T>()
+
+  for (const item of setA) {
+    if (!setB.has(item)) result.add(item)
+  }
+  for (const item of setB) {
+    if (!setA.has(item)) result.add(item)
+  }
+
+  return result
+}

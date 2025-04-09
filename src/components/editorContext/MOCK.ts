@@ -46,7 +46,7 @@ export const createMockData = (editor: Editor) => {
     modulesData.push({
       ...baseRectData,
       // fillColor: getRandomHexColor(),
-      fillColor: '#ed1c24',
+      fillColor: '#ededed',
       x,
       y,
       layer: i + 1,

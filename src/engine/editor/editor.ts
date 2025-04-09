@@ -186,6 +186,20 @@ class Editor {
     return new Set(this.selectedModules.keys())
   }
 
+  public getSelectedIdSet(): Set<UID> {
+    if (this.isSelectAll) {
+      const idSet = new Set<UID>()
+
+      this.moduleMap.forEach((module) => {
+        idSet.add(module.id)
+      })
+
+      return idSet
+    }
+
+    return new Set(this.selectedModules.keys())
+  }
+
   public modifySelection(idSet: Set<UID>, action: SelectionActionMode) {
     modifySelection.call(this, idSet, action)
   }

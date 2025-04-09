@@ -46,7 +46,6 @@ const Toolbar: React.FC = () => {
                     disabled={disabled}
                     title={tooltip}
                     onClick={() => {
-                      // console.log(id)
                       if (id === 'undo' || id === 'redo') {
                         executeAction('history-' + id as ModuleOperationType)
                       } else if (id === 'delete') {

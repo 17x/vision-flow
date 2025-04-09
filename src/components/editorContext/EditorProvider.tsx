@@ -75,9 +75,9 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           onWorldMouseMove: (point) => {
             setWorldPoint(point)
           },
-          onContextMenu:(idSet)=>{
-            console.log(idSet)
-          }
+          onContextMenu: (idSet, position) => {
+            console.log(idSet, position)
+          },
         },
       })
 
@@ -108,7 +108,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 
   const applyHistoryNode = (node: HistoryNode) => {
     if (editorRef.current) {
-      editorRef.current.execute('history-pick',node)
+      editorRef.current.execute('history-pick', node)
     }
   }
 
@@ -143,6 +143,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
                  className={'relative overflow-hidden flex w-full h-full'}
             ></div>
             <StatusBar worldPoint={worldPoint}/>
+
           </div>
 
           <div style={{width: 200}} className={'h-full flex-shrink-0 border-l border-gray-200'}>

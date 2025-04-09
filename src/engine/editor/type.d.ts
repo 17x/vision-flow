@@ -67,7 +67,7 @@ type SelectionUpdatedHandler = (selected: Set<UID> | 'all', selectedProps?: Modu
 type ViewportUpdatedHandler = (viewportInfo: BoundingRect) => void;
 type WorldUpdatedHandler = (worldInfo: WorldInfo) => void;
 type WorldMouseMoveUpdatedHandler = (point: Point) => void;
-type ContextMenuHandler = (idSet: Set<UID>) => void;
+type ContextMenuHandler = (idSet: Set<UID>, position: Point) => void;
 
 export declare type EventHandlers = {
   onHistoryUpdated?: HistoryUpdatedHandler

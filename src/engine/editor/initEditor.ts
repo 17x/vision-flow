@@ -5,7 +5,6 @@ import Editor from './editor.ts'
 import {redo} from './history/redo.ts'
 import {undo} from './history/undo.ts'
 import {pick} from './history/pick.ts'
-import {ModuleMoveDirection} from './type'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
@@ -238,7 +237,7 @@ export function initEditor(this: Editor) {
     this.events.onHistoryUpdated?.(this.history)
   })
 
-  this.action.on('context-menu', (data) => {
-    this.events.onContextMenu?.(data)
+  this.action.on('context-menu', ({idSet,position}) => {
+    this.events.onContextMenu?.(idSet,position)
   })
 }

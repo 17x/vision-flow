@@ -60,17 +60,20 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
       },
     })
     this.draggingModules = new Set([closestId])
-  } else if (!isSelected && modifyKey) {
-    // Add to existing selection
-    this.draggingModules = new Set(this.selectedModules)
-    this.action.dispatch({
-      type: 'selection-modify',
-      data: {
-        mode: 'add',
-        idSet: new Set([closestId]),
-      },
-    })
-    this._lastSelectedOne = closestId
+  } else if (modifyKey) {
+    if (isSelected) {
+      this._deselection = closestId
+    } else {
+      // Add to existing selection
+      this.draggingModules = new Set(this.selectedModules)
+      this.action.dispatch({
+        type: 'selection-modify',
+        data: {
+          mode: 'add',
+          idSet: new Set([closestId]),
+        },
+      })
+    }
 
     this.draggingModules.add(closestId)
   } else {

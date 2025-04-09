@@ -43,9 +43,8 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       } else {
         const closestId = [...this.hoveredModules][this.hoveredModules.size - 1]
         // console.log(closestId)
-        console.log(this._lastSelectedOne)
-        console.log(closestId)
-        if (closestId && modifyKey && closestId === this._lastSelectedOne) {
+        console.log(this._deselection)
+        if (closestId && modifyKey && closestId === this._deselection) {
           this.action.dispatch({
             type: 'selection-modify',
             data: {
@@ -94,7 +93,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
   selectedShadow.clear()
   _selectingModules.clear()
   this.manipulationStatus = 'static'
-  this._lastSelectedOne = null
+  this._deselection = null
   updateSelectionBox(viewport.selectionBox, {x: 0, y: 0, width: 0, height: 0}, false)
 }
 

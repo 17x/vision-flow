@@ -197,7 +197,7 @@ class Editor {
       return idSet
     }
 
-    return new Set(this.selectedModules.keys())
+    return new Set(this.selectedModules)
   }
 
   public modifySelection(idSet: Set<UID>, action: SelectionActionMode) {

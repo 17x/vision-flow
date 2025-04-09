@@ -1,9 +1,8 @@
 import {updateSelectionBox} from '../domManipulations.ts'
 import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 import {generateBoundingRectFromTwoPoints, isInsideRotatedRect, rectInside} from '../../../core/utils.ts'
-import {SelectionActionMode} from '../../selection/type'
 import Editor from '../../editor.ts'
-import {areSetsEqual, getIntersection, getSymmetricDifference} from '../../../lib/lib.ts'
+import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
   const {
@@ -42,7 +41,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
         }
       })
 
-      const selectingChanged = !areSetsEqual(this.selectingModules, _selecting)
+      const selectingChanged = !areSetsEqual(selectingModules, _selecting)
 
       updateSelectionBox(viewport.selectionBox, rect)
 
@@ -130,6 +129,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     case 'static': {
       const virtualPoint = this.getWorldPointByViewportPoint(viewport.mouseMovePoint.x, viewport.mouseMovePoint.y)
 
+      hoveredModules.clear()
       this.getVisibleModuleMap().forEach((module) => {
         if (module.type === 'rectangle') {
           const {x, y, width, height, rotation} = (module as Rectangle)

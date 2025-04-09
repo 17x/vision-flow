@@ -17,34 +17,41 @@ export function modifySelection(this: Editor, idSet: Set<UID>, action: Selection
       // console.log(eventCallBackData)
     }
   }
+  const realSelectedModules = this.getSelectedIdSet()
+
+  this.selectedModules.clear()
 
   if (action === 'replace') {
-    this.selectedModules.clear()
+    realSelectedModules.clear()
   }
 
   idSet.forEach((id) => {
     switch (action) {
       case 'add':
-        this.selectedModules.add(id)
+        realSelectedModules.add(id)
         break
       case 'delete':
-        this.selectedModules.delete(id)
+        realSelectedModules.delete(id)
         break
       case 'toggle':
-        if (this.selectedModules.has(id)) {
-          this.selectedModules.delete(id)
+        if (realSelectedModules.has(id)) {
+          realSelectedModules.delete(id)
         } else {
-          this.selectedModules.add(id)
+          realSelectedModules.add(id)
         }
         break
       case 'replace':
-        this.selectedModules.add(id)
+        realSelectedModules.add(id)
         break
     }
   })
 
-  this.isSelectAll = this.selectedModules.size === this.moduleMap.size
-  // console.log(this.selectedModules.size,this.moduleMap.size)
+  this.isSelectAll = realSelectedModules.size === this.moduleMap.size
+
+  // this.selectedModules.clear()
+  if (!this.isSelectAll) {
+    realSelectedModules.forEach(id => this.selectedModules.add(id))
+  }
   // this.events.onSelectionUpdated?.(idSet, eventCallBackData)
 }
 

@@ -30,20 +30,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       const y = (viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) * viewport.dpr / viewport.scale
 
       // mouse stay static
-      if (x === 0 && y === 0) {
-        console.log('did not move')
-        console.log(this.hoveredModules)
-        const closestId = [...this.hoveredModules][this.hoveredModules.size - 1]
-        if (closestId && modifyKey) {
-          this.action.dispatch({
-            type: 'selection-modify',
-            data: {
-              mode: 'delete',
-              idSet: new Set([closestId]),
-            },
-          })
-        }
-      } else {
+      if (!(x === 0 && y === 0)) {
         // move back to origin position and do the move again
         draggingModules.forEach((id) => {
           moduleMap.get(id).x -= x
@@ -59,7 +46,6 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
         })
       }
 
-      this.replace(draggingModules)
     }
       break
 

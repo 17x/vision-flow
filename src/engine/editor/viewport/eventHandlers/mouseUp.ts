@@ -5,8 +5,8 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
   const {draggingModules, manipulationStatus, moduleMap, selectingModules, selectedShadow, viewport} = this
   const x = e.clientX - viewport.rect!.x
   const y = e.clientY - viewport.rect!.y
-  const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
-
+  // const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
+  console.log('up',manipulationStatus)
   viewport.mouseMovePoint.x = x
   viewport.mouseMovePoint.y = y
 

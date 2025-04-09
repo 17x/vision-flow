@@ -15,6 +15,7 @@ import {FileType} from '../fileContext/FileContext.tsx'
 import EditorContext from './EditorContext.tsx'
 import PropPanel from '../propPanel/PropPanel.tsx'
 import {createMockData} from './MOCK.ts'
+import {ContextMenu, ContextMenuDataType} from '../contextMenu/ContextMenu.tsx'
 
 const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const editorRef = useRef<Editor>(null)
@@ -24,6 +25,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [sortedModules, setSortedModules] = useState<ModuleType[]>([])
   const [selectedProps, setSelectedProps] = useState<ModuleProps>(null)
   const [selectedModules, setSelectedModules] = useState<UID[]>([])
+  const [contextMenuData, setContextMenuData] = useState<ContextMenuDataType | null>(null)
   const [historyCurrent, setHistoryCurrent] = useState<HistoryNode['id']>(0)
   const [viewport, setViewport] = useState<ViewportInfo>({
     width: 0,
@@ -77,6 +79,10 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           },
           onContextMenu: (idSet, position) => {
             console.log(idSet, position)
+            setContextMenuData({
+              idSet,
+              position,
+            })
           },
         },
       })
@@ -112,6 +118,10 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
   }
 
+  const handleContextMenuAction = (code: ModuleOperationType, data: unknown = null) => {
+
+  }
+
   const executeAction = (code: ModuleOperationType, data: unknown = null) => {
     editorRef.current!.execute(code, data)
   }
@@ -137,13 +147,15 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         <main className={'flex flex-row overflow-hidden h-full'}>
           <ModulePanel/>
 
-          <div className={'flex flex-col w-full h-full overflow-hidden'}>
+          <div className={'flex flex-col w-full h-full overflow-hidden relative'}>
             <div ref={containerRef}
                  editor-container={'true'}
                  className={'relative overflow-hidden flex w-full h-full'}
             ></div>
             <StatusBar worldPoint={worldPoint}/>
-
+            {contextMenuData && <ContextMenu data={contextMenuData} onClose={() => {
+              setContextMenuData(null)
+            }} onAction={handleContextMenuAction}/>}
           </div>
 
           <div style={{width: 200}} className={'h-full flex-shrink-0 border-l border-gray-200'}>

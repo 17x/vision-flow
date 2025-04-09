@@ -1,39 +1,43 @@
 import Editor from '../../editor.ts'
 
 function handleContextMenu(this: Editor, e: MouseEvent) {
-  const dataName = 'editor-contextmenu-dom'
-  const contextMenuDom = document.createElement('div')
+  // const dataName = 'editor-contextmenu-dom'
+  // const contextMenuDom = document.createElement('div')
 
   e.preventDefault()
   e.stopPropagation()
-
+  console.log('mem')
   if (e.ctrlKey) {
     return false
   }
 
   const lastId = [...this.hoveredModules][this.hoveredModules.size - 1]
   const selectedIdSet = this.getSelectedIdSet()
+  const position = {...this.viewport.mouseMovePoint}
+  let idSet = new Set()
 
   if (lastId) {
     if (selectedIdSet.has(lastId)) {
-      this.action.dispatch({
-        type: 'context-menu',
-        data: {
-          idSet: selectedIdSet,
-          position: {...this.viewport.mouseMovePoint},
-        },
-      })
+      idSet = selectedIdSet
     } else {
+      idSet.add(lastId)
       this.action.dispatch({
-        type: 'context-menu',
+        type: 'selection-modify',
         data: {
-          idSet: new Set([lastId]),
-          position: {...this.viewport.mouseMovePoint},
+          mode: 'replace',
+          lastId: new Set(idSet),
         },
       })
     }
   }
 
+  this.action.dispatch({
+    type: 'context-menu',
+    data: {
+      idSet,
+      position,
+    },
+  })
   return
   // console.log(this.hoveredModules)
   const remove = (event: MouseEvent) => {

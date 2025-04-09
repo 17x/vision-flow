@@ -3,11 +3,11 @@ import Editor from '../../editor.ts'
 function handleMouseDown(this: Editor, e: MouseEvent) {
   const {shiftKey, clientY, target, button, clientX, metaKey, ctrlKey} = e
   const inViewport = target === this.viewport.wrapper
-  const isLeftClick = button === 0
+  // const isLeftClick = button === 0
   const modifyKey = ctrlKey || metaKey || shiftKey
   const closestId = [...this.hoveredModules][this.hoveredModules.size - 1]
 
-  if (!inViewport || !isLeftClick) return
+  if (!inViewport) return
 
   this.viewport.mouseDownPoint.x = clientX - this.viewport.rect!.x
   this.viewport.mouseDownPoint.y = clientY - this.viewport.rect!.y

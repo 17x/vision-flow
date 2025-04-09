@@ -18,7 +18,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
   viewport.mouseMovePoint.x = e.clientX - viewport.rect!.x
   viewport.mouseMovePoint.y = e.clientY - viewport.rect!.y
   viewport.drawCrossLine = false
-  hoveredModules.clear()
+  // hoveredModules.clear()
 
   action.dispatch({type: 'world-mouse-move'})
 
@@ -31,7 +31,6 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const virtualSelectionRect: BoundingRect = generateBoundingRectFromTwoPoints(pointA, pointB)
       const _selecting: Set<UID> = new Set()
       const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
-      const mode: SelectionActionMode = modifyKey ? 'toggle' : 'replace'
 
       this.getVisibleModuleMap().forEach((module) => {
         if (module.type === 'rectangle') {

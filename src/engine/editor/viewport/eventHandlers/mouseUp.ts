@@ -5,6 +5,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
   const {draggingModules, manipulationStatus, moduleMap, selectingModules, selectedShadow, viewport} = this
   const x = e.clientX - viewport.rect!.x
   const y = e.clientY - viewport.rect!.y
+  const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
 
   viewport.mouseMovePoint.x = x
   viewport.mouseMovePoint.y = y
@@ -28,20 +29,36 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       const x = (viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) * viewport.dpr / viewport.scale
       const y = (viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) * viewport.dpr / viewport.scale
 
-      // move back to origin position and do the move again
-      draggingModules.forEach((id) => {
-        moduleMap.get(id).x -= x
-        moduleMap.get(id).y -= y
-      })
+      // mouse stay static
+      if (x === 0 && y === 0) {
+        console.log('did not move')
+        console.log(this.hoveredModules)
+        const closestId = [...this.hoveredModules][this.hoveredModules.size - 1]
+        if (closestId && modifyKey) {
+          this.action.dispatch({
+            type: 'selection-modify',
+            data: {
+              mode: 'delete',
+              idSet: new Set([closestId]),
+            },
+          })
+        }
+      } else {
+        // move back to origin position and do the move again
+        draggingModules.forEach((id) => {
+          moduleMap.get(id).x -= x
+          moduleMap.get(id).y -= y
+        })
 
-      this.action.dispatch({
-        type: 'selection-move',
-        data: {
-          direction: 'module-move-shift',
-          delta: {x, y},
-        },
-      })
-      // this.batchMove(new Set(draggingModules), {x, y})
+        this.action.dispatch({
+          type: 'selection-move',
+          data: {
+            direction: 'module-move-shift',
+            delta: {x, y},
+          },
+        })
+      }
+
       this.replace(draggingModules)
     }
       break

@@ -51,6 +51,7 @@ class Editor {
   hoveredModules: Set<UID> = new Set()
   draggingModules: Set<UID> = new Set()
   selectingModules: Set<UID> = new Set()
+  selectedShadow: Set<UID> = new Set()
   manipulationStatus: ViewportManipulationType = 'static'
   CopyDeltaX = 50
   CopyDeltaY = 100

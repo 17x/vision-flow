@@ -23,7 +23,7 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
     if (!modifyKey) {
       this.action.dispatch({type: 'selection-clear'})
     }
-
+    this.selectedShadow = new Set(this.selectedModules)
     return this.manipulationStatus = 'selecting'
   }
 

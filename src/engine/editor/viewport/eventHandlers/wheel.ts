@@ -7,7 +7,7 @@ function handleWheel(this: Editor, event: WheelEvent) {
   // console.log(this.manipulationStatus)
   event.preventDefault()
   event.stopPropagation()
-
+  if (this.manipulationStatus !== 'static') return
   const {zooming, panning, scrolling, zoomFactor, translateX, translateY} = detectGestures(event)
 
   // console.log(`${zooming ? 'zooming' : ''} ${panning ? 'panning' : ''} ${scrolling ? 'scrolling' : ''} `)

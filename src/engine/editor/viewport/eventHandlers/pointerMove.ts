@@ -28,7 +28,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const pointA = this.getWorldPointByViewportPoint(rect.x, rect.y)
       const pointB = this.getWorldPointByViewportPoint(rect.right, rect.bottom)
       const virtualSelectionRect: BoundingRect = generateBoundingRectFromTwoPoints(pointA, pointB)
-      const _localSelectionModules: Set<UID> = new Set()
+      const _selecting: Set<UID> = new Set()
       const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
       const mode: SelectionActionMode = modifyKey ? 'toggle' : 'replace'
 
@@ -37,28 +37,53 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
           const boundingRect = module.getBoundingRect() as BoundingRect
 
           if (rectInside(boundingRect, virtualSelectionRect)) {
-            _localSelectionModules.add(module.id)
+            _selecting.add(module.id)
           }
         }
       })
 
-      const equal = areSetsEqual(selectingModules, _localSelectionModules)
+      const selectingNotChanged = areSetsEqual(this.selectingModules, _selecting)
 
       updateSelectionBox(viewport.selectionBox, rect)
-      console.log(equal)
 
-      if (equal) {
-        if (_localSelectionModules.size === 0) return
+      this.selectedShadow = new Set(_selecting)
 
+      // Selecting nothing now
+      if (_selecting.size === 0) {
+        // remove selected if existing
+        if (this.selectedShadow.size === 0) {
+          if (!modifyKey) {
+            action.dispatch({type: 'selection-clear'})
+          }else{
+            console.log('replace')
+            action.dispatch({
+              type: 'selection-modify', data: {mode: 'replace', idSet: this.selectedShadow},
+            })
+          }
+        } else {
+          action.dispatch({
+            type: 'selection-modify', data: {mode: 'replace', idSet: this.selectedShadow},
+          })
+        }
       } else {
-        this.selectingModules = _localSelectionModules
-        action.dispatch({
-          type: 'selection-modify', data: {mode, _localSelectionModules},
-        })
-        console.log(_localSelectionModules,mode,this.selectedModules)
+        if (!selectingNotChanged) {
+          action.dispatch({
+            type: 'selection-modify', data: {mode: 'delete', idSet: this.selectingModules},
+          })
 
+          if (modifyKey) {
+            action.dispatch({
+              type: 'selection-modify', data: {mode: 'toggle', idSet: _selecting},
+            })
+          } else {
+            action.dispatch({
+              type: 'selection-modify', data: {mode: 'add', idSet: _selecting},
+            })
+          }
+
+          this.selectingModules = _selecting
+        }
       }
-
     }
       break
 

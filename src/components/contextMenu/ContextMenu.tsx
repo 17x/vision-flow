@@ -42,8 +42,22 @@ export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position}, onCl
     {id: 'bringToFront', disabled: idSet.size === 0},
     {id: 'sendToBack', disabled: idSet.size === 0},
   ]
-  const handleContextAction = (action:string) => {
-    console.log(action)
+  const handleContextAction = (action: string) => {
+    // console.log(action)
+    switch (action) {
+      case 'copy':
+        executeAction('selection-copy')
+        break
+      case 'paste':
+        executeAction('selection-paste')
+        break
+      case 'delete':
+        executeAction('selection-delete')
+        break
+      case 'duplicate':
+        executeAction('selection-duplicate')
+        break
+    }
     // executeAction()
   }
   return (

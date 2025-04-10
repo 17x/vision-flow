@@ -77,11 +77,12 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           onWorldMouseMove: (point) => {
             setWorldPoint(point)
           },
-          onContextMenu: (idSet, position) => {
+          onContextMenu: (idSet, position, copiedItems) => {
             console.log(idSet, position)
             setContextMenuData({
               idSet,
               position,
+              copiedItems,
             })
           },
         },

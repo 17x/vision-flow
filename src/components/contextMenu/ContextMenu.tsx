@@ -6,6 +6,7 @@ import EditorContext from '../editorContext/EditorContext.tsx'
 export interface ContextMenuDataType {
   idSet: Set<number>
   position: { x: number, y: number }
+  copiedItems: boolean
 }
 
 export interface ContextMenuProps {
@@ -14,7 +15,7 @@ export interface ContextMenuProps {
   onClose: () => void
 }
 
-export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position}, onClose}) => {
+export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position, copiedItems}, onClose}) => {
   const {t} = useTranslation()
   const {executeAction} = useContext(EditorContext)
 
@@ -32,7 +33,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position}, onCl
 
   const menuItems = [
     {id: 'copy', disabled: idSet.size === 0},
-    {id: 'paste', disabled: true},
+    {id: 'paste', disabled: !copiedItems},
     {id: 'delete', disabled: idSet.size === 0},
     {id: 'duplicate', disabled: idSet.size === 0},
     // {id: 'group', disabled: idSet.size < 2},

@@ -1,6 +1,6 @@
-import { SelectionActionMode } from "../selection/type"
-import { HistoryNode } from "../history/DoublyLinkedList.ts"
-import { ModuleMoveDirection } from "../type"
+import {SelectionActionMode} from '../selection/type'
+import {HistoryNode} from '../history/DoublyLinkedList.ts'
+import {ModuleMoveDirection} from '../type'
 
 /*export interface EventBase<T extends string, P> {
   type: T;
@@ -21,47 +21,48 @@ export type SelectionMoveData = {
 };
 
 export type EditorEventMap = {
-  "editor-initialized": never;
-  "visible-module-update": ModuleMap;
-  "visible-selected-update": { idSet: Set<UID>; operators: never };
-  "selection-modify": SelectionModifyData;
-  "selection-copy": never;
-  "selection-paste": never;
-  "selection-duplicate": never;
-  "selection-move": SelectionMoveData;
-  "selection-clear": never;
-  "selection-delete": never;
-  "select-all": never;
-  "module-paste": never;
-  "module-redo": never;
-  "module-undo": never;
-  "module-duplicate": never;
-  "module-delete": never;
-  "module-modify": never;
-  "module-move": never;
-  "module-move-start": never;
-  "module-move-end": never;
-  "module-move-up": never;
-  "module-move-down": never;
-  "module-move-left": never;
-  "module-move-right": never;
-  "history-redo": never;
-  "history-undo": never;
-  "history-pick": HistoryNode;
-  "viewport-resize": null;
-  "viewport-mouse-down": never;
-  "viewport-mouse-move": never;
-  "viewport-mouse-up": never;
-  "world-zoom": {
+  'editor-initialized': never;
+  'visible-module-update': ModuleMap;
+  'visible-selected-update': { idSet: Set<UID>; operators: never };
+  'selection-modify': SelectionModifyData;
+  'selection-copy': never;
+  'selection-paste': never;
+  'selection-duplicate': never;
+  'selection-move': SelectionMoveData;
+  'selection-clear': never;
+  'selection-delete': never;
+  'select-all': never;
+  'module-paste': never;
+  'module-redo': never;
+  'module-undo': never;
+  'module-duplicate': never;
+  'module-delete': never;
+  'module-modify': never;
+  'module-move': never;
+  'module-move-start': never;
+  'module-move-end': never;
+  'module-move-up': never;
+  'module-move-down': never;
+  'module-move-left': never;
+  'module-move-right': never;
+  'history-redo': never;
+  'history-undo': never;
+  'history-pick': HistoryNode;
+  'viewport-resize': null;
+  'viewport-mouse-down': never;
+  'viewport-mouse-move': never;
+  'viewport-mouse-up': never;
+  'world-zoom': {
     zoomFactor: number;
     physicalPoint: Point;
   };
-  "world-shift": Point;
-  "world-update": never;
-  "world-mouse-move": never;
-  "context-menu": {
+  'world-shift': Point;
+  'world-update': never;
+  'world-mouse-move': never;
+  'context-menu': {
     idSet: Set<UID>;
     position: Position;
+    copiedItems: boolean
   };
 };
 

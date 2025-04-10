@@ -50,7 +50,7 @@ class Action {
     type: K,
     data?: EditorEventData<K>,
   ) {
-    console.trace('action: ', type)
+    // console.trace('action: ', type)
 
     if (this.eventsMap.has(type)) {
       this.eventsMap.get(type)!.forEach((cb) => {

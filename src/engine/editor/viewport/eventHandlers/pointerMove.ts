@@ -101,14 +101,11 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const x = (e.movementX * viewport.dpr) / viewport.scale
       const y = (e.movementY * viewport.dpr) / viewport.scale
 
-      console.log(draggingModules)
       draggingModules.forEach((id) => {
         moduleMap.get(id).move(x, y)
-        // moduleMap.get(id).x += x
-        // moduleMap.get(id).y += y
       })
-      console.log('temp')
-      // use dispatch temporary
+
+      // force update
       this.action.dispatch('visible-module-update')
     }
       break

@@ -82,6 +82,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           onSelectionUpdated: (selected, props) => {
             setSelectedModules(Array.from(selected))
             setSelectedProps(props)
+            console.log(props)
           },
           onViewportUpdated: (viewportInfo) => {
             setViewport(viewportInfo)

@@ -49,7 +49,9 @@ export function initEditor(this: Editor) {
 
   on('editor-selection-update', () => {
     updateVisibleSelected.call(this)
-    this.events.onSelectionUpdated?.(this.selectedModules)
+    this.events.onSelectionUpdated?.(this.selectedModules, this.getIfUnique())
+
+    // this.events.onSelectionUpdated?.(this.selectedModules)
 
     dispatch('visible-selected-update')
   })

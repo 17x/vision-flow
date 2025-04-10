@@ -106,8 +106,8 @@ export function batchModify(this: Editor, from: Set<UID>, data: Partial<ModulePr
   })
 
   // this.render()
-  this.events.onModulesUpdated?.(this.moduleMap)
-  this.events.onSelectionUpdated?.(this.selectedModules, this.getIfUnique())
+  // this.events.onModulesUpdated?.(this.moduleMap)
+  // this.events.onSelectionUpdated?.(this.selectedModules, this.getIfUnique())
 
   if (historyCode) {
     /*this.history.add({

@@ -53,6 +53,10 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           // size: basicEditorAreaSize,
           modules: [],
         },
+        config: {
+          // dpr: 2,
+          dpr: 10,
+        },
         events: {
           onHistoryUpdated: (historyTree) => {
             setHistoryArray(historyTree!.toArray())

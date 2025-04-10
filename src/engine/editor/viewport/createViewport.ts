@@ -31,6 +31,10 @@ export function createViewport(this: Editor): Viewport {
   const resizeObserver = new ResizeObserver(
     throttle(() => {
       this.action.dispatch('viewport-resize')
+      if (!this.initialized) {
+        this.initialized = true
+        this.fitFrame()
+      }
     }, 200),
   )
   const {signal} = eventsController

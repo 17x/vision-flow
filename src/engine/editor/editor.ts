@@ -27,6 +27,7 @@ import {Viewport, ViewportManipulationType} from './viewport/type'
 import {createViewport} from './viewport/createViewport.ts'
 import {destroyViewport} from './viewport/destroyViewport.ts'
 import {initEditor} from './initEditor.ts'
+import {fitRectToViewport} from './viewport/helper.ts'
 
 export interface EditorDataProps {
   id: UID;
@@ -69,13 +70,14 @@ class Editor {
   manipulationStatus: ViewportManipulationType = 'static'
   CopyDeltaX = 50
   CopyDeltaY = 100
+  initialized: boolean = false
 
   constructor({
                 container,
                 data,
                 events = {},
                 config = {
-                  dpr: 10,
+                  dpr: 2,
                 },
               }: EditorInterface) {
     this.visibleModuleMap = new Map()
@@ -379,7 +381,7 @@ class Editor {
   zoomTo(newScale: number | 'fit') {
     console.log(newScale)
     if (newScale === 'fit') {
-      // this.fitFrame()
+      this.fitFrame()
     } else {
       this.zoomAtPoint(
         {
@@ -442,7 +444,7 @@ class Editor {
 
   fitFrame() {
     console.log('fit')
-    // const {frame, viewportRect} = this
+    const {frame, viewportRect} = this.viewport
     /* const testFrame = generateBoundingRectFromRotatedRect({
        x: 800,
        y: 800,
@@ -452,14 +454,14 @@ class Editor {
     // console.log(testFrame)
     // console.log(frame)
 
-    // const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect)
+    const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect)
 
     // console.log(virtualRect)
     // console.log(scale, offsetX, offsetY)
-    /*
-        this.viewport.scale = scale
-        this.viewport.offset.x = offsetX
-        this.viewport.offset.y = offsetY*/
+    this.viewport.scale = scale
+    this.viewport.offset.x = offsetX
+    this.viewport.offset.y = offsetY
+    this.action.dispatch('world-update')
     // this.viewport.render()
     // this.viewport.updateWorldRect()
   }

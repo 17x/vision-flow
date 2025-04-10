@@ -124,7 +124,7 @@ class Viewport1 {
 
     this.viewport.domResizing = true
     this.viewport.resizeTimeout = setTimeout(() => {
-        this.viewport.action.dispatch({type: 'viewport-resize'})
+        this.viewport.action.dispatch('viewport-resize')
       },
       this.viewport.resizeInterval,
     )

@@ -1,8 +1,15 @@
-import {updateSelectionBox} from '../domManipulations.ts'
-import Editor from '../../editor.ts'
+import { updateSelectionBox } from "../domManipulations.ts"
+import Editor from "../../editor.ts"
 
 function handleMouseUp(this: Editor, e: MouseEvent) {
-  const {draggingModules, manipulationStatus, moduleMap, _selectingModules, selectedShadow, viewport} = this
+  const {
+    draggingModules,
+    manipulationStatus,
+    moduleMap,
+    _selectingModules,
+    selectedShadow,
+    viewport,
+  } = this
   const x = e.clientX - viewport.rect!.x
   const y = e.clientY - viewport.rect!.y
   const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
@@ -11,66 +18,65 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
   viewport.mouseMovePoint.y = y
 
   switch (manipulationStatus) {
-    case 'selecting':
-
+    case "selecting":
       break
 
-    case 'panning':
+    case "panning":
       // this.viewport.translateViewport(e.movementX, e.movementY)
 
       break
 
-    case 'dragging': {
-      const x = (viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) * viewport.dpr / viewport.scale
-      const y = (viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) * viewport.dpr / viewport.scale
-      const moved = !(x === 0 && y === 0)
+    case "dragging":
+      {
+        const x =
+          ((viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) *
+            viewport.dpr) /
+          viewport.scale
+        const y =
+          ((viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) *
+            viewport.dpr) /
+          viewport.scale
+        const moved = !(x === 0 && y === 0)
 
-      // mouse stay static
-      if (moved) {
-        // move back to origin position and do the move again
-        draggingModules.forEach((id) => {
-          moduleMap.get(id).x -= x
-          moduleMap.get(id).y -= y
-        })
-
-        this.action.dispatch({
-          type: 'selection-move',
-          data: {
-            direction: 'module-move-shift',
-            delta: {x, y},
-          },
-        })
-      } else {
-        const closestId = [...this.hoveredModules][this.hoveredModules.size - 1]
-        // console.log(closestId)
-        console.log(this._deselection)
-        if (closestId && modifyKey && closestId === this._deselection) {
-          this.action.dispatch({
-            type: 'selection-modify',
-            data: {
-              mode: 'toggle',
-              idSet: new Set([closestId]),
-            },
+        // mouse stay static
+        if (moved) {
+          // move back to origin position and do the move again
+          draggingModules.forEach((id) => {
+            moduleMap.get(id).x -= x
+            moduleMap.get(id).y -= y
           })
+
+          this.action.dispatch("selection-move", {
+            direction: "module-move-shift",
+            delta: { x, y },
+          })
+        } else {
+          const closestId = [...this.hoveredModules][
+            this.hoveredModules.size - 1
+          ]
+          // console.log(closestId)
+          console.log(this._deselection)
+          if (closestId && modifyKey && closestId === this._deselection) {
+            this.action.dispatch("selection-modify", {
+              mode: "toggle",
+              idSet: new Set([closestId]),
+            })
+          }
         }
       }
-
-    }
       break
 
-    case 'resizing':
+    case "resizing":
       break
 
-    case 'rotating':
+    case "rotating":
       break
 
-    case 'mousedown':
+    case "mousedown":
       console.log(this.draggingModules)
-      this.action.dispatch({
-        type: 'selection-clear',
-      })
+      this.action.dispatch('selection-clear')
       break
-    case 'static':
+    case "static":
       // console.log(this.hoveredModules)
       /*console.log(this.handlingModules)
       if (this.hoveredModules.size === 0) {
@@ -92,9 +98,13 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
   draggingModules.clear()
   selectedShadow.clear()
   _selectingModules.clear()
-  this.manipulationStatus = 'static'
+  this.manipulationStatus = "static"
   this._deselection = null
-  updateSelectionBox(viewport.selectionBox, {x: 0, y: 0, width: 0, height: 0}, false)
+  updateSelectionBox(
+    viewport.selectionBox,
+    { x: 0, y: 0, width: 0, height: 0 },
+    false
+  )
 }
 
 export default handleMouseUp

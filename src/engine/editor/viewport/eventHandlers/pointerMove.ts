@@ -1,6 +1,9 @@
 import {updateSelectionBox} from '../domManipulations.ts'
 // import Rectangle from '../../../core/modules/shapes/rectangle.ts'
-import {generateBoundingRectFromTwoPoints, rectInside} from '../../../core/utils.ts'
+import {
+  generateBoundingRectFromTwoPoints,
+  rectInside,
+} from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
 import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
 import {updateHoveredModules} from './funcs.ts'
@@ -20,15 +23,22 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
   viewport.drawCrossLine = false
   // hoveredModules.clear()
 
-  action.dispatch({type: 'world-mouse-move'})
+  action.dispatch('world-mouse-move')
 
   switch (this.manipulationStatus) {
     case 'selecting': {
       viewport.wrapper.setPointerCapture(e.pointerId)
-      const rect = generateBoundingRectFromTwoPoints(viewport.mouseDownPoint, viewport.mouseMovePoint)
+      const rect = generateBoundingRectFromTwoPoints(
+        viewport.mouseDownPoint,
+        viewport.mouseMovePoint,
+      )
       const pointA = this.getWorldPointByViewportPoint(rect.x, rect.y)
-      const pointB = this.getWorldPointByViewportPoint(rect.right, rect.bottom)
-      const virtualSelectionRect: BoundingRect = generateBoundingRectFromTwoPoints(pointA, pointB)
+      const pointB = this.getWorldPointByViewportPoint(
+        rect.right,
+        rect.bottom,
+      )
+      const virtualSelectionRect: BoundingRect =
+        generateBoundingRectFromTwoPoints(pointA, pointB)
       const _selecting: Set<UID> = new Set()
       const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
 
@@ -60,37 +70,37 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const SD = getSymmetricDifference(selectedShadow, _selecting)
 
       if (modifyKey) {
-        action.dispatch({
-          type: 'selection-modify', data: {mode: 'replace', idSet: SD},
+        action.dispatch('selection-modify', {
+          mode: 'replace',
+          idSet: SD,
         })
       } else {
         if (_selecting.size === 0 && selectedShadow.size === 0) {
-          return action.dispatch({type: 'selection-clear'})
+          return action.dispatch('selection-clear')
         }
         const newSet = new Set([...selectedShadow, ..._selecting])
 
-        action.dispatch({
-          type: 'selection-modify', data: {mode: 'replace', idSet: newSet},
+        action.dispatch('selection-modify', {
+          mode: 'replace',
+          idSet: newSet,
         })
       }
     }
       break
 
     case 'panning':
-      action.dispatch({
-        type: 'world-shift',
-        data: {
+      action.dispatch('world-shift',
+        {
           x: e.movementX,
           y: e.movementY,
-        },
-      })
+        })
 
       break
 
     case 'dragging': {
       viewport.wrapper.setPointerCapture(e.pointerId)
-      const x = e.movementX * viewport.dpr / viewport.scale
-      const y = e.movementY * viewport.dpr / viewport.scale
+      const x = (e.movementX * viewport.dpr) / viewport.scale
+      const y = (e.movementY * viewport.dpr) / viewport.scale
 
       console.log(draggingModules)
       draggingModules.forEach((id) => {
@@ -100,9 +110,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       })
       console.log('temp')
       // use dispatch temporary
-      this.action.dispatch({
-        type: 'visible-module-update',
-      })
+      this.action.dispatch('visible-module-update')
     }
       break
 
@@ -113,10 +121,12 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       break
 
     case 'mousedown': {
-
       const MOVE_THROTTLE = 1
-      const moved = Math.abs(viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) > MOVE_THROTTLE ||
-        Math.abs(viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) > MOVE_THROTTLE
+      const moved =
+        Math.abs(viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) >
+        MOVE_THROTTLE ||
+        Math.abs(viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) >
+        MOVE_THROTTLE
 
       if (moved) {
         if (draggingModules.size > 0) {

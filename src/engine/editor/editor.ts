@@ -2,10 +2,23 @@ import {ModuleOperationType, EventHandlers} from './type'
 import History from './history/history.ts'
 import Action from './actions/actions.ts'
 import {HistoryOperationType} from './history/type'
-import {generateBoundingRectFromTwoPoints, rectsOverlap} from '../core/utils.ts'
-import {batchAdd, batchCopy, batchCreate, batchDelete, batchModify, batchMove} from './modules/modules.ts'
+import {
+  generateBoundingRectFromTwoPoints,
+  rectsOverlap,
+} from '../core/utils.ts'
+import {
+  batchAdd,
+  batchCopy,
+  batchCreate,
+  batchDelete,
+  batchModify,
+  batchMove,
+} from './modules/modules.ts'
 import {OperationHandler, SelectionActionMode} from './selection/type'
-import {modifySelection, updateVisibleSelectedModules} from './selection/helper.ts'
+import {
+  modifySelection,
+  updateVisibleSelectedModules,
+} from './selection/helper.ts'
 import {updateScrollBars} from './viewport/domManipulations.ts'
 import render from '../core/renderer/mainCanvasRenderer.ts'
 import selectionRender from './viewport/selectionRender.ts'
@@ -21,14 +34,14 @@ export interface EditorDataProps {
 }
 
 export interface EditorConfig {
-  dpr: number
+  dpr: number;
 }
 
 export interface EditorInterface {
   container: HTMLDivElement
   data: EditorDataProps
-  events?: EventHandlers
-  config?: EditorConfig
+  events?: EventHandlers;
+  config?: EditorConfig;
 }
 
 class Editor {
@@ -65,7 +78,6 @@ class Editor {
                   dpr: 2,
                 },
               }: EditorInterface) {
-
     this.visibleModuleMap = new Map()
     this.id = data.id
     this.config = config
@@ -74,14 +86,11 @@ class Editor {
     this.container = container
     this.history = new History(this)
     this.viewport = createViewport.call(this)
-    this.moduleMap = data.modules.reduce<ModuleMap>(
-      (acc, curr) => {
-        acc.set(curr.id, curr)
+    this.moduleMap = data.modules.reduce<ModuleMap>((acc, curr) => {
+      acc.set(curr.id, curr)
 
-        return acc
-      },
-      new Map<UID, ModuleType>(),
-    )
+      return acc
+    }, new Map<UID, ModuleType>())
 
     this.init()
   }
@@ -91,7 +100,7 @@ class Editor {
   }
 
   get createModuleId(): UID {
-    return this.id + '-' + (++this.moduleCounter)
+    return this.id + '-' + ++this.moduleCounter
   }
 
   batchCreate(moduleDataList: ModuleProps[]): ModuleMap {
@@ -102,7 +111,11 @@ class Editor {
     return batchAdd.call(this, modules)
   }
 
-  batchCopy(from: 'all' | Set<UID>, removeId = false, addOn?: { string: unknown }): ModuleProps[] {
+  batchCopy(
+    from: 'all' | Set<UID>,
+    removeId = false,
+    addOn?: { string: unknown },
+  ): ModuleProps[] {
     return batchCopy.call(this, from, removeId, addOn)
   }
 
@@ -114,18 +127,20 @@ class Editor {
     batchMove.call(this, from, delta)
   }
 
-  batchModify(from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryOperationType) {
+  batchModify(
+    from: 'all' | Set<UID>,
+    data: Partial<ModuleProps>,
+    historyCode?: HistoryOperationType,
+  ) {
     batchModify.call(this, from, data, historyCode)
   }
 
-  getModulesByLayerIndex() {
-
-  }
+  getModulesByLayerIndex() {}
 
   getModulesByIdSet(idSet: Set<UID>): ModuleMap {
     const result: ModuleMap = new Map()
 
-    idSet.forEach(id => {
+    idSet.forEach((id) => {
       const mod = this.moduleMap.get(id)
       if (mod) {
         result.set(id, mod)
@@ -157,18 +172,15 @@ class Editor {
 
   public execute(type: ModuleOperationType, data: unknown = null) {
     // @ts-ignore
-    this.action.execute({type, data})
+    this.action.execute(type, data)
   }
 
   // selection
   dispatchVisibleSelectedModules() {
     this.updateVisibleSelectedModules()
-    this.action.dispatch({
-      type: 'visible-selected-update',
-      data: {
-        idSet: this.getVisibleSelectedModules(),
-        operators: this.operationHandlers,
-      },
+    this.action.dispatch('visible-selected-update', {
+      idSet: this.getVisibleSelectedModules(),
+      operators: this.operationHandlers,
     })
   }
 
@@ -229,14 +241,15 @@ class Editor {
   }
 
   updateCopiedItemsDelta(): void {
-    this.copiedItems.forEach(copiedItem => {
+    this.copiedItems.forEach((copiedItem) => {
       copiedItem!.x += this.CopyDeltaX
       copiedItem!.y += this.CopyDeltaY
     })
   }
 
   public getIfUnique() {
-    if (this.selectedModules.size === 1) return [...this.selectedModules.values()][0]
+    if (this.selectedModules.size === 1)
+      return [...this.selectedModules.values()][0]
     return null
   }
 
@@ -289,12 +302,16 @@ class Editor {
     }
   */
 
-  zoomAtPoint(point: Point, zoom: number, zoomTo: boolean = false): {
-    scale: number,
+  zoomAtPoint(
+    point: Point,
+    zoom: number,
+    zoomTo: boolean = false,
+  ): {
+    scale: number;
     offset: {
-      x: number,
-      y: number,
-    },
+      x: number;
+      y: number;
+    };
   } {
     const {offset, scale, dpr} = this.viewport
     const minScale = 0.1
@@ -448,7 +465,6 @@ class Editor {
     this.history.destroy()
     this.moduleMap.clear()
   }
-
 }
 
 export default Editor

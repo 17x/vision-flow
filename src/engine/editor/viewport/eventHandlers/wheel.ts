@@ -1,14 +1,15 @@
-import {isNegativeZero} from '../../../core/utils.ts'
-import Editor from '../../editor.ts'
+import { isNegativeZero } from "../../../core/utils.ts"
+import Editor from "../../editor.ts"
 
 function handleWheel(this: Editor, event: WheelEvent) {
   // Prevent page zoom
-  if (event.target as HTMLElement !== this.viewport.wrapper) return
+  if ((event.target as HTMLElement) !== this.viewport.wrapper) return
   // console.log(this.manipulationStatus)
   event.preventDefault()
   event.stopPropagation()
-  if (this.manipulationStatus !== 'static') return
-  const {zooming, panning, scrolling, zoomFactor, translateX, translateY} = detectGestures(event)
+  if (this.manipulationStatus !== "static") return
+  const { zooming, panning, scrolling, zoomFactor, translateX, translateY } =
+    detectGestures(event)
 
   // console.log(`${zooming ? 'zooming' : ''} ${panning ? 'panning' : ''} ${scrolling ? 'scrolling' : ''} `)
 
@@ -16,21 +17,16 @@ function handleWheel(this: Editor, event: WheelEvent) {
 
   if (zooming) {
     console.log(zoomFactor)
-    this.action.dispatch({
-      type: 'world-zoom',
-      data: {
-        zoomFactor,
-        physicalPoint: this.viewport.mouseMovePoint,
-      },
+    this.action.dispatch("world-zoom", {
+      zoomFactor,
+      physicalPoint: this.viewport.mouseMovePoint,
     })
     // this.zoomAtPoint(this.viewport.mouseMovePoint, zoomFactor)
     // this.setTranslateViewport(shiftX, shiftY)
   } else if (panning || scrolling) {
-    this.action.dispatch({
-      type: 'world-shift',
-      data: {
-        x: translateX, y: translateY,
-      },
+    this.action.dispatch("world-shift", {
+      x: translateX,
+      y: translateY,
     })
     // this.translateViewport(translateX, translateY)
   }
@@ -56,7 +52,7 @@ const detectGestures = (() => {
   const zoomSpeedB = 0.1
 
   return (event: WheelEvent) => {
-    const {deltaX, deltaY, altKey} = event
+    const { deltaX, deltaY, altKey } = event
     if (_timer) {
       clearTimeout(_timer)
     }
@@ -80,16 +76,18 @@ const detectGestures = (() => {
 
     if (EVENT_BUFFER.length >= ACTION_THRESHOLD) {
       // detect zooming
-      const allXAreMinusZero = EVENT_BUFFER.every(e => isNegativeZero(e.deltaX))
-      const allYAreFloat = EVENT_BUFFER.every(e => isFloat(e.deltaY))
-      const absBiggerThan4 = EVENT_BUFFER.every(e => Math.abs(e.deltaY) > 4)
+      const allXAreMinusZero = EVENT_BUFFER.every((e) =>
+        isNegativeZero(e.deltaX)
+      )
+      const allYAreFloat = EVENT_BUFFER.every((e) => isFloat(e.deltaY))
+      const absBiggerThan4 = EVENT_BUFFER.every((e) => Math.abs(e.deltaY) > 4)
 
       // console.log('detect zooming')
 
       if (allXAreMinusZero && allYAreFloat && !absBiggerThan4) {
         gestureLock = true
 
-        console.log('touchpadZoomingLock')
+        console.log("touchpadZoomingLock")
         // console.log([...EVENT_BUFFER])
         // zoomFactor = deltaY > 0 ? -.1 : .1
         // zooming = true
@@ -126,7 +124,11 @@ const detectGestures = (() => {
         scrolling = true
         translateX = -deltaX
       }
-    } else if (isNegativeZero(deltaX) && isFloat(deltaY) && Math.abs(deltaY) > 4) {
+    } else if (
+      isNegativeZero(deltaX) &&
+      isFloat(deltaY) &&
+      Math.abs(deltaY) > 4
+    ) {
       // Vertical scrolling
       // console.log('ver scrolling', deltaX)
       if (altKey) {
@@ -175,9 +177,12 @@ const detectGestures = (() => {
   }
 })()
 
-function isUInt(v: number) {return !isFloat(v)}
+function isUInt(v: number) {
+  return !isFloat(v)
+}
 
-function isFloat(v: number) {return Math.abs(v) % 1 !== 0}
+function isFloat(v: number) {
+  return Math.abs(v) % 1 !== 0
+}
 
 export default handleWheel
-

@@ -1,8 +1,9 @@
-import Editor from '../../editor.ts'
-import {updateHoveredModules} from './funcs.ts'
+import Editor from "../../editor.ts"
+import { updateHoveredModules } from "./funcs.ts"
 
 function handleMouseDown(this: Editor, e: MouseEvent) {
-  const {shiftKey, clientY, target, /*button,*/ clientX, metaKey, ctrlKey} = e
+  const { shiftKey, clientY, target, /*button,*/ clientX, metaKey, ctrlKey } =
+    e
 
   if (!(target === this.viewport.wrapper)) return
   // const inViewport = target === this.viewport.wrapper
@@ -20,7 +21,7 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
   e.preventDefault()
 
   if (this.viewport.spaceKeyDown) {
-    return this.manipulationStatus = 'panning'
+    return (this.manipulationStatus = "panning")
   }
 
   const closestId = [...this.hoveredModules][this.hoveredModules.size - 1]
@@ -29,19 +30,19 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
   if (!closestId) {
     // Determine clear selected modules
     if (!modifyKey) {
-      this.action.dispatch({type: 'selection-clear'})
+      this.action.dispatch("selection-clear")
     }
     this.selectedShadow = this.getSelectedIdSet()
     // console.warn(this.selectedShadow)
-    return this.manipulationStatus = 'selecting'
+    return (this.manipulationStatus = "selecting")
   }
 
-  this.manipulationStatus = 'dragging'
+  this.manipulationStatus = "dragging"
   const realSelected = this.getSelectedIdSet()
 
   // Drag all
   if (this.isSelectAll) {
-    realSelected.forEach(id => {
+    realSelected.forEach((id) => {
       this.draggingModules.add(id)
     })
 
@@ -55,38 +56,30 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
 
   if (realSelected.size === 0 || (!isSelected && !modifyKey)) {
     // Initial selection or replace selection without modifier key
-    this.action.dispatch({
-      type: 'selection-modify',
-      data: {
-        mode: 'replace',
-        idSet: new Set([closestId]),
-      },
+    this.action.dispatch("selection-modify", {
+      mode: "replace",
+      idSet: new Set([closestId]),
     })
     this.draggingModules = new Set([closestId])
   } else if (modifyKey) {
     this.draggingModules = new Set(realSelected)
 
     if (isSelected) {
-      console.log('isSelected', isSelected)
+      console.log("isSelected", isSelected)
       this._deselection = closestId
       this.draggingModules.add(closestId)
     } else {
       // Add to existing selection
-      this.action.dispatch({
-        type: 'selection-modify',
-        data: {
-          mode: 'add',
-          idSet: new Set([closestId]),
-        },
+      this.action.dispatch("selection-modify", {
+        mode: "add",
+        idSet: new Set([closestId]),
       })
     }
     this.draggingModules.add(closestId)
-
   } else {
     // Dragging already selected module(s)
     this.draggingModules = new Set(realSelected)
   }
-
 }
 
 export default handleMouseDown

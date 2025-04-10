@@ -1,7 +1,10 @@
 import {initViewportDom, InitViewportDomReturn} from './domManipulations.ts'
 import Editor from '../editor.ts'
 import {Viewport} from './type'
-import {generateBoundingRectFromTwoPoints, throttle} from '../../core/utils.ts'
+import {
+  generateBoundingRectFromTwoPoints,
+  throttle,
+} from '../../core/utils.ts'
 import {createFrame} from './helper.ts'
 import handleMouseDown from './eventHandlers/mouseDown.ts'
 import handleMouseUp from './eventHandlers/mouseUp.ts'
@@ -20,18 +23,31 @@ export function createViewport(this: Editor): Viewport {
     scrollBarX,
     scrollBarY,
   }: InitViewportDomReturn = initViewportDom()
-  const selectionCTX = selectionCanvas.getContext('2d') as CanvasRenderingContext2D
+  const selectionCTX = selectionCanvas.getContext(
+    '2d',
+  ) as CanvasRenderingContext2D
   const mainCTX = mainCanvas.getContext('2d') as CanvasRenderingContext2D
   const eventsController = new AbortController()
-  const resizeObserver = new ResizeObserver(throttle(() => {
-    this.action.dispatch({type: 'viewport-resize', data: null})
-  }, 200))
+  const resizeObserver = new ResizeObserver(
+    throttle(() => {
+      this.action.dispatch('viewport-resize')
+    }, 200),
+  )
   const {signal} = eventsController
   const mouseDownPoint = {x: 0, y: 0}
   const mouseMovePoint = {x: 0, y: 0}
-  const rect = generateBoundingRectFromTwoPoints(mouseDownPoint, mouseMovePoint)
-  const viewportRect = generateBoundingRectFromTwoPoints(mouseDownPoint, mouseMovePoint)
-  const worldRect = generateBoundingRectFromTwoPoints(mouseDownPoint, mouseMovePoint)
+  const rect = generateBoundingRectFromTwoPoints(
+    mouseDownPoint,
+    mouseMovePoint,
+  )
+  const viewportRect = generateBoundingRectFromTwoPoints(
+    mouseDownPoint,
+    mouseMovePoint,
+  )
+  const worldRect = generateBoundingRectFromTwoPoints(
+    mouseDownPoint,
+    mouseMovePoint,
+  )
 
   window.addEventListener('mousedown', handleMouseDown.bind(this), {
     signal,
@@ -43,7 +59,9 @@ export function createViewport(this: Editor): Viewport {
     signal,
     passive: false,
   })
-  wrapper.addEventListener('pointermove', handlePointerMove.bind(this), {signal})
+  wrapper.addEventListener('pointermove', handlePointerMove.bind(this), {
+    signal,
+  })
   wrapper.addEventListener('contextmenu', handleContextMenu.bind(this), {
     signal,
   })
@@ -78,5 +96,4 @@ export function createViewport(this: Editor): Viewport {
     resizeObserver,
     eventsController,
   }
-
 }

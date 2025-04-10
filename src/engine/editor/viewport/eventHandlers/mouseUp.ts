@@ -57,7 +57,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
 
 
           if (closestId && modifyKey && closestId === this._deselection) {
-            this.action.dispatch("selection-modify", {
+            this.action.dispatch("modify-selection", {
               mode: "toggle",
               idSet: new Set([closestId]),
             })

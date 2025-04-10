@@ -69,7 +69,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const SD = getSymmetricDifference(selectedShadow, _selecting)
 
       if (modifyKey) {
-        action.dispatch('selection-modify', {
+        action.dispatch('modify-selection', {
           mode: 'replace',
           idSet: SD,
         })
@@ -79,7 +79,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
         }
         const newSet = new Set([...selectedShadow, ..._selecting])
 
-        action.dispatch('selection-modify', {
+        action.dispatch('modify-selection', {
           mode: 'replace',
           idSet: newSet,
         })

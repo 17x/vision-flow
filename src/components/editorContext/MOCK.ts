@@ -20,7 +20,7 @@ export const createMockData = (editor: Editor) => {
     rotation: 0,
   }
   // const MOCK_ELE_LEN = 1
-  const MOCK_ELE_LEN = 1
+  const MOCK_ELE_LEN = 100
   // const MOCK_ELE_LEN = 200
   // const MOCK_ELE_LEN = 1000
   const shiftSpeed = 100
@@ -54,16 +54,5 @@ export const createMockData = (editor: Editor) => {
     })
   }
 
-  const instantiations = editor.batchCreate(modulesData)
-
-  editor.batchAdd(instantiations)
-  console.log(editor.getSelected)
-  editor.history.add({
-      type: 'history-add',
-      payload: {
-        modules: [...instantiations.values()].map(mod => mod.getDetails()),
-        selectedModules: editor.getSelected,
-      },
-    },
-  )
+  editor.action.dispatch('module-add', modulesData)
 }

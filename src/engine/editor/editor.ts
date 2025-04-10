@@ -433,8 +433,8 @@ class Editor {
        height: 100
      }, 50)*/
     // console.log(testFrame)
-    console.log(frame)
-    console.log(viewportRect)
+    // console.log(frame)
+    // console.log(viewportRect)
 
     const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect, 0.95)
 

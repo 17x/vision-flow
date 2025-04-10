@@ -45,7 +45,7 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
 
   if (realSelected.size === 0 || (!isSelected && !modifyKey)) {
     // Initial selection or replace selection without modifier key
-    this.action.dispatch("selection-modify", {
+    this.action.dispatch("modify-selection", {
       mode: "replace",
       idSet: new Set([closestId]),
     })
@@ -59,7 +59,7 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
       this.draggingModules.add(closestId)
     } else {
       // Add to existing selection
-      this.action.dispatch("selection-modify", {
+      this.action.dispatch("modify-selection", {
         mode: "add",
         idSet: new Set([closestId]),
       })

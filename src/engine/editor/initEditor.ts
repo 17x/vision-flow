@@ -103,7 +103,7 @@ export function initEditor(this: Editor) {
     this.action.dispatch('visible-module-update')
   })
 
-  this.action.on('selection-modify', (data) => {
+  this.action.on('modify-selection', (data) => {
     const {mode, idSet} = data as SelectionModifyData
 
     this.modifySelected(idSet, mode)
@@ -196,7 +196,7 @@ export function initEditor(this: Editor) {
     const savedSelected = new Set(newModules.keys())
 
     this.batchAdd(newModules)
-    this.replaceSelected(new Set(newModules.keys()))
+    this.replaceSelected(savedSelected)
 
     this.dispatchVisibleSelectedModules()
     this.updateVisibleModuleMap()
@@ -256,6 +256,29 @@ export function initEditor(this: Editor) {
       })
     },
   )
+
+  this.action.on('module-add', (data) => {
+    const newModules = this.batchCreate(data)
+    const savedSelected = new Set(newModules.keys())
+
+    this.batchAdd(newModules)
+    this.replaceSelected(savedSelected)
+
+    this.dispatchVisibleSelectedModules()
+    this.updateVisibleModuleMap()
+    this.action.dispatch('visible-module-update')
+
+    const moduleProps = [...newModules.values()].map((mod) => mod.getDetails())
+    // this.getSelected()
+
+    this.history.add({
+      type: 'history-duplicate',
+      payload: {
+        modules: moduleProps,
+        selectedModules: savedSelected,
+      },
+    })
+  })
 
   this.action.on('history-undo', () => {
     undo.call(this)

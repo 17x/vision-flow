@@ -15,7 +15,7 @@ export type ModuleMoveDirection =
 
 export type OperationType =
   'select-all'
-  | 'selection-modify'
+  | 'modify-selection'
   | 'selection-copy'
   | 'selection-delete'
   | 'selection-paste'
@@ -24,7 +24,7 @@ export type OperationType =
   | 'history-undo'
   | 'history-pick'
   | 'selection-duplicate'
-  | 'module-delete'
+  // | 'module-delete'
   | 'selection-clear'
   | 'module-modify'
   | 'module-move'

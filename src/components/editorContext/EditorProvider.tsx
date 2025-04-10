@@ -25,7 +25,12 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [sortedModules, setSortedModules] = useState<ModuleType[]>([])
   const [selectedProps, setSelectedProps] = useState<ModuleProps>(null)
   const [selectedModules, setSelectedModules] = useState<UID[]>([])
-  const [contextMenuData, setContextMenuData] = useState<ContextMenuDataType | null>(null)
+  const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
+  const [contextMenuData, setContextMenuData] = useState<ContextMenuDataType>({
+    idSet: new Set(),
+    position: {x: 0, y: 0},
+    copiedItems: false,
+  })
   const [historyCurrent, setHistoryCurrent] = useState<HistoryNode['id']>(0)
   const [viewport, setViewport] = useState<ViewportInfo>({
     width: 0,
@@ -154,9 +159,12 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
                  className={'relative overflow-hidden flex w-full h-full'}
             ></div>
             <StatusBar worldPoint={worldPoint}/>
-            {contextMenuData && <ContextMenu data={contextMenuData} onClose={() => {
-              setContextMenuData(null)
-            }}/>}
+            {
+              showContextMenu &&
+                <ContextMenu data={contextMenuData} onClose={() => {
+                  setShowContextMenu(false)
+                }}/>
+            }
           </div>
 
           <div style={{width: 200}} className={'h-full flex-shrink-0 border-l border-gray-200'}>
@@ -164,7 +172,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
             <LayerPanel data={sortedModules}
                         selected={selectedModules}
                         handleSelectModule={id => {
-                          executeAction('selection-modify', new Set([id]))
+                          executeAction('modify-selection', new Set([id]))
                         }}/>
             <HistoryPanel/>
           </div>

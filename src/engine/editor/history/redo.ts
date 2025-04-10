@@ -4,7 +4,7 @@ import Editor from '../editor.ts'
 
 export function redo(this: Editor, quiet: boolean = false): HistoryNode | false {
   if (this.history.current === this.history.tail) return false
-  console.log(this.history.current?.data.payload.selectedModules)
+
   this.history.forward()
 
   const {type, payload} = this.history.current!.data

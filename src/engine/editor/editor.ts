@@ -75,7 +75,7 @@ class Editor {
                 data,
                 events = {},
                 config = {
-                  dpr: 2,
+                  dpr: 10,
                 },
               }: EditorInterface) {
     this.visibleModuleMap = new Map()
@@ -312,21 +312,21 @@ class Editor {
       x: number;
       y: number;
     };
-  } {
+  } | false {
     const {offset, scale, dpr} = this.viewport
-    const minScale = 0.1
-    const maxScale = 5
+    const minScale = 0.1 * dpr
+    const maxScale = 5 * dpr
     let newScale = scale + zoom
     // const offsetX = 0
     // const offsetY = 0
-    const pointX = point.x * scale
-    const pointY = point.y * scale
-    const rect = {
-      x: 0,
-      y: 0,
-      width: this.viewport.rect!.width * dpr,
-      height: this.viewport.rect!.height * dpr,
-    }
+    /* const pointX = point.x * scale
+     const pointY = point.y * scale
+     const rect = {
+       x: 0,
+       y: 0,
+       width: this.viewport.rect!.width * dpr,
+       height: this.viewport.rect!.height * dpr,
+     }*/
     /*    console.log(
       pointX,
       pointY,
@@ -336,7 +336,7 @@ class Editor {
       newScale = zoom
     }
 
-    if (newScale < minScale || newScale > maxScale) return
+    if (newScale < minScale || newScale > maxScale) {return false}
 
     // Clamp scale
     const clampedScale = Math.max(minScale, Math.min(maxScale, newScale))
@@ -350,7 +350,13 @@ class Editor {
     // Calculate the offset adjustment so that the zoom is centered around the point
     const newOffsetX = canvasPoint.x - (canvasPoint.x - offset.x) * zoomFactor
     const newOffsetY = canvasPoint.y - (canvasPoint.y - offset.y) * zoomFactor
-
+    console.log({
+      scale: clampedScale,
+      offset: {
+        x: newOffsetX,
+        y: newOffsetY,
+      },
+    })
     // const newOffsetX = offset.x - (canvasPoint.x * (zoomFactor - 1))
     // const newOffsetY = offset.y - (canvasPoint.y * (zoomFactor - 1))
 

@@ -49,15 +49,16 @@ export function initEditor(this: Editor) {
     this.action.dispatch('visible-module-update')
   })
 
-  this.action.on('world-zoom', (data) => {
-    console.log(data)
-    const {zoomFactor, physicalPoint} = data!
-    const {scale, offset} = this.zoomAtPoint(physicalPoint, zoomFactor)
+  this.action.on('world-zoom', ({zoomFactor, physicalPoint}) => {
+    const r = this.zoomAtPoint(physicalPoint, zoomFactor)
+    if (r) {
+      const {scale, offset} = r
+      this.viewport.scale = scale
+      this.viewport.offset.x = offset.x
+      this.viewport.offset.y = offset.y
+      this.action.dispatch('world-update')
+    }
 
-    this.viewport.scale = scale
-    this.viewport.offset.x = offset.x
-    this.viewport.offset.y = offset.y
-    this.action.dispatch('world-update')
     // this.events.onViewportUpdated?.(worldRect as BoundingRect)
   })
 
@@ -141,9 +142,9 @@ export function initEditor(this: Editor) {
     this.updateCopiedItemsDelta()
   })
 
-  this.action.on('selection-paste', () => {
+  this.action.on('selection-paste', (position?) => {
     if (this.copiedItems.length === 0) return
-
+    // console.log(position)
     const newModules = this.batchCreate(this.copiedItems)
     const idSet = new Set(newModules.keys())
 

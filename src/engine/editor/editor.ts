@@ -179,15 +179,12 @@ class Editor {
 
   // selection
   dispatchVisibleSelectedModules() {
-    this.updateVisibleSelectedModules()
+    updateVisibleSelectedModules.call(this)
+
     this.action.dispatch('visible-selected-update', {
       idSet: this.getVisibleSelectedModules(),
       operators: this.operationHandlers,
     })
-  }
-
-  public updateVisibleSelectedModules() {
-    updateVisibleSelectedModules.call(this)
   }
 
   public getVisibleSelectedModules() {
@@ -198,7 +195,7 @@ class Editor {
     if (this.isSelectAll) {
       return 'all'
     }
-    return new Set(this.selectedModules.keys())
+    return new Set(this.selectedModules)
   }
 
   public getSelectedIdSet(): Set<UID> {

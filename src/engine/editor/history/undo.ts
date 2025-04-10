@@ -54,12 +54,10 @@ export function undo(this: Editor, quiet: boolean = false): HistoryNode | false 
   this.history.back()
   // this.editor.updateVisibleModuleMap(this.editor.viewport.worldRect)
   if (!quiet) {
+    console.log(selectedModules)
     // restore selected modules
-    if (selectedModules === 'all') {
-      this.selectAll()
-    } else {
-      this.replaceSelected(selectedModules)
-    }
+    this.replaceSelected(selectedModules)
+    this.dispatchVisibleSelectedModules()
 
     // this.events.onHistoryUpdated?.(this.history)
   }

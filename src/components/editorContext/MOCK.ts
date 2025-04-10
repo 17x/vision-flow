@@ -20,7 +20,7 @@ export const createMockData = (editor: Editor) => {
     rotation: 0,
   }
   // const MOCK_ELE_LEN = 1
-  const MOCK_ELE_LEN = 10
+  const MOCK_ELE_LEN = 1
   // const MOCK_ELE_LEN = 200
   // const MOCK_ELE_LEN = 1000
   const shiftSpeed = 100

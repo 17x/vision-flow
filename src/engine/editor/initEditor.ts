@@ -113,20 +113,21 @@ export function initEditor(this: Editor) {
   })
 
   this.action.on('selection-delete', () => {
-    const backup = this.batchDelete(
-      this.isSelectAll ? 'all' : this.selectedModules,
-    )
+    const backup = this.batchDelete(this.getSelected())
+    const savedSelected = this.getSelectedIdSet()
+
     this.selectedModules.clear()
     this.isSelectAll = false
     this.dispatchVisibleSelectedModules()
     this.updateVisibleModuleMap()
     this.action.dispatch('visible-module-update')
 
+    console.log(savedSelected)
     this.history.add({
       type: 'history-delete',
       payload: {
         modules: backup,
-        selectedModules: this.getSelected(),
+        selectedModules: savedSelected,
       },
     })
   })
@@ -167,6 +168,7 @@ export function initEditor(this: Editor) {
     }
 
     const idSet = new Set(newModules.keys())
+    // const savedSelected = this.getSelectedIdSet()
 
     this.batchAdd(newModules)
     this.replaceSelected(idSet)
@@ -180,7 +182,7 @@ export function initEditor(this: Editor) {
       type: 'history-paste',
       payload: {
         modules: [...newModules.values()].map((mod) => mod.getDetails()),
-        selectedModules: this.getSelected(),
+        selectedModules: idSet,
       },
     })
   })
@@ -200,6 +202,8 @@ export function initEditor(this: Editor) {
     })
 
     const newModules = this.batchCreate(temp)
+    const savedSelected = new Set(newModules.keys())
+
     this.batchAdd(newModules)
     this.isSelectAll = false
     this.replaceSelected(new Set(newModules.keys()))
@@ -215,7 +219,7 @@ export function initEditor(this: Editor) {
       type: 'history-duplicate',
       payload: {
         modules: moduleProps,
-        selectedModules: this.getSelected(),
+        selectedModules: savedSelected,
       },
     })
   })
@@ -228,7 +232,7 @@ export function initEditor(this: Editor) {
       const MODULE_MOVE_STEP = 5
       console.log(direction, delta)
 
-      let backup: 'all' | Set<UID>
+      const savedSelected: Set<UID> = this.getSelectedIdSet()
 
       switch (direction) {
         case 'module-move-down':
@@ -247,11 +251,11 @@ export function initEditor(this: Editor) {
 
       if (this.isSelectAll) {
         this.batchMove('all', delta)
-        backup = 'all'
       } else {
-        backup = new Set(this.selectedModules)
         this.batchMove(this.selectedModules, delta)
       }
+
+      // const savedSelected = this.getSelectedIdSet()
 
       this.dispatchVisibleSelectedModules()
       this.updateVisibleModuleMap()
@@ -261,21 +265,21 @@ export function initEditor(this: Editor) {
         type: 'history-move',
         payload: {
           delta,
-          selectedModules: backup,
+          selectedModules: savedSelected,
         },
       })
     },
   )
 
   this.action.on('history-undo', () => {
-    undo.call(this, true)
+    undo.call(this)
     this.updateVisibleModuleMap()
     this.action.dispatch('visible-module-update')
     this.events.onHistoryUpdated?.(this.history)
   })
 
   this.action.on('history-redo', () => {
-    redo.call(this, true)
+    redo.call(this)
     this.updateVisibleModuleMap()
     this.action.dispatch('visible-module-update')
     this.events.onHistoryUpdated?.(this.history)

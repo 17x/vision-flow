@@ -1,6 +1,6 @@
 type HistoryPrev = HistoryNode | null
 type HistoryNext = HistoryPrev
-type HistorySelectedModules = Set<UID> | 'all'
+type HistorySelectedModules = Set<UID>
 type HistoryModules = ModuleProps[] | UID[]
 
 export type HistoryOperationType =

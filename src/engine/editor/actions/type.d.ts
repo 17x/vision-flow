@@ -24,7 +24,7 @@ export type EditorEventMap = {
   * */
   'editor-selection-update': never;
   'visible-module-update': ModuleMap;
-  'visible-selected-update': { idSet: Set<UID>; operators: never };
+  'visible-selected-update': never;
   'modify-selection': SelectionModifyData;
   'selection-clear': never;
   'selection-copy': never;

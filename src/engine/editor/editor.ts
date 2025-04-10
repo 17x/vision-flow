@@ -187,7 +187,7 @@ class Editor {
     })*/
   }
 
-  public getVisibleSelectedModules() {
+  public get getVisibleSelectedModules() {
     return new Set(this.visibleSelectedModules)
   }
 

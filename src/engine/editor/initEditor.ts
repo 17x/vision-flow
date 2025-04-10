@@ -71,29 +71,6 @@ export function initEditor(this: Editor) {
     // this.events.onViewportUpdated?.(worldRect as BoundingRect)
   })
 
-  on('visible-module-update', () => {
-    dispatch('visible-selected-update')
-    resetCanvas(
-      this.viewport.mainCTX,
-      this.viewport.dpr,
-      this.viewport.scale,
-      this.viewport.offset,
-    )
-    this.renderModules()
-  })
-
-  on('visible-selected-update', () => {
-    const idSet = this.getVisibleSelectedModules()
-    // operators = this.operationHandlers,
-    resetCanvas(
-      this.viewport.selectionCTX,
-      this.viewport.dpr,
-      this.viewport.scale,
-      this.viewport.offset,
-    )
-    this.renderSelections(idSet as Set<UID>)
-  })
-
   on('select-all', () => {
     this.selectAll()
     dispatch('editor-selection-update')
@@ -259,12 +236,11 @@ export function initEditor(this: Editor) {
   })
 
   on('editor-module-map-update', (historyData: HistoryOperation) => {
-    this.replaceSelected(historyData.payload.selectedModules)
-
-    // this.dispatchVisibleSelectedModules()
-    dispatch('editor-selection-update')
+    // this.replaceSelected(historyData.payload.selectedModules)
     this.updateVisibleModuleMap()
+
     dispatch('visible-module-update')
+    dispatch('editor-selection-update')
 
     this.history.add(historyData)
   })
@@ -272,10 +248,31 @@ export function initEditor(this: Editor) {
   on('editor-selection-update', () => {
     updateVisibleSelectedModules.call(this)
 
-    dispatch('visible-selected-update', {
-      idSet: this.getVisibleSelectedModules(),
-      operators: this.operationHandlers,
-    })
+    dispatch('visible-selected-update')
+  })
+
+  on('visible-module-update', () => {
+    dispatch('visible-selected-update')
+    resetCanvas(
+      this.viewport.mainCTX,
+      this.viewport.dpr,
+      this.viewport.scale,
+      this.viewport.offset,
+    )
+    this.renderModules()
+  })
+
+  on('visible-selected-update', () => {
+    const idSet = this.getVisibleSelectedModules
+    console.log(idSet)
+    // operators = this.operationHandlers,
+    resetCanvas(
+      this.viewport.selectionCTX,
+      this.viewport.dpr,
+      this.viewport.scale,
+      this.viewport.offset,
+    )
+    this.renderSelections(idSet as Set<UID>)
   })
 
   on('history-undo', () => {

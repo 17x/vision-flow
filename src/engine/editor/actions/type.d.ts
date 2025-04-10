@@ -22,8 +22,8 @@ export type EditorEventMap = {
   /*
   * selected has been changed
   * */
-  'editor-selection-update': boolean
-  'visible-module-update': ModuleMap;
+  'editor-selection-update': never
+  'visible-module-update': boolean;
   'visible-selected-update': never;
   'modify-selection': SelectionModifyData;
   'selection-clear': never;

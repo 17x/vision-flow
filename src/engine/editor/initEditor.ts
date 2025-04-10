@@ -41,15 +41,14 @@ export function initEditor(this: Editor) {
     // this.replaceSelected(historyData.payload.selectedModules)
     this.updateVisibleModuleMap()
 
-    dispatch('visible-module-update')
+    dispatch('visible-module-update', true)
     dispatch('editor-selection-update')
 
     this.history.add(historyData)
   })
 
-  on('editor-selection-update', (quiet = false) => {
+  on('editor-selection-update', () => {
     updateVisibleSelected.call(this)
-
     dispatch('visible-selected-update')
   })
 
@@ -260,8 +259,10 @@ export function initEditor(this: Editor) {
     })
   })
 
-  on('visible-module-update', () => {
-    dispatch('visible-selected-update')
+  on('visible-module-update', (quite = false) => {
+    if (!quite) {
+      dispatch('visible-selected-update')
+    }
     resetCanvas(
       this.viewport.mainCTX,
       this.viewport.dpr,

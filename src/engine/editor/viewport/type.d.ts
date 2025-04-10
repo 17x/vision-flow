@@ -19,7 +19,6 @@ export type ViewportManipulationType =
   | 'selecting'
 
 export interface Viewport {
-  // editor: Editor
   resizeObserver: ResizeObserver
   wrapper: HTMLDivElement
   scrollBarX: HTMLDivElement
@@ -33,21 +32,35 @@ export interface Viewport {
   initialized: boolean
   dpr: number
   spaceKeyDown: boolean
-  // hoveredModules: Set<UID>
-  // handlingModules: Set<UID>
   zooming: boolean
-  // manipulationStatus: ViewportManipulationType
+  /*
+  * frame
+  *
+  * A rect that based on world coordinate, x=0, y=0
+  * Its size can be modified
+  * */
   frame: Partial<RectangleRenderProps> & BoundingRect
+  /*
+  * mouseDownPoint
+  * relative position to wrapper's top-left
+  * */
   mouseDownPoint: Point
   mouseMovePoint: Point
   offset: Point
   rect: BoundingRect
+  /*
+  * viewportRect:
+  *
+  * Its width equals to Canvas real width, and height also
+  *
+  * width = canvas.style.width * dpr
+  *
+  * height = canvas.style.height * dpr
+  * */
   viewportRect: BoundingRect
   worldRect: BoundingRect
-  // domResizing: boolean
   scale: number
   enableCrossLine: boolean
   drawCrossLineDefault: boolean
   drawCrossLine: boolean
-
 }

@@ -145,8 +145,9 @@ export function initEditor(this: Editor) {
 
   this.action.on('selection-paste', (position?) => {
     if (this.copiedItems.length === 0) return
-    console.log(position)
+
     let newModules: ModuleMap
+
     if (position) {
       const {x, y} = this.getWorldPointByViewportPoint(position.x, position.y)
       const topLeftItem = this.copiedItems.reduce((prev, current) => {
@@ -154,7 +155,7 @@ export function initEditor(this: Editor) {
       })
       const offsetX = x - topLeftItem.x
       const offsetY = y - topLeftItem.y
-      
+
       const offsetItems = this.copiedItems.map((item) => {
 
         return {
@@ -169,7 +170,6 @@ export function initEditor(this: Editor) {
       newModules = this.batchCreate(this.copiedItems)
     }
 
-    console.log(this.copiedItems)
     const idSet = new Set(newModules.keys())
 
     this.batchAdd(newModules)

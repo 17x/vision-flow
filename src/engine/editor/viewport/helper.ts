@@ -1,26 +1,24 @@
-import {RectangleRenderProps} from "../../core/renderer/type"
-import {generateBoundingRectFromRect} from "../../core/utils.ts"
+import {RectangleRenderProps} from '../../core/renderer/type'
+import {generateBoundingRectFromRect} from '../../core/utils.ts'
 
-export const fitRectToViewport = (rect: Rect, viewport: Rect): {
+/*
+* Fit a world coordinate based rect into pixel-based viewport
+* which can put the rect middle of the viewport
+* paddingScale can leave some space between the frame and the viewport boundary
+* */
+export const fitRectToViewport = (rect: Rect, viewport: Rect, paddingScale = 0.98): {
   scale: number
   offsetX: number
   offsetY: number
 } => {
   const {width: viewWidth, height: viewHeight} = viewport
   const {width: rectWidth, height: rectHeight} = rect
-  const paddingScale = 0.98
+  // const paddingScale = 0.98
   const scaleX = viewWidth / rectWidth
   const scaleY = viewHeight / rectHeight
   const scale = Math.min(scaleX, scaleY) * paddingScale
   const offsetX = ((viewWidth - rectWidth * scale) / 2 - rect.x * scale) / 2
   const offsetY = ((viewHeight - rectHeight * scale) / 2 - rect.y * scale) / 2
-  // const offsetX: number = (viewWidth - rectWidth * scale) / 2 - rect.x * scale
-  // const offsetY: number = (viewHeight - rectHeight * scale) / 2 - rect.y * scale
-
-  // offsetX = (viewWidth - rectWidth * scale) / 2 - rect.x * scale;
-  // offsetY = (viewHeight - rectHeight * scale) / 2 - rect.y * scale;
-  // offsetX = (viewWidth - rectWidth * scale) / 2 - rect.x * scale
-  // offsetY = (viewHeight - rectHeight * scale) / 2 - rect.y * scale
 
   return {
     scale,

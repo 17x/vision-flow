@@ -93,14 +93,13 @@ export function initEditor(this: Editor) {
   this.action.on('select-all', () => {
     this.selectAll()
     this.dispatchVisibleSelectedModules()
-    // this.events.onSelectionUpdated?.(this.getSelected, null)
   })
 
   this.action.on('selection-clear', () => {
     this.selectedModules.clear()
     this.dispatchVisibleSelectedModules()
-    this.updateVisibleModuleMap()
-    this.action.dispatch('visible-module-update')
+    // this.updateVisibleModuleMap()
+    // this.action.dispatch('visible-module-update')
   })
 
   this.action.on('modify-selection', (data) => {

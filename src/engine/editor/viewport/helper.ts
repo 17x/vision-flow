@@ -13,12 +13,11 @@ export const fitRectToViewport = (rect: Rect, viewport: Rect, paddingScale = 0.9
 } => {
   const {width: viewWidth, height: viewHeight} = viewport
   const {width: rectWidth, height: rectHeight} = rect
-  // const paddingScale = 0.98
   const scaleX = viewWidth / rectWidth
   const scaleY = viewHeight / rectHeight
   const scale = Math.min(scaleX, scaleY) * paddingScale
-  const offsetX = ((viewWidth - rectWidth * scale) / 2 - rect.x * scale) / 2
-  const offsetY = ((viewHeight - rectHeight * scale) / 2 - rect.y * scale) / 2
+  const offsetX = ((viewWidth - rectWidth * scale) / 2 - rect.x * scale)
+  const offsetY = ((viewHeight - rectHeight * scale) / 2 - rect.y * scale)
 
   return {
     scale,

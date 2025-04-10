@@ -52,7 +52,7 @@ export type EditorEventMap = {
   'viewport-mouse-down': never;
   'viewport-mouse-move': never;
   'viewport-mouse-up': never;
-  'world-zoom': {
+  'world-zoom': 'fit' | {
     zoomFactor: number;
     physicalPoint: Point;
   };

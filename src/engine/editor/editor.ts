@@ -443,8 +443,7 @@ class Editor {
   }
 
   fitFrame() {
-    console.log('fit')
-    const {frame, viewportRect} = this.viewport
+    const {frame, viewportRect, dpr} = this.viewport
     /* const testFrame = generateBoundingRectFromRotatedRect({
        x: 800,
        y: 800,
@@ -455,14 +454,14 @@ class Editor {
     console.log(frame)
     console.log(viewportRect)
 
-    const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect)
+    const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect, 0.95)
 
     // console.log(virtualRect)
     // console.log(scale, offsetX, offsetY)
     this.viewport.scale = scale
-    this.viewport.offset.x = offsetX
-    this.viewport.offset.y = offsetY
-    this.action.dispatch('world-update')
+    this.viewport.offset.x = offsetX / dpr
+    this.viewport.offset.y = offsetY / dpr
+    // this.action.dispatch('world-update')
     // this.viewport.render()
     // this.viewport.updateWorldRect()
   }

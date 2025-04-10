@@ -1,11 +1,9 @@
-import {fitRectToViewport} from './viewport/helper.ts'
 import resetCanvas from './viewport/resetCanvas.tsx'
 import {SelectionModifyData} from './actions/type'
 import Editor from './editor.ts'
 import {redo} from './history/redo.ts'
 import {undo} from './history/undo.ts'
 import {pick} from './history/pick.ts'
-import {screenToCanvas} from '../lib/lib.ts'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
@@ -17,21 +15,13 @@ export function initEditor(this: Editor) {
 
   action.on('viewport-resize', () => {
     this.updateViewport()
+    this.updateWorldRect()
 
-    if (!this.viewport.initialized) {
-      const {frame, viewportRect} = this.viewport
-      const {scale, offsetX, offsetY} = fitRectToViewport(
-        frame,
-        viewportRect,
-      )
-
-      this.viewport.scale = scale
-      this.viewport.offset.x = offsetX
-      this.viewport.offset.y = offsetY
-      this.viewport.initialized = true
+    if (!this.initialized) {
+      this.initialized = true
+      this.fitFrame()
     }
 
-    this.updateWorldRect()
     this.action.dispatch('world-update')
   })
 
@@ -50,14 +40,19 @@ export function initEditor(this: Editor) {
     this.action.dispatch('visible-module-update')
   })
 
-  this.action.on('world-zoom', ({zoomFactor, physicalPoint}) => {
-    const r = this.zoomAtPoint(physicalPoint, zoomFactor)
-    if (r) {
-      const {scale, offset} = r
-      this.viewport.scale = scale
-      this.viewport.offset.x = offset.x
-      this.viewport.offset.y = offset.y
-      this.action.dispatch('world-update')
+  this.action.on('world-zoom', (arg) => {
+    if (arg === 'fit') {
+      this.fitFrame()
+    } else {
+      const r = this.zoomAtPoint(arg.physicalPoint, arg.zoomFactor)
+
+      if (r) {
+        const {scale, offset} = r
+        this.viewport.scale = scale
+        this.viewport.offset.x = offset.x
+        this.viewport.offset.y = offset.y
+        this.action.dispatch('world-update')
+      }
     }
 
     // this.events.onViewportUpdated?.(worldRect as BoundingRect)

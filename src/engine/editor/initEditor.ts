@@ -43,6 +43,7 @@ export function initEditor(this: Editor) {
   this.action.on('world-zoom', (arg) => {
     if (arg === 'fit') {
       this.fitFrame()
+      this.action.dispatch('world-update')
     } else {
       const r = this.zoomAtPoint(arg.physicalPoint, arg.zoomFactor)
 

@@ -248,7 +248,7 @@ export function initEditor(this: Editor) {
   on('editor-selection-update', () => {
     updateVisibleSelectedModules.call(this)
 
-    dispatch('visible-selected-update')
+     dispatch('visible-selected-update')
   })
 
   on('visible-module-update', () => {

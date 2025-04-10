@@ -51,11 +51,9 @@ export function modifySelected(this: Editor, idSet: Set<UID>, action: SelectionA
 }
 
 export function updateVisibleSelectedModules(this: Editor) {
-  const visibleModuleMap = this.getVisibleModuleMap()
   this.visibleSelectedModules.clear()
   this.operationHandlers.clear()
-
-  visibleModuleMap.forEach(module => {
+  this.getVisibleModuleMap.forEach(module => {
     if (module.type === 'rectangle') {
       const {x, y, id, width, height, rotation} = module as RectangleProps
       const points = getBoxControlPoints(x, y, width, height, rotation)

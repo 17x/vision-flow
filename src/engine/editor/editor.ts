@@ -17,7 +17,6 @@ import {
 import {OperationHandler, SelectionActionMode} from './selection/type'
 import {
   modifySelected,
-  updateVisibleSelectedModules,
 } from './selection/helper.ts'
 import {updateScrollBars} from './viewport/domManipulations.ts'
 import render from '../core/renderer/mainCanvasRenderer.ts'
@@ -168,23 +167,13 @@ class Editor {
     })
   }
 
-  getVisibleModuleMap(): ModuleMap {
+  public get getVisibleModuleMap(): ModuleMap {
     return new Map(this.visibleModuleMap)
   }
 
   public execute(type: OperationType, data: unknown = null) {
     // @ts-ignore
     this.action.execute(type, data)
-  }
-
-  // selection
-  dispatchVisibleSelectedModules() {
-    updateVisibleSelectedModules.call(this)
-
-    /*this.action.dispatch('visible-selected-update', {
-      idSet: this.getVisibleSelectedModules(),
-      operators: this.operationHandlers,
-    })*/
   }
 
   public get getVisibleSelectedModules() {

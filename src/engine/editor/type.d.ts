@@ -63,7 +63,7 @@ export interface WorldInfo extends Size {
 
 type HistoryUpdatedHandler = (history: History) => void;
 type ModulesUpdatedHandler = (moduleMap: ModuleMap) => void;
-type SelectionUpdatedHandler = (selected: Set<UID> | 'all', selectedProps?: ModuleProps) => void;
+type SelectionUpdatedHandler = (selected: Set<UID>, selectedProps?: ModuleProps) => void;
 type ViewportUpdatedHandler = (viewportInfo: BoundingRect) => void;
 type WorldUpdatedHandler = (worldInfo: WorldInfo) => void;
 type WorldMouseMoveUpdatedHandler = (point: Point) => void;

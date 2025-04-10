@@ -91,15 +91,13 @@ export function initEditor(this: Editor) {
   })
 
   this.action.on('select-all', () => {
-    this.selectedModules.clear()
-    this.isSelectAll = true
+    this.selectAll()
     this.dispatchVisibleSelectedModules()
-    // this.events.onSelectionUpdated?.('all', null)
+    // this.events.onSelectionUpdated?.(this.getSelected, null)
   })
 
   this.action.on('selection-clear', () => {
     this.selectedModules.clear()
-    this.isSelectAll = false
     this.dispatchVisibleSelectedModules()
     this.updateVisibleModuleMap()
     this.action.dispatch('visible-module-update')
@@ -113,11 +111,10 @@ export function initEditor(this: Editor) {
   })
 
   this.action.on('selection-delete', () => {
-    const backup = this.batchDelete(this.getSelected())
-    const savedSelected = this.getSelectedIdSet()
+    const backup = this.batchDelete(this.getSelected)
+    const savedSelected = this.getSelected
 
     this.selectedModules.clear()
-    this.isSelectAll = false
     this.dispatchVisibleSelectedModules()
     this.updateVisibleModuleMap()
     this.action.dispatch('visible-module-update')
@@ -134,7 +131,7 @@ export function initEditor(this: Editor) {
 
   this.action.on('selection-copy', () => {
     this.copiedItems = this.batchCopy(
-      this.isSelectAll ? 'all' : this.selectedModules,
+      this.getSelected,
       true,
     )
     this.updateCopiedItemsDelta()
@@ -168,7 +165,7 @@ export function initEditor(this: Editor) {
     }
 
     const idSet = new Set(newModules.keys())
-    // const savedSelected = this.getSelectedIdSet()
+    // const savedSelected = this.getSelected
 
     this.batchAdd(newModules)
     this.replaceSelected(idSet)
@@ -188,13 +185,7 @@ export function initEditor(this: Editor) {
   })
 
   this.action.on('selection-duplicate', () => {
-    let temp: ModuleProps[]
-
-    if (this.isSelectAll) {
-      temp = this.batchCopy('all', true)
-    } else {
-      temp = this.batchCopy(this.selectedModules, true)
-    }
+    const temp: ModuleProps[] = this.batchCopy(this.selectedModules, true)
 
     temp.forEach((copiedItem) => {
       copiedItem!.x += this.CopyDeltaX
@@ -205,7 +196,6 @@ export function initEditor(this: Editor) {
     const savedSelected = new Set(newModules.keys())
 
     this.batchAdd(newModules)
-    this.isSelectAll = false
     this.replaceSelected(new Set(newModules.keys()))
 
     this.dispatchVisibleSelectedModules()
@@ -227,12 +217,12 @@ export function initEditor(this: Editor) {
   this.action.on(
     'selection-move',
     ({direction, delta = {x: 0, y: 0}}) => {
-      if (!this.isSelectAll && this.selectedModules.size === 0) return
+      if (this.getSelected.size === 0) return
 
       const MODULE_MOVE_STEP = 5
       console.log(direction, delta)
 
-      const savedSelected: Set<UID> = this.getSelectedIdSet()
+      const savedSelected: Set<UID> = this.getSelected
 
       switch (direction) {
         case 'module-move-down':
@@ -249,13 +239,9 @@ export function initEditor(this: Editor) {
           break
       }
 
-      if (this.isSelectAll) {
-        this.batchMove('all', delta)
-      } else {
-        this.batchMove(this.selectedModules, delta)
-      }
+      this.batchMove(this.selectedModules, delta)
 
-      // const savedSelected = this.getSelectedIdSet()
+      // const savedSelected = this.getSelected
 
       this.dispatchVisibleSelectedModules()
       this.updateVisibleModuleMap()

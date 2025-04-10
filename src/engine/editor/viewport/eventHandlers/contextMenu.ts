@@ -12,7 +12,7 @@ function handleContextMenu(this: Editor, e: MouseEvent) {
   }
 
   const lastId = [...this.hoveredModules][this.hoveredModules.size - 1]
-  const selectedIdSet = this.getSelectedIdSet()
+  const selectedIdSet = this.getSelected
   const position = {...this.viewport.mouseMovePoint}
   let idSet = new Set<UID>()
 

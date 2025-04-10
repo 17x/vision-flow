@@ -17,7 +17,7 @@ class History extends DoublyLinkedList {
       type: 'history-init',
       payload: {
         state: null,
-        selectedModules: 'all',
+        selectedModules: new Set(),
       },
     })
 
@@ -90,11 +90,6 @@ class History extends DoublyLinkedList {
     // this.editor.updateVisibleModuleMap(this.editor.viewport.worldRect)
     if (!quiet) {
       // restore selected modules
-      if (selectedModules === 'all') {
-        this.editor.selectAll()
-      } else {
-        this.editor.replace(selectedModules)
-      }
 
       this.editor.events.onHistoryUpdated?.(this)
     }
@@ -154,11 +149,7 @@ class History extends DoublyLinkedList {
     // this.editor.updateVisibleModuleMap(this.editor.viewport.worldRect)
 
     if (!quiet) {
-      if (selectedModules === 'all') {
-        this.editor.selectAll()
-      } else {
-        this.editor.replace(selectedModules)
-      }
+
 
       this.editor.events.onHistoryUpdated?.(this)
     }
@@ -190,11 +181,7 @@ class History extends DoublyLinkedList {
 
       // this.editor.updateVisibleModuleMap(this.editor.viewport.worldRect)
 
-      if (selectedModules === 'all') {
-        this.editor.selectAll()
-      } else {
-        this.editor.replace(selectedModules)
-      }
+
       this.editor.events.onHistoryUpdated?.(this)
     } else {
       // do sth...

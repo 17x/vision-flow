@@ -61,7 +61,7 @@ export const createMockData = (editor: Editor) => {
       type: 'history-add',
       payload: {
         modules: [...instantiations.values()].map(mod => mod.getDetails()),
-        selectedModules: editor.getSelected(),
+        selectedModules: editor.getSelected,
       },
     },
   )

@@ -59,7 +59,7 @@ class Editor {
   readonly selectedModules: Set<UID> = new Set()
   readonly visibleSelectedModules: Set<UID> = new Set()
   readonly operationHandlers: Set<OperationHandler> = new Set()
-  isSelectAll: boolean = false
+
   resizeHandleSize: number = 10
   copiedItems: ModuleProps[] = []
   hoveredModules: Set<UID> = new Set()
@@ -114,23 +114,23 @@ class Editor {
   }
 
   batchCopy(
-    from: 'all' | Set<UID>,
+    from: Set<UID>,
     removeId = false,
     addOn?: { string: unknown },
   ): ModuleProps[] {
     return batchCopy.call(this, from, removeId, addOn)
   }
 
-  batchDelete(from: 'all' | Set<UID>) {
+  batchDelete(from: Set<UID>) {
     return batchDelete.call(this, from)
   }
 
-  batchMove(from: 'all' | Set<UID>, delta: Point) {
+  batchMove(from: Set<UID>, delta: Point) {
     batchMove.call(this, from, delta)
   }
 
   batchModify(
-    from: 'all' | Set<UID>,
+    from: Set<UID>,
     data: Partial<ModuleProps>,
     historyCode?: HistoryOperationType,
   ) {
@@ -191,24 +191,7 @@ class Editor {
     return new Set(this.visibleSelectedModules)
   }
 
-  public getSelected(): Set<UID> | 'all' {
-    if (this.isSelectAll) {
-      return 'all'
-    }
-    return new Set(this.selectedModules)
-  }
-
-  public getSelectedIdSet(): Set<UID> {
-    if (this.isSelectAll) {
-      const idSet = new Set<UID>()
-
-      this.moduleMap.forEach((module) => {
-        idSet.add(module.id)
-      })
-
-      return idSet
-    }
-
+  public get getSelected(): Set<UID> {
     return new Set(this.selectedModules)
   }
 
@@ -234,9 +217,11 @@ class Editor {
 
   public selectAll(): void {
     this.selectedModules.clear()
-    this.isSelectAll = true
-    // this.update()
-    this.events.onSelectionUpdated?.('all', null)
+    this.moduleMap.forEach((module) => {
+      this.selectedModules.add(module.id)
+    })
+
+    this.events.onSelectionUpdated?.(this.selectedModules)
   }
 
   updateCopiedItemsDelta(): void {

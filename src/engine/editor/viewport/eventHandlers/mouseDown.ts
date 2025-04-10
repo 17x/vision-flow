@@ -32,24 +32,13 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
     if (!modifyKey) {
       this.action.dispatch("selection-clear")
     }
-    this.selectedShadow = this.getSelectedIdSet()
+    this.selectedShadow = this.getSelected
     // console.warn(this.selectedShadow)
     return (this.manipulationStatus = "selecting")
   }
 
   this.manipulationStatus = "dragging"
-  const realSelected = this.getSelectedIdSet()
-
-  // Drag all
-  if (this.isSelectAll) {
-    realSelected.forEach((id) => {
-      this.draggingModules.add(id)
-    })
-
-    this._deselection = closestId
-
-    return
-  }
+  const realSelected = this.getSelected
 
   // this.draggingModules = new Set(this.selectedModules)
   const isSelected = realSelected.has(closestId)

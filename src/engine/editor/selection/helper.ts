@@ -17,7 +17,7 @@ export function modifySelected(this: Editor, idSet: Set<UID>, action: SelectionA
       // console.log(eventCallBackData)
     }
   }
-  const realSelectedModules = this.getSelectedIdSet()
+  const realSelectedModules = this.getSelected
 
   this.selectedModules.clear()
 
@@ -46,12 +46,7 @@ export function modifySelected(this: Editor, idSet: Set<UID>, action: SelectionA
     }
   })
 
-  this.isSelectAll = realSelectedModules.size === this.moduleMap.size
-
-  // this.selectedModules.clear()
-  if (!this.isSelectAll) {
-    realSelectedModules.forEach(id => this.selectedModules.add(id))
-  }
+  realSelectedModules.forEach(id => this.selectedModules.add(id))
   // this.events.onSelectionUpdated?.(idSet, eventCallBackData)
 }
 
@@ -80,14 +75,8 @@ export function updateVisibleSelectedModules(this: Editor) {
       })
     }
 
-    if (this.isSelectAll) {
-      visibleModuleMap.forEach(module => {
-        this.visibleSelectedModules.add(module.id)
-      })
-    } else {
-      if (this.selectedModules.has(module.id)) {
-        this.visibleSelectedModules.add(module.id)
-      }
+    if (this.selectedModules.has(module.id)) {
+      this.visibleSelectedModules.add(module.id)
     }
   })
 }

@@ -38,22 +38,18 @@ export function batchAdd(this: Editor, modules: ModuleMap) {
   this.events.onModulesUpdated?.(this.moduleMap)
 }
 
-export function batchCopy(this: Editor, from: 'all' | Set<UID>, removeId = false, addOn?: {
+export function batchCopy(this: Editor, from: Set<UID>, removeId = false, addOn?: {
   string: unknown
 }): ModuleProps[] {
   const result: ModuleProps[] = []
-  let modulesMap: ModuleMap = new Map()
+  const modulesMap: ModuleMap = new Map()
 
-  if (from === 'all') {
-    modulesMap = this.moduleMap
-  } else if (typeCheck(from) === 'set') {
-    from.forEach(id => {
-      const mod = this.moduleMap.get(id)
-      if (mod) {
-        modulesMap.set(id, mod)
-      }
-    })
-  }
+  from.forEach(id => {
+    const mod = this.moduleMap.get(id)
+    if (mod) {
+      modulesMap.set(id, mod)
+    }
+  })
 
   modulesMap.forEach(mod => {
     const data: ModuleProps = mod.getDetails()
@@ -72,32 +68,18 @@ export function batchCopy(this: Editor, from: 'all' | Set<UID>, removeId = false
   return result
 }
 
-export function batchDelete(this: Editor, from: 'all' | Set<UID>): ModuleProps[] {
-  let backup: ModuleProps[] = []
+export function batchDelete(this: Editor, from: Set<UID>): ModuleProps[] {
+  const backup: ModuleProps[] = this.batchCopy(from)
 
-  if (from === 'all') {
-    backup = this.batchCopy('all')
-    this.moduleMap.clear()
-  } else if (typeCheck(from) === 'set') {
-    backup = this.batchCopy(from)
-    backup.forEach(module => {
-      this.moduleMap.delete(module.id)
-    })
-  }
+  backup.forEach(module => {
+    this.moduleMap.delete(module.id)
+  })
 
   return backup
 }
 
-export function batchMove(this: Editor, from: 'all' | Set<UID>, delta: Point) {
-  let modulesMap: ModuleMap | null = null
-
-  if (from === 'all') {
-    modulesMap = this.moduleMap
-  } else if (typeCheck(from) === 'set') {
-    modulesMap = this.getModulesByIdSet(from)
-  } else {
-    return false
-  }
+export function batchMove(this: Editor, from: Set<UID>, delta: Point) {
+  const modulesMap: ModuleMap = this.getModulesByIdSet(from)
 
   modulesMap.forEach((module: ModuleProps) => {
     module.x += delta.x
@@ -108,16 +90,8 @@ export function batchMove(this: Editor, from: 'all' | Set<UID>, delta: Point) {
   // this.events.onSelectionUpdated?.(this.selectedModules, this.getIfUnique())
 }
 
-export function batchModify(this: Editor, from: 'all' | Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryOperationType) {
-  let modulesMap = null
-
-  if (from === 'all') {
-    modulesMap = this.moduleMap
-  } else if (typeCheck(from) === 'set') {
-    modulesMap = this.getModulesByIdSet(from)
-  } else {
-    return false
-  }
+export function batchModify(this: Editor, from: Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryOperationType) {
+  const modulesMap = this.getModulesByIdSet(from)
 
   modulesMap.forEach((module: ModuleProps) => {
     Object.keys(data).forEach((key) => {

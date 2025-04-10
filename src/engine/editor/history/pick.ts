@@ -27,11 +27,8 @@ export function pick(this: Editor, targetNode: HistoryNode) {
 
     // this.editor.updateVisibleModuleMap(this.editor.viewport.worldRect)
 
-    if (selectedModules === 'all') {
-      this.selectAll()
-    } else {
-      this.replaceSelected(selectedModules)
-    }
+    this.replaceSelected(selectedModules)
+
 
     this.events.onHistoryUpdated?.(this.history)
   } else {

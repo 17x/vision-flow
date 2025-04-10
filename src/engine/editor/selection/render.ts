@@ -59,21 +59,7 @@ function render(this: SelectionManager) {
     circleRender(ctx, dots)
   }
 
-  if (this.isSelectAll) {
-    BatchDrawer(this.editor.moduleMap)
-  } else {
-    const selectedModulesMap: ModuleMap = new Map()
 
-    this.selectedModules.forEach(id => {
-      this.editor.moduleMap.forEach((module) => {
-        if (module.id === id) {
-          selectedModulesMap.set(module.id, module)
-        }
-      })
-    })
-
-    BatchDrawer(selectedModulesMap)
-  }
 }
 
 export default render*/

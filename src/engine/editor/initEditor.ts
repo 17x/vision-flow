@@ -5,6 +5,7 @@ import Editor from './editor.ts'
 import {redo} from './history/redo.ts'
 import {undo} from './history/undo.ts'
 import {pick} from './history/pick.ts'
+import {screenToCanvas} from '../lib/lib.ts'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
@@ -144,8 +145,31 @@ export function initEditor(this: Editor) {
 
   this.action.on('selection-paste', (position?) => {
     if (this.copiedItems.length === 0) return
-    // console.log(position)
-    const newModules = this.batchCreate(this.copiedItems)
+    console.log(position)
+    let newModules: ModuleMap
+    if (position) {
+      const {x, y} = this.getWorldPointByViewportPoint(position.x, position.y)
+      const topLeftItem = this.copiedItems.reduce((prev, current) => {
+        return (current.x < prev.x && current.y < prev.y) ? current : prev
+      })
+      const offsetX = x - topLeftItem.x
+      const offsetY = y - topLeftItem.y
+      
+      const offsetItems = this.copiedItems.map((item) => {
+
+        return {
+          ...item,
+          x: item.x + offsetX,
+          y: item.y + offsetY,
+        }
+      })
+
+      newModules = this.batchCreate(offsetItems)
+    } else {
+      newModules = this.batchCreate(this.copiedItems)
+    }
+
+    console.log(this.copiedItems)
     const idSet = new Set(newModules.keys())
 
     this.batchAdd(newModules)

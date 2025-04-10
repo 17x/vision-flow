@@ -109,7 +109,7 @@ class Editor {
     return batchCreate.call(this, moduleDataList)
   }
 
-  batchAdd(modules: ModuleMap) {
+  batchAdd(modules: ModuleMap): ModuleMap {
     return batchAdd.call(this, modules)
   }
 
@@ -121,7 +121,7 @@ class Editor {
     return batchCopy.call(this, from, removeId, addOn)
   }
 
-  batchDelete(from: Set<UID>) {
+  batchDelete(from: Set<UID>): ModuleProps[] {
     return batchDelete.call(this, from)
   }
 

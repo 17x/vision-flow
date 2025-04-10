@@ -30,12 +30,14 @@ export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): Module
   return newMap
 }
 
-export function batchAdd(this: Editor, modules: ModuleMap) {
+export function batchAdd(this: Editor, modules: ModuleMap):ModuleMap {
   modules.forEach(mod => {
     this.moduleMap.set(mod.id, mod)
   })
 
   this.events.onModulesUpdated?.(this.moduleMap)
+
+  return modules
 }
 
 export function batchCopy(this: Editor, from: Set<UID>, removeId = false, addOn?: {

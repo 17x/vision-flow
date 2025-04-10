@@ -1,6 +1,7 @@
 import {SelectionActionMode} from '../selection/type'
 import {HistoryNode} from '../history/DoublyLinkedList.ts'
 import {ModuleMoveDirection} from '../type'
+import {HistoryOperation} from '../history/type'
 
 export interface SelectionModifyData {
   mode: SelectionActionMode;
@@ -17,6 +18,7 @@ export type SelectionMoveData = {
 
 export type EditorEventMap = {
   'editor-initialized': never;
+  'editor-module-map-update': HistoryOperation;
   'visible-module-update': ModuleMap;
   'visible-selected-update': { idSet: Set<UID>; operators: never };
   'modify-selection': SelectionModifyData;

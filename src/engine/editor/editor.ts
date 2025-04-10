@@ -181,10 +181,10 @@ class Editor {
   dispatchVisibleSelectedModules() {
     updateVisibleSelectedModules.call(this)
 
-    this.action.dispatch('visible-selected-update', {
+    /*this.action.dispatch('visible-selected-update', {
       idSet: this.getVisibleSelectedModules(),
       operators: this.operationHandlers,
-    })
+    })*/
   }
 
   public getVisibleSelectedModules() {

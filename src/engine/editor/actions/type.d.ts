@@ -19,6 +19,10 @@ export type SelectionMoveData = {
 export type EditorEventMap = {
   'editor-initialized': never;
   'editor-module-map-update': HistoryOperation;
+  /*
+  * selected has been changed
+  * */
+  'editor-selection-update': never;
   'visible-module-update': ModuleMap;
   'visible-selected-update': { idSet: Set<UID>; operators: never };
   'modify-selection': SelectionModifyData;

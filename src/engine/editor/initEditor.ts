@@ -5,16 +5,19 @@ import {redo} from './history/redo.ts'
 import {undo} from './history/undo.ts'
 import {pick} from './history/pick.ts'
 import {HistoryOperation} from './history/type'
+import {updateVisibleSelectedModules} from './selection/helper.ts'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
+  const dispatch = action.dispatch.bind(action)
+  const on = action.on.bind(action)
+  // const off = action.off.bind(action)
 
-  // const shadow = container.attachShadow({mode: 'open'})
   container.appendChild(viewport.wrapper)
 
   viewport.resizeObserver.observe(container)
 
-  action.on('viewport-resize', () => {
+  on('viewport-resize', () => {
     this.updateViewport()
     this.updateWorldRect()
 
@@ -23,10 +26,10 @@ export function initEditor(this: Editor) {
       this.fitFrame()
     }
 
-    this.action.dispatch('world-update')
+    dispatch('world-update')
   })
 
-  this.action.on('world-mouse-move', () => {
+  on('world-mouse-move', () => {
     const p = this.getWorldPointByViewportPoint(
       this.viewport.mouseMovePoint.x,
       this.viewport.mouseMovePoint.y,
@@ -34,17 +37,17 @@ export function initEditor(this: Editor) {
     this.events.onWorldMouseMove?.(p as Point)
   })
 
-  this.action.on('world-update', () => {
+  on('world-update', () => {
     this.updateWorldRect()
     this.updateVisibleModuleMap()
     this.events.onViewportUpdated?.(this.viewport.worldRect as BoundingRect)
-    this.action.dispatch('visible-module-update')
+    dispatch('visible-module-update')
   })
 
-  this.action.on('world-zoom', (arg) => {
+  on('world-zoom', (arg) => {
     if (arg === 'fit') {
       this.fitFrame()
-      this.action.dispatch('world-update')
+      dispatch('world-update')
     } else {
       const r = this.zoomAtPoint(arg.physicalPoint, arg.zoomFactor)
 
@@ -53,24 +56,23 @@ export function initEditor(this: Editor) {
         this.viewport.scale = scale
         this.viewport.offset.x = offset.x
         this.viewport.offset.y = offset.y
-        this.action.dispatch('world-update')
+        dispatch('world-update')
       }
     }
-
     // this.events.onViewportUpdated?.(worldRect as BoundingRect)
   })
 
-  this.action.on('world-shift', (data) => {
+  on('world-shift', (data) => {
     const {x, y} = data
     this.viewport.offset.x += x
     this.viewport.offset.y += y
-    this.action.dispatch('world-update')
+    dispatch('world-update')
 
     // this.events.onViewportUpdated?.(worldRect as BoundingRect)
   })
 
-  this.action.on('visible-module-update', () => {
-    this.dispatchVisibleSelectedModules()
+  on('visible-module-update', () => {
+    dispatch('visible-selected-update')
     resetCanvas(
       this.viewport.mainCTX,
       this.viewport.dpr,
@@ -80,41 +82,42 @@ export function initEditor(this: Editor) {
     this.renderModules()
   })
 
-  this.action.on('visible-selected-update', (data) => {
+  on('visible-selected-update', () => {
+    const idSet = this.getVisibleSelectedModules()
+    // operators = this.operationHandlers,
     resetCanvas(
       this.viewport.selectionCTX,
       this.viewport.dpr,
       this.viewport.scale,
       this.viewport.offset,
     )
-    this.renderSelections(data!.idSet as Set<UID>)
-    // this.action.dispatch("visible-module-update")
+    this.renderSelections(idSet as Set<UID>)
   })
 
-  this.action.on('select-all', () => {
+  on('select-all', () => {
     this.selectAll()
-    this.dispatchVisibleSelectedModules()
+    dispatch('editor-selection-update')
   })
 
-  this.action.on('selection-clear', () => {
+  on('selection-clear', () => {
     this.selectedModules.clear()
-    this.dispatchVisibleSelectedModules()
+    dispatch('editor-selection-update')
   })
 
-  this.action.on('modify-selection', (data) => {
+  on('modify-selection', (data) => {
     const {mode, idSet} = data as SelectionModifyData
 
     this.modifySelected(idSet, mode)
-    this.dispatchVisibleSelectedModules()
+    dispatch('editor-selection-update')
   })
 
-  this.action.on('selection-delete', () => {
+  on('selection-delete', () => {
     const savedSelected = this.getSelected
     const backup = this.batchDelete(savedSelected)
 
     this.selectedModules.clear()
 
-    this.action.dispatch('editor-module-map-update', {
+    dispatch('editor-module-map-update', {
       type: 'history-delete',
       payload: {
         modules: backup,
@@ -123,7 +126,7 @@ export function initEditor(this: Editor) {
     })
   })
 
-  this.action.on('selection-copy', () => {
+  on('selection-copy', () => {
     this.copiedItems = this.batchCopy(
       this.getSelected,
       true,
@@ -131,7 +134,7 @@ export function initEditor(this: Editor) {
     this.updateCopiedItemsDelta()
   })
 
-  this.action.on('selection-paste', (position?) => {
+  on('selection-paste', (position?) => {
     if (this.copiedItems.length === 0) return
 
     let newModules: ModuleMap
@@ -164,7 +167,7 @@ export function initEditor(this: Editor) {
     this.replaceSelected(savedSelected)
     this.updateCopiedItemsDelta()
 
-    this.action.dispatch('editor-module-map-update', {
+    dispatch('editor-module-map-update', {
       type: 'history-paste',
       payload: {
         modules: [...newModules.values()].map((mod) => mod.getDetails()),
@@ -173,7 +176,7 @@ export function initEditor(this: Editor) {
     })
   })
 
-  this.action.on('selection-duplicate', () => {
+  on('selection-duplicate', () => {
     const temp: ModuleProps[] = this.batchCopy(this.selectedModules, true)
 
     temp.forEach((copiedItem) => {
@@ -190,7 +193,7 @@ export function initEditor(this: Editor) {
     const moduleProps = [...newModules.values()].map((mod) => mod.getDetails())
     // this.getSelected()
 
-    this.action.dispatch('editor-module-map-update', {
+    dispatch('editor-module-map-update', {
       type: 'history-duplicate',
       payload: {
         modules: moduleProps,
@@ -199,7 +202,7 @@ export function initEditor(this: Editor) {
     })
   })
 
-  this.action.on('selection-move', ({direction, delta = {x: 0, y: 0}}) => {
+  on('selection-move', ({direction, delta = {x: 0, y: 0}}) => {
     if (this.getSelected.size === 0) return
 
     const MODULE_MOVE_STEP = 5
@@ -226,9 +229,8 @@ export function initEditor(this: Editor) {
 
     // const savedSelected = this.getSelected
 
-    this.dispatchVisibleSelectedModules()
-    this.updateVisibleModuleMap()
-    this.action.dispatch('visible-module-update')
+    dispatch('editor-selection-update')
+    dispatch('visible-module-update')
 
     this.history.add({
       type: 'history-move',
@@ -239,7 +241,7 @@ export function initEditor(this: Editor) {
     })
   })
 
-  this.action.on('module-add', (data) => {
+  on('module-add', (data) => {
     const newModules = this.batchAdd(this.batchCreate(data))
     const savedSelected = new Set(newModules.keys())
 
@@ -247,7 +249,7 @@ export function initEditor(this: Editor) {
     this.replaceSelected(savedSelected)
 
     const moduleProps = [...newModules.values()].map((mod) => mod.getDetails())
-    this.action.dispatch('editor-module-map-update', {
+    dispatch('editor-module-map-update', {
       type: 'history-add',
       payload: {
         modules: moduleProps,
@@ -256,38 +258,48 @@ export function initEditor(this: Editor) {
     })
   })
 
-  this.action.on('editor-module-map-update', (historyData: HistoryOperation) => {
+  on('editor-module-map-update', (historyData: HistoryOperation) => {
     this.replaceSelected(historyData.payload.selectedModules)
 
-    this.dispatchVisibleSelectedModules()
+    // this.dispatchVisibleSelectedModules()
+    dispatch('editor-selection-update')
     this.updateVisibleModuleMap()
-    this.action.dispatch('visible-module-update')
+    dispatch('visible-module-update')
 
     this.history.add(historyData)
   })
 
-  this.action.on('history-undo', () => {
+  on('editor-selection-update', () => {
+    updateVisibleSelectedModules.call(this)
+
+    dispatch('visible-selected-update', {
+      idSet: this.getVisibleSelectedModules(),
+      operators: this.operationHandlers,
+    })
+  })
+
+  on('history-undo', () => {
     undo.call(this)
     this.updateVisibleModuleMap()
-    this.action.dispatch('visible-module-update')
+    dispatch('visible-module-update')
     this.events.onHistoryUpdated?.(this.history)
   })
 
-  this.action.on('history-redo', () => {
+  on('history-redo', () => {
     redo.call(this)
     this.updateVisibleModuleMap()
-    this.action.dispatch('visible-module-update')
+    dispatch('visible-module-update')
     this.events.onHistoryUpdated?.(this.history)
   })
 
-  this.action.on('history-pick', (data) => {
+  on('history-pick', (data) => {
     pick.call(this, data)
     this.updateVisibleModuleMap()
-    this.action.dispatch('visible-module-update')
+    dispatch('visible-module-update')
     this.events.onHistoryUpdated?.(this.history)
   })
 
-  this.action.on('context-menu', ({idSet, position, copiedItems}) => {
+  on('context-menu', ({idSet, position, copiedItems}) => {
     this.events.onContextMenu?.(idSet, position, copiedItems)
   })
 }

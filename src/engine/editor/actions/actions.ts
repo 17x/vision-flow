@@ -1,25 +1,39 @@
 // import Editor from '../editor.ts'
-import {EditorEventData, EditorEvents, EditorEventType} from './type'
+import {EditorEventData, EditorEventType} from './type'
 
-type EventsCallback = (data: EditorEventData) => void
+type EventsCallback<K extends EditorEventType> = (
+  data?: EditorEventData<K>,
+) => void;
 
 class Action {
-  readonly eventsMap: Map<EditorEventType, EventsCallback[]> = new Map()
+  private readonly eventsMap: Map<
+    EditorEventType,
+    EventsCallback<EditorEventType>[]
+  > = new Map()
 
-  constructor() {
-  }
+  constructor() {}
 
   // subscribe
-  public on(eventName: EditorEventType, callback: EventsCallback) {
+  public on<K extends EditorEventType>(
+    eventName: K,
+    callback: EventsCallback<K>,
+  ) {
     if (this.eventsMap.has(eventName)) {
-      this.eventsMap.get(eventName)!.push(callback)
+      this.eventsMap
+        .get(eventName)!
+        .push(callback as EventsCallback<EditorEventType>)
     } else {
-      this.eventsMap.set(eventName, [callback])
+      this.eventsMap.set(eventName, [
+        callback as EventsCallback<EditorEventType>,
+      ])
     }
   }
 
   // unsubscribe
-  public off(eventName: EditorEventType, callback: EventsCallback) {
+  public off<K extends EditorEventType>(
+    eventName: K,
+    callback: EventsCallback<K>,
+  ) {
     if (this.eventsMap.has(eventName)) {
       const arr = this.eventsMap.get(eventName)!
 
@@ -34,97 +48,21 @@ class Action {
     }
   }
 
-  public dispatch({type, data}: EditorEvents) {
-    if ([''].includes(type)) {
-    }
-      console.info('action: ', type)
+  public dispatch<K extends EditorEventType>(
+    type: K,
+    data?: EditorEventData<K>,
+  ) {
+    console.trace('action: ', type)
 
     if (this.eventsMap.has(type)) {
       this.eventsMap.get(type)!.forEach((cb) => {
-        cb(data as EditorEventData)
+        if (data) {cb(data)} else {cb()}
       })
     }
   }
 
-  public execute({type, data}: EditorEvents) {
-    // console.log('execute: ', type, data)
-    // @ts-ignore
-    this.dispatch({type, data})
-
-    /*  switch (type) {
-        case 'editor-initialized':
-          break
-
-        case 'select-all':
-          this.editor.selectAll()
-          break
-
-        case 'module-add':
-          this.editor.replace(data as Set<UID>)
-          break
-
-        case 'selection-modify':
-          this.editor.replace(data as Set<UID>)
-          break
-
-        case 'selection-copy':
-          this.editor.copySelected()
-          break
-
-        case 'module-delete':
-          this.editor.removeSelected()
-          break
-
-        case 'selection-duplicate':
-          this.editor.duplicateSelected()
-          break
-
-        case 'selection-clear':
-          this.editor.clear()
-          break
-
-        case 'selection-paste':
-          this.editor.pasteCopied()
-          break
-
-        case 'module-redo':
-          this.editor.history.redo()
-          break
-
-        case 'module-undo':
-          this.editor.history.undo()
-          break
-
-        case 'zoom':
-          this.editor.viewport.zoomTo(data)
-          break
-
-        case 'module-move-up':
-        case 'module-move-right':
-        case 'module-move-left':
-        case 'module-move-down':
-          this.editor.batchMove(
-            this.editor.getSelected(),
-            {
-              x: (type === 'moveLeft' && -MODULE_MOVE_STEP) || (type === 'moveRight' && MODULE_MOVE_STEP) || 0,
-              y: (type === 'moveUp' && -MODULE_MOVE_STEP) || (type === 'moveDown' && MODULE_MOVE_STEP) || 0,
-            },
-            'history-move',
-          )
-          break
-
-        default:
-          // Optionally handle unknown codes
-          console.warn(`Unknown code: ${type}`)
-      }*/
-
-    /*   if (this.lock) return
-       const MODULE_MOVE_STEP = 5
-       this.lock = true
-       this.lock = true
-
-       this.lock = false*/
-
+  public execute<K extends EditorEventType>(type: K, data: EditorEventData<K>) {
+    this.dispatch(type, data)
   }
 
   public destroy() {

@@ -61,6 +61,7 @@ export interface WorldInfo extends Size {
   status: string
 }
 
+type InitializedHandler = () => void;
 type HistoryUpdatedHandler = (history: History) => void;
 type ModulesUpdatedHandler = (moduleMap: ModuleMap) => void;
 type SelectionUpdatedHandler = (selected: Set<UID>, selectedProps?: ModuleProps) => void;
@@ -70,6 +71,7 @@ type WorldMouseMoveUpdatedHandler = (point: Point) => void;
 type ContextMenuHandler = (idSet: Set<UID>, position: Point, copiedItems: boolean) => void;
 
 export declare type EventHandlers = {
+  onInitialized?: InitializedHandler
   onHistoryUpdated?: HistoryUpdatedHandler
   onModulesUpdated?: ModulesUpdatedHandler
   onSelectionUpdated?: SelectionUpdatedHandler

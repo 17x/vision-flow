@@ -5,7 +5,7 @@ import {redo} from './history/redo.ts'
 import {undo} from './history/undo.ts'
 import {pick} from './history/pick.ts'
 import {HistoryOperation} from './history/type'
-import {updateVisibleSelectedModules} from './selection/helper.ts'
+import {updateVisibleSelected} from './selection/helper.ts'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
@@ -19,14 +19,38 @@ export function initEditor(this: Editor) {
 
   on('viewport-resize', () => {
     this.updateViewport()
-    this.updateWorldRect()
+    // this.updateWorldRect()
 
-    if (!this.initialized) {
-      this.initialized = true
-      this.fitFrame()
+    if (this.initialized) {
+      dispatch('world-update')
+    } else {
+      dispatch('editor-initialized')
     }
+  })
 
+  on('editor-initialized', () => {
     dispatch('world-update')
+
+    this.initialized = true
+    this.fitFrame()
+    this.events.onInitialized?.()
+    // dispatch('editor-initialized')
+  })
+
+  on('editor-module-map-update', (historyData: HistoryOperation) => {
+    // this.replaceSelected(historyData.payload.selectedModules)
+    this.updateVisibleModuleMap()
+
+    dispatch('visible-module-update')
+    dispatch('editor-selection-update')
+
+    this.history.add(historyData)
+  })
+
+  on('editor-selection-update', (quiet = false) => {
+    updateVisibleSelected.call(this)
+
+    dispatch('visible-selected-update')
   })
 
   on('world-mouse-move', () => {
@@ -42,6 +66,7 @@ export function initEditor(this: Editor) {
     this.updateVisibleModuleMap()
     this.events.onViewportUpdated?.(this.viewport.worldRect as BoundingRect)
     dispatch('visible-module-update')
+    // console.log(this.getVisibleSelected, {...this.viewport})
   })
 
   on('world-zoom', (arg) => {
@@ -235,22 +260,6 @@ export function initEditor(this: Editor) {
     })
   })
 
-  on('editor-module-map-update', (historyData: HistoryOperation) => {
-    // this.replaceSelected(historyData.payload.selectedModules)
-    this.updateVisibleModuleMap()
-
-    dispatch('visible-module-update')
-    dispatch('editor-selection-update')
-
-    this.history.add(historyData)
-  })
-
-  on('editor-selection-update', () => {
-    updateVisibleSelectedModules.call(this)
-
-     dispatch('visible-selected-update')
-  })
-
   on('visible-module-update', () => {
     dispatch('visible-selected-update')
     resetCanvas(
@@ -263,8 +272,8 @@ export function initEditor(this: Editor) {
   })
 
   on('visible-selected-update', () => {
-    const idSet = this.getVisibleSelectedModules
-    console.log(idSet)
+    // console.log(this.getVisibleSelectedModules)
+
     // operators = this.operationHandlers,
     resetCanvas(
       this.viewport.selectionCTX,
@@ -272,7 +281,7 @@ export function initEditor(this: Editor) {
       this.viewport.scale,
       this.viewport.offset,
     )
-    this.renderSelections(idSet as Set<UID>)
+    this.renderSelections(this.getVisibleSelected)
   })
 
   on('history-undo', () => {

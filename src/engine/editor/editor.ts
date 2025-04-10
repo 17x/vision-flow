@@ -56,7 +56,7 @@ class Editor {
   history: History
   viewport: Viewport
   readonly selectedModules: Set<UID> = new Set()
-  readonly visibleSelectedModules: Set<UID> = new Set()
+  readonly visibleSelected: Set<UID> = new Set()
   readonly operationHandlers: Set<OperationHandler> = new Set()
 
   resizeHandleSize: number = 10
@@ -160,7 +160,7 @@ class Editor {
 
     this.moduleMap.forEach((module) => {
       const boundingRect = module.getBoundingRect() as BoundingRect
-
+      // console.log(boundingRect,this.viewport.worldRect)
       if (rectsOverlap(boundingRect, this.viewport.worldRect)) {
         this.visibleModuleMap.set(module.id, module)
       }
@@ -176,8 +176,8 @@ class Editor {
     this.action.execute(type, data)
   }
 
-  public get getVisibleSelectedModules() {
-    return new Set(this.visibleSelectedModules)
+  public get getVisibleSelected() {
+    return new Set(this.visibleSelected)
   }
 
   public get getSelected(): Set<UID> {
@@ -228,6 +228,8 @@ class Editor {
 
   // viewport
   renderModules() {
+    if (this.visibleModuleMap.size === 0) return
+
     const animate = () => {
       render({
         ctx: this.viewport.mainCTX,

@@ -63,6 +63,9 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           // dpr: 10,
         },
         events: {
+          onInitialized: () => {
+            createMockData(editor)
+          },
           onHistoryUpdated: (historyTree) => {
             setHistoryArray(historyTree!.toArray())
 
@@ -97,7 +100,6 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         },
       })
 
-      createMockData(editor)
       editorRef.current = editor
     }
 

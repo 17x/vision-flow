@@ -50,8 +50,8 @@ export function modifySelected(this: Editor, idSet: Set<UID>, action: SelectionA
   // this.events.onSelectionUpdated?.(idSet, eventCallBackData)
 }
 
-export function updateVisibleSelectedModules(this: Editor) {
-  this.visibleSelectedModules.clear()
+export function updateVisibleSelected(this: Editor) {
+  this.visibleSelected.clear()
   this.operationHandlers.clear()
   this.getVisibleModuleMap.forEach(module => {
     if (module.type === 'rectangle') {
@@ -74,7 +74,7 @@ export function updateVisibleSelectedModules(this: Editor) {
     }
 
     if (this.selectedModules.has(module.id)) {
-      this.visibleSelectedModules.add(module.id)
+      this.visibleSelected.add(module.id)
     }
   })
 }

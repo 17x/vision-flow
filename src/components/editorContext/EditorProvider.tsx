@@ -118,10 +118,6 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
   }
 
-  const handleContextMenuAction = (code: ModuleOperationType, data: unknown = null) => {
-
-  }
-
   const executeAction = (code: ModuleOperationType, data: unknown = null) => {
     editorRef.current!.execute(code, data)
   }
@@ -155,7 +151,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
             <StatusBar worldPoint={worldPoint}/>
             {contextMenuData && <ContextMenu data={contextMenuData} onClose={() => {
               setContextMenuData(null)
-            }} onAction={handleContextMenuAction}/>}
+            }}/>}
           </div>
 
           <div style={{width: 200}} className={'h-full flex-shrink-0 border-l border-gray-200'}>

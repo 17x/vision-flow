@@ -14,7 +14,6 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     draggingModules,
     moduleMap,
     viewport,
-    hoveredModules,
     selectedShadow,
     _selectingModules,
   } = this

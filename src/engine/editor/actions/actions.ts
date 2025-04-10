@@ -6,7 +6,7 @@ type EventsCallback<K extends EditorEventType> = EditorEventData<K> extends neve
 class Action {
   private readonly eventsMap: Map<
     EditorEventType,
-    EventsCallback<EditorEventType>[]
+    (EditorEventData<EditorEventType> extends never ? () => void : (data: EditorEventData<EditorEventType>) => void)[]
   > = new Map()
 
   constructor() {}
@@ -54,7 +54,7 @@ class Action {
 
     if (this.eventsMap.has(type)) {
       this.eventsMap.get(type)!.forEach((cb) => {
-        if (data) {cb(data)} else {cb()}
+        cb(data as EditorEventData<K>)
       })
     }
   }

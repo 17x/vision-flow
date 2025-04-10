@@ -1,3 +1,4 @@
+/* eslint-disable */
 import uid from "./utilities/Uid.ts"
 import {FileMap, FileType} from "./components/fileContext/FileContext.tsx"
 
@@ -38,3 +39,4 @@ const MOCK_FILE = CreateFile()
 const MOCK_FILE_MAP = CreateFileMapByFilesId([MOCK_FILE])
 
 export default MOCK_FILE_MAP
+

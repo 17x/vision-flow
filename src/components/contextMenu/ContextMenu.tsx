@@ -28,7 +28,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position}, onCl
     return () => {
       window.removeEventListener('click', remove)
     }
-  }, [])
+  }, [idSet, position])
 
   const menuItems = [
     {id: 'copy', disabled: idSet.size === 0},

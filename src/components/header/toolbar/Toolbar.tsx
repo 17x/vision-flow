@@ -5,7 +5,7 @@ import {Fragment, ReactNode, useContext} from 'react'
 import {ModuleOperationType} from '../../../engine/editor/type'
 import EditorContext from '../../editorContext/EditorContext.tsx'
 import {NamedIcon} from '../../lib/icon/icon.tsx'
-import {I18nFormatModule, t} from 'i18next'
+import {t} from 'i18next'
 import {I18nHistoryDataItem} from '../../../i18n/type'
 
 const IconSize = 20

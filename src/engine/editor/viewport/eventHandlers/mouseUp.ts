@@ -54,8 +54,8 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
           const closestId = [...this.hoveredModules][
             this.hoveredModules.size - 1
           ]
-          // console.log(closestId)
-          console.log(this._deselection)
+
+
           if (closestId && modifyKey && closestId === this._deselection) {
             this.action.dispatch("selection-modify", {
               mode: "toggle",

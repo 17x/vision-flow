@@ -174,7 +174,7 @@ export function initEditor(this: Editor) {
     this.dispatchVisibleSelectedModules()
     this.updateVisibleModuleMap()
     this.action.dispatch('visible-module-update')
-
+    console.log(idSet)
     this.history.add({
       type: 'history-paste',
       payload: {

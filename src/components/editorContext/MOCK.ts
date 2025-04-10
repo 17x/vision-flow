@@ -40,8 +40,8 @@ export const createMockData = (editor: Editor) => {
   for (let i = 0; i < MOCK_ELE_LEN; i++) {
     // const x = getRandomNumber(1000)
     // const y = getRandomNumber(1414)
-    const x= baseX + (i * shiftSpeed)
-    const  y= baseY + (i * shiftSpeed)
+    const x = baseX + (i * shiftSpeed)
+    const y = baseY + (i * shiftSpeed)
     // console.log(x)
     modulesData.push({
       ...baseRectData,
@@ -57,6 +57,7 @@ export const createMockData = (editor: Editor) => {
   const instantiations = editor.batchCreate(modulesData)
 
   editor.batchAdd(instantiations)
+  console.log(editor.getSelected)
   editor.history.add({
       type: 'history-add',
       payload: {

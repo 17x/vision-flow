@@ -1,24 +1,32 @@
-import {useEffect, useRef, useState} from "react"
+import {useContext, useEffect, useRef, useState} from 'react'
+import EditorContext from '../editorContext/EditorContext.tsx'
 // import {useTranslation} from "react-i18next";
 // import OptimizedDND from "./OptimizedDND.ts";
 
 interface LayerPanelProps {
   data: ModuleType[]
   selected: UID[]
-  handleSelectModule: (id: UID) => void;
 }
 
 const ITEM_HEIGHT = 28
-export const LayerPanel = ({data, selected, handleSelectModule}: LayerPanelProps) => {
+export const LayerPanel = ({data, selected}: LayerPanelProps) => {
   // const {t} = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null)
   const targetRef = useRef<HTMLDivElement>(null)
   const [scrollTop, setScrollTop] = useState(0)
   const [indexRange, setIndexRange] = useState([0, 10])
+  const {executeAction} = useContext(EditorContext)
 
   useEffect(() => {
-    // scrollTo()
-  }, [selected, data])
+    /*  const closestOne = selected[selected.length - 1]
+
+      if (closestOne) {
+        const idx = data.findIndex(x => x.id === closestOne)
+
+        scrollRef.current?.scrollTo(0, idx * ITEM_HEIGHT)
+        console.log(idx * ITEM_HEIGHT)
+      }*/
+  }, [selected])
 
   const handleScroll = () => {
     if (!scrollRef.current) return
@@ -27,7 +35,7 @@ export const LayerPanel = ({data, selected, handleSelectModule}: LayerPanelProps
     const startIndex = Math.round(newScrollTop / ITEM_HEIGHT)
     const endIndex = startIndex + 10
 
-    console.log(newScrollTop)
+    // console.log(newScrollTop)
     if (scrollUp) {
       if (indexRange[0] >= data.length - 1) return
     } else {
@@ -49,12 +57,14 @@ export const LayerPanel = ({data, selected, handleSelectModule}: LayerPanelProps
         <div ref={selected?.includes(item.id) ? targetRef : null}
              style={{height: ITEM_HEIGHT}}
              className={selected?.includes(item.id) ? 'bg-gray-400 text-white' : ''}
-             onClick={() => handleSelectModule(item.id)}
+             onClick={() => {
+               executeAction('modify-selection', {mode: 'replace', idSet: new Set([item.id])})
+             }}
              id={`layer-module-${item.id}`}
              key={item.id}>
           {/*{item.id.match(/\d+$/)[0]}*/}
           {item.type}
-        </div>
+        </div>,
       )
     }
   }

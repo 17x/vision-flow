@@ -49,6 +49,8 @@ export function initEditor(this: Editor) {
 
   on('editor-selection-update', () => {
     updateVisibleSelected.call(this)
+    this.events.onSelectionUpdated?.(this.selectedModules)
+
     dispatch('visible-selected-update')
   })
 
@@ -207,7 +209,7 @@ export function initEditor(this: Editor) {
     if (this.getSelected.size === 0) return
 
     const MODULE_MOVE_STEP = 5
-    console.log(direction, delta)
+    // console.log(direction, delta)
 
     const savedSelected: Set<UID> = this.getSelected
 

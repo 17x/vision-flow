@@ -210,7 +210,7 @@ class Editor {
       this.selectedModules.add(module.id)
     })
 
-    this.events.onSelectionUpdated?.(this.selectedModules)
+    // this.events.onSelectionUpdated?.(this.selectedModules)
   }
 
   updateCopiedItemsDelta(): void {

@@ -172,10 +172,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           <div style={{width: 200}} className={'h-full flex-shrink-0 border-l border-gray-200'}>
             <PropPanel/>
             <LayerPanel data={sortedModules}
-                        selected={selectedModules}
-                        handleSelectModule={id => {
-                          executeAction('modify-selection', new Set([id]))
-                        }}/>
+                        selected={selectedModules}/>
             <HistoryPanel/>
           </div>
         </main>

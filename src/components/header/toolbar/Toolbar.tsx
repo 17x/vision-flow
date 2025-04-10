@@ -2,7 +2,7 @@ import {useSelector} from 'react-redux'
 import {RootState} from '../../../redux/store.ts'
 import {LayerDown, LayerToBottom, LayerToTop, LayerUp} from './Icons/LayerIcons.tsx'
 import {Fragment, ReactNode, useContext} from 'react'
-import {ModuleOperationType} from '../../../engine/editor/type'
+import {OperationType} from '../../../engine/editor/type'
 import EditorContext from '../../editorContext/EditorContext.tsx'
 import {NamedIcon} from '../../lib/icon/icon.tsx'
 import {t} from 'i18next'
@@ -47,9 +47,9 @@ const Toolbar: React.FC = () => {
                     title={tooltip}
                     onClick={() => {
                       if (id === 'undo' || id === 'redo') {
-                        executeAction('history-' + id as ModuleOperationType)
+                        executeAction('history-' + id as OperationType)
                       } else if (id === 'delete') {
-                        executeAction('selection-' + id as ModuleOperationType)
+                        executeAction('selection-' + id as OperationType)
                       }
                     }}
                     className={'relative ml-1 rounded-sm mr-1 flex items-center cursor-pointer justify-center w-6 h-6 opacity-50   hover:bg-gray-200  hover:opacity-100 disabled:text-gray-200 disabled:cursor-default'}>

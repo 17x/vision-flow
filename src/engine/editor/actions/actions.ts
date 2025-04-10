@@ -1,7 +1,7 @@
 // import Editor from '../editor.ts'
 import {EditorEventData, EditorEventType} from './type'
 
-type EventsCallback<K extends EditorEventType> = EditorEventData<K> extends never ? () => void : (data: EditorEventData<K>) => void;
+export type EventsCallback<K extends EditorEventType> = EditorEventData<K> extends never ? () => void : (data: EditorEventData<K>) => void;
 
 class Action {
   private readonly eventsMap: Map<

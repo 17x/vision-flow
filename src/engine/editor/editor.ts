@@ -1,4 +1,4 @@
-import {ModuleOperationType, EventHandlers} from './type'
+import {OperationType, EventHandlers} from './type'
 import History from './history/history.ts'
 import Action from './actions/actions.ts'
 import {HistoryOperationType} from './history/type'
@@ -170,7 +170,7 @@ class Editor {
     return new Map(this.visibleModuleMap)
   }
 
-  public execute(type: ModuleOperationType, data: unknown = null) {
+  public execute(type: OperationType, data: unknown = null) {
     // @ts-ignore
     this.action.execute(type, data)
   }

@@ -7,7 +7,7 @@ import uid from '../../utilities/Uid.ts'
 import {HistoryNode} from '../../engine/editor/history/DoublyLinkedList.ts'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 import {
-  ModuleOperationType,
+  OperationType,
 } from '../../engine/editor/type'
 import Header from '../header/Header.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
@@ -119,7 +119,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
   }
 
-  const executeAction = (code: ModuleOperationType, data: unknown = null) => {
+  const executeAction = (code: OperationType, data: unknown = null) => {
     editorRef.current!.execute(code, data)
   }
 

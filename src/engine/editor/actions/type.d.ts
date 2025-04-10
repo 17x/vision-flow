@@ -26,7 +26,7 @@ export type EditorEventMap = {
   'visible-selected-update': { idSet: Set<UID>; operators: never };
   'selection-modify': SelectionModifyData;
   'selection-copy': never;
-  'selection-paste': never;
+  'selection-paste': Point;
   'selection-duplicate': never;
   'selection-move': SelectionMoveData;
   'selection-clear': never;

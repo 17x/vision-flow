@@ -1,12 +1,12 @@
 import React, {useContext, useEffect} from 'react'
-import {ModuleOperationType, ModuleMoveDirection} from '../engine/editor/type'
+import {OperationType, ModuleMoveDirection} from '../engine/editor/type'
 import EditorContext from './editorContext/EditorContext.tsx'
 
 const ShortcutListener: React.FC = () => {
   const {executeAction, focused} = useContext(EditorContext)
 
   const handleKeyPress = (e: KeyboardEvent) => {
-    let shortcutCode: ModuleOperationType | null = null
+    let shortcutCode: OperationType | null = null
     const {key, ctrlKey, metaKey, shiftKey} = e
 
     const arrowKeys: { [key: string]: ModuleMoveDirection } = {

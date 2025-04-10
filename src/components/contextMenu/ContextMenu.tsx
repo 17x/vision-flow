@@ -50,7 +50,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position, copie
         executeAction('selection-copy')
         break
       case 'paste':
-        executeAction('selection-paste')
+        executeAction('selection-paste', position)
         break
       case 'delete':
         executeAction('selection-delete')

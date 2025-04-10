@@ -13,7 +13,7 @@ export type ModuleMoveDirection =
   'module-move-right' |
   'module-move-shift'
 
-export type ModuleOperationType =
+export type OperationType =
   'select-all'
   | 'selection-modify'
   | 'selection-copy'

@@ -16,7 +16,7 @@ import {
 } from './modules/modules.ts'
 import {OperationHandler, SelectionActionMode} from './selection/type'
 import {
-  modifySelection,
+  modifySelected,
   updateVisibleSelectedModules,
 } from './selection/helper.ts'
 import {updateScrollBars} from './viewport/domManipulations.ts'
@@ -213,24 +213,24 @@ class Editor {
     return new Set(this.selectedModules)
   }
 
-  public modifySelection(idSet: Set<UID>, action: SelectionActionMode) {
-    modifySelection.call(this, idSet, action)
+  public modifySelected(idSet: Set<UID>, action: SelectionActionMode) {
+    modifySelected.call(this, idSet, action)
   }
 
-  public add(idSet: Set<UID>) {
-    modifySelection.call(this, idSet, 'add')
+  public addSelected(idSet: Set<UID>) {
+    modifySelected.call(this, idSet, 'add')
   }
 
-  public delete(idSet: Set<UID>) {
-    modifySelection.call(this, idSet, 'delete')
+  public deleteSelected(idSet: Set<UID>) {
+    modifySelected.call(this, idSet, 'delete')
   }
 
-  public toggle(idSet: Set<UID>) {
-    modifySelection.call(this, idSet, 'toggle')
+  public toggleSelected(idSet: Set<UID>) {
+    modifySelected.call(this, idSet, 'toggle')
   }
 
-  public replace(idSet: Set<UID>) {
-    modifySelection.call(this, idSet, 'replace')
+  public replaceSelected(idSet: Set<UID>) {
+    modifySelected.call(this, idSet, 'replace')
   }
 
   public selectAll(): void {

@@ -58,7 +58,7 @@ export function undo(this: Editor, quiet: boolean = false): HistoryNode | false 
     if (selectedModules === 'all') {
       this.selectAll()
     } else {
-      this.replace(selectedModules)
+      this.replaceSelected(selectedModules)
     }
 
     // this.events.onHistoryUpdated?.(this.history)

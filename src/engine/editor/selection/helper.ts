@@ -4,7 +4,7 @@ import Editor from '../editor.ts'
 import {RectangleProps} from '../../core/modules/shapes/rectangle.ts'
 import {getBoxControlPoints} from '../../lib/lib.ts'
 
-export function modifySelection(this: Editor, idSet: Set<UID>, action: SelectionActionMode) {
+export function modifySelected(this: Editor, idSet: Set<UID>, action: SelectionActionMode) {
   if (typeCheck(idSet) !== 'set' || idSet.size <= 0) return
 
   let eventCallBackData = null

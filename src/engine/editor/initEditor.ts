@@ -111,7 +111,7 @@ export function initEditor(this: Editor) {
   this.action.on('selection-modify', (data) => {
     const {mode, idSet} = data as SelectionModifyData
 
-    this.modifySelection(idSet, mode)
+    this.modifySelected(idSet, mode)
     this.dispatchVisibleSelectedModules()
   })
 
@@ -149,7 +149,7 @@ export function initEditor(this: Editor) {
     const idSet = new Set(newModules.keys())
 
     this.batchAdd(newModules)
-    this.replace(idSet)
+    this.replaceSelected(idSet)
     this.updateCopiedItemsDelta()
 
     this.dispatchVisibleSelectedModules()
@@ -182,7 +182,7 @@ export function initEditor(this: Editor) {
     const newModules = this.batchCreate(temp)
     this.batchAdd(newModules)
     this.isSelectAll = false
-    this.replace(new Set(newModules.keys()))
+    this.replaceSelected(new Set(newModules.keys()))
 
     this.dispatchVisibleSelectedModules()
     this.updateVisibleModuleMap()

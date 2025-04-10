@@ -87,9 +87,9 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       }*/
       // console.log()
       if (e.ctrlKey || e.metaKey || e.shiftKey) {
-        this.toggle(draggingModules)
+        this.toggleSelected(draggingModules)
       } else {
-        this.replace(draggingModules)
+        this.replaceSelected(draggingModules)
       }
 
       break

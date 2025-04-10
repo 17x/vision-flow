@@ -6,7 +6,7 @@ function handleContextMenu(this: Editor, e: MouseEvent) {
 
   e.preventDefault()
   e.stopPropagation()
-  console.log('mem')
+
   if (e.ctrlKey) {
     return false
   }
@@ -24,7 +24,7 @@ function handleContextMenu(this: Editor, e: MouseEvent) {
     }
   }
 
-  console.log(this.copiedItems)
+  // console.log(this.copiedItems)
   this.action.dispatch('context-menu', {
     idSet,
     position,

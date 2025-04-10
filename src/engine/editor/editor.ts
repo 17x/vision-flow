@@ -220,9 +220,12 @@ class Editor {
     })
   }
 
-  public getIfUnique() {
-    if (this.selectedModules.size === 1)
-      return [...this.selectedModules.values()][0]
+  public getSelectedPropsIfUnique() {
+    if (this.selectedModules.size === 1) {
+      const unique = [...this.selectedModules.values()][0]
+
+      return this.moduleMap.get(unique).getDetails()
+    }
     return null
   }
 

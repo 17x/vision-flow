@@ -51,8 +51,8 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
             delta: { x, y },
           })
         } else {
-          const closestId = [...this.hoveredModules][
-            this.hoveredModules.size - 1
+          const closestId = [...this.hoveredModule][
+            this.hoveredModule.size - 1
           ]
 
 

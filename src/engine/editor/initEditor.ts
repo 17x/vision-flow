@@ -5,7 +5,7 @@ import {redo} from './history/redo.ts'
 import {undo} from './history/undo.ts'
 import {pick} from './history/pick.ts'
 import {HistoryOperation} from './history/type'
-import {updateVisibleSelected} from './selection/helper.ts'
+import {updateSelectionCanvasRenderData} from './selection/helper.ts'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
@@ -48,7 +48,7 @@ export function initEditor(this: Editor) {
   })
 
   on('editor-selection-update', () => {
-    updateVisibleSelected.call(this)
+    updateSelectionCanvasRenderData.call(this)
     this.events.onSelectionUpdated?.(this.selectedModules, this.getSelectedPropsIfUnique())
 
     dispatch('visible-selected-update')
@@ -274,7 +274,7 @@ export function initEditor(this: Editor) {
 
   on('visible-module-update', (quite = false) => {
     if (!quite) {
-      updateVisibleSelected.call(this)
+      updateSelectionCanvasRenderData.call(this)
       dispatch('visible-selected-update')
     }
     resetCanvas(
@@ -298,6 +298,19 @@ export function initEditor(this: Editor) {
     )
     console.log(this.getVisibleSelected)
     this.renderSelections(this.getVisibleSelected)
+  })
+
+  on('module-hover-enter', (id) => {
+    this.hoveredModule = id
+
+    updateSelectionCanvasRenderData.call(this)
+    dispatch('visible-selected-update')
+  })
+  on('module-hover-leave', () => {
+    this.hoveredModule = null
+
+    updateSelectionCanvasRenderData.call(this)
+    dispatch('visible-selected-update')
   })
 
   on('history-undo', () => {

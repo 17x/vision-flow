@@ -34,6 +34,8 @@ export type EditorEventMap = {
   'selection-delete': never;
   'select-all': never;
   'module-add': ModuleProps[];
+  'module-hover-enter': UID;
+  'module-hover-leave': UID;
   'history-redo': never;
   'history-undo': never;
   'history-pick': HistoryNode;

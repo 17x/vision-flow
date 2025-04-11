@@ -53,22 +53,21 @@ export function modifySelected(
   // this.events.onSelectionUpdated?.(idSet, eventCallBackData)
 }
 
-export function updateVisibleSelected(this: Editor) {
+export function updateSelectionCanvasRenderData(this: Editor) {
   this.visibleSelected.clear()
   this.operationHandlers.clear()
+  // this.highlightedModules.clear()
   const localHandlerWidth = 10
   const localHandlerBorderWidth = 1
   const size = this.selectedModules.size
-  console.log()
 
   this.getVisibleModuleMap.forEach((module) => {
     if (this.selectedModules.has(module.id)) {
       this.visibleSelected.add(module.id)
-
     }
   })
 
-  console.log(this.hoveredModules)
+  // this.highlightedModules = this.getVisibleSelected
 
   if (size === 1) {
     this.getVisibleSelectedModuleMap.forEach((module) => {
@@ -82,13 +81,14 @@ export function updateVisibleSelected(this: Editor) {
             this.operationHandlers.add(p)
           },
         )
-      }
 
+      }
     })
   }
-
-  // console.log(this.getVisibleSelectedModuleMap)
-
+/*
+  if (this.hoveredModule) {
+    this.highlightedModules.add(this.hoveredModule)
+  }*/
 }
 
 function createHandlersForRect({
@@ -107,14 +107,18 @@ function createHandlersForRect({
   rotation: number;
 }): ResizeHandler[] {
   const localHandleOffsets = [
-    {name: 'tl', x: 0, y: 0, cursor: 'nwse-resize'}, // top-left
-    {name: 't', x: 0.5, y: 0, cursor: 'ns-resize'}, // top-center
-    {name: 'tr', x: 1, y: 0, cursor: 'nesw-resize'}, // top-right
-    {name: 'r', x: 1, y: 0.5, cursor: 'ew-resize'}, // right-center
-    {name: 'br', x: 1, y: 1, cursor: 'nwse-resize'}, // bottom-right
-    {name: 'b', x: 0.5, y: 1, cursor: 'ns-resize'}, // bottom-center
-    {name: 'bl', x: 0, y: 1, cursor: 'nesw-resize'}, // bottom-left
-    {name: 'l', x: 0, y: 0.5, cursor: 'ew-resize'}, // left-center
+    {type: 'resize', name: 'tl', x: 0, y: 0, cursor: 'nwse-resize'}, // top-left
+    {type: 'resize', name: 't', x: 0.5, y: 0, cursor: 'ns-resize'}, // top-center
+    {type: 'resize', name: 'tr', x: 1, y: 0, cursor: 'nesw-resize'}, // top-right
+    {type: 'resize', name: 'r', x: 1, y: 0.5, cursor: 'ew-resize'}, // right-center
+    {type: 'resize', name: 'br', x: 1, y: 1, cursor: 'nwse-resize'}, // bottom-right
+    {type: 'resize', name: 'b', x: 0.5, y: 1, cursor: 'ns-resize'}, // bottom-center
+    {type: 'resize', name: 'bl', x: 0, y: 1, cursor: 'nesw-resize'}, // bottom-left
+    {type: 'resize', name: 'l', x: 0, y: 0.5, cursor: 'ew-resize'}, // left-center
+    {type: 'rotate', name: 'rotate-tl', x: -0.1, y: -0.1, cursor: 'rotate'}, // left-center
+    {type: 'rotate', name: 'rotate-tr', x: 1.1, y: -0.1, cursor: 'rotate'}, // left-center
+    {type: 'rotate', name: 'rotate-br', x: 1.1, y: 1.1, cursor: 'rotate'}, // left-center
+    {type: 'rotate', name: 'rotate-bl', x: -0.1, y: 1.1, cursor: 'rotate'}, // left-center
   ] as const
 
   return localHandleOffsets.map((offset) => {
@@ -126,8 +130,8 @@ function createHandlersForRect({
     const rotated = rotatePoint(handleX, handleY, cx, cy, rotation)
 
     return {
-      id: `${id}-handle-${offset.name}`,
-      type: 'resize',
+      id: `${id}`,
+      type: offset.type,
       cursor: offset.cursor,
       data: {
         x: rotated.x,
@@ -158,4 +162,11 @@ function rotatePoint(
     x: cx + dx * cos - dy * sin,
     y: cy + dx * sin + dy * cos,
   }
+}
+
+function getLastOneFromSet<T>(s: Set<T>): T | false {
+  const lastOne = [...s][s.size - 1]
+
+  if (!lastOne) return false
+  return lastOne
 }

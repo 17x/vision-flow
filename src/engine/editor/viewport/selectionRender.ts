@@ -2,54 +2,42 @@ import {CircleRenderProps, RectangleRenderProps} from '../../core/renderer/type'
 import Rectangle from '../../core/modules/shapes/rectangle.ts'
 import rectRender from '../../core/renderer/rectRender.ts'
 import circleRender from '../../core/renderer/circleRender.ts'
-import {drawCrossLine, getBoxControlPoints} from '../../lib/lib.ts'
+import {drawCrossLine} from '../../lib/lib.ts'
 import Editor from '../editor.ts'
 
-function selectionRender(this: Editor, idSet: Set<UID>) {
-  // if (!idSet || idSet.size === 0) return
-
+function selectionRender(this: Editor) {
   const {selectionCTX: ctx, dpr, offset, worldRect, scale: scale, mouseMovePoint} = this.viewport
-  // const modules = this.getModulesByIdSet(idSet)
-  console.log([...this.operationHandlers])
   const rects: RectangleRenderProps[] = []
   const dots: CircleRenderProps[] = []
   const fillColor = '#5491f8'
   const lineColor = '#5491f8'
+  const selected = this.getVisibleSelected
+  const highlightedModules = new Set<UID>(selected)
+  const centerPointWidth = 2 / this.viewport.scale * this.viewport.dpr
 
-  this.operationHandlers.forEach(operation => {
-    switch (operation.type) {
-      case 'resize':
-        // console.log(operation.data)
-        const rect = {
-          ...operation.data,
-          height: operation.data.width,
-          opacity: 80,
-          // rotation: 10,
-          fillColor,
-          lineColor: '#fff',
-        }
-        // console.log(rect)
-        rects.push(rect)
-        break
-    }
-  })
+  if (this.hoveredModule) {
+    highlightedModules.add(this.hoveredModule)
+  }
 
-  // console.log(modules.size)
-  this.getVisibleSelectedModuleMap.forEach((module) => {
+  highlightedModules.forEach((id) => {
+    const module = this.moduleMap.get(id)
+    // console.log(module)
     const {
       x, y, width, height, rotation, lineWidth,
     } = (module as Rectangle).getDetails()
-    /*const points = getBoxControlPoints(x, y, width, height, rotation)
+    const centerPointRect = {
+      x,
+      y,
+      width: centerPointWidth * 2,
+      height: centerPointWidth * 2,
+      fillColor: fillColor,
+      lineColor: 'transparent',
+      lineWidth: lineWidth / this.viewport.scale * this.viewport.dpr,
+      rotation,
+      opacity: 100,
+    }
 
-    dots.push(...points.map(point => ({
-      ...point,
-      r1: l,
-      r2: l,
-      fillColor,
-      lineColor: '#fff',
-    })))
-*/
-    rects.push({
+    const boundaryRect = {
       x,
       y,
       width,
@@ -59,9 +47,44 @@ function selectionRender(this: Editor, idSet: Set<UID>) {
       lineWidth: lineWidth / this.viewport.scale * this.viewport.dpr,
       rotation,
       opacity: 0,
-      // dashLine: 'dash',
-    })
+    }
+
+    rects.push(boundaryRect)
+
+    if (id !== this.hoveredModule) {
+      rects.push(centerPointRect)
+    }
   })
+
+  this.operationHandlers.forEach(operation => {
+    switch (operation.type) {
+      case 'resize':
+        // console.log(operation.data)
+        const rect = {
+          ...operation.data,
+          height: operation.data.width,
+          opacity: 100,
+          // rotation: 10,
+          fillColor: '#fff',
+          lineColor: lineColor,
+        }
+        // console.log(rect)
+        rects.push(rect)
+        break
+    }
+  })
+
+  if (this.hoveredModule) {
+    const {x, y} = this.getVisibleModuleMap.get(this.hoveredModule)
+    dots.push({
+      x,
+      y,
+      lineColor: 'transparent',
+      fillColor,
+      r1: centerPointWidth,
+      r2: centerPointWidth,
+    })
+  }
 
   rectRender(ctx, rects)
   circleRender(ctx, dots)

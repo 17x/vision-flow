@@ -6,7 +6,7 @@ import {
 } from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
 import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
-import {updateHoveredModules} from './funcs.ts'
+import {updateHoveredModule} from './funcs.ts'
 import {ResizeHandler} from '../../selection/type'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
@@ -136,7 +136,9 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       break
 
     case 'static': {
-      const {viewport, hoveredModules} = this
+      updateHoveredModule.call(this)
+
+      const {viewport, hoveredModule} = this
 
       const virtualPoint = this.getWorldPointByViewportPoint(viewport.mouseMovePoint.x, viewport.mouseMovePoint.y)
       const hitTest =
@@ -147,7 +149,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
           console.log(f)
           return f
         })
-      const closestOne:ResizeHandler = hitTest[hitTest.length - 1]
+      const closestOne: ResizeHandler = hitTest[hitTest.length - 1]
 
       if (closestOne) {
         console.log(closestOne)
@@ -155,7 +157,6 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       } else {
         viewport.wrapper.style.cursor = 'default'
       }
-      updateHoveredModules.call(this)
 
       // console.log(hoveredModules)
 

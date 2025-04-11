@@ -61,7 +61,8 @@ class Editor {
 
   resizeHandleSize: number = 10
   copiedItems: ModuleProps[] = []
-  hoveredModules: Set<UID> = new Set()
+  hoveredModule: UID | null = null
+  highlightedModules: Set<UID> = new Set()
   draggingModules: Set<UID> = new Set()
   _selectingModules: Set<UID> = new Set()
   _deselection: UID | null = null
@@ -332,13 +333,13 @@ class Editor {
     // Calculate the offset adjustment so that the zoom is centered around the point
     const newOffsetX = canvasPoint.x - (canvasPoint.x - offset.x) * zoomFactor
     const newOffsetY = canvasPoint.y - (canvasPoint.y - offset.y) * zoomFactor
-/*    console.log({
-      scale: clampedScale,
-      offset: {
-        x: newOffsetX,
-        y: newOffsetY,
-      },
-    })*/
+    /*    console.log({
+          scale: clampedScale,
+          offset: {
+            x: newOffsetX,
+            y: newOffsetY,
+          },
+        })*/
     // const newOffsetX = offset.x - (canvasPoint.x * (zoomFactor - 1))
     // const newOffsetY = offset.y - (canvasPoint.y * (zoomFactor - 1))
 

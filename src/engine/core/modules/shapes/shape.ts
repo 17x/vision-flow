@@ -12,6 +12,7 @@ export interface ShapeProps extends BasicModuleProps {
   enableFill?: boolean
   fillColor?: FillColor
 
+  /*first*/
   dashLine?: string
   rotation: number
 }

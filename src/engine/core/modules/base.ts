@@ -21,7 +21,6 @@ class Base {
   private readonly lineWidth: number
   private readonly lineColor: HexColor
   private readonly opacity: Opacity
-  // private readonly position: Point
   readonly rotation: Rotation
   private readonly shadow: Shadow
   readonly layer: number
@@ -78,7 +77,7 @@ class Base {
       right: 0,
       bottom: 0,
       cx: 0,
-      cy: 0
+      cy: 0,
     }
   }
 }

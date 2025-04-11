@@ -1,14 +1,14 @@
 import Editor from '../../engine/editor/editor.ts'
 
 export const createMockData = (editor: Editor) => {
-  const baseX = 100
-  const baseY = 100
+  const baseX = 200
+  const baseY = 300
   const baseRectData: Omit<ShapePropsType, 'id' | 'layer'> = {
     type: 'rectangle',
-    x: 100,
-    y: 100,
-    width: 100,
-    height: 100,
+    // x: 150,
+    // y: 150,
+    width: baseX * 2,
+    height: baseY * 2,
     enableLine: true,
     lineColor: '#000000',
     lineWidth: 1,
@@ -20,10 +20,11 @@ export const createMockData = (editor: Editor) => {
     rotation: 0,
   }
   // const MOCK_ELE_LEN = 1
-  const MOCK_ELE_LEN = 100
+  const MOCK_ELE_LEN = 10
   // const MOCK_ELE_LEN = 200
   // const MOCK_ELE_LEN = 1000
-  const shiftSpeed = 100
+  const shiftSpeed = 10
+  // const shiftSpeed = 100
   // const MOCK_ELE_LEN = 2
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -46,12 +47,12 @@ export const createMockData = (editor: Editor) => {
     modulesData.push({
       ...baseRectData,
       // fillColor: getRandomHexColor(),
-      fillColor: '#ededed',
+      fillColor: '#fff',
       x,
       y,
       layer: i + 1,
       // rotation: i + 10,
-      rotation:  30,
+      rotation: 30,
     })
   }
 

@@ -296,7 +296,7 @@ export function initEditor(this: Editor) {
       this.viewport.scale,
       this.viewport.offset,
     )
-    console.log(this.getVisibleSelected)
+    // console.log(this.getVisibleSelected)
     this.renderSelections(this.getVisibleSelected)
   })
 

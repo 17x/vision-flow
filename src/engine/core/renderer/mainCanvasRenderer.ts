@@ -15,7 +15,7 @@ interface RenderProps {
 const render = ({ctx, modules, frame}: RenderProps): void => {
   // console.log(frame)
   const fixedFrame = {...frame, x: frame.cx, y: frame.cy}
-  const rects: Partial<RectangleRenderProps> & BoundingRect[] = [fixedFrame]
+  const rects: RectangleRenderProps[] = [fixedFrame]
   const lines: LineRenderProps[] = []
   const texts = []
 
@@ -36,14 +36,14 @@ const render = ({ctx, modules, frame}: RenderProps): void => {
         rotation,
         gradient,
         radius,
-        id
+        // id
       } = (module as Rectangle).getDetails()
 
       if ((enableFill && opacity > 0) || enableLine) {
         rects.push({x, y, width, height, fillColor, opacity, lineWidth, lineColor, rotation, gradient, radius})
       }
 
-      texts.push({x: x + 10, y: y + 10, width, height, id: id.match(/\d+$/g)![0]})
+      // texts.push({x: x + 10, y: y + 10, width, height, id: id.match(/\d+$/g)![0]})
     }
 
     if (module.type === 'connector') {

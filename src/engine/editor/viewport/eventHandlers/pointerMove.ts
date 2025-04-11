@@ -146,13 +146,12 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
           // console.log(operationHandler.data)
           const {x, y, width, rotation} = operationHandler.data
           const f = isInsideRotatedRect(virtualPoint, {x, y, width, height: width}, rotation)
-          console.log(f)
+          // console.log(f)
           return f
         })
       const closestOne: ResizeHandler = hitTest[hitTest.length - 1]
 
       if (closestOne) {
-        console.log(closestOne)
         viewport.wrapper.style.cursor = closestOne.cursor
       } else {
         viewport.wrapper.style.cursor = 'default'

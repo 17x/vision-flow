@@ -47,6 +47,7 @@ function selectionRender(this: Editor) {
       lineWidth: lineWidth / this.viewport.scale * this.viewport.dpr,
       rotation,
       opacity: 0,
+      dashLine: '[3, 5]',
     }
 
     rects.push(boundaryRect)

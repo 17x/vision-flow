@@ -1,6 +1,7 @@
 import Editor from '../../editor.ts'
 import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 import {isInsideRotatedRect} from '../../../core/utils.ts'
+import {ResizeHandler} from '../../selection/type'
 
 export function updateHoveredModule(this: Editor) {
   const {viewport} = this
@@ -23,6 +24,21 @@ export function updateHoveredModule(this: Editor) {
       }
     }
   })
+  // console.log(this.operationHandlers)
+  const operationHandlers = [...this.operationHandlers].filter((operationHandler: ResizeHandler) => {
+    // console.log(operationHandler.data)
+    const {x, y, width, rotation} = operationHandler.data
+    const f = isInsideRotatedRect(virtualPoint, {x, y, width, height: width}, rotation)
+    return f
+  })
+
+  const operator = operationHandlers[operationHandlers.length - 1]
+
+  if (operator) {
+    console.log(operator)
+    this.action.dispatch('module-hover-enter', operator.id)
+    return
+  }
 
   if (this.hoveredModule !== moduleId) {
     if (this.hoveredModule) {

@@ -93,7 +93,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       })
 
       const props: ModuleChangeProps = {} // explicitly typed
-
+/*
       for (const key in from) {
         const tkey = key as keyof ModuleModifyData
         const tvalue = from[key] as ModuleModifyData
@@ -101,7 +101,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
           from: from[tkey],
           to: to[tkey],
         }
-      }
+      }*/
       /*
       for (const key of Object.keys(r) as (keyof ModuleProps)[]) {
         props[key] = {
@@ -109,11 +109,11 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
           to: r[key],
         }
       }*/
-
+/*
       this.action.dispatch('module-modify', {
         id,
         props,
-      })
+      })*/
     }
       break
 

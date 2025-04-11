@@ -59,13 +59,14 @@ class Editor {
   readonly visibleSelected: Set<UID> = new Set()
   readonly operationHandlers: Set<OperationHandlers> = new Set()
 
-  resizeHandleSize: number = 10
+  // resizeHandleSize: number = 10
   copiedItems: ModuleProps[] = []
   hoveredModule: UID | null = null
-  highlightedModules: Set<UID> = new Set()
+  // highlightedModules: Set<UID> = new Set()
   draggingModules: Set<UID> = new Set()
   _selectingModules: Set<UID> = new Set()
   _deselection: UID | null = null
+  _resizingOperator: OperationHandlers | null
   selectedShadow: Set<UID> = new Set()
   manipulationStatus: ViewportManipulationType = 'static'
   CopyDeltaX = 50

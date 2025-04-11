@@ -17,15 +17,20 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
   this.viewport.mouseDownPoint.y = y
   this.viewport.mouseMovePoint.x = x
   this.viewport.mouseMovePoint.y = y
-  updateHoveredModule.call(this)
+  const operator = updateHoveredModule.call(this)
   e.preventDefault()
 
   if (this.viewport.spaceKeyDown) {
     return (this.manipulationStatus = 'panning')
   }
 
+  if (operator) {// console.log('opear', r)
+    this._resizingOperator = operator
+    return (this.manipulationStatus = 'resizing')
+  }
+
   const hoveredModule = this.hoveredModule
-  console.log(hoveredModule)
+  // console.log(hoveredModule)
   // Click on blank area and not doing multi-selection
   if (!hoveredModule) {
     // Determine clear selected modules

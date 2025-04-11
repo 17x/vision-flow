@@ -1,14 +1,14 @@
 import Editor from '../../engine/editor/editor.ts'
 
 export const createMockData = (editor: Editor) => {
-  const baseX = 200
+  const baseX = 300
   const baseY = 300
   const baseRectData: Omit<ShapePropsType, 'id' | 'layer'> = {
     type: 'rectangle',
     // x: 150,
     // y: 150,
-    width: baseX * 2,
-    height: baseY * 2,
+    width: baseX * 1.5,
+    height: baseY * 1.5,
     enableLine: true,
     lineColor: '#000000',
     lineWidth: 1,
@@ -19,8 +19,8 @@ export const createMockData = (editor: Editor) => {
     radius: 0,
     rotation: 0,
   }
-  // const MOCK_ELE_LEN = 1
-  const MOCK_ELE_LEN = 10
+  const MOCK_ELE_LEN = 1
+  // const MOCK_ELE_LEN = 10
   // const MOCK_ELE_LEN = 200
   // const MOCK_ELE_LEN = 1000
   const shiftSpeed = 10
@@ -52,7 +52,7 @@ export const createMockData = (editor: Editor) => {
       y,
       layer: i + 1,
       // rotation: i + 10,
-      rotation: 30,
+      rotation: 45,
     })
   }
 

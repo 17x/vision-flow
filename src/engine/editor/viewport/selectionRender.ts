@@ -6,6 +6,7 @@ import {drawCrossLine} from '../../lib/lib.ts'
 import Editor from '../editor.ts'
 
 function selectionRender(this: Editor) {
+  if (this.moduleMap.size === 0) return
   const {selectionCTX: ctx, dpr, offset, worldRect, scale: scale, mouseMovePoint} = this.viewport
   const rects: RectangleRenderProps[] = []
   const dots: CircleRenderProps[] = []

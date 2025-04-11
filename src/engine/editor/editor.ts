@@ -236,7 +236,7 @@ class Editor {
 
   // viewport
   renderModules() {
-    if (this.visibleModuleMap.size === 0) return
+    // if (this.visibleModuleMap.size === 0) return
 
     const animate = () => {
       render({

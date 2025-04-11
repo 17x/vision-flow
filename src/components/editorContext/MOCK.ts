@@ -52,7 +52,7 @@ export const createMockData = (editor: Editor) => {
       y,
       layer: i + 1,
       // rotation: i + 10,
-      rotation: 45,
+      rotation: 0,
     })
   }
 

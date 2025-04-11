@@ -9,18 +9,29 @@ export interface OperationHandler {
 }
 
 type HandlerType = 'resize' | 'rotate';
-type ResizeCursor =
-  | 'ns-resize'
-  | 'ew-resize'
-  | 'nwse-resize'
-  | 'nesw-resize'
-  | 'default';
+
+export type ResizeHandleName =
+  | 'tl'
+  | 't'
+  | 'tr'
+  | 'r'
+  | 'br'
+  | 'b'
+  | 'bl'
+  | 'l';
+
+interface ResizeTransform {
+  dx: number;
+  dy: number;
+  cx: number;
+  cy: number;
+}
 
 interface ResizeHandler {
   id: string;
   type: HandlerType;
+  name: ResizeHandleName
   cursor: ResizeCursor;
-  originCursor: ResizeCursor;
   data: {
     x: number;
     y: number;

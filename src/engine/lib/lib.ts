@@ -1,6 +1,6 @@
 // import typeCheck from '../../utilities/typeCheck.ts'
 
-import {ResizeCursor, ResizeHandler} from '../editor/selection/type'
+import {ResizeCursor, ResizeHandleName, ResizeHandler, ResizeTransform} from '../editor/selection/type'
 
 export const getBoxControlPoints = (
   cx: number,
@@ -204,7 +204,7 @@ export function createHandlersForRect({
     return {
       id: `${id}`,
       type: offset.type,
-      originCursor: offset.originCursor,
+      name: offset.name,
       cursor,
       data: {
         x: rotated.x,
@@ -269,18 +269,106 @@ function getCursor(
   return 'default'
 }
 
+export function getResizeTransform(
+  name: ResizeHandleName,
+  symmetric = false,
+): ResizeTransform {
+  const base = (() => {
+    switch (name) {
+      case 'tl':
+        return {dx: -1, dy: -1, cx: 0.5, cy: 0.5}
+      case 't':
+        return {dx: 0, dy: -1, cx: 0.0, cy: 0.5}
+      case 'tr':
+        return {dx: 1, dy: -1, cx: -0.5, cy: 0.5}
+      case 'r':
+        return {dx: 1, dy: 0, cx: -0.5, cy: 0.0}
+      case 'br':
+        return {dx: 1, dy: 1, cx: -0.5, cy: -0.5}
+      case 'b':
+        return {dx: 0, dy: 1, cx: 0.0, cy: -0.5}
+      case 'bl':
+        return {dx: -1, dy: 1, cx: 0.5, cy: -0.5}
+      case 'l':
+        return {dx: -1, dy: 0, cx: 0.5, cy: 0.0}
+      default:
+        throw new Error(`Unsupported resize handle: ${name}`)
+    }
+  })()
 
-export function getResizeTransform(cursor: ResizeCursor): ResizeTransform {
-  switch (cursor) {
-    case 'ew-resize':
-      return { dx: 1, dy: 0, cx: 0.5, cy: 0 }
-    case 'ns-resize':
-      return { dx: 0, dy: 1, cx: 0, cy: 0.5 }
-    case 'nwse-resize':
-      return { dx: 1, dy: 1, cx: 0.5, cy: 0.5 }
-    case 'nesw-resize':
-      return { dx: -1, dy: 1, cx: -0.5, cy: 0.5 }
-    default:
-      return { dx: 0, dy: 0, cx: 0, cy: 0 }
+  if (symmetric) {
+    // When resizing symmetrically, center should not move.
+    return {...base, cx: 0, cy: 0}
+  }
+
+  return base
+}
+
+type ResizeTransformResult = {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+export function applyResizeTransform({
+                                       downPoint,
+                                       movePoint,
+                                       width,
+                                       height,
+                                       cx,
+                                       cy,
+                                       rotation,
+                                       handleName,
+                                       scale,
+                                       dpr,
+                                       altKey = false,
+                                       shiftKey = false,
+                                     }: {
+  downPoint: { x: number; y: number }
+  movePoint: { x: number; y: number }
+  width: number
+  height: number
+  cx: number
+  cy: number
+  rotation: number
+  handleName: ResizeHandleName
+  scale: number
+  dpr: number
+  altKey?: boolean
+  shiftKey?: boolean
+}): ResizeTransformResult {
+  const dx = (movePoint.x - downPoint.x) / scale * dpr
+  const dy = (movePoint.y - downPoint.y) / scale * dpr
+
+  const angle = -rotation * (Math.PI / 180)
+  const cos = Math.cos(angle)
+  const sin = Math.sin(angle)
+
+  const localDX = dx * cos + dy * sin
+  const localDY = -dx * sin + dy * cos
+
+  const t = getResizeTransform(handleName, altKey)
+
+  let deltaX = localDX * t.dx
+  let deltaY = localDY * t.dy
+
+  if (shiftKey) {
+    const aspect = width / height || 1
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      deltaY = deltaX / aspect * Math.sign(t.dy || 1)
+    } else {
+      deltaX = deltaY * aspect * Math.sign(t.dx || 1)
+    }
+  }
+
+  const factor = altKey ? 2 : 1
+
+  return {
+    x: cx - deltaX * t.cx * factor,
+    y: cy - deltaY * t.cy * factor,
+    width: width + deltaX * factor,
+    height: height + deltaY * factor,
   }
 }

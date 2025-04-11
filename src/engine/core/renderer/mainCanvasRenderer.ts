@@ -45,7 +45,7 @@ const render = ({ctx, modules, frame}: RenderProps): void => {
       }
 
       // texts.push({x: x + 10, y: y + 10, width, height, id: id.match(/\d+$/g)![0]})
-      texts.push({x: x, y: y, width, height, id: layer})
+      // texts.push({x: x, y: y, width, height, id: layer})
     }
 
     if (module.type === 'connector') {

@@ -42,6 +42,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const _selecting: Set<UID> = new Set()
       const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
 
+      // TODO test again
       this.getVisibleModuleMap.forEach((module) => {
         if (module.type === 'rectangle') {
           const boundingRect = module.getBoundingRect() as BoundingRect

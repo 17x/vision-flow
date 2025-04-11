@@ -2,6 +2,7 @@ import {updateSelectionBox} from '../domManipulations.ts'
 import Editor from '../../editor.ts'
 import {applyResize} from './funcs.ts'
 import {applyResizeTransform} from '../../../lib/lib.ts'
+import {ModuleChangeProps, ModuleModifyData} from '../../actions/type'
 
 function handleMouseUp(this: Editor, e: MouseEvent) {
   const {
@@ -70,8 +71,13 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       const {mouseDownPoint, mouseMovePoint, scale, dpr} = this.viewport
       const {name: handleName, data: {rotation}, moduleOrigin, id} = this._resizingOperator!
       const {cx, cy, width, height} = moduleOrigin
-
-      const r = applyResizeTransform({
+      const from: Rect = {
+        x: cx,
+        y: cy,
+        width,
+        height,
+      }
+      const to = applyResizeTransform({
         downPoint: mouseDownPoint,
         movePoint: mouseMovePoint,
         dpr,
@@ -86,11 +92,27 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
         initialCY: cy,
       })
 
+      const props: ModuleChangeProps = {} // explicitly typed
+
+      for (const key in from) {
+        const tkey = key as keyof ModuleModifyData
+        const tvalue = from[key] as ModuleModifyData
+        props[key] = {
+          from: from[tkey],
+          to: to[tkey],
+        }
+      }
+      /*
+      for (const key of Object.keys(r) as (keyof ModuleProps)[]) {
+        props[key] = {
+          from: from[key],
+          to: r[key],
+        }
+      }*/
+
       this.action.dispatch('module-modify', {
-        idSet: new Set([id]),
-        props: {
-          ...r,
-        },
+        id,
+        props,
       })
     }
       break

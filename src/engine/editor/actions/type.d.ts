@@ -16,6 +16,20 @@ export type SelectionMoveData = {
   delta?: Point;
 };
 
+export type PropChange<T> = {
+  from: T
+  to: T
+}
+
+export type ModuleChangeProps = {
+  [K in keyof ModuleProps]?: PropChange<ModuleProps[K]>
+}
+
+export interface ModuleModifyData {
+  id: UID
+  props: ModuleChangeProps
+}
+
 export type EditorEventMap = {
   'editor-initialized': never;
   'editor-module-map-update': HistoryOperation;
@@ -34,10 +48,7 @@ export type EditorEventMap = {
   'selection-delete': never;
   'select-all': never;
   'module-add': ModuleProps[];
-  'module-modify': {
-    idSet: Set<UID>;
-    props: Partial<ModuleProps>
-  }
+  'module-modify': ModuleModifyData
   'module-hover-enter': UID;
   'module-hover-leave': UID;
   'history-redo': never;

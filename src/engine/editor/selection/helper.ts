@@ -68,8 +68,10 @@ export function updateVisibleSelected(this: Editor) {
     }
   })
 
-  this.getVisibleSelectedModuleMap.forEach((module) => {
-    if (size === 1 && this.selectedModules.has(module.id)) {
+  console.log(this.hoveredModules)
+
+  if (size === 1) {
+    this.getVisibleSelectedModuleMap.forEach((module) => {
       if (module.type === 'rectangle') {
         const {x: cx, y: cy, id, width, height, rotation} = module as RectangleProps
 
@@ -77,14 +79,13 @@ export function updateVisibleSelected(this: Editor) {
           (p) => {
             p.data.width = localHandlerWidth / this.viewport.scale * this.viewport.dpr
             p.data.lineWidth = localHandlerBorderWidth / this.viewport.scale * this.viewport.dpr
-            // console.log(this.viewport.scale, this.viewport.dpr, p.data.width)
             this.operationHandlers.add(p)
           },
         )
       }
-    }
 
-  })
+    })
+  }
 
   // console.log(this.getVisibleSelectedModuleMap)
 

@@ -1,12 +1,13 @@
 import {updateSelectionBox} from '../domManipulations.ts'
 // import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 import {
-  generateBoundingRectFromTwoPoints,
+  generateBoundingRectFromTwoPoints, isInsideRotatedRect,
   rectInside,
 } from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
 import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
 import {updateHoveredModules} from './funcs.ts'
+import {ResizeHandler} from '../../selection/type'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
   const {
@@ -136,10 +137,24 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
 
     case 'static': {
       const {viewport, hoveredModules} = this
+
       const virtualPoint = this.getWorldPointByViewportPoint(viewport.mouseMovePoint.x, viewport.mouseMovePoint.y)
-      this.operationHandlers.forEach(operationHandler => {
-        // console.log(operationHandler.data)
-      })
+      const hitTest =
+        [...this.operationHandlers].filter((operationHandler: ResizeHandler) => {
+          // console.log(operationHandler.data)
+          const {x, y, width, rotation} = operationHandler.data
+          const f = isInsideRotatedRect(virtualPoint, {x, y, width, height: width}, rotation)
+          console.log(f)
+          return f
+        })
+      const closestOne:ResizeHandler = hitTest[hitTest.length - 1]
+
+      if (closestOne) {
+        console.log(closestOne)
+        viewport.wrapper.style.cursor = closestOne.cursor
+      } else {
+        viewport.wrapper.style.cursor = 'default'
+      }
       updateHoveredModules.call(this)
 
       // console.log(hoveredModules)

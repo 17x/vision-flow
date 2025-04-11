@@ -19,8 +19,8 @@ export const createMockData = (editor: Editor) => {
     radius: 0,
     rotation: 0,
   }
-  const MOCK_ELE_LEN = 1
-  // const MOCK_ELE_LEN = 100
+  // const MOCK_ELE_LEN = 1
+  const MOCK_ELE_LEN = 100
   // const MOCK_ELE_LEN = 200
   // const MOCK_ELE_LEN = 1000
   const shiftSpeed = 100
@@ -51,7 +51,7 @@ export const createMockData = (editor: Editor) => {
       y,
       layer: i + 1,
       // rotation: i + 10,
-      rotation: i + 10,
+      rotation: i + 30,
     })
   }
 

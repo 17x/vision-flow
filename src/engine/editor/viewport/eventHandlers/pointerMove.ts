@@ -138,20 +138,13 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
 
     case 'static': {
       const r = updateHoveredModule.call(this)
-      const {viewport, hoveredModule} = this
+      const {viewport} = this
 
       if (r) {
-
         viewport.wrapper.style.cursor = r.cursor
+      } else {
+        viewport.wrapper.style.cursor = 'default'
       }
-
-      /*     if (closestOne) {
-             viewport.wrapper.style.cursor = closestOne.cursor
-           } else {
-             viewport.wrapper.style.cursor = 'default'
-           }*/
-
-      // console.log(hoveredModules)
 
       viewport.wrapper.releasePointerCapture(e.pointerId)
       viewport.drawCrossLine = viewport.drawCrossLineDefault

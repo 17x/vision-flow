@@ -19,7 +19,7 @@ export function updateHoveredModule(this: Editor) {
   const operator = operationHandlers[operationHandlers.length - 1]
 
   if (operator) {
-    console.log(operator)
+    // console.log(operator)
     this.action.dispatch('module-hover-enter', operator.id)
     return operator
   }

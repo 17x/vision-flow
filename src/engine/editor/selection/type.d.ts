@@ -9,18 +9,23 @@ export interface OperationHandler {
 }
 
 type HandlerType = 'resize' | 'rotate';
-type Direction =
-  | 'n' | 's' | 'e' | 'w'
-  | 'ne' | 'nw' | 'se' | 'sw';
+type ResizeCursor =
+  | 'ns-resize'
+  | 'ew-resize'
+  | 'nwse-resize'
+  | 'nesw-resize'
+  | 'default';
 
 interface ResizeHandler {
   id: string;
   type: HandlerType;
-  cursor: string;
+  cursor: ResizeCursor;
+  originCursor: ResizeCursor;
   data: {
     x: number;
     y: number;
     width: number;
+    lineWidth: number
     position: string;
     rotation: number;
   };

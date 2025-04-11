@@ -1,8 +1,14 @@
 // import typeCheck from '../../utilities/typeCheck.ts'
 
-import {ResizeHandler} from '../editor/selection/type'
+import {ResizeCursor, ResizeHandler} from '../editor/selection/type'
 
-export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Point[] => {
+export const getBoxControlPoints = (
+  cx: number,
+  cy: number,
+  w: number,
+  h: number,
+  rotation: number,
+): Point[] => {
   const halfW = w / 2
   const halfH = h / 2
 
@@ -16,13 +22,13 @@ export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number
   // Control points before rotation
   const points: Point[] = [
     {x: cx - halfW, y: cy - halfH}, // Top-left
-    {x: cx, y: cy - halfH},         // Top-center
+    {x: cx, y: cy - halfH}, // Top-center
     {x: cx + halfW, y: cy - halfH}, // Top-right
-    {x: cx + halfW, y: cy},         // Right-center
+    {x: cx + halfW, y: cy}, // Right-center
     {x: cx + halfW, y: cy + halfH}, // Bottom-right
-    {x: cx, y: cy + halfH},         // Bottom-center
+    {x: cx, y: cy + halfH}, // Bottom-center
     {x: cx - halfW, y: cy + halfH}, // Bottom-left
-    {x: cx - halfW, y: cy},         // Left-center
+    {x: cx - halfW, y: cy}, // Left-center
   ]
 
   // Rotate each point around the center
@@ -39,18 +45,24 @@ export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number
 }
 
 interface DrawCrossLineProps {
-  ctx: CanvasRenderingContext2D
-  mousePoint: Point
-  scale: number
-  dpr: DPR
-  offset: Point
-  virtualRect: BoundingRect
+  ctx: CanvasRenderingContext2D;
+  mousePoint: Point;
+  scale: number;
+  dpr: DPR;
+  offset: Point;
+  virtualRect: BoundingRect;
 }
 
 /** Convert canvas coordinates to screen coordinates */
-export function canvasToScreen(scale: number, offsetX: number, offsetY: number, canvasX: number, canvasY: number): {
+export function canvasToScreen(
+  scale: number,
+  offsetX: number,
+  offsetY: number,
+  canvasX: number,
+  canvasY: number,
+): {
   x: number;
-  y: number
+  y: number;
 } {
   return {
     x: canvasX * scale + offsetX,
@@ -59,9 +71,15 @@ export function canvasToScreen(scale: number, offsetX: number, offsetY: number, 
 }
 
 /** Convert screen (mouse) coordinates to canvas coordinates */
-export function screenToCanvas(scale: number, offsetX: number, offsetY: number, screenX: number, screenY: number): {
+export function screenToCanvas(
+  scale: number,
+  offsetX: number,
+  offsetY: number,
+  screenX: number,
+  screenY: number,
+): {
   x: number;
-  y: number
+  y: number;
 } {
   return {
     x: (screenX - offsetX) / scale,
@@ -79,7 +97,13 @@ export const drawCrossLine = ({
                               }: DrawCrossLineProps): void => {
   const textOffsetX = 10 / (dpr * scale)
   const textOffsetY = 10 / (dpr * scale)
-  const {x, y} = screenToCanvas(scale, offsetX * dpr, offsetY * dpr, mousePoint.x * dpr, mousePoint.y * dpr)
+  const {x, y} = screenToCanvas(
+    scale,
+    offsetX * dpr,
+    offsetY * dpr,
+    mousePoint.x * dpr,
+    mousePoint.y * dpr,
+  )
   const crossLineColor = '#ff0000'
   const textColor = '#ff0000'
   const textShadowColor = '#000'
@@ -92,7 +116,12 @@ export const drawCrossLine = ({
   ctx.shadowColor = crossLineColor
   ctx.shadowBlur = 1
 
-  ctx.fillText(`${Math.floor(x)}, ${Math.floor(y)}`, x + textOffsetX, y - textOffsetY, 200 / scale)
+  ctx.fillText(
+    `${Math.floor(x)}, ${Math.floor(y)}`,
+    x + textOffsetX,
+    y - textOffsetY,
+    200 / scale,
+  )
   ctx.lineWidth = 2 / (dpr * scale)
   ctx.strokeStyle = crossLineColor
   ctx.shadowColor = textShadowColor
@@ -114,7 +143,10 @@ export const areSetsEqual = <T>(setA: Set<T>, setB: Set<T>): boolean => {
   return true
 }
 
-export const getSymmetricDifference = <T>(setA: Set<T>, setB: Set<T>): Set<T> => {
+export const getSymmetricDifference = <T>(
+  setA: Set<T>,
+  setB: Set<T>,
+): Set<T> => {
   const result = new Set<T>()
 
   for (const item of setA) {
@@ -143,34 +175,36 @@ export function createHandlersForRect({
   rotation: number;
 }): ResizeHandler[] {
   const localHandleOffsets = [
-    {type: 'resize', name: 'tl', x: 0, y: 0, cursor: 'nwse-resize'}, // top-left
-    {type: 'resize', name: 't', x: 0.5, y: 0, cursor: 'ns-resize'}, // top-center
-    {type: 'resize', name: 'tr', x: 1, y: 0, cursor: 'nesw-resize'}, // top-right
-    {type: 'resize', name: 'r', x: 1, y: 0.5, cursor: 'ew-resize'}, // right-center
-    {type: 'resize', name: 'br', x: 1, y: 1, cursor: 'nwse-resize'}, // bottom-right
-    {type: 'resize', name: 'b', x: 0.5, y: 1, cursor: 'ns-resize'}, // bottom-center
-    {type: 'resize', name: 'bl', x: 0, y: 1, cursor: 'nesw-resize'}, // bottom-left
-    {type: 'resize', name: 'l', x: 0, y: 0.5, cursor: 'ew-resize'}, // left-center
-    {type: 'rotate', name: 'rotate-tl', x: -0.1, y: -0.1, cursor: 'rotate'}, // left-center
-    {type: 'rotate', name: 'rotate-tr', x: 1.1, y: -0.1, cursor: 'rotate'}, // left-center
-    {type: 'rotate', name: 'rotate-br', x: 1.1, y: 1.1, cursor: 'rotate'}, // left-center
-    {type: 'rotate', name: 'rotate-bl', x: -0.1, y: 1.1, cursor: 'rotate'}, // left-center
+    {type: 'resize', name: 'tl', x: 0, y: 0, originCursor: 'nwse-resize', cursor: 'nwse-resize'}, // top-left
+    {type: 'resize', name: 't', x: 0.5, y: 0, originCursor: 'ns-resize', cursor: 'ns-resize'}, // top-center
+    {type: 'resize', name: 'tr', x: 1, y: 0, originCursor: 'nesw-resize', cursor: 'nesw-resize'}, // top-right
+    {type: 'resize', name: 'r', x: 1, y: 0.5, originCursor: 'ew-resize', cursor: 'ew-resize'}, // right-center
+    {type: 'resize', name: 'br', x: 1, y: 1, originCursor: 'nwse-resize', cursor: 'nwse-resize'}, // bottom-right
+    {type: 'resize', name: 'b', x: 0.5, y: 1, originCursor: 'ns-resize', cursor: 'ns-resize'}, // bottom-center
+    {type: 'resize', name: 'bl', x: 0, y: 1, originCursor: 'nesw-resize', cursor: 'nesw-resize'}, // bottom-left
+    {type: 'resize', name: 'l', x: 0, y: 0.5, originCursor: 'ew-resize', cursor: 'ew-resize'}, // left-center
+    {type: 'rotate', name: 'rotate-tl', x: -0.1, y: -0.1, originCursor: 'rotate', cursor: 'rotate'}, // left-center
+    {type: 'rotate', name: 'rotate-tr', x: 1.1, y: -0.1, originCursor: 'rotate', cursor: 'rotate'}, // left-center
+    {type: 'rotate', name: 'rotate-br', x: 1.1, y: 1.1, originCursor: 'rotate', cursor: 'rotate'}, // left-center
+    {type: 'rotate', name: 'rotate-bl', x: -0.1, y: 1.1, originCursor: 'rotate', cursor: 'rotate'}, // left-center
   ] as const
 
-  return localHandleOffsets.map((offset) => {
+  const handlers = localHandleOffsets.map((offset) => {
     // Calculate the handle position in local coordinates
     const handleX = cx - width / 2 + offset.x * width
     const handleY = cy - height / 2 + offset.y * height
     // Rotate the handle position around the center
     const rotated = rotatePoint(handleX, handleY, cx, cy, rotation)
-    let cursor = offset.cursor
+    let cursor: ResizeCursor = offset.cursor as ResizeCursor
 
     if (offset.type === 'resize') {
       cursor = getCursor(rotated.x, rotated.y, cx, cy, rotation)
     }
+
     return {
       id: `${id}`,
       type: offset.type,
+      originCursor: offset.originCursor,
       cursor,
       data: {
         x: rotated.x,
@@ -181,6 +215,11 @@ export function createHandlersForRect({
       },
     }
   })
+  // const points = handlers.filter(({type}) => type === 'resize')
+
+  // setCursorForPoints(points)
+
+  return handlers
 }
 
 function rotatePoint(
@@ -201,35 +240,85 @@ function rotatePoint(
     y: cy + dx * sin + dy * cos,
   }
 }
-function getCursor(handlerX: number, handlerY: number, centerX: number, centerY: number, rotation: number): string {
-  // Step 1: Transform global point into local space (cancel rotation)
-  const dx = handlerX - centerX
-  const dy = handlerY - centerY
 
-  const rad = (-rotation * Math.PI) / 180 // inverse rotation
-  const localX = dx * Math.cos(rad) - dy * Math.sin(rad)
-  const localY = dx * Math.sin(rad) + dy * Math.cos(rad)
+function getCursor(
+  x: number,
+  y: number,
+  cx: number,
+  cy: number,
+  threshold = 4,
+): ResizeCursor {
+  const dx = x - cx
+  const dy = y - cy
 
-  // Step 2: Decide quadrant or edge
-  const absX = Math.abs(localX)
-  const absY = Math.abs(localY)
-  const threshold = 0.5 // to decide between corner vs side
+  const absDx = Math.abs(dx)
+  const absDy = Math.abs(dy)
 
-  if (absX > absY) {
-    // Horizontal
-    if (localX > 0) return 'ew-resize' // Right
-    else return 'ew-resize'           // Left
-  } else if (absY > absX) {
-    // Vertical
-    if (localY > 0) return 'ns-resize' // Bottom
-    else return 'ns-resize'           // Top
-  } else {
-    // Corner
-    if (localX > 0 && localY > 0) return 'nwse-resize' // Bottom-right
-    if (localX < 0 && localY < 0) return 'nwse-resize' // Top-left
-    if (localX > 0 && localY < 0) return 'nesw-resize' // Top-right
-    if (localX < 0 && localY > 0) return 'nesw-resize' // Bottom-left
+  // Corner handles
+  if (absDx > threshold && absDy > threshold) {
+    if (dx < 0 && dy < 0) return 'nwse-resize'   // Top-left
+    if (dx > 0 && dy < 0) return 'nesw-resize'   // Top-right
+    if (dx > 0 && dy > 0) return 'nwse-resize'   // Bottom-right
+    if (dx < 0 && dy > 0) return 'nesw-resize'   // Bottom-left
   }
+
+  // Side handles
+  if (absDx <= threshold && absDy > threshold) return 'ns-resize' // Top or Bottom
+  if (absDy <= threshold && absDx > threshold) return 'ew-resize' // Left or Right
 
   return 'default'
 }
+
+/*
+
+function setCursorForPoints(
+  points: ResizeHandler[],
+  cx: number,
+  cy: number,
+): string {
+  let topIndex = -1
+  let rightIndex = -1
+  let bottomIndex = -1
+  let leftIndex = -1
+
+  points.reduce((acc, curr, index) => {
+    const {x, y} = curr.data
+
+    if (x < acc.left) {
+      acc.left = x
+      leftIndex = index
+    }
+    if (x > acc.right) {
+      acc.right = x
+      rightIndex = index
+    }
+    if (y < acc.top) {
+      acc.top = y
+      topIndex = index
+    }
+    if (y > acc.bottom) {
+      acc.bottom = y
+      bottomIndex = index
+    }
+
+    return acc
+  }, {
+    top: Number.MAX_SAFE_INTEGER,
+    right: Number.MIN_SAFE_INTEGER,
+    bottom: Number.MIN_SAFE_INTEGER,
+    left: Number.MAX_SAFE_INTEGER,
+  })
+
+  console.log(
+    topIndex,
+    rightIndex,
+    bottomIndex,
+    leftIndex,
+    points,
+  )
+  points[topIndex].cursor = 'ns-resize'
+  points[leftIndex].cursor = 'ew-resize'
+  points[rightIndex].cursor = 'ew-resize'
+  points[bottomIndex].cursor = 'ns-resize'
+  return points
+}*/

@@ -77,7 +77,7 @@ export function updateSelectionCanvasRenderData(this: Editor) {
 
         createHandlersForRect({id, cx, cy, width, height, rotation}).forEach(
           (p) => {
-            console.log(p.data,p.cursor)
+            // console.log(p.data,p.cursor)
             p.data.width = localHandlerWidth / this.viewport.scale * this.viewport.dpr
             p.data.lineWidth = localHandlerBorderWidth / this.viewport.scale * this.viewport.dpr
             this.operationHandlers.add(p)

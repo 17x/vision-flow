@@ -90,8 +90,8 @@ interface ModifyOperation {
       id: string // module ID that was modified
       props: {
         [key: string]: {
-          from: never // previous value of the property
-          to: never   // new value of the property
+          from: string | null | boolean
+          to: string | null | boolean
         }
       }
     }[]

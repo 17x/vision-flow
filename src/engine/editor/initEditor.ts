@@ -272,6 +272,27 @@ export function initEditor(this: Editor) {
     dispatch('editor-selection-update')
   })
 
+  on('module-modify', (data) => {
+    console.warn(data)
+
+    this.history.add({
+      type: 'history-modify',
+      payload: {
+        selectedModules: this.getSelected,
+        changes: [{
+          id: '1',
+          props: {
+            x: {
+              from: '100',
+              to: '100',
+            },
+          },
+        }],
+      },
+
+    })
+  })
+
   on('visible-module-update', (quite = false) => {
     if (!quite) {
       updateSelectionCanvasRenderData.call(this)

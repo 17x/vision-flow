@@ -1,5 +1,7 @@
-import { updateSelectionBox } from "../domManipulations.ts"
-import Editor from "../../editor.ts"
+import {updateSelectionBox} from '../domManipulations.ts'
+import Editor from '../../editor.ts'
+import {applyResize} from './funcs.ts'
+import {applyResizeTransform} from '../../../lib/lib.ts'
 
 function handleMouseUp(this: Editor, e: MouseEvent) {
   const {
@@ -19,63 +21,88 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
   viewport.mouseMovePoint.y = y
 
   switch (manipulationStatus) {
-    case "selecting":
+    case 'selecting':
       break
 
-    case "panning":
+    case 'panning':
       // this.viewport.translateViewport(e.movementX, e.movementY)
 
       break
 
-    case "dragging":
-      {
-        const x =
-          ((viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) *
-            viewport.dpr) /
-          viewport.scale
-        const y =
-          ((viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) *
-            viewport.dpr) /
-          viewport.scale
-        const moved = !(x === 0 && y === 0)
+    case 'dragging': {
+      const x =
+        ((viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) *
+          viewport.dpr) /
+        viewport.scale
+      const y =
+        ((viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) *
+          viewport.dpr) /
+        viewport.scale
+      const moved = !(x === 0 && y === 0)
 
-        // mouse stay static
-        if (moved) {
-          // move back to origin position and do the move again
-          draggingModules.forEach((id) => {
-            moduleMap.get(id).x -= x
-            moduleMap.get(id).y -= y
+      // mouse stay static
+      if (moved) {
+        // move back to origin position and do the move again
+        draggingModules.forEach((id) => {
+          moduleMap.get(id).x -= x
+          moduleMap.get(id).y -= y
+        })
+
+        this.action.dispatch('selection-move', {
+          direction: 'module-move-shift',
+          delta: {x, y},
+        })
+      } else {
+        const closestId = this.hoveredModule
+
+        if (closestId && modifyKey && closestId === this._deselection) {
+          this.action.dispatch('modify-selection', {
+            mode: 'toggle',
+            idSet: new Set([closestId]),
           })
-
-          this.action.dispatch("selection-move", {
-            direction: "module-move-shift",
-            delta: { x, y },
-          })
-        } else {
-          const closestId = this.hoveredModule
-
-
-          if (closestId && modifyKey && closestId === this._deselection) {
-            this.action.dispatch("modify-selection", {
-              mode: "toggle",
-              idSet: new Set([closestId]),
-            })
-          }
         }
       }
+    }
       break
 
-    case "resizing":
+    case 'resizing': {
+      const {altKey, shiftKey} = e
+      const {mouseDownPoint, mouseMovePoint, scale, dpr} = this.viewport
+      const {name: handleName, data: {rotation}, moduleOrigin, id} = this._resizingOperator!
+      const {cx, cy, width, height} = moduleOrigin
+
+      const r = applyResizeTransform({
+        downPoint: mouseDownPoint,
+        movePoint: mouseMovePoint,
+        dpr,
+        scale,
+        initialWidth: width,
+        initialHeight: height,
+        rotation,
+        handleName,
+        altKey,
+        shiftKey,
+        initialCX: cx,
+        initialCY: cy,
+      })
+
+      this.action.dispatch('module-modify', {
+        idSet: new Set([id]),
+        props: {
+          ...r,
+        },
+      })
+    }
       break
 
-    case "rotating":
+    case 'rotating':
       break
 
-    case "mousedown":
+    case 'mousedown':
       console.log(this.draggingModules)
       this.action.dispatch('selection-clear')
       break
-    case "static":
+    case 'static':
       // console.log(this.hoveredModules)
       /*console.log(this.handlingModules)
       if (this.hoveredModules.size === 0) {
@@ -98,13 +125,14 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
   selectedShadow.clear()
   _selectingModules.clear()
   _selectingModules.clear()
-  this.manipulationStatus = "static"
+  this.manipulationStatus = 'static'
   this._deselection = null
   this._resizingOperator = null
+
   updateSelectionBox(
     viewport.selectionBox,
-    { x: 0, y: 0, width: 0, height: 0 },
-    false
+    {x: 0, y: 0, width: 0, height: 0},
+    false,
   )
 }
 

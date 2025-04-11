@@ -34,6 +34,10 @@ export type EditorEventMap = {
   'selection-delete': never;
   'select-all': never;
   'module-add': ModuleProps[];
+  'module-modify': {
+    idSet: Set<UID>;
+    props: Partial<ModuleProps>
+  }
   'module-hover-enter': UID;
   'module-hover-leave': UID;
   'history-redo': never;

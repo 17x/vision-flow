@@ -72,11 +72,12 @@ export function applyResize(this: Editor, altKey: boolean, shiftKey: boolean) {
     initialCY: cy,
   })
 
-  console.warn(r)
   // return
   module.x = r.x
   module.y = r.y
   module.width = r.width
   module.height = r.height
+
+  return r
 }
 

@@ -30,7 +30,7 @@ export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): Module
   return newMap
 }
 
-export function batchAdd(this: Editor, modules: ModuleMap):ModuleMap {
+export function batchAdd(this: Editor, modules: ModuleMap): ModuleMap {
   modules.forEach(mod => {
     this.moduleMap.set(mod.id, mod)
   })
@@ -97,11 +97,10 @@ export function batchModify(this: Editor, from: Set<UID>, data: Partial<ModulePr
 
   modulesMap.forEach((module: ModuleProps) => {
     Object.keys(data).forEach((key) => {
-      const value = data[key]
-
-      if (typeof value === 'string' || typeof value === 'number') {
-        module[key] = value
-      }
+      module[key] = data[key]
+      // const value = data[key]
+      // if (typeof value === 'string' || typeof value === 'number') {
+      // }
     })
   })
 

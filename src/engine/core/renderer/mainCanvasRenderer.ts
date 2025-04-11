@@ -1,8 +1,8 @@
-import rectRender from "./rectRender.ts"
-import lineRender, {LineRenderProps} from "./lineRender.ts"
-import {RectangleRenderProps} from "./type"
-import Rectangle from "../modules/shapes/rectangle.ts"
-import Connector from "../modules/connectors/connector.ts"
+import rectRender from './rectRender.ts'
+import lineRender, {LineRenderProps} from './lineRender.ts'
+import {RectangleRenderProps} from './type'
+import Rectangle from '../modules/shapes/rectangle.ts'
+import Connector from '../modules/connectors/connector.ts'
 
 interface RenderProps {
   ctx: CanvasRenderingContext2D
@@ -36,6 +36,7 @@ const render = ({ctx, modules, frame}: RenderProps): void => {
         rotation,
         gradient,
         radius,
+        layer,
         // id
       } = (module as Rectangle).getDetails()
 
@@ -44,6 +45,7 @@ const render = ({ctx, modules, frame}: RenderProps): void => {
       }
 
       // texts.push({x: x + 10, y: y + 10, width, height, id: id.match(/\d+$/g)![0]})
+      texts.push({x: x, y: y, width, height, id: layer})
     }
 
     if (module.type === 'connector') {
@@ -57,8 +59,8 @@ const render = ({ctx, modules, frame}: RenderProps): void => {
         startY: rect1.bottom,
         endX: rect2.centerX,
         endY: rect2.top,
-        fillStyle: "#5491f8",
-        lineWidth: 1
+        fillStyle: '#5491f8',
+        lineWidth: 1,
       })
       // rects.push({x, y, width, height, fillStyle, strokeStyle, lineWidth})
     }
@@ -70,10 +72,16 @@ const render = ({ctx, modules, frame}: RenderProps): void => {
 }
 
 const textRender = (ctx: CanvasRenderingContext2D, texts): void => {
-  ctx.font = 'sans-serif'
-  ctx.textBaseline = 'top'
+  ctx.font = '100px sans-serif'
+  ctx.textBaseline = 'middle'
   texts.forEach(({id, x, y, width, height}) => {
-    ctx.fillText(id, x - width / 2 + 5, y - height / 2 + 5, 100)
+    ctx.save()
+
+    ctx.translate(x, y)
+
+    ctx.fillText(id, x - width / 2, y - height / 2, 100)
+
+    ctx.restore()
   })
 }
 

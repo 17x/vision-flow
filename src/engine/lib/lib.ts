@@ -269,56 +269,18 @@ function getCursor(
   return 'default'
 }
 
-/*
 
-function setCursorForPoints(
-  points: ResizeHandler[],
-  cx: number,
-  cy: number,
-): string {
-  let topIndex = -1
-  let rightIndex = -1
-  let bottomIndex = -1
-  let leftIndex = -1
-
-  points.reduce((acc, curr, index) => {
-    const {x, y} = curr.data
-
-    if (x < acc.left) {
-      acc.left = x
-      leftIndex = index
-    }
-    if (x > acc.right) {
-      acc.right = x
-      rightIndex = index
-    }
-    if (y < acc.top) {
-      acc.top = y
-      topIndex = index
-    }
-    if (y > acc.bottom) {
-      acc.bottom = y
-      bottomIndex = index
-    }
-
-    return acc
-  }, {
-    top: Number.MAX_SAFE_INTEGER,
-    right: Number.MIN_SAFE_INTEGER,
-    bottom: Number.MIN_SAFE_INTEGER,
-    left: Number.MAX_SAFE_INTEGER,
-  })
-
-  console.log(
-    topIndex,
-    rightIndex,
-    bottomIndex,
-    leftIndex,
-    points,
-  )
-  points[topIndex].cursor = 'ns-resize'
-  points[leftIndex].cursor = 'ew-resize'
-  points[rightIndex].cursor = 'ew-resize'
-  points[bottomIndex].cursor = 'ns-resize'
-  return points
-}*/
+export function getResizeTransform(cursor: ResizeCursor): ResizeTransform {
+  switch (cursor) {
+    case 'ew-resize':
+      return { dx: 1, dy: 0, cx: 0.5, cy: 0 }
+    case 'ns-resize':
+      return { dx: 0, dy: 1, cx: 0, cy: 0.5 }
+    case 'nwse-resize':
+      return { dx: 1, dy: 1, cx: 0.5, cy: 0.5 }
+    case 'nesw-resize':
+      return { dx: -1, dy: 1, cx: -0.5, cy: 0.5 }
+    default:
+      return { dx: 0, dy: 0, cx: 0, cy: 0 }
+  }
+}

@@ -12,6 +12,7 @@ function selectionRender(this: Editor, idSet: Set<UID>) {
   const enableRotationHandle = this.selectedModules.size === 1
   // const idSet = selectionManager.getVisibleSelectedModules()
   const modules = this.getModulesByIdSet(idSet)
+  console.log([...this.operationHandlers])
   const l = this.resizeHandleSize / 2
   const rects: RectangleRenderProps[] = []
   const dots: CircleRenderProps[] = []
@@ -23,11 +24,27 @@ function selectionRender(this: Editor, idSet: Set<UID>) {
     // selectionManager.ctx.rotate(item.rotation); // Apply rotation
   }
 
+  this.operationHandlers.forEach(operation => {
+    switch (operation.type) {
+      case 'resize':
+        // console.log(operation.data)
+        const rect = {
+          ...operation.data,
+          height: operation.data.width,
+          fillColor,
+          lineColor: '#fff',
+        }
+        console.log(rect)
+        rects.push(rect)
+        break
+    }
+  })
+
   modules.forEach((module) => {
     const {
       x, y, width, height, rotation, lineWidth,
     } = (module as Rectangle).getDetails()
-    const points = getBoxControlPoints(x, y, width, height, rotation)
+    /*const points = getBoxControlPoints(x, y, width, height, rotation)
 
     dots.push(...points.map(point => ({
       ...point,
@@ -36,7 +53,7 @@ function selectionRender(this: Editor, idSet: Set<UID>) {
       fillColor,
       lineColor: '#fff',
     })))
-
+*/
     rects.push({
       x,
       y,

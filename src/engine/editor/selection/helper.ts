@@ -1,4 +1,4 @@
-import {SelectionActionMode} from './type'
+import {OperationHandler, ResizeHandler, SelectionActionMode} from './type'
 import typeCheck from '../../../utilities/typeCheck.ts'
 import Editor from '../editor.ts'
 import {RectangleProps} from '../../core/modules/shapes/rectangle.ts'
@@ -53,23 +53,14 @@ export function modifySelected(this: Editor, idSet: Set<UID>, action: SelectionA
 export function updateVisibleSelected(this: Editor) {
   this.visibleSelected.clear()
   this.operationHandlers.clear()
+
   this.getVisibleModuleMap.forEach(module => {
     if (module.type === 'rectangle') {
       const {x, y, id, width, height, rotation} = module as RectangleProps
-      const points = getBoxControlPoints(x, y, width, height, rotation)
+      // const points = getBoxControlPoints(x, y, width, height, rotation)
 
-      points.forEach(point => {
-        // create manipulation handlers
-        this.operationHandlers.add(
-          {
-            id,
-            type: 'resize',
-            data: {
-              ...point,
-              r: this.viewport.scale,
-            },
-          },
-        )
+      createHandlersForRect({id, x, y, width, height, rotation}).forEach(p => {
+        this.operationHandlers.add(p)
       })
     }
 
@@ -77,4 +68,58 @@ export function updateVisibleSelected(this: Editor) {
       this.visibleSelected.add(module.id)
     }
   })
+
+}
+
+function createHandlersForRect({id, x, y, width, height, rotation}): ResizeHandler[] {
+  const localHandleOffsets = [
+    {name: 'tl', x: 0, y: 0, cursor: 'nwse-resize'}, // top-left
+    {name: 't', x: 0.5, y: 0, cursor: 'ns-resize'}, // top-center
+    {name: 'tr', x: 1, y: 0, cursor: 'nesw-resize'}, // top-right
+    {name: 'r', x: 1, y: 0.5, cursor: 'ew-resize'}, // right-center
+    {name: 'br', x: 1, y: 1, cursor: 'nwse-resize'}, // bottom-right
+    {name: 'b', x: 0.5, y: 1, cursor: 'ns-resize'}, // bottom-center
+    {name: 'bl', x: 0, y: 1, cursor: 'nesw-resize'}, // bottom-left
+    {name: 'l', x: 0, y: 0.5, cursor: 'ew-resize'}, // left-center
+  ] as const
+
+  return localHandleOffsets.map((offset) => {
+    // Step 1: Local position relative to the center of the rect
+    const localX = (offset.x - 0.5) * width
+    const localY = (offset.y - 0.5) * height
+    // console.log(localX, localY)
+    // Step 2: Apply rotation to the local position
+    const rotated = rotatePoint(localX, localY, x, y, rotation)
+    const rotatedX = x + rotated.x
+    const rotatedY = y + rotated.y
+    console.log(localX, localY, rotated)
+    // Return handler
+    return {
+      id: `${id}-handle-${offset.name}`,
+      type: 'resize',
+      cursor: offset.cursor,
+      data: {
+        x: rotatedX,
+        y: rotatedY,
+        width: 10,
+        position: offset.name, // Position of the handler (e.g., top-left)
+      },
+    }
+  })
+}
+
+// Function to rotate a point around the center of the rectangle
+function rotatePoint(px: number, py: number, cx: number, cy: number, rotation: number) {
+  const dx = px - cx
+  const dy = py - cy
+  const angle = rotation * (Math.PI / 180)
+  const cos = Math.cos(angle)
+  const sin = Math.sin(angle)
+
+  console.log(px, py, cx, cy, rotation)
+
+  return {
+    x: cx + dx * cos - dy * sin,
+    y: cy + dx * sin + dy * cos,
+  }
 }

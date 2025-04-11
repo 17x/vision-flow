@@ -14,7 +14,7 @@ import {
   batchModify,
   batchMove,
 } from './modules/modules.ts'
-import {OperationHandler, SelectionActionMode} from './selection/type'
+import {OperationHandler, OperationHandlers, SelectionActionMode} from './selection/type'
 import {
   modifySelected,
 } from './selection/helper.ts'
@@ -57,7 +57,7 @@ class Editor {
   viewport: Viewport
   readonly selectedModules: Set<UID> = new Set()
   readonly visibleSelected: Set<UID> = new Set()
-  readonly operationHandlers: Set<OperationHandler> = new Set()
+  readonly operationHandlers: Set<OperationHandlers> = new Set()
 
   resizeHandleSize: number = 10
   copiedItems: ModuleProps[] = []

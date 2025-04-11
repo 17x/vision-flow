@@ -1,4 +1,4 @@
-import typeCheck from '../../utilities/typeCheck.ts'
+// import typeCheck from '../../utilities/typeCheck.ts'
 
 export const getBoxControlPoints = (cx: number, cy: number, w: number, h: number, rotation: number): Point[] => {
   const halfW = w / 2

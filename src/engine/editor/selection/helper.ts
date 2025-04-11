@@ -2,6 +2,7 @@ import {ResizeHandler, SelectionActionMode} from './type'
 import typeCheck from '../../../utilities/typeCheck.ts'
 import Editor from '../editor.ts'
 import {RectangleProps} from '../../core/modules/shapes/rectangle.ts'
+import {createHandlersForRect} from '../../lib/lib.ts'
 
 export function modifySelected(
   this: Editor,
@@ -76,6 +77,7 @@ export function updateSelectionCanvasRenderData(this: Editor) {
 
         createHandlersForRect({id, cx, cy, width, height, rotation}).forEach(
           (p) => {
+            console.log(p.data,p.cursor)
             p.data.width = localHandlerWidth / this.viewport.scale * this.viewport.dpr
             p.data.lineWidth = localHandlerBorderWidth / this.viewport.scale * this.viewport.dpr
             this.operationHandlers.add(p)
@@ -90,6 +92,7 @@ export function updateSelectionCanvasRenderData(this: Editor) {
     this.highlightedModules.add(this.hoveredModule)
   }*/
 }
+/*
 
 function createHandlersForRect({
                                  id,
@@ -169,4 +172,4 @@ function getLastOneFromSet<T>(s: Set<T>): T | false {
 
   if (!lastOne) return false
   return lastOne
-}
+}*/

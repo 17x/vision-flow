@@ -137,26 +137,19 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       break
 
     case 'static': {
-      updateHoveredModule.call(this)
-
+      const r = updateHoveredModule.call(this)
       const {viewport, hoveredModule} = this
 
-      const virtualPoint = this.getWorldPointByViewportPoint(viewport.mouseMovePoint.x, viewport.mouseMovePoint.y)
-      const hitTest =
-        [...this.operationHandlers].filter((operationHandler: ResizeHandler) => {
-          // console.log(operationHandler.data)
-          const {x, y, width, rotation} = operationHandler.data
-          const f = isInsideRotatedRect(virtualPoint, {x, y, width, height: width}, rotation)
-          // console.log(f)
-          return f
-        })
-      const closestOne: ResizeHandler = hitTest[hitTest.length - 1]
+      if (r) {
 
-      if (closestOne) {
-        viewport.wrapper.style.cursor = closestOne.cursor
-      } else {
-        viewport.wrapper.style.cursor = 'default'
+        viewport.wrapper.style.cursor = r.cursor
       }
+
+      /*     if (closestOne) {
+             viewport.wrapper.style.cursor = closestOne.cursor
+           } else {
+             viewport.wrapper.style.cursor = 'default'
+           }*/
 
       // console.log(hoveredModules)
 

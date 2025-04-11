@@ -1,13 +1,11 @@
 import {updateSelectionBox} from '../domManipulations.ts'
-// import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 import {
-  generateBoundingRectFromTwoPoints, isInsideRotatedRect,
+  generateBoundingRectFromTwoPoints,
   rectInside,
 } from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
-import {applyResizeTransform, areSetsEqual, getResizeTransform, getSymmetricDifference} from '../../../lib/lib.ts'
-import {updateHoveredModule} from './funcs.ts'
-import {ResizeHandler} from '../../selection/type'
+import {applyResizeTransform, areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
+import {applyResize, updateHoveredModule} from './funcs.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
   const {
@@ -115,31 +113,8 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     case 'resizing': {
       viewport.wrapper.setPointerCapture(e.pointerId)
       const {altKey, shiftKey} = e
-      const {mouseDownPoint, mouseMovePoint, scale, dpr} = viewport
-      const {name: handleName, data: {x, y, rotation}, id} = this._resizingOperator!
-      const module = moduleMap.get(id)
-      const {width, height} = module
 
-      const r = applyResizeTransform({
-        downPoint: mouseDownPoint,
-        movePoint: mouseMovePoint,
-        dpr,
-        scale,
-        width,
-        height,
-        rotation,
-        handleName,
-        altKey,
-        shiftKey,
-        cx: x,
-        cy: y,
-      })
-
-      console.warn(r)
-      module.x = r.x
-      module.y = r.y
-      module.width = r.width
-      module.height = r.height
+      applyResize.call(this, altKey, shiftKey)
 
       this.action.dispatch('visible-module-update')
     }

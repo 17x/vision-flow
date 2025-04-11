@@ -7,6 +7,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
     manipulationStatus,
     moduleMap,
     _selectingModules,
+    _resizingOperator,
     selectedShadow,
     viewport,
   } = this
@@ -96,8 +97,10 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
   draggingModules.clear()
   selectedShadow.clear()
   _selectingModules.clear()
+  _selectingModules.clear()
   this.manipulationStatus = "static"
   this._deselection = null
+  this._resizingOperator = null
   updateSelectionBox(
     viewport.selectionBox,
     { x: 0, y: 0, width: 0, height: 0 },

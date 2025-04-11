@@ -32,6 +32,7 @@ interface ResizeHandler {
   type: HandlerType;
   name: ResizeHandleName
   cursor: ResizeCursor;
+  moduleOrigin: ModuleProps
   data: {
     x: number;
     y: number;

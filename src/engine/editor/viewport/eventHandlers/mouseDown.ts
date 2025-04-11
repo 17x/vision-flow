@@ -24,7 +24,7 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
     return (this.manipulationStatus = 'panning')
   }
 
-  if (operator) {// console.log('opear', r)
+  if (operator && operator.type === 'resize') {// console.log('opear', r)
     this._resizingOperator = operator
     return (this.manipulationStatus = 'resizing')
   }

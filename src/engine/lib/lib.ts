@@ -188,6 +188,7 @@ export function createHandlersForRect({
     {type: 'rotate', name: 'rotate-br', x: 1.1, y: 1.1, originCursor: 'rotate', cursor: 'rotate'}, // left-center
     {type: 'rotate', name: 'rotate-bl', x: -0.1, y: 1.1, originCursor: 'rotate', cursor: 'rotate'}, // left-center
   ] as const
+  // const module = this.moduleMap.get(id)
 
   const handlers = localHandleOffsets.map((offset) => {
     // Calculate the handle position in local coordinates
@@ -196,7 +197,6 @@ export function createHandlersForRect({
     // Rotate the handle position around the center
     const rotated = rotatePoint(handleX, handleY, cx, cy, rotation)
     let cursor: ResizeCursor = offset.cursor as ResizeCursor
-
     if (offset.type === 'resize') {
       cursor = getCursor(rotated.x, rotated.y, cx, cy, rotation)
     }
@@ -206,6 +206,7 @@ export function createHandlersForRect({
       type: offset.type,
       name: offset.name,
       cursor,
+      moduleOrigin: {cx, cy, width, height},
       data: {
         x: rotated.x,
         y: rotated.y,
@@ -215,9 +216,6 @@ export function createHandlersForRect({
       },
     }
   })
-  // const points = handlers.filter(({type}) => type === 'resize')
-
-  // setCursorForPoints(points)
 
   return handlers
 }
@@ -312,25 +310,25 @@ type ResizeTransformResult = {
 }
 
 export function applyResizeTransform({
-                                       downPoint,
-                                       movePoint,
-                                       width,
-                                       height,
-                                       cx,
-                                       cy,
-                                       rotation,
-                                       handleName,
-                                       scale,
-                                       dpr,
-                                       altKey = false,
-                                       shiftKey = false,
-                                     }: {
+                                downPoint,
+                                movePoint,
+                                initialWidth,
+                                initialHeight,
+                                initialCX,
+                                initialCY,
+                                rotation,
+                                handleName,
+                                scale,
+                                dpr,
+                                altKey = false,
+                                shiftKey = false,
+                              }: {
   downPoint: { x: number; y: number }
   movePoint: { x: number; y: number }
-  width: number
-  height: number
-  cx: number
-  cy: number
+  initialWidth: number
+  initialHeight: number
+  initialCX: number
+  initialCY: number
   rotation: number
   handleName: ResizeHandleName
   scale: number
@@ -338,8 +336,11 @@ export function applyResizeTransform({
   altKey?: boolean
   shiftKey?: boolean
 }): ResizeTransformResult {
-  const dx = (movePoint.x - downPoint.x) / scale * dpr
-  const dy = (movePoint.y - downPoint.y) / scale * dpr
+  const dxScreen = movePoint.x - downPoint.x
+  const dyScreen = movePoint.y - downPoint.y
+
+  const dx = dxScreen / scale * dpr
+  const dy = dyScreen / scale * dpr
 
   const angle = -rotation * (Math.PI / 180)
   const cos = Math.cos(angle)
@@ -354,7 +355,7 @@ export function applyResizeTransform({
   let deltaY = localDY * t.dy
 
   if (shiftKey) {
-    const aspect = width / height || 1
+    const aspect = initialWidth / initialHeight || 1
 
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
       deltaY = deltaX / aspect * Math.sign(t.dy || 1)
@@ -365,10 +366,11 @@ export function applyResizeTransform({
 
   const factor = altKey ? 2 : 1
 
-  return {
-    x: cx - deltaX * t.cx * factor,
-    y: cy - deltaY * t.cy * factor,
-    width: width + deltaX * factor,
-    height: height + deltaY * factor,
-  }
+  const width = initialWidth + deltaX * factor
+  const height = initialHeight + deltaY * factor
+
+  const x = initialCX - deltaX * t.cx * factor
+  const y = initialCY - deltaY * t.cy * factor
+
+  return { x, y, width, height }
 }

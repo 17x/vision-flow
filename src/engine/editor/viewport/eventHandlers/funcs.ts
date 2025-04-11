@@ -2,6 +2,7 @@ import Editor from '../../editor.ts'
 import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 import {isInsideRotatedRect} from '../../../core/utils.ts'
 import {ResizeHandler} from '../../selection/type'
+import {applyResizeTransform} from '../../../lib/lib.ts'
 
 export function updateHoveredModule(this: Editor) {
   const {viewport} = this
@@ -49,3 +50,33 @@ export function updateHoveredModule(this: Editor) {
     }
   }
 }
+
+export function applyResize(this: Editor, altKey: boolean, shiftKey: boolean) {
+  const {mouseDownPoint, mouseMovePoint, scale, dpr} = this.viewport
+  const {name: handleName, data: {rotation}, moduleOrigin, id} = this._resizingOperator!
+  const {cx, cy, width, height} = moduleOrigin
+  const module = this.moduleMap.get(id)
+
+  const r = applyResizeTransform({
+    downPoint: mouseDownPoint,
+    movePoint: mouseMovePoint,
+    dpr,
+    scale,
+    initialWidth: width,
+    initialHeight: height,
+    rotation,
+    handleName,
+    altKey,
+    shiftKey,
+    initialCX: cx,
+    initialCY: cy,
+  })
+
+  console.warn(r)
+  // return
+  module.x = r.x
+  module.y = r.y
+  module.width = r.width
+  module.height = r.height
+}
+

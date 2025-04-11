@@ -92,6 +92,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           },
           onContextMenu: (idSet, position, copiedItems) => {
             console.log(idSet, position)
+            setShowContextMenu(true)
             setContextMenuData({
               idSet,
               position,

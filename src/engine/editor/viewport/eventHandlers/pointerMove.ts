@@ -138,7 +138,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const {viewport, hoveredModules} = this
       const virtualPoint = this.getWorldPointByViewportPoint(viewport.mouseMovePoint.x, viewport.mouseMovePoint.y)
       this.operationHandlers.forEach(operationHandler => {
-        console.log(operationHandler.data)
+        // console.log(operationHandler.data)
       })
       updateHoveredModules.call(this)
 

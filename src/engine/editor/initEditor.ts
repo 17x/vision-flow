@@ -42,7 +42,7 @@ export function initEditor(this: Editor) {
     this.updateVisibleModuleMap()
 
     dispatch('visible-module-update', true)
-    dispatch('editor-selection-update')
+    // dispatch('editor-selection-update')
 
     this.history.add(historyData)
   })
@@ -127,6 +127,8 @@ export function initEditor(this: Editor) {
         selectedModules: savedSelected,
       },
     })
+
+    dispatch('editor-selection-update')
   })
 
   on('selection-copy', () => {
@@ -177,6 +179,8 @@ export function initEditor(this: Editor) {
         selectedModules: savedSelected,
       },
     })
+
+    dispatch('editor-selection-update')
   })
 
   on('selection-duplicate', () => {
@@ -203,6 +207,8 @@ export function initEditor(this: Editor) {
         selectedModules: savedSelected,
       },
     })
+
+    dispatch('editor-selection-update')
   })
 
   on('selection-move', ({direction, delta = {x: 0, y: 0}}) => {
@@ -254,6 +260,7 @@ export function initEditor(this: Editor) {
     this.replaceSelected(savedSelected)
 
     const moduleProps = [...newModules.values()].map((mod) => mod.getDetails())
+
     dispatch('editor-module-map-update', {
       type: 'history-add',
       payload: {
@@ -261,10 +268,13 @@ export function initEditor(this: Editor) {
         selectedModules: savedSelected,
       },
     })
+
+    dispatch('editor-selection-update')
   })
 
   on('visible-module-update', (quite = false) => {
     if (!quite) {
+      updateVisibleSelected.call(this)
       dispatch('visible-selected-update')
     }
     resetCanvas(
@@ -286,6 +296,7 @@ export function initEditor(this: Editor) {
       this.viewport.scale,
       this.viewport.offset,
     )
+    console.log(this.getVisibleSelected)
     this.renderSelections(this.getVisibleSelected)
   })
 

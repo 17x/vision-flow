@@ -180,6 +180,10 @@ class Editor {
     return new Set(this.visibleSelected)
   }
 
+  public get getVisibleSelectedModuleMap() {
+    return this.getModulesByIdSet(this.getVisibleSelected)
+  }
+
   public get getSelected(): Set<UID> {
     return new Set(this.selectedModules)
   }
@@ -328,13 +332,13 @@ class Editor {
     // Calculate the offset adjustment so that the zoom is centered around the point
     const newOffsetX = canvasPoint.x - (canvasPoint.x - offset.x) * zoomFactor
     const newOffsetY = canvasPoint.y - (canvasPoint.y - offset.y) * zoomFactor
-    console.log({
+/*    console.log({
       scale: clampedScale,
       offset: {
         x: newOffsetX,
         y: newOffsetY,
       },
-    })
+    })*/
     // const newOffsetX = offset.x - (canvasPoint.x * (zoomFactor - 1))
     // const newOffsetY = offset.y - (canvasPoint.y * (zoomFactor - 1))
 

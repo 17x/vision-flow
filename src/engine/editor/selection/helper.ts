@@ -1,10 +1,13 @@
-import {OperationHandler, ResizeHandler, SelectionActionMode} from './type'
+import {ResizeHandler, SelectionActionMode} from './type'
 import typeCheck from '../../../utilities/typeCheck.ts'
 import Editor from '../editor.ts'
 import {RectangleProps} from '../../core/modules/shapes/rectangle.ts'
-import {getBoxControlPoints} from '../../lib/lib.ts'
 
-export function modifySelected(this: Editor, idSet: Set<UID>, action: SelectionActionMode) {
+export function modifySelected(
+  this: Editor,
+  idSet: Set<UID>,
+  action: SelectionActionMode,
+) {
   if (typeCheck(idSet) !== 'set' || idSet.size <= 0) return
 
   let eventCallBackData = null
@@ -46,32 +49,62 @@ export function modifySelected(this: Editor, idSet: Set<UID>, action: SelectionA
     }
   })
 
-  realSelectedModules.forEach(id => this.selectedModules.add(id))
+  realSelectedModules.forEach((id) => this.selectedModules.add(id))
   // this.events.onSelectionUpdated?.(idSet, eventCallBackData)
 }
 
 export function updateVisibleSelected(this: Editor) {
   this.visibleSelected.clear()
   this.operationHandlers.clear()
+  const localHandlerWidth = 10
+  const localHandlerBorderWidth = 1
+  const size = this.selectedModules.size
+  console.log()
 
-  this.getVisibleModuleMap.forEach(module => {
-    if (module.type === 'rectangle') {
-      const {x, y, id, width, height, rotation} = module as RectangleProps
-      // const points = getBoxControlPoints(x, y, width, height, rotation)
-
-      createHandlersForRect({id, x, y, width, height, rotation}).forEach(p => {
-        this.operationHandlers.add(p)
-      })
-    }
-
+  this.getVisibleModuleMap.forEach((module) => {
     if (this.selectedModules.has(module.id)) {
       this.visibleSelected.add(module.id)
+
     }
   })
 
+  this.getVisibleSelectedModuleMap.forEach((module) => {
+    if (size === 1 && this.selectedModules.has(module.id)) {
+      if (module.type === 'rectangle') {
+        const {x: cx, y: cy, id, width, height, rotation} = module as RectangleProps
+
+        createHandlersForRect({id, cx, cy, width, height, rotation}).forEach(
+          (p) => {
+            p.data.width = localHandlerWidth / this.viewport.scale * this.viewport.dpr
+            p.data.lineWidth = localHandlerBorderWidth / this.viewport.scale * this.viewport.dpr
+            // console.log(this.viewport.scale, this.viewport.dpr, p.data.width)
+            this.operationHandlers.add(p)
+          },
+        )
+      }
+    }
+
+  })
+
+  // console.log(this.getVisibleSelectedModuleMap)
+
 }
 
-function createHandlersForRect({id, x, y, width, height, rotation}): ResizeHandler[] {
+function createHandlersForRect({
+                                 id,
+                                 cx,
+                                 cy,
+                                 width,
+                                 height,
+                                 rotation,
+                               }: {
+  id: string;
+  cx: number;
+  cy: number;
+  width: number;
+  height: number;
+  rotation: number;
+}): ResizeHandler[] {
   const localHandleOffsets = [
     {name: 'tl', x: 0, y: 0, cursor: 'nwse-resize'}, // top-left
     {name: 't', x: 0.5, y: 0, cursor: 'ns-resize'}, // top-center
@@ -84,39 +117,41 @@ function createHandlersForRect({id, x, y, width, height, rotation}): ResizeHandl
   ] as const
 
   return localHandleOffsets.map((offset) => {
-    // Step 1: Local position relative to the center of the rect
-    const localX = (offset.x - 0.5) * width
-    const localY = (offset.y - 0.5) * height
-    // console.log(localX, localY)
-    // Step 2: Apply rotation to the local position
-    const rotated = rotatePoint(localX, localY, x, y, rotation)
-    const rotatedX = x + rotated.x
-    const rotatedY = y + rotated.y
-    console.log(localX, localY, rotated)
-    // Return handler
+    // Calculate the handle position in local coordinates
+    const handleX = cx - width / 2 + offset.x * width
+    const handleY = cy - height / 2 + offset.y * height
+
+    // Rotate the handle position around the center
+    const rotated = rotatePoint(handleX, handleY, cx, cy, rotation)
+
     return {
       id: `${id}-handle-${offset.name}`,
       type: 'resize',
       cursor: offset.cursor,
       data: {
-        x: rotatedX,
-        y: rotatedY,
-        width: 10,
-        position: offset.name, // Position of the handler (e.g., top-left)
+        x: rotated.x,
+        y: rotated.y,
+        width: 0,
+        position: offset.name,
+        rotation,
       },
     }
   })
 }
 
 // Function to rotate a point around the center of the rectangle
-function rotatePoint(px: number, py: number, cx: number, cy: number, rotation: number) {
+function rotatePoint(
+  px: number,
+  py: number,
+  cx: number,
+  cy: number,
+  rotation: number,
+) {
   const dx = px - cx
   const dy = py - cy
   const angle = rotation * (Math.PI / 180)
   const cos = Math.cos(angle)
   const sin = Math.sin(angle)
-
-  console.log(px, py, cx, cy, rotation)
 
   return {
     x: cx + dx * cos - dy * sin,

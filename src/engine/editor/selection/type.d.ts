@@ -15,7 +15,9 @@ export interface ResizeHandler extends OperationHandler {
     x: number;
     y: number;
     width: number;
+    lineWidth: number;
     position: string; // Top-left, bottom-right, etc.
+    rotation: number;
   };
 }
 

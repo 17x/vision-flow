@@ -125,7 +125,8 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       viewport.wrapper.setPointerCapture(e.pointerId)
       const {shiftKey} = e
 
-      applyRotating.call(this, shiftKey)
+      const {rotation} = applyRotating.call(this, shiftKey)
+      // console.log(rotation)
       this.action.dispatch('module-operating')
     }
       break

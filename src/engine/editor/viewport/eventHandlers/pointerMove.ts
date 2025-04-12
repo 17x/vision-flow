@@ -161,12 +161,11 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
 
           updateCursor(viewport.wrapper, viewport.cursor, centerPoint, viewport.mouseMovePoint)
         } else {
+          updateCursor(viewport.wrapper, viewport.cursor, 'hide')
           viewport.wrapper.style.cursor = r.cursor
         }
       } else {
         updateCursor(viewport.wrapper, viewport.cursor, 'hide')
-
-        // viewport.wrapper.style.cursor = 'default'
       }
 
       viewport.wrapper.releasePointerCapture(e.pointerId)

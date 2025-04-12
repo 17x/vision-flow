@@ -81,8 +81,8 @@ export function initViewportDom(id: UID): InitViewportDomReturn {
     }
     
     #${cursor.id} svg{
-      width:20px;
-      height:20px;
+      width:18px;
+      height:18px;
     }
   `
 
@@ -138,8 +138,8 @@ export const updateCursor = (wrapper: HTMLDivElement, cursor: HTMLDivElement, ce
   const size = 24
   const offset = size / 2
 
-  const dx = mousePoint.x - centerPoint.x
-  const dy = mousePoint.y - centerPoint.y
+  const dx = mousePoint!.x - centerPoint.x
+  const dy = mousePoint!.y - centerPoint.y
   const angleRad = Math.atan2(dy, dx)
   const angleDeg = angleRad * (180 / Math.PI)
   let normalizedAngle = angleDeg

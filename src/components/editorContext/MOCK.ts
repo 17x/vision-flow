@@ -21,10 +21,10 @@ export const createMockData = (editor: Editor) => {
     rotation: 0,
   }
   // const MOCK_ELE_LEN = 1
-  // const MOCK_ELE_LEN = 10
+  const MOCK_ELE_LEN = 10
   // const MOCK_ELE_LEN = 200
-  const MOCK_ELE_LEN = 1000
-  const shiftSpeed = 2
+  // const MOCK_ELE_LEN = 10000
+  // const shiftSpeed = 2
   // const shiftSpeed = 100
   // const MOCK_ELE_LEN = 2
   // @ts-ignore
@@ -34,7 +34,7 @@ export const createMockData = (editor: Editor) => {
   }
 
   // @ts-ignore
-   
+
   const getRandomNumber = (max: number): number => {
     return Math.floor(Math.random() * max)
   }

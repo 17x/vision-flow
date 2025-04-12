@@ -15,8 +15,6 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
   }
   const rectQueue: RectangleRenderProps[] = deduplicateObjectsByKeyValue(uintArray)
 
-  console.log(rects.length, rectQueue.length)
-  console.log(rectQueue)
   // Start rendering
   ctx.save()
   rectQueue.forEach(({

@@ -5,7 +5,7 @@ import {
 } from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
 import {applyResizeTransform, areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
-import {applyResize, updateHoveredModule} from './funcs.ts'
+import {applyResize, applyRotating, updateHoveredModule} from './funcs.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
   const {
@@ -120,9 +120,14 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     }
       break
 
-    case 'rotating':
+    case 'rotating': {
       viewport.wrapper.setPointerCapture(e.pointerId)
+      const {shiftKey} = e
 
+      applyRotating.call(this, shiftKey)
+      this.action.dispatch('visible-module-update')
+
+    }
       break
 
     case 'mousedown': {

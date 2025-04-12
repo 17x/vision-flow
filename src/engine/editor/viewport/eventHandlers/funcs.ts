@@ -81,5 +81,32 @@ export function applyResize(this: Editor, altKey: boolean, shiftKey: boolean) {
 }
 
 export function applyRotating(this: Editor, shiftKey: boolean) {
+  const {mouseDownPoint, mouseMovePoint} = this.viewport
+  const {
+    data,
+    moduleOrigin,
+    id,
+  } = this._rotatingOperator!
+  const {cx, cy, rotation} = moduleOrigin
+  const module = this.moduleMap.get(id)
+  console.log(module)
+  // Calculate the angle between the mouse position and the center of the object
+  const startAngle = Math.atan2(mouseDownPoint.y - cy, mouseDownPoint.x - cx)
+  const currentAngle = Math.atan2(mouseMovePoint.y - cy, mouseMovePoint.x - cx)
 
+  // Calculate the rotation delta in degrees
+  let rotationDelta = (currentAngle - startAngle) * (180 / Math.PI)
+
+  // Snap to 15-degree increments if shift key is pressed
+  if (shiftKey) {
+    rotationDelta = Math.round(rotationDelta / 15) * 15
+  }
+
+  // Apply the rotation
+  module.rotation = rotation + rotationDelta
+
+  return {
+    rotation: module.rotation,
+  }
 }
+

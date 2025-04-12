@@ -67,7 +67,7 @@ class Editor {
   _selectingModules: Set<UID> = new Set()
   _deselection: UID | null = null
   _resizingOperator: ResizeHandler | null
-  _rotatingOperator: RotateHandler | null
+  _rotatingOperator: OperationHandlers | null
   selectedShadow: Set<UID> = new Set()
   manipulationStatus: ViewportManipulationType = 'static'
   CopyDeltaX = 50

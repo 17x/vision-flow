@@ -93,6 +93,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
 
       const props: ModuleChangeProps = {} // explicitly typed
 
+      console.log(to)
       for (const key in from) {
         props[key] = {
           from: from[key],

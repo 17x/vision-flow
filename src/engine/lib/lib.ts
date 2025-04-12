@@ -5,14 +5,14 @@ import {
   ResizeHandleName,
   ResizeHandler,
   ResizeTransform,
-} from '../editor/selection/type'
+} from "../editor/selection/type"
 
 export const getBoxControlPoints = (
   cx: number,
   cy: number,
   w: number,
   h: number,
-  rotation: number,
+  rotation: number
 ): Point[] => {
   const halfW = w / 2
   const halfH = h / 2
@@ -26,18 +26,18 @@ export const getBoxControlPoints = (
 
   // Control points before rotation
   const points: Point[] = [
-    {x: cx - halfW, y: cy - halfH}, // Top-left
-    {x: cx, y: cy - halfH}, // Top-center
-    {x: cx + halfW, y: cy - halfH}, // Top-right
-    {x: cx + halfW, y: cy}, // Right-center
-    {x: cx + halfW, y: cy + halfH}, // Bottom-right
-    {x: cx, y: cy + halfH}, // Bottom-center
-    {x: cx - halfW, y: cy + halfH}, // Bottom-left
-    {x: cx - halfW, y: cy}, // Left-center
+    { x: cx - halfW, y: cy - halfH }, // Top-left
+    { x: cx, y: cy - halfH }, // Top-center
+    { x: cx + halfW, y: cy - halfH }, // Top-right
+    { x: cx + halfW, y: cy }, // Right-center
+    { x: cx + halfW, y: cy + halfH }, // Bottom-right
+    { x: cx, y: cy + halfH }, // Bottom-center
+    { x: cx - halfW, y: cy + halfH }, // Bottom-left
+    { x: cx - halfW, y: cy }, // Left-center
   ]
 
   // Rotate each point around the center
-  return points.map(({x, y}) => {
+  return points.map(({ x, y }) => {
     const dx = x - cx
     const dy = y - cy
 
@@ -64,7 +64,7 @@ export function canvasToScreen(
   offsetX: number,
   offsetY: number,
   canvasX: number,
-  canvasY: number,
+  canvasY: number
 ): {
   x: number;
   y: number;
@@ -81,7 +81,7 @@ export function screenToCanvas(
   offsetX: number,
   offsetY: number,
   screenX: number,
-  screenY: number,
+  screenY: number
 ): {
   x: number;
   y: number;
@@ -93,28 +93,28 @@ export function screenToCanvas(
 }
 
 export const drawCrossLine = ({
-                                ctx,
-                                mousePoint,
-                                scale,
-                                dpr,
-                                offset: {x: offsetX, y: offsetY},
-                                virtualRect: {left: minX, top: minY, right: maxX, bottom: maxY},
-                              }: DrawCrossLineProps): void => {
+  ctx,
+  mousePoint,
+  scale,
+  dpr,
+  offset: { x: offsetX, y: offsetY },
+  virtualRect: { left: minX, top: minY, right: maxX, bottom: maxY },
+}: DrawCrossLineProps): void => {
   const textOffsetX = 10 / (dpr * scale)
   const textOffsetY = 10 / (dpr * scale)
-  const {x, y} = screenToCanvas(
+  const { x, y } = screenToCanvas(
     scale,
     offsetX * dpr,
     offsetY * dpr,
     mousePoint.x * dpr,
-    mousePoint.y * dpr,
+    mousePoint.y * dpr
   )
-  const crossLineColor = '#ff0000'
-  const textColor = '#ff0000'
-  const textShadowColor = '#000'
+  const crossLineColor = "#ff0000"
+  const textColor = "#ff0000"
+  const textShadowColor = "#000"
 
   ctx.save()
-  ctx.textBaseline = 'alphabetic'
+  ctx.textBaseline = "alphabetic"
   ctx.font = `${24 / scale}px sans-serif`
   // ctx.setLineDash([3 * dpr * scale, 5 * dpr * scale])
   ctx.fillStyle = textColor
@@ -125,7 +125,7 @@ export const drawCrossLine = ({
     `${Math.floor(x)}, ${Math.floor(y)}`,
     x + textOffsetX,
     y - textOffsetY,
-    200 / scale,
+    200 / scale
   )
   ctx.lineWidth = 2 / (dpr * scale)
   ctx.strokeStyle = crossLineColor
@@ -150,7 +150,7 @@ export const areSetsEqual = <T>(setA: Set<T>, setB: Set<T>): boolean => {
 
 export const getSymmetricDifference = <T>(
   setA: Set<T>,
-  setB: Set<T>,
+  setB: Set<T>
 ): Set<T> => {
   const result = new Set<T>()
 
@@ -165,13 +165,13 @@ export const getSymmetricDifference = <T>(
 }
 
 export function createHandlersForRect({
-                                        id,
-                                        cx,
-                                        cy,
-                                        width,
-                                        height,
-                                        rotation,
-                                      }: {
+  id,
+  cx,
+  cy,
+  width,
+  height,
+  rotation,
+}: {
   id: string;
   cx: number;
   cy: number;
@@ -181,100 +181,100 @@ export function createHandlersForRect({
 }): ResizeHandler[] {
   const localHandleOffsets = [
     {
-      type: 'resize',
-      name: 'tl',
+      type: "resize",
+      name: "tl",
       x: 0,
       y: 0,
-      originCursor: 'nwse-resize',
-      cursor: 'nwse-resize',
+      originCursor: "nwse-resize",
+      cursor: "nwse-resize",
     }, // top-left
     {
-      type: 'resize',
-      name: 't',
+      type: "resize",
+      name: "t",
       x: 0.5,
       y: 0,
-      originCursor: 'ns-resize',
-      cursor: 'ns-resize',
+      originCursor: "ns-resize",
+      cursor: "ns-resize",
     }, // top-center
     {
-      type: 'resize',
-      name: 'tr',
+      type: "resize",
+      name: "tr",
       x: 1,
       y: 0,
-      originCursor: 'nesw-resize',
-      cursor: 'nesw-resize',
+      originCursor: "nesw-resize",
+      cursor: "nesw-resize",
     }, // top-right
     {
-      type: 'resize',
-      name: 'r',
+      type: "resize",
+      name: "r",
       x: 1,
       y: 0.5,
-      originCursor: 'ew-resize',
-      cursor: 'ew-resize',
+      originCursor: "ew-resize",
+      cursor: "ew-resize",
     }, // right-center
     {
-      type: 'resize',
-      name: 'br',
+      type: "resize",
+      name: "br",
       x: 1,
       y: 1,
-      originCursor: 'nwse-resize',
-      cursor: 'nwse-resize',
+      originCursor: "nwse-resize",
+      cursor: "nwse-resize",
     }, // bottom-right
     {
-      type: 'resize',
-      name: 'b',
+      type: "resize",
+      name: "b",
       x: 0.5,
       y: 1,
-      originCursor: 'ns-resize',
-      cursor: 'ns-resize',
+      originCursor: "ns-resize",
+      cursor: "ns-resize",
     }, // bottom-center
     {
-      type: 'resize',
-      name: 'bl',
+      type: "resize",
+      name: "bl",
       x: 0,
       y: 1,
-      originCursor: 'nesw-resize',
-      cursor: 'nesw-resize',
+      originCursor: "nesw-resize",
+      cursor: "nesw-resize",
     }, // bottom-left
     {
-      type: 'resize',
-      name: 'l',
+      type: "resize",
+      name: "l",
       x: 0,
       y: 0.5,
-      originCursor: 'ew-resize',
-      cursor: 'ew-resize',
+      originCursor: "ew-resize",
+      cursor: "ew-resize",
     }, // left-center
     {
-      type: 'rotate',
-      name: 'rotate-tl',
+      type: "rotate",
+      name: "rotate-tl",
       x: -0.1,
       y: -0.1,
-      originCursor: 'rotate',
-      cursor: 'rotate',
+      originCursor: "rotate",
+      cursor: "rotate",
     }, // left-center
     {
-      type: 'rotate',
-      name: 'rotate-tr',
+      type: "rotate",
+      name: "rotate-tr",
       x: 1.1,
       y: -0.1,
-      originCursor: 'rotate',
-      cursor: 'rotate',
+      originCursor: "rotate",
+      cursor: "rotate",
     }, // left-center
     {
-      type: 'rotate',
-      name: 'rotate-br',
+      type: "rotate",
+      name: "rotate-br",
       x: 1.1,
       y: 1.1,
-      originCursor: 'rotate',
-      cursor: 'rotate',
+      originCursor: "rotate",
+      cursor: "rotate",
     }, // left-center
     {
-      type: 'rotate',
-      name: 'rotate-bl',
+      type: "rotate",
+      name: "rotate-bl",
       x: -0.1,
       y: 1.1,
-      originCursor: 'rotate',
-      cursor: 'rotate',
+      originCursor: "rotate",
+      cursor: "rotate",
     }, // left-center
   ] as const
   // const module = this.moduleMap.get(id)
@@ -286,7 +286,7 @@ export function createHandlersForRect({
     // Rotate the handle position around the center
     const rotated = rotatePoint(handleX, handleY, cx, cy, rotation)
     let cursor: ResizeCursor = offset.cursor as ResizeCursor
-    if (offset.type === 'resize') {
+    if (offset.type === "resize") {
       cursor = getCursor(rotated.x, rotated.y, cx, cy, rotation)
     }
 
@@ -295,7 +295,7 @@ export function createHandlersForRect({
       type: offset.type,
       name: offset.name,
       cursor,
-      moduleOrigin: {cx, cy, width, height},
+      moduleOrigin: { cx, cy, width, height },
       data: {
         x: rotated.x,
         y: rotated.y,
@@ -314,7 +314,7 @@ function rotatePoint(
   py: number,
   cx: number,
   cy: number,
-  rotation: number,
+  rotation: number
 ) {
   const dx = px - cx
   const dy = py - cy
@@ -333,7 +333,7 @@ function getCursor(
   y: number,
   cx: number,
   cy: number,
-  threshold = 4,
+  threshold = 4
 ): ResizeCursor {
   const dx = x - cx
   const dy = y - cy
@@ -343,41 +343,41 @@ function getCursor(
 
   // Corner handles
   if (absDx > threshold && absDy > threshold) {
-    if (dx < 0 && dy < 0) return 'nwse-resize' // Top-left
-    if (dx > 0 && dy < 0) return 'nesw-resize' // Top-right
-    if (dx > 0 && dy > 0) return 'nwse-resize' // Bottom-right
-    if (dx < 0 && dy > 0) return 'nesw-resize' // Bottom-left
+    if (dx < 0 && dy < 0) return "nwse-resize" // Top-left
+    if (dx > 0 && dy < 0) return "nesw-resize" // Top-right
+    if (dx > 0 && dy > 0) return "nwse-resize" // Bottom-right
+    if (dx < 0 && dy > 0) return "nesw-resize" // Bottom-left
   }
 
   // Side handles
-  if (absDx <= threshold && absDy > threshold) return 'ns-resize' // Top or Bottom
-  if (absDy <= threshold && absDx > threshold) return 'ew-resize' // Left or Right
+  if (absDx <= threshold && absDy > threshold) return "ns-resize" // Top or Bottom
+  if (absDy <= threshold && absDx > threshold) return "ew-resize" // Left or Right
 
-  return 'default'
+  return "default"
 }
 
 export function getResizeTransform(
   name: ResizeHandleName,
-  symmetric = false,
+  symmetric = false
 ): ResizeTransform {
   const base = (() => {
     switch (name) {
-      case 'tl':
-        return {dx: -1, dy: -1, cx: 0.5, cy: 0.5}
-      case 't':
-        return {dx: 0, dy: -1, cx: 0.0, cy: 0.5}
-      case 'tr':
-        return {dx: 1, dy: -1, cx: -0.5, cy: 0.5}
-      case 'r':
-        return {dx: 1, dy: 0, cx: -0.5, cy: 0.0}
-      case 'br':
-        return {dx: 1, dy: 1, cx: -0.5, cy: -0.5}
-      case 'b':
-        return {dx: 0, dy: 1, cx: 0.0, cy: -0.5}
-      case 'bl':
-        return {dx: -1, dy: 1, cx: 0.5, cy: -0.5}
-      case 'l':
-        return {dx: -1, dy: 0, cx: 0.5, cy: 0.0}
+      case "tl":
+        return { dx: -1, dy: -1, cx: 0.5, cy: 0.5 }
+      case "t":
+        return { dx: 0, dy: -1, cx: 0.0, cy: 0.5 }
+      case "tr":
+        return { dx: 1, dy: -1, cx: -0.5, cy: 0.5 }
+      case "r":
+        return { dx: 1, dy: 0, cx: -0.5, cy: 0.0 }
+      case "br":
+        return { dx: 1, dy: 1, cx: -0.5, cy: -0.5 }
+      case "b":
+        return { dx: 0, dy: 1, cx: 0.0, cy: -0.5 }
+      case "bl":
+        return { dx: -1, dy: 1, cx: 0.5, cy: -0.5 }
+      case "l":
+        return { dx: -1, dy: 0, cx: 0.5, cy: 0.0 }
       default:
         throw new Error(`Unsupported resize handle: ${name}`)
     }
@@ -385,7 +385,7 @@ export function getResizeTransform(
 
   if (symmetric) {
     // When resizing symmetrically, center should not move.
-    return {...base, cx: 0, cy: 0}
+    return { ...base, cx: 0, cy: 0 }
   }
 
   return base
@@ -399,19 +399,19 @@ type ResizeTransformResult = {
 };
 
 export function applyResizeTransform({
-                                       downPoint,
-                                       movePoint,
-                                       initialWidth,
-                                       initialHeight,
-                                       initialCX,
-                                       initialCY,
-                                       rotation,
-                                       handleName,
-                                       scale,
-                                       dpr,
-                                       altKey = false,
-                                       shiftKey = false,
-                                     }: {
+  downPoint,
+  movePoint,
+  initialWidth,
+  initialHeight,
+  initialCX,
+  initialCY,
+  rotation,
+  handleName,
+  scale,
+  dpr,
+  altKey = false,
+  shiftKey = false,
+}: {
   downPoint: { x: number; y: number };
   movePoint: { x: number; y: number };
   initialWidth: number;
@@ -451,21 +451,32 @@ export function applyResizeTransform({
 
   // Maintain aspect ratio if shift key is pressed
   if (shiftKey) {
-    const aspect = initialWidth / initialHeight || 1
+    const aspect = initialWidth / initialHeight
     const absDeltaX = Math.abs(deltaX)
     const absDeltaY = Math.abs(deltaY)
 
-    if (absDeltaX > absDeltaY) {
-      deltaY = (deltaX / aspect) * Math.sign(t.dy || 1)
-    } else {
-      deltaX = deltaY * aspect * Math.sign(t.dx || 1)
+    // For corner handles, use the larger movement
+    if (t.dx !== 0 && t.dy !== 0) {
+      if (absDeltaX > absDeltaY) {
+        deltaY = deltaX / aspect
+      } else {
+        deltaX = deltaY * aspect
+      }
+    }
+    // For horizontal handles, maintain aspect ratio based on width change
+    else if (t.dx !== 0) {
+      deltaY = deltaX / aspect
+    }
+    // For vertical handles, maintain aspect ratio based on height change
+    else if (t.dy !== 0) {
+      deltaX = deltaY * aspect
     }
   }
 
   // Apply the resize transform
   const factor = altKey ? 2 : 1
-  const width = initialWidth + deltaX * factor
-  const height = initialHeight + deltaY * factor
+  const width = Math.abs(initialWidth + deltaX * factor)
+  const height = Math.abs(initialHeight + deltaY * factor)
 
   // Calculate the center movement in local coordinates
   const centerDeltaX = -deltaX * t.cx * factor
@@ -479,5 +490,5 @@ export function applyResizeTransform({
   const x = initialCX + globalCenterDeltaX
   const y = initialCY + globalCenterDeltaY
 
-  return {x, y, width, height}
+  return { x, y, width, height }
 }

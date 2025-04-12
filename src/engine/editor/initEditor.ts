@@ -280,8 +280,9 @@ export function initEditor(this: Editor) {
         selectedModules: this.getSelected,
         changes: [data],
       },
-
     })
+
+    dispatch('editor-selection-update')
   })
 
   on('visible-module-update', (quite = false) => {

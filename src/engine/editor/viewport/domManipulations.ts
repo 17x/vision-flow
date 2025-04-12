@@ -23,47 +23,54 @@ export function initViewportDom(id: UID): InitViewportDomReturn {
   const selectionBoxId = 'editor-selection-box-' + id
 
   cssText.textContent = `
-    #${mainCanvasId}{
+    #${mainCanvasId} {
+      background-color: #f0f0f0;
       position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    #${selectionCanvasId} {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    #${wrapperId} {
+      user-select: none;
+      position: relative;
+      scrollbar-width: thin;
+      scrollbar-color: #787878 transparent;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+
+    #${selectionBoxId} {
+      pointer-events: none;
+      position: absolute;
+      border: 1px solid ${boxColor};
+      background-color: ${boxBgColor};
     }
   `
 
   mainCanvas.id = mainCanvasId
   mainCanvas.setAttribute('editor-main-canvas', '')
-  mainCanvas.style.backgroundColor = '#f0f0f0'
-  mainCanvas.style.position = 'absolute'
-  mainCanvas.style.left = '0'
-  mainCanvas.style.top = '0'
-  mainCanvas.style.width = '100%'
-  mainCanvas.style.height = '100%'
-  mainCanvas.style.pointerEvents = 'none'
 
   selectionCanvas.id = selectionCanvasId
   selectionCanvas.setAttribute('editor-selection-canvas', '')
-  selectionCanvas.style.position = 'absolute'
-  selectionCanvas.style.left = '0'
-  selectionCanvas.style.top = '0'
-  selectionCanvas.style.width = '100%'
-  selectionCanvas.style.height = '100%'
-  selectionCanvas.style.pointerEvents = 'none'
 
   wrapper.id = wrapperId
   wrapper.setAttribute('editor-wrapper', '')
-  wrapper.style.userSelect = 'none'
-  wrapper.style.position = 'relative'
-  wrapper.style.scrollbarWidth = 'thin'
-  wrapper.style.scrollbarColor = '#787878 transparent'
-  wrapper.style.overflow = 'hidden'
-  wrapper.style.width = '100%'
-  wrapper.style.height = '100%'
 
   selectionBox.id = selectionBoxId
   selectionBox.setAttribute('editor-selection-box', '')
-  selectionBox.style.pointerEvents = 'none'
-  selectionBox.style.position = 'absolute'
-  selectionBox.style.border = '1px solid ' + boxColor
-  selectionBox.style.backgroundColor = boxBgColor
-
   wrapper.append(mainCanvas, selectionCanvas, scrollBarX, scrollBarY, selectionBox, cssText)
 
   return {

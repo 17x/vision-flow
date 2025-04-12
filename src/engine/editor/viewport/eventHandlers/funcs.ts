@@ -1,7 +1,7 @@
 import Editor from '../../editor.ts'
 import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 import {isInsideRotatedRect} from '../../../core/utils.ts'
-import {ResizeHandler} from '../../selection/type'
+import {OperationHandlers} from '../../selection/type'
 import {applyResizeTransform} from '../../../lib/lib.ts'
 
 export function updateHoveredModule(this: Editor) {
@@ -10,11 +10,10 @@ export function updateHoveredModule(this: Editor) {
   let maxLayer = Number.MIN_SAFE_INTEGER
   let moduleId: UID | null = null
 
-  const operationHandlers = [...this.operationHandlers].filter((operationHandler: ResizeHandler) => {
-    // console.log(operationHandler.data)
-    const {x, y, width, rotation} = operationHandler.data
-    const f = isInsideRotatedRect(virtualPoint, {x, y, width, height: width}, rotation)
-    return f
+  const operationHandlers = [...this.operationHandlers].filter((operationHandler: OperationHandlers) => {
+    const {x, y, size, rotation} = operationHandler.data
+
+    return isInsideRotatedRect(virtualPoint, {x, y, width: size, height: size}, rotation)
   })
 
   const operator = operationHandlers[operationHandlers.length - 1]

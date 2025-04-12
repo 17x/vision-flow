@@ -60,7 +60,7 @@ function selectionRender(this: Editor) {
 
   this.operationHandlers.forEach(operation => {
     switch (operation.type) {
-      case 'resize':
+      case 'resize': {
         // console.log(operation.data)
         const rect = {
           ...operation.data,
@@ -71,11 +71,10 @@ function selectionRender(this: Editor) {
           fillColor: '#fff',
           lineColor: lineColor,
         }
-        // console.log(rect)
         rects.push(rect)
+      }
         break
-      case 'rotate':
-        console.log(operation.data)
+      case 'rotate': {
         const rect2 = {
           ...operation.data,
           width: operation.data.size,
@@ -85,8 +84,9 @@ function selectionRender(this: Editor) {
           fillColor: '#ff0000',
           lineColor: lineColor,
         }
-        // console.log(rect)
+
         rects.push(rect2)
+      }
         break
     }
   })

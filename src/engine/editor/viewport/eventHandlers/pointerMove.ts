@@ -1,4 +1,4 @@
-import {updateSelectionBox} from '../domManipulations.ts'
+import {updateCursor, updateSelectionBox} from '../domManipulations.ts'
 import {
   generateBoundingRectFromTwoPoints,
   rectInside,
@@ -125,8 +125,9 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       viewport.wrapper.setPointerCapture(e.pointerId)
       const {shiftKey} = e
 
-      const {rotation} = applyRotating.call(this, shiftKey)
-      // console.log(rotation)
+      applyRotating.call(this, shiftKey)
+      updateCursor(viewport.wrapper, viewport.cursor, this._rotatingOperator!.moduleOrigin, viewport.mouseMovePoint)
+
       this.action.dispatch('module-operating')
     }
       break
@@ -152,11 +153,19 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     case 'static': {
       const r = updateHoveredModule.call(this)
       const {viewport} = this
+      // const {rotation} = applyRotating.call(this, shiftKey)
 
+      // updateCursor(viewport.selectionBox)
       if (r) {
-        viewport.wrapper.style.cursor = r.cursor
+        if (r.type === 'rotate') {
+          updateCursor(viewport.wrapper, viewport.cursor, r.moduleOrigin, viewport.mouseMovePoint)
+        } else {
+          viewport.wrapper.style.cursor = r.cursor
+        }
       } else {
-        viewport.wrapper.style.cursor = 'default'
+        updateCursor(viewport.wrapper, viewport.cursor, 'hide')
+
+        // viewport.wrapper.style.cursor = 'default'
       }
 
       viewport.wrapper.releasePointerCapture(e.pointerId)

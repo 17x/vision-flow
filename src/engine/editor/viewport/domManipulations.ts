@@ -75,6 +75,7 @@ export function initViewportDom(id: UID): InitViewportDomReturn {
     
     #${cursor.id}{
       display: none;
+      pointer-events: none;
       width:2rem;
       height:2rem;
     }
@@ -113,9 +114,16 @@ export const updateSelectionBox = (selectionBox: HTMLDivElement, {x, y, height, 
   selectionBox.style.height = height + 'px'
   selectionBox.style.display = show ? 'block' : 'none'
 }
-export const updateCursor = (cursor: HTMLDivElement, {x, y, height, width}: Rect, show = true) => {
-  cursor.style.transform = `translate(${x}px, ${y}px)`
-  cursor.style.display = show ? 'block' : 'none'
-  cursor.style.backgroundColor = 'blue'
 
+export const updateCursor = (wrapper: HTMLDivElement, cursor: HTMLDivElement, centerPoint: Point | 'hide', mousePoint?: Point) => {
+  if (centerPoint === 'hide') {
+    cursor.style.display = 'none'
+    wrapper.style.cursor = 'default'
+    return
+  }
+
+  wrapper.style.cursor = 'none'
+  cursor.style.display = 'block'
+  cursor.style.transform = `translate(${mousePoint!.x}px, ${mousePoint!.y}px)`
+  cursor.style.backgroundColor = 'blue'
 }

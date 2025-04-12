@@ -293,11 +293,10 @@ export function createHandlersForRect(module: ModuleType, scale: number, dpr: DP
       cursor = getCursor(rotated.x, rotated.y, cx, cy, rotation)
       len = resizeHandlerScaledWidth
       lineWidth = resizeHandlerScaledLineWidth
-
     } else {
-      // console.log(offset.offsetX * scaledWidth, offset.offsetY * scaledWidth)
       const currentRotateHandlerCenterX = handleX + offset.offsetX * resizeHandlerScaledWidth
       const currentRotateHandlerCenterY = handleX + offset.offsetY * resizeHandlerScaledWidth
+      console.log(currentRotateHandlerCenterX, currentRotateHandlerCenterY)
       rotated = rotatePoint(currentRotateHandlerCenterX, currentRotateHandlerCenterY, cx, cy, rotation)
       len = resizeHandlerScaledWidth
     }
@@ -313,7 +312,7 @@ export function createHandlersForRect(module: ModuleType, scale: number, dpr: DP
         y: rotated.y,
         width: len,
         lineWidth,
-        position: offset.name,
+        // position: offset.name,
         rotation,
       },
     }

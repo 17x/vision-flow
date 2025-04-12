@@ -28,6 +28,7 @@ export interface OperationHandler {
   id: string; // Unique identifier for the handler
   type: HandlerType; // Type of the operation (resize, rotate, etc.)
   cursor: string; // The cursor style when hovering over the handler
+  moduleOrigin: ModuleProps
   data: {
     x: number;
     y: number;
@@ -41,7 +42,6 @@ interface ResizeHandler extends OperationHandler {
   type: 'resize';
   name: ResizeHandleName
   cursor: ResizeCursor;
-  moduleOrigin: ModuleProps
 }
 
 export interface RotateHandler extends OperationHandler {

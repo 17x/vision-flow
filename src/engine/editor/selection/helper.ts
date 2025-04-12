@@ -57,10 +57,6 @@ export function modifySelected(
 export function updateSelectionCanvasRenderData(this: Editor) {
   this.visibleSelected.clear()
   this.operationHandlers.clear()
-  // this.highlightedModules.clear()
-  const localHandlerWidth = 10
-  const localHandlerBorderWidth = 1
-  const size = this.selectedModules.size
 
   this.getVisibleModuleMap.forEach((module) => {
     if (this.selectedModules.has(module.id)) {
@@ -70,28 +66,26 @@ export function updateSelectionCanvasRenderData(this: Editor) {
 
   // this.highlightedModules = this.getVisibleSelected
 
-  if (size === 1) {
-    this.getVisibleSelectedModuleMap.forEach((module) => {
-      if (module.type === 'rectangle') {
-        const {x: cx, y: cy, id, width, height, rotation} = module as RectangleProps
+  const module = this.getSelectedPropsIfUnique()
 
-        createHandlersForRect({id, cx, cy, width, height, rotation}).forEach(
-          (p) => {
-            // console.log(p.data,p.cursor)
-            p.data.width = localHandlerWidth / this.viewport.scale * this.viewport.dpr
-            p.data.lineWidth = localHandlerBorderWidth / this.viewport.scale * this.viewport.dpr
-            this.operationHandlers.add(p)
-          },
-        )
+  if (module) {
+    const {scale, dpr} = this.viewport
 
-      }
-    })
+    createHandlersForRect(module, scale, dpr).forEach(
+      (p) => {
+        // console.log(p.data,p.cursor)
+        // p.data.width = localHandlerWidth / this.viewport.scale * this.viewport.dpr
+        // p.data.lineWidth = localHandlerBorderWidth / this.viewport.scale * this.viewport.dpr
+        this.operationHandlers.add(p)
+      },
+    )
   }
-/*
-  if (this.hoveredModule) {
-    this.highlightedModules.add(this.hoveredModule)
-  }*/
+  /*
+    if (this.hoveredModule) {
+      this.highlightedModules.add(this.hoveredModule)
+    }*/
 }
+
 /*
 
 function createHandlersForRect({

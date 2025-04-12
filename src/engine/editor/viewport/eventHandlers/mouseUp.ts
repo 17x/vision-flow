@@ -1,6 +1,6 @@
 import {updateSelectionBox} from '../domManipulations.ts'
 import Editor from '../../editor.ts'
-import {applyResize} from './funcs.ts'
+import {applyResize, applyRotating} from './funcs.ts'
 import {applyResizeTransform} from '../../../lib/lib.ts'
 import {ModuleChangeProps, ModuleModifyData} from '../../actions/type'
 
@@ -109,7 +109,18 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       // this.viewport.wrapper.style.cursor = 'default'
       break
 
-    case 'rotating':
+    case 'rotating': {
+      const {shiftKey} = e
+      const {id, data: {rotation}} = this._rotatingOperator!
+
+      const {rotation: NewRotation} = applyRotating.call(this, shiftKey)
+      this.action.dispatch('module-modify', {
+        id,
+        props: {
+          rotation: {from: rotation, to: NewRotation},
+        },
+      })
+    }
       break
 
     case 'mousedown':

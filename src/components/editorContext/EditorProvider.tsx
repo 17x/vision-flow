@@ -16,6 +16,7 @@ import EditorContext from './EditorContext.tsx'
 import PropPanel from '../propPanel/PropPanel.tsx'
 import {createMockData} from './MOCK.ts'
 import {ContextMenu, ContextMenuDataType} from '../contextMenu/ContextMenu.tsx'
+import {EditorEventData, EditorEventType} from '../../engine/editor/actions/type'
 
 const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const editorRef = useRef<Editor>(null)
@@ -131,8 +132,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
   }
 
-  const executeAction = (code: OperationType, data: unknown = null) => {
-    editorRef.current!.execute(code, data)
+  const executeAction = <K extends EditorEventType>(type: K, data?: EditorEventData<K>) => {
+    editorRef.current!.execute(type as OperationType, data)
   }
 
   return (

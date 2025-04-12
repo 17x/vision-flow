@@ -4,7 +4,7 @@ import {I18nHistoryDataItem} from '../../i18n/type'
 import EditorContext from '../editorContext/EditorContext.tsx'
 
 export interface ContextMenuDataType {
-  idSet: Set<number>
+  idSet: Set<UID>
   position: { x: number, y: number }
   copiedItems: boolean
 }

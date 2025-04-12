@@ -107,7 +107,7 @@ function selectionRender(this: Editor) {
   circleRender(ctx, dots)
 
   // if (this.enableCrossLine && this.drawCrossLine) {
-  if (this.viewport.enableCrossLine && this.viewport.drawCrossLine) {
+  /*if (this.viewport.enableCrossLine && this.viewport.drawCrossLine) {
     drawCrossLine({
       ctx,
       mousePoint: mouseMovePoint,
@@ -116,7 +116,7 @@ function selectionRender(this: Editor) {
       offset,
       worldRect: worldRect,
     })
-  }
+  }*/
 }
 
 export default selectionRender

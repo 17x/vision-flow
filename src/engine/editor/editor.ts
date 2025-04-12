@@ -14,7 +14,7 @@ import {
   batchModify,
   batchMove,
 } from './modules/modules.ts'
-import {OperationHandler, OperationHandlers, ResizeHandler, RotateHandler, SelectionActionMode} from './selection/type'
+import {OperationHandlers, ResizeHandler, SelectionActionMode} from './selection/type'
 import {
   modifySelected,
 } from './selection/helper.ts'
@@ -66,8 +66,8 @@ class Editor {
   draggingModules: Set<UID> = new Set()
   _selectingModules: Set<UID> = new Set()
   _deselection: UID | null = null
-  _resizingOperator: ResizeHandler | null
-  _rotatingOperator: OperationHandlers | null
+  _resizingOperator: ResizeHandler | null = null
+  _rotatingOperator: OperationHandlers | null = null
   selectedShadow: Set<UID> = new Set()
   manipulationStatus: ViewportManipulationType = 'static'
   CopyDeltaX = 50
@@ -251,9 +251,9 @@ class Editor {
     requestAnimationFrame(animate)
   }
 
-  renderSelections(modules: Set<UID>) {
+  renderSelections() {
     const animate = () => {
-      selectionRender.call(this, modules)
+      selectionRender.call(this)
     }
 
     requestAnimationFrame(animate)

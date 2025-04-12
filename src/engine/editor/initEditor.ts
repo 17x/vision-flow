@@ -271,6 +271,10 @@ export function initEditor(this: Editor) {
     dispatch('editor-selection-update')
   })
 
+  on('module-operating', () => {
+    dispatch('visible-module-update')
+    dispatch('editor-selection-update')
+  })
   on('module-modify', (data) => {
     console.warn(data)
 
@@ -282,6 +286,7 @@ export function initEditor(this: Editor) {
       },
     })
 
+    dispatch('visible-module-update')
     dispatch('editor-selection-update')
   })
 
@@ -310,7 +315,7 @@ export function initEditor(this: Editor) {
       this.viewport.offset,
     )
     // console.log(this.getVisibleSelected)
-    this.renderSelections(this.getVisibleSelected)
+    this.renderSelections()
   })
 
   on('module-hover-enter', (id) => {

@@ -1,3 +1,4 @@
+// eslint disabled
 import Editor from '../../engine/editor/editor.ts'
 
 export const createMockData = (editor: Editor) => {
@@ -32,6 +33,8 @@ export const createMockData = (editor: Editor) => {
     return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`
   }
 
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getRandomNumber = (max: number): number => {
     return Math.floor(Math.random() * max)
   }

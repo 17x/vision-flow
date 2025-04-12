@@ -4,7 +4,7 @@ import {
   rectInside,
 } from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
-import {applyResizeTransform, areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
+import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
 import {applyResize, applyRotating, updateHoveredModule} from './funcs.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
@@ -116,7 +116,8 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
 
       applyResize.call(this, altKey, shiftKey)
 
-      this.action.dispatch('visible-module-update')
+      this.action.dispatch('module-operating')
+      // this.action.dispatch('visible-module-update')
     }
       break
 
@@ -125,8 +126,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const {shiftKey} = e
 
       applyRotating.call(this, shiftKey)
-      this.action.dispatch('visible-module-update')
-
+      this.action.dispatch('module-operating')
     }
       break
 

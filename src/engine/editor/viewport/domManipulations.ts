@@ -133,22 +133,17 @@ export const updateCursor = (wrapper: HTMLDivElement, cursor: HTMLDivElement, ce
   const size = 24
   const offset = size / 2
 
-  // Calculate dx and dy between point A (centerPoint) and point B (mousePoint)
   const dx = mousePoint.x - centerPoint.x
   const dy = mousePoint.y - centerPoint.y
-  console.warn(mousePoint,centerPoint)
-  // Calculate the angle in radians
   const angleRad = Math.atan2(dy, dx)
-
-  // Convert radians to degrees
   const angleDeg = angleRad * (180 / Math.PI)
-
-  // Normalize angle to 0-360 range if necessary
   let normalizedAngle = angleDeg
   if (normalizedAngle < 0) normalizedAngle += 360
 
+  // for svg icon direction
+  normalizedAngle += 45
 
   console.warn(normalizedAngle)
   cursor.style.transformOrigin = 'center center'
-  cursor.style.transform = `translate(${mousePoint.x - offset}px, ${mousePoint.y - offset}px) rotate(${angleDeg}deg)`
+  cursor.style.transform = `translate(${mousePoint.x - offset}px, ${mousePoint.y - offset}px) rotate(${normalizedAngle}deg)`
 }

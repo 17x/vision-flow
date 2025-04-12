@@ -105,6 +105,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
         props,
       })
     }
+      // this.viewport.wrapper.style.cursor = 'default'
       break
 
     case 'rotating':

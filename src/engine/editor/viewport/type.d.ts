@@ -25,6 +25,7 @@ export interface Viewport {
   scrollBarY: HTMLDivElement
   selectionBox: HTMLDivElement
   selectionCanvas: HTMLCanvasElement
+  cursor: HTMLDivElement
   selectionCTX: CanvasRenderingContext2D
   mainCanvas: HTMLCanvasElement
   mainCTX: CanvasRenderingContext2D

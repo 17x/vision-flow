@@ -5,6 +5,7 @@ export interface InitViewportDomReturn {
   selectionCanvas: HTMLCanvasElement
   scrollBarX: HTMLDivElement
   scrollBarY: HTMLDivElement
+  cursor: HTMLDivElement
 }
 
 const createWith = <T extends keyof HTMLElementTagNameMap>(tagName: T, role: string, id: string): HTMLElementTagNameMap[T] => {
@@ -21,8 +22,10 @@ export function initViewportDom(id: UID): InitViewportDomReturn {
   const wrapper = createWith('div', 'editor-wrapper', id)
   const mainCanvas = createWith('canvas', 'editor-main-canvas', id)
   const selectionCanvas = createWith('canvas', 'editor-selection-canvas', id)
-  const {scrollBarX, scrollBarY} = generateScrollBars()
+  const scrollBarX = createWith('div', 'scroll-bar-x', id)
+  const scrollBarY = createWith('div', 'scroll-bar-x', id)
   const selectionBox = createWith('div', 'editor-selection-box', id)
+  const cursor = createWith('div', 'editor-cursor', id)
   const cssText = createWith('style', 'editor-style', id)
 
   cssText.textContent = `
@@ -56,14 +59,28 @@ export function initViewportDom(id: UID): InitViewportDomReturn {
     }
 
     #${selectionBox.id} {
+      display: none;
       pointer-events: none;
       position: absolute;
       border: 1px solid ${boxColor};
       background-color: ${boxBgColor};
     }
+    
+    #${scrollBarX.id},
+    #${scrollBarY.id}{
+      background-color: #787878;
+      user-select:none;
+      translate:none;
+    }
+    
+    #${cursor.id}{
+      display: none;
+      width:2rem;
+      height:2rem;
+    }
   `
 
-  wrapper.append(mainCanvas, selectionCanvas, scrollBarX, scrollBarY, selectionBox, cssText)
+  wrapper.append(mainCanvas, selectionCanvas, scrollBarX, scrollBarY, selectionBox, cursor, cssText)
 
   return {
     wrapper,
@@ -72,23 +89,8 @@ export function initViewportDom(id: UID): InitViewportDomReturn {
     mainCanvas,
     scrollBarX,
     scrollBarY,
+    cursor,
   }
-}
-
-export const generateScrollBars = (): { scrollBarX: HTMLDivElement, scrollBarY: HTMLDivElement } => {
-  const scrollBarX = document.createElement('div')
-  const scrollBarY = document.createElement('div')
-
-  scrollBarX.setAttribute('scroll-bar-x', '')
-  scrollBarY.setAttribute('scroll-bar-y', '')
-  scrollBarX.style.backgroundColor = '#787878'
-  scrollBarY.style.backgroundColor = '#787878'
-  scrollBarX.style.userSelect = 'none'
-  scrollBarY.style.userSelect = 'none'
-  scrollBarY.style.translate = 'none'
-  scrollBarY.style.translate = 'none'
-
-  return {scrollBarX, scrollBarY}
 }
 
 export const updateScrollBars = (scrollBarX: HTMLDivElement, scrollBarY: HTMLDivElement) => {
@@ -110,4 +112,10 @@ export const updateSelectionBox = (selectionBox: HTMLDivElement, {x, y, height, 
   selectionBox.style.width = width + 'px'
   selectionBox.style.height = height + 'px'
   selectionBox.style.display = show ? 'block' : 'none'
+}
+export const updateCursor = (cursor: HTMLDivElement, {x, y, height, width}: Rect, show = true) => {
+  cursor.style.transform = `translate(${x}px, ${y}px)`
+  cursor.style.display = show ? 'block' : 'none'
+  cursor.style.backgroundColor = 'blue'
+
 }

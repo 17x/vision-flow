@@ -22,6 +22,7 @@ export function createViewport(this: Editor): Viewport {
     selectionBox,
     scrollBarX,
     scrollBarY,
+    cursor,
   }: InitViewportDomReturn = initViewportDom(this.id)
   const selectionCTX = selectionCanvas.getContext(
     '2d',
@@ -93,6 +94,7 @@ export function createViewport(this: Editor): Viewport {
     scrollBarX,
     scrollBarY,
     selectionBox,
+    cursor,
     resizeObserver,
     eventsController,
   }

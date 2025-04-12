@@ -124,10 +124,13 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     case 'rotating': {
       viewport.wrapper.setPointerCapture(e.pointerId)
       const {shiftKey} = e
-      const centerPoint = this.getViewPointByWorldPoint(this._rotatingOperator!.moduleOrigin.cx, this._rotatingOperator!.moduleOrigin.cy)
+      const {
+        x,
+        y,
+      } = this.getViewPointByWorldPoint(this._rotatingOperator!.moduleOrigin.cx, this._rotatingOperator!.moduleOrigin.cy)
 
       applyRotating.call(this, shiftKey)
-      updateCursor(viewport.wrapper, viewport.cursor, centerPoint, viewport.mouseMovePoint)
+      updateCursor(viewport.wrapper, viewport.cursor, {x: x / 2/2, y: y / 2/2}, viewport.mouseMovePoint)
 
       this.action.dispatch('module-operating')
     }
@@ -158,8 +161,12 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       if (r) {
         if (r.type === 'rotate') {
           const centerPoint = this.getViewPointByWorldPoint(r.moduleOrigin.cx, r.moduleOrigin.cy)
+          const {
+            x,
+            y,
+          } = centerPoint
 
-          updateCursor(viewport.wrapper, viewport.cursor, centerPoint, viewport.mouseMovePoint)
+          updateCursor(viewport.wrapper, viewport.cursor, {x: x / 2, y: y / 2}, viewport.mouseMovePoint)
         } else {
           viewport.wrapper.style.cursor = r.cursor
         }

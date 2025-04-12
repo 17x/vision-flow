@@ -130,19 +130,25 @@ export const updateCursor = (wrapper: HTMLDivElement, cursor: HTMLDivElement, ce
   `
   cursor.style.display = 'block'
   wrapper.style.cursor = 'none'
-
   const size = 24
   const offset = size / 2
+
+  // Calculate dx and dy between point A (centerPoint) and point B (mousePoint)
   const dx = mousePoint.x - centerPoint.x
   const dy = mousePoint.y - centerPoint.y
-
+  console.warn(mousePoint,centerPoint)
+  // Calculate the angle in radians
   const angleRad = Math.atan2(dy, dx)
-  const angleDeg = angleRad * (180 / Math.PI)
-  let normalizedAngle = angleDeg
 
+  // Convert radians to degrees
+  const angleDeg = angleRad * (180 / Math.PI)
+
+  // Normalize angle to 0-360 range if necessary
+  let normalizedAngle = angleDeg
   if (normalizedAngle < 0) normalizedAngle += 360
+
 
   console.warn(normalizedAngle)
   cursor.style.transformOrigin = 'center center'
-  cursor.style.transform = `translate(${mousePoint.x - offset}px, ${mousePoint.y - offset}px) rotate(${normalizedAngle}deg)`
+  cursor.style.transform = `translate(${mousePoint.x - offset}px, ${mousePoint.y - offset}px) rotate(${angleDeg}deg)`
 }

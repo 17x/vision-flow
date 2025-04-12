@@ -10,7 +10,6 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
     manipulationStatus,
     moduleMap,
     _selectingModules,
-    _resizingOperator,
     selectedShadow,
     viewport,
   } = this

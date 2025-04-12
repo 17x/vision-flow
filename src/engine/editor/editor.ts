@@ -14,7 +14,7 @@ import {
   batchModify,
   batchMove,
 } from './modules/modules.ts'
-import {OperationHandler, OperationHandlers, ResizeHandler, SelectionActionMode} from './selection/type'
+import {OperationHandler, OperationHandlers, ResizeHandler, RotateHandler, SelectionActionMode} from './selection/type'
 import {
   modifySelected,
 } from './selection/helper.ts'
@@ -67,6 +67,7 @@ class Editor {
   _selectingModules: Set<UID> = new Set()
   _deselection: UID | null = null
   _resizingOperator: ResizeHandler | null
+  _rotatingOperator: RotateHandler | null
   selectedShadow: Set<UID> = new Set()
   manipulationStatus: ViewportManipulationType = 'static'
   CopyDeltaX = 50

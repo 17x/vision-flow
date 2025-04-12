@@ -80,3 +80,6 @@ export function applyResize(this: Editor, altKey: boolean, shiftKey: boolean) {
   return r
 }
 
+export function applyRotating(this: Editor, shiftKey: boolean) {
+
+}

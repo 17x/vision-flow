@@ -24,9 +24,14 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
     return (this.manipulationStatus = 'panning')
   }
 
-  if (operator && operator.type === 'resize') {// console.log('opear', r)
-    this._resizingOperator = operator
-    return (this.manipulationStatus = 'resizing')
+  if (operator) {
+    if (operator.type === 'resize') {
+      this._resizingOperator = operator
+      return (this.manipulationStatus = 'resizing')
+    } else if (operator.type === 'rotate') {
+      this._rotatingOperator = operator
+      return (this.manipulationStatus = 'rotating')
+    }
   }
 
   const hoveredModule = this.hoveredModule

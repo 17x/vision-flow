@@ -121,6 +121,8 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       break
 
     case 'rotating':
+      viewport.wrapper.setPointerCapture(e.pointerId)
+
       break
 
     case 'mousedown': {

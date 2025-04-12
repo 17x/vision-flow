@@ -13,7 +13,8 @@ const FileProvider: FC = () => {
   const [fileList, setFileList] = useState<FileType[]>([])
   const fileLen = fileMap.current.size
   const showCreateFile = fileLen === 0 || creating
-  console.log(currentFileId)
+  // console.log(currentFileId)
+
   useEffect(() => {
     if (MOCK_FILE_MAP.size > 0) {
       fileMap.current = MOCK_FILE_MAP
@@ -93,11 +94,13 @@ const FileProvider: FC = () => {
 
         <div className={'flex-1 overflow-hidden min-h-[600px]'}>
           {
-            fileList.map(file =>
-              file.id === currentFileId ?
-                <EditorProvider key={file.id} file={file}/>
-                : undefined,
-            )
+            fileList.map(file => <div key={file.id}
+                                      className={'outline-0 w-full h-full flex flex-col'}
+                                      style={{
+                                        display: file.id === currentFileId ? 'flex' : 'none',
+                                      }}>
+              <EditorProvider file={file}/>
+            </div>)
           }
         </div>
 

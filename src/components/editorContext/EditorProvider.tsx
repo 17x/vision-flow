@@ -47,7 +47,6 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 
   useEffect(() => {
     let editor: Editor
-
     if (containerRef.current) {
       const newUID = uid()
 

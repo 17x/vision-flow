@@ -40,7 +40,6 @@ export function initEditor(this: Editor) {
   on('editor-module-map-update', (historyData: HistoryOperation) => {
     // this.replaceSelected(historyData.payload.selectedModules)
     this.updateVisibleModuleMap()
-    console.log(this.moduleMap)
     dispatch('visible-module-update', true)
     // dispatch('editor-selection-update')
 

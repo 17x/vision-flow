@@ -230,7 +230,6 @@ class Editor {
     if (this.selectedModules.size === 1) {
       const unique = [...this.selectedModules.values()][0]
 
-      console.log(this.moduleMap,unique)
       return this.moduleMap.get(unique).getDetails()
     }
     return null

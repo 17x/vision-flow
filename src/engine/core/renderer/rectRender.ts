@@ -1,5 +1,5 @@
-import {RectangleRenderProps} from "./type"
-import deduplicateObjectsByKeyValue from "./deduplicate.ts"
+import {RectangleRenderProps} from './type'
+import deduplicateObjectsByKeyValue from './deduplicate.ts'
 
 const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]): void => {
   let uintArray = rects
@@ -9,10 +9,14 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
       ...item,
       x: Math.floor(item.x),
       y: Math.floor(item.y),
+      width: Math.floor(item.width),
+      height: Math.floor(item.height),
     }))
   }
   const rectQueue: RectangleRenderProps[] = deduplicateObjectsByKeyValue(uintArray)
 
+  console.log(rects.length, rectQueue.length)
+  console.log(rectQueue)
   // Start rendering
   ctx.save()
   rectQueue.forEach(({
@@ -27,7 +31,7 @@ const rectRender = (ctx: CanvasRenderingContext2D, rects: RectangleRenderProps[]
                        opacity = 100,
                        gradient,
                        rotation = 0,
-                       dashLine = ''
+                       dashLine = '',
                      }: RectangleRenderProps) => {
 
     const LocalX = width / 2

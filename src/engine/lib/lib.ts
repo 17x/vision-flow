@@ -1,6 +1,11 @@
 // import typeCheck from '../../utilities/typeCheck.ts'
 
-import {ResizeCursor, ResizeHandleName, ResizeHandler, ResizeTransform} from '../editor/selection/type'
+import {
+  ResizeCursor,
+  ResizeHandleName,
+  ResizeHandler,
+  ResizeTransform,
+} from '../editor/selection/type'
 
 export const getBoxControlPoints = (
   cx: number,
@@ -175,18 +180,102 @@ export function createHandlersForRect({
   rotation: number;
 }): ResizeHandler[] {
   const localHandleOffsets = [
-    {type: 'resize', name: 'tl', x: 0, y: 0, originCursor: 'nwse-resize', cursor: 'nwse-resize'}, // top-left
-    {type: 'resize', name: 't', x: 0.5, y: 0, originCursor: 'ns-resize', cursor: 'ns-resize'}, // top-center
-    {type: 'resize', name: 'tr', x: 1, y: 0, originCursor: 'nesw-resize', cursor: 'nesw-resize'}, // top-right
-    {type: 'resize', name: 'r', x: 1, y: 0.5, originCursor: 'ew-resize', cursor: 'ew-resize'}, // right-center
-    {type: 'resize', name: 'br', x: 1, y: 1, originCursor: 'nwse-resize', cursor: 'nwse-resize'}, // bottom-right
-    {type: 'resize', name: 'b', x: 0.5, y: 1, originCursor: 'ns-resize', cursor: 'ns-resize'}, // bottom-center
-    {type: 'resize', name: 'bl', x: 0, y: 1, originCursor: 'nesw-resize', cursor: 'nesw-resize'}, // bottom-left
-    {type: 'resize', name: 'l', x: 0, y: 0.5, originCursor: 'ew-resize', cursor: 'ew-resize'}, // left-center
-    {type: 'rotate', name: 'rotate-tl', x: -0.1, y: -0.1, originCursor: 'rotate', cursor: 'rotate'}, // left-center
-    {type: 'rotate', name: 'rotate-tr', x: 1.1, y: -0.1, originCursor: 'rotate', cursor: 'rotate'}, // left-center
-    {type: 'rotate', name: 'rotate-br', x: 1.1, y: 1.1, originCursor: 'rotate', cursor: 'rotate'}, // left-center
-    {type: 'rotate', name: 'rotate-bl', x: -0.1, y: 1.1, originCursor: 'rotate', cursor: 'rotate'}, // left-center
+    {
+      type: 'resize',
+      name: 'tl',
+      x: 0,
+      y: 0,
+      originCursor: 'nwse-resize',
+      cursor: 'nwse-resize',
+    }, // top-left
+    {
+      type: 'resize',
+      name: 't',
+      x: 0.5,
+      y: 0,
+      originCursor: 'ns-resize',
+      cursor: 'ns-resize',
+    }, // top-center
+    {
+      type: 'resize',
+      name: 'tr',
+      x: 1,
+      y: 0,
+      originCursor: 'nesw-resize',
+      cursor: 'nesw-resize',
+    }, // top-right
+    {
+      type: 'resize',
+      name: 'r',
+      x: 1,
+      y: 0.5,
+      originCursor: 'ew-resize',
+      cursor: 'ew-resize',
+    }, // right-center
+    {
+      type: 'resize',
+      name: 'br',
+      x: 1,
+      y: 1,
+      originCursor: 'nwse-resize',
+      cursor: 'nwse-resize',
+    }, // bottom-right
+    {
+      type: 'resize',
+      name: 'b',
+      x: 0.5,
+      y: 1,
+      originCursor: 'ns-resize',
+      cursor: 'ns-resize',
+    }, // bottom-center
+    {
+      type: 'resize',
+      name: 'bl',
+      x: 0,
+      y: 1,
+      originCursor: 'nesw-resize',
+      cursor: 'nesw-resize',
+    }, // bottom-left
+    {
+      type: 'resize',
+      name: 'l',
+      x: 0,
+      y: 0.5,
+      originCursor: 'ew-resize',
+      cursor: 'ew-resize',
+    }, // left-center
+    {
+      type: 'rotate',
+      name: 'rotate-tl',
+      x: -0.1,
+      y: -0.1,
+      originCursor: 'rotate',
+      cursor: 'rotate',
+    }, // left-center
+    {
+      type: 'rotate',
+      name: 'rotate-tr',
+      x: 1.1,
+      y: -0.1,
+      originCursor: 'rotate',
+      cursor: 'rotate',
+    }, // left-center
+    {
+      type: 'rotate',
+      name: 'rotate-br',
+      x: 1.1,
+      y: 1.1,
+      originCursor: 'rotate',
+      cursor: 'rotate',
+    }, // left-center
+    {
+      type: 'rotate',
+      name: 'rotate-bl',
+      x: -0.1,
+      y: 1.1,
+      originCursor: 'rotate',
+      cursor: 'rotate',
+    }, // left-center
   ] as const
   // const module = this.moduleMap.get(id)
 
@@ -254,10 +343,10 @@ function getCursor(
 
   // Corner handles
   if (absDx > threshold && absDy > threshold) {
-    if (dx < 0 && dy < 0) return 'nwse-resize'   // Top-left
-    if (dx > 0 && dy < 0) return 'nesw-resize'   // Top-right
-    if (dx > 0 && dy > 0) return 'nwse-resize'   // Bottom-right
-    if (dx < 0 && dy > 0) return 'nesw-resize'   // Bottom-left
+    if (dx < 0 && dy < 0) return 'nwse-resize' // Top-left
+    if (dx > 0 && dy < 0) return 'nesw-resize' // Top-right
+    if (dx > 0 && dy > 0) return 'nwse-resize' // Bottom-right
+    if (dx < 0 && dy > 0) return 'nesw-resize' // Bottom-left
   }
 
   // Side handles
@@ -303,74 +392,92 @@ export function getResizeTransform(
 }
 
 type ResizeTransformResult = {
-  x: number
-  y: number
-  width: number
-  height: number
-}
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
 
 export function applyResizeTransform({
-                                downPoint,
-                                movePoint,
-                                initialWidth,
-                                initialHeight,
-                                initialCX,
-                                initialCY,
-                                rotation,
-                                handleName,
-                                scale,
-                                dpr,
-                                altKey = false,
-                                shiftKey = false,
-                              }: {
-  downPoint: { x: number; y: number }
-  movePoint: { x: number; y: number }
-  initialWidth: number
-  initialHeight: number
-  initialCX: number
-  initialCY: number
-  rotation: number
-  handleName: ResizeHandleName
-  scale: number
-  dpr: number
-  altKey?: boolean
-  shiftKey?: boolean
+                                       downPoint,
+                                       movePoint,
+                                       initialWidth,
+                                       initialHeight,
+                                       initialCX,
+                                       initialCY,
+                                       rotation,
+                                       handleName,
+                                       scale,
+                                       dpr,
+                                       altKey = false,
+                                       shiftKey = false,
+                                     }: {
+  downPoint: { x: number; y: number };
+  movePoint: { x: number; y: number };
+  initialWidth: number;
+  initialHeight: number;
+  initialCX: number;
+  initialCY: number;
+  rotation: number;
+  handleName: ResizeHandleName;
+  scale: number;
+  dpr: number;
+  altKey?: boolean;
+  shiftKey?: boolean;
 }): ResizeTransformResult {
+  // Calculate raw movement in screen coordinates
   const dxScreen = movePoint.x - downPoint.x
   const dyScreen = movePoint.y - downPoint.y
 
-  const dx = dxScreen / scale * dpr
-  const dy = dyScreen / scale * dpr
+  // Convert to canvas coordinates and apply DPR
+  const dx = (dxScreen / scale) * dpr
+  const dy = (dyScreen / scale) * dpr
 
+  // Convert rotation to radians and calculate rotation matrix
   const angle = -rotation * (Math.PI / 180)
   const cos = Math.cos(angle)
   const sin = Math.sin(angle)
 
-  const localDX = dx * cos + dy * sin
-  const localDY = -dx * sin + dy * cos
+  // Transform the movement vector into the object's local coordinate system
+  const localDX = dx * cos - dy * sin
+  const localDY = dx * sin + dy * cos
 
+  // Get the resize transform based on the handle
   const t = getResizeTransform(handleName, altKey)
 
+  // Calculate the size changes in local coordinates
   let deltaX = localDX * t.dx
   let deltaY = localDY * t.dy
 
+  // Maintain aspect ratio if shift key is pressed
   if (shiftKey) {
     const aspect = initialWidth / initialHeight || 1
+    const absDeltaX = Math.abs(deltaX)
+    const absDeltaY = Math.abs(deltaY)
 
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      deltaY = deltaX / aspect * Math.sign(t.dy || 1)
+    if (absDeltaX > absDeltaY) {
+      deltaY = (deltaX / aspect) * Math.sign(t.dy || 1)
     } else {
       deltaX = deltaY * aspect * Math.sign(t.dx || 1)
     }
   }
 
+  // Apply the resize transform
   const factor = altKey ? 2 : 1
-
   const width = initialWidth + deltaX * factor
   const height = initialHeight + deltaY * factor
 
-  const x = initialCX - deltaX * t.cx * factor
-  const y = initialCY - deltaY * t.cy * factor
+  // Calculate the center movement in local coordinates
+  const centerDeltaX = -deltaX * t.cx * factor
+  const centerDeltaY = -deltaY * t.cy * factor
 
-  return { x, y, width, height }
+  // Transform the center movement back to global coordinates
+  const globalCenterDeltaX = centerDeltaX * cos + centerDeltaY * sin
+  const globalCenterDeltaY = -centerDeltaX * sin + centerDeltaY * cos
+
+  // Calculate the new center position
+  const x = initialCX + globalCenterDeltaX
+  const y = initialCY + globalCenterDeltaY
+
+  return {x, y, width, height}
 }

@@ -7,23 +7,26 @@ export interface InitViewportDomReturn {
   scrollBarY: HTMLDivElement
 }
 
+const createWith = <T extends keyof HTMLElementTagNameMap>(tagName: T, role: string, id: string): HTMLElementTagNameMap[T] => {
+  const dom = document.createElement(tagName)
+  dom.setAttribute(role, '')
+  dom.id = role + '-' + id
+
+  return dom
+}
+
 export function initViewportDom(id: UID): InitViewportDomReturn {
   const boxColor = '#1FB3FF'
   const boxBgColor = 'rgba(31,180,255,0.1)'
-  const wrapper = document.createElement('div')
-  const selectionBox = document.createElement('div')
-  const selectionCanvas: HTMLCanvasElement = document.createElement('canvas')
-
-  const mainCanvas: HTMLCanvasElement = document.createElement('canvas')
+  const wrapper = createWith('div', 'editor-wrapper', id)
+  const mainCanvas = createWith('canvas', 'editor-main-canvas', id)
+  const selectionCanvas = createWith('canvas', 'editor-selection-canvas', id)
   const {scrollBarX, scrollBarY} = generateScrollBars()
-  const cssText = document.createElement('style')
-  const wrapperId = 'editor-wrapper-' + id
-  const mainCanvasId = 'editor-main-canvas-' + id
-  const selectionCanvasId = 'editor-selection-canvas-' + id
-  const selectionBoxId = 'editor-selection-box-' + id
+  const selectionBox = createWith('div', 'editor-selection-box', id)
+  const cssText = createWith('style', 'editor-style', id)
 
   cssText.textContent = `
-    #${mainCanvasId} {
+    #${mainCanvas.id} {
       background-color: #f0f0f0;
       position: absolute;
       left: 0;
@@ -33,7 +36,7 @@ export function initViewportDom(id: UID): InitViewportDomReturn {
       pointer-events: none;
     }
 
-    #${selectionCanvasId} {
+    #${selectionCanvas.id} {
       position: absolute;
       left: 0;
       top: 0;
@@ -42,7 +45,7 @@ export function initViewportDom(id: UID): InitViewportDomReturn {
       pointer-events: none;
     }
 
-    #${wrapperId} {
+    #${wrapper.id} {
       user-select: none;
       position: relative;
       scrollbar-width: thin;
@@ -52,7 +55,7 @@ export function initViewportDom(id: UID): InitViewportDomReturn {
       height: 100%;
     }
 
-    #${selectionBoxId} {
+    #${selectionBox.id} {
       pointer-events: none;
       position: absolute;
       border: 1px solid ${boxColor};
@@ -60,17 +63,6 @@ export function initViewportDom(id: UID): InitViewportDomReturn {
     }
   `
 
-  mainCanvas.id = mainCanvasId
-  mainCanvas.setAttribute('editor-main-canvas', '')
-
-  selectionCanvas.id = selectionCanvasId
-  selectionCanvas.setAttribute('editor-selection-canvas', '')
-
-  wrapper.id = wrapperId
-  wrapper.setAttribute('editor-wrapper', '')
-
-  selectionBox.id = selectionBoxId
-  selectionBox.setAttribute('editor-selection-box', '')
   wrapper.append(mainCanvas, selectionCanvas, scrollBarX, scrollBarY, selectionBox, cssText)
 
   return {

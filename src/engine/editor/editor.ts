@@ -21,7 +21,7 @@ import {
 import {updateScrollBars} from './viewport/domManipulations.ts'
 import render from '../core/renderer/mainCanvasRenderer.ts'
 import selectionRender from './viewport/selectionRender.ts'
-import {screenToCanvas} from '../lib/lib.ts'
+import {canvasToScreen, screenToCanvas} from '../lib/lib.ts'
 import {Viewport, ViewportManipulationType} from './viewport/type'
 import {createViewport} from './viewport/createViewport.ts'
 import {destroyViewport} from './viewport/destroyViewport.ts'
@@ -418,6 +418,18 @@ class Editor {
     const {dpr, offset, scale} = this.viewport
 
     return screenToCanvas(
+      scale,
+      offset.x * dpr,
+      offset.y * dpr,
+      x * dpr,
+      y * dpr,
+    )
+  }
+
+  getViewPointByWorldPoint(x: number, y: number) {
+    const {dpr, offset, scale} = this.viewport
+
+    return canvasToScreen(
       scale,
       offset.x * dpr,
       offset.y * dpr,

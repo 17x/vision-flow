@@ -115,10 +115,7 @@ export const updateSelectionBox = (selectionBox: HTMLDivElement, {x, y, height, 
   selectionBox.style.display = show ? 'block' : 'none'
 }
 
-export const updateCursor = (wrapper: HTMLDivElement, cursor: HTMLDivElement, centerPoint: {
-  cx: number,
-  cy: number
-} | 'hide', mousePoint?: Point) => {
+export const updateCursor = (wrapper: HTMLDivElement, cursor: HTMLDivElement, centerPoint: Point | 'hide', mousePoint?: Point) => {
   if (centerPoint === 'hide') {
     cursor.style.display = 'none'
     wrapper.style.cursor = 'default'
@@ -139,13 +136,18 @@ export const updateCursor = (wrapper: HTMLDivElement, cursor: HTMLDivElement, ce
   const offset = size / 2
   cursor.style.transform = `translate(${mousePoint.x - offset}px, ${mousePoint.y - offset}px)`
 
-  const dx = mousePoint.x - centerPoint.cx
-  const dy = mousePoint.y - centerPoint.cy
-  const angle = Math.atan2(dy, dx) * (180 / Math.PI) // angle in degrees
-  console.log(angle)
+  console.warn(centerPoint, mousePoint)
+  const dx = centerPoint.x - mousePoint.x
+  const dy = centerPoint.y - mousePoint.y
+
+  const angleRad = Math.atan2(dx, -dy)
+  const angleDeg = angleRad * (180 / Math.PI)
+  // if (angleDeg < 0) angleDeg += 360
+
   const svg = cursor.querySelector('svg') as SVGElement
+  console.warn(angleDeg)
   if (svg) {
     svg.style.transformOrigin = 'center center'
-    svg.style.transform = `rotate(${angle}deg)`
+    svg.style.transform = `rotate(${angleDeg}deg)`
   }
 }

@@ -4,7 +4,7 @@ import {
   rectInside,
 } from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
-import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
+import {areSetsEqual, canvasToScreen, getSymmetricDifference} from '../../../lib/lib.ts'
 import {applyResize, applyRotating, updateHoveredModule} from './funcs.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
@@ -124,9 +124,10 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     case 'rotating': {
       viewport.wrapper.setPointerCapture(e.pointerId)
       const {shiftKey} = e
+      const centerPoint = this.getViewPointByWorldPoint(this._rotatingOperator!.moduleOrigin.cx, this._rotatingOperator!.moduleOrigin.cy)
 
       applyRotating.call(this, shiftKey)
-      updateCursor(viewport.wrapper, viewport.cursor, this._rotatingOperator!.moduleOrigin, viewport.mouseMovePoint)
+      updateCursor(viewport.wrapper, viewport.cursor, centerPoint, viewport.mouseMovePoint)
 
       this.action.dispatch('module-operating')
     }
@@ -153,12 +154,12 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     case 'static': {
       const r = updateHoveredModule.call(this)
       const {viewport} = this
-      // const {rotation} = applyRotating.call(this, shiftKey)
 
-      // updateCursor(viewport.selectionBox)
       if (r) {
         if (r.type === 'rotate') {
-          updateCursor(viewport.wrapper, viewport.cursor, r.moduleOrigin, viewport.mouseMovePoint)
+          const centerPoint = this.getViewPointByWorldPoint(r.moduleOrigin.cx, r.moduleOrigin.cy)
+
+          updateCursor(viewport.wrapper, viewport.cursor, centerPoint, viewport.mouseMovePoint)
         } else {
           viewport.wrapper.style.cursor = r.cursor
         }

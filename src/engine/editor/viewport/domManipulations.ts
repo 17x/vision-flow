@@ -115,15 +115,37 @@ export const updateSelectionBox = (selectionBox: HTMLDivElement, {x, y, height, 
   selectionBox.style.display = show ? 'block' : 'none'
 }
 
-export const updateCursor = (wrapper: HTMLDivElement, cursor: HTMLDivElement, centerPoint: Point | 'hide', mousePoint?: Point) => {
+export const updateCursor = (wrapper: HTMLDivElement, cursor: HTMLDivElement, centerPoint: {
+  cx: number,
+  cy: number
+} | 'hide', mousePoint?: Point) => {
   if (centerPoint === 'hide') {
     cursor.style.display = 'none'
     wrapper.style.cursor = 'default'
     return
   }
 
-  wrapper.style.cursor = 'none'
+  cursor.innerHTML = `
+       <?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.99 18.93">
+  <path d="M15.57,16.04c.48-.57,1-1.1,1.5-1.65.35-.38.54-.85,1.15-.82.72.04,1.01.78.55,1.34-1.07,1.3-2.37,2.5-3.44,3.82-.69.48-1.09,0-1.56-.48-.91-.95-1.92-2.07-2.78-3.07-.3-.35-.58-.72-.33-1.19.39-.73,1.08-.39,1.53.07.52.55,1.01,1.17,1.51,1.74.07.08.17.19.26.22,0-.81.02-1.64-.08-2.44-.51-4.07-3.48-7.36-7.47-8.32-1.12-.27-2.22-.25-3.37-.24.15.2.34.39.52.56.51.47,1.2.95,1.66,1.44.69.73-.3,1.84-1.1,1.19-.91-.74-1.83-1.68-2.7-2.48-.38-.35-1.06-.81-1.29-1.26-.21-.4-.1-.54.14-.89C1.59,2.57,2.79,1.18,4.11.18c.76-.58,1.72.38,1.13,1.14l-2.3,2.09c.76.04,1.52-.01,2.28.06,5.2.47,9.42,4.43,10.22,9.59.15.99.1,1.98.14,2.98Z"/>
+</svg>
+  `
+  // Place cursor at mouse
   cursor.style.display = 'block'
-  cursor.style.transform = `translate(${mousePoint!.x}px, ${mousePoint!.y}px)`
-  cursor.style.backgroundColor = 'blue'
+  wrapper.style.cursor = 'none'
+  // Center the cursor at the mouse location
+  const size = 24
+  const offset = size / 2
+  cursor.style.transform = `translate(${mousePoint.x - offset}px, ${mousePoint.y - offset}px)`
+
+  const dx = mousePoint.x - centerPoint.cx
+  const dy = mousePoint.y - centerPoint.cy
+  const angle = Math.atan2(dy, dx) * (180 / Math.PI) // angle in degrees
+  console.log(angle)
+  const svg = cursor.querySelector('svg') as SVGElement
+  if (svg) {
+    svg.style.transformOrigin = 'center center'
+    svg.style.transform = `rotate(${angle}deg)`
+  }
 }

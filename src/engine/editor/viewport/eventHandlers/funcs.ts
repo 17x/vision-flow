@@ -104,26 +104,25 @@ export function applyRotating(this: Editor, shiftKey: boolean) {
   const {cx, cy} = moduleOrigin
   const module = this.moduleMap.get(id)
 
-  // Convert screen coordinates to canvas coordinates
   const downX = (mouseDownPoint.x - this.viewport.offset.x) / scale * dpr
   const downY = (mouseDownPoint.y - this.viewport.offset.y) / scale * dpr
   const moveX = (mouseMovePoint.x - this.viewport.offset.x) / scale * dpr
   const moveY = (mouseMovePoint.y - this.viewport.offset.y) / scale * dpr
 
-  // Calculate the angle between the mouse position and the center of the object
   const startAngle = Math.atan2(downY - cy, downX - cx)
   const currentAngle = Math.atan2(moveY - cy, moveX - cx)
 
-  // Calculate the rotation delta in degrees
   let rotationDelta = (currentAngle - startAngle) * (180 / Math.PI)
 
-  // Snap to 15-degree increments if shift key is pressed
   if (shiftKey) {
     rotationDelta = Math.round(rotationDelta / 15) * 15
   }
 
-  // Apply the rotation
-  module.rotation = rotation + rotationDelta
+  // Normalize rotation to [0, 360)
+  let newRotation = (rotation + rotationDelta) % 360
+  if (newRotation < 0) newRotation += 360
+
+  module.rotation = newRotation
 
   return {
     rotation: module.rotation,

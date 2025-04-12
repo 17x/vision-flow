@@ -150,5 +150,5 @@ export const updateCursor = (wrapper: HTMLDivElement, cursor: HTMLDivElement, ce
 
   console.warn(normalizedAngle)
   cursor.style.transformOrigin = 'center center'
-  cursor.style.transform = `translate(${mousePoint.x - offset}px, ${mousePoint.y - offset}px) rotate(${normalizedAngle}deg)`
+  cursor.style.transform = `translate(${mousePoint!.x - offset}px, ${mousePoint!.y - offset}px) rotate(${normalizedAngle}deg)`
 }

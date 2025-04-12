@@ -2,14 +2,14 @@
 import Editor from '../../engine/editor/editor.ts'
 
 export const createMockData = (editor: Editor) => {
-  const baseX = 300
-  const baseY = 300
+  const baseX = 500
+  const baseY = 500
   const baseRectData: Omit<ShapePropsType, 'id' | 'layer'> = {
     type: 'rectangle',
     // x: 150,
     // y: 150,
-    width: baseX * 1.5,
-    height: baseY * 1.5,
+    width: baseX / 1.2,
+    height: baseY / 1.2,
     enableLine: true,
     lineColor: '#000000',
     lineWidth: 1,

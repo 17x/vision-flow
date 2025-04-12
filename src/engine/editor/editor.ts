@@ -28,8 +28,6 @@ import {destroyViewport} from './viewport/destroyViewport.ts'
 import {initEditor} from './initEditor.ts'
 import {fitRectToViewport} from './viewport/helper.ts'
 import uid from '../../utilities/Uid.ts'
-import {off} from '../../utilities/eventBinding.ts'
-
 export interface EditorDataProps {
   id: UID;
   modules: ModuleType[];

@@ -75,7 +75,7 @@ function selectionRender(this: Editor) {
       }
         break
       case 'rotate': {
-        const rect2 = {
+       /* const rect2 = {
           ...operation.data,
           width: operation.data.size,
           height: operation.data.size,
@@ -85,7 +85,7 @@ function selectionRender(this: Editor) {
           lineColor: lineColor,
         }
 
-        rects.push(rect2)
+        rects.push(rect2)*/
       }
         break
     }

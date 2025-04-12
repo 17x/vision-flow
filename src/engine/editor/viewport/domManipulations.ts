@@ -76,8 +76,13 @@ export function initViewportDom(id: UID): InitViewportDomReturn {
     #${cursor.id}{
       display: none;
       pointer-events: none;
-      width:2rem;
-      height:2rem;
+      width:20px;
+      height:20px;
+    }
+    
+    #${cursor.id} svg{
+      width:20px;
+      height:20px;
     }
   `
 

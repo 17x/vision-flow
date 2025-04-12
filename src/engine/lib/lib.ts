@@ -94,8 +94,8 @@ x: canvasX * scale + offsetX,
 y: canvasY * scale + offsetY,
 * */
   return {
-    x: (point.x * scale + offset.x * dpr) / dpr,
-    y: (point.y * scale + offset.y * dpr) / dpr,
+    x: ((point.x * scale) + offset.x * dpr) / dpr,
+    y: ((point.y * scale) + offset.y * dpr) / dpr,
   }
 }
 

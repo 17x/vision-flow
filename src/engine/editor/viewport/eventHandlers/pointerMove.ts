@@ -4,7 +4,7 @@ import {
   rectInside,
 } from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
-import {areSetsEqual, canvasToScreen, getSymmetricDifference} from '../../../lib/lib.ts'
+import {areSetsEqual, worldToScreen, getSymmetricDifference} from '../../../lib/lib.ts'
 import {applyResize, applyRotating, updateHoveredModule} from './funcs.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
@@ -130,7 +130,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       } = this.getViewPointByWorldPoint(this._rotatingOperator!.moduleOrigin.cx, this._rotatingOperator!.moduleOrigin.cy)
 
       applyRotating.call(this, shiftKey)
-      updateCursor(viewport.wrapper, viewport.cursor, {x: x / 2/2, y: y / 2/2}, viewport.mouseMovePoint)
+      updateCursor(viewport.wrapper, viewport.cursor, {x: x / 2 / 2, y: y / 2 / 2}, viewport.mouseMovePoint)
 
       this.action.dispatch('module-operating')
     }

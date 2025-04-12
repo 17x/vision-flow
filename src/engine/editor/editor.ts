@@ -21,13 +21,14 @@ import {
 import {updateScrollBars} from './viewport/domManipulations.ts'
 import render from '../core/renderer/mainCanvasRenderer.ts'
 import selectionRender from './viewport/selectionRender.ts'
-import {canvasToScreen, screenToCanvas} from '../lib/lib.ts'
+import {worldToScreen, screenToWorld} from '../lib/lib.ts'
 import {Viewport, ViewportManipulationType} from './viewport/type'
 import {createViewport} from './viewport/createViewport.ts'
 import {destroyViewport} from './viewport/destroyViewport.ts'
 import {initEditor} from './initEditor.ts'
 import {fitRectToViewport} from './viewport/helper.ts'
 import uid from '../../utilities/Uid.ts'
+import {off} from '../../utilities/eventBinding.ts'
 
 export interface EditorDataProps {
   id: UID;
@@ -417,24 +418,22 @@ class Editor {
   getWorldPointByViewportPoint(x: number, y: number) {
     const {dpr, offset, scale} = this.viewport
 
-    return screenToCanvas(
+    return screenToWorld(
+      {x, y},
+      offset,
       scale,
-      offset.x * dpr,
-      offset.y * dpr,
-      x * dpr,
-      y * dpr,
+      dpr,
     )
   }
 
   getViewPointByWorldPoint(x: number, y: number) {
     const {dpr, offset, scale} = this.viewport
 
-    return canvasToScreen(
+    return worldToScreen(
+      {x, y},
+      offset,
       scale,
-      offset.x * dpr,
-      offset.y * dpr,
-      x * dpr,
-      y * dpr,
+      dpr,
     )
   }
 

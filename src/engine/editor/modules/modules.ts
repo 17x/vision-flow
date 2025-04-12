@@ -92,15 +92,12 @@ export function batchMove(this: Editor, from: Set<UID>, delta: Point) {
   // this.events.onSelectionUpdated?.(this.selectedModules, this.getIfUnique())
 }
 
-export function batchModify(this: Editor, from: Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryOperationType) {
-  const modulesMap = this.getModulesByIdSet(from)
+export function batchModify(this: Editor, idSet: Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryOperationType) {
+  const modulesMap = this.getModulesByIdSet(idSet)
 
   modulesMap.forEach((module: ModuleProps) => {
     Object.keys(data).forEach((key) => {
       module[key] = data[key]
-      // const value = data[key]
-      // if (typeof value === 'string' || typeof value === 'number') {
-      // }
     })
   })
 

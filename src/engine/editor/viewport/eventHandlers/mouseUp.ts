@@ -71,7 +71,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       const {mouseDownPoint, mouseMovePoint, scale, dpr} = this.viewport
       const {name: handleName, data: {rotation}, moduleOrigin, id} = this._resizingOperator!
       const {cx, cy, width, height} = moduleOrigin
-      const from: Rect = {
+      const from: Partial<ModuleProps> = {
         x: cx,
         y: cy,
         width,
@@ -90,30 +90,21 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
         shiftKey,
         initialCX: cx,
         initialCY: cy,
-      })
+      }) as Partial<ModuleProps>
 
       const props: ModuleChangeProps = {} // explicitly typed
-/*
+
       for (const key in from) {
-        const tkey = key as keyof ModuleModifyData
-        const tvalue = from[key] as ModuleModifyData
-        props[key] = {
-          from: from[tkey],
-          to: to[tkey],
-        }
-      }*/
-      /*
-      for (const key of Object.keys(r) as (keyof ModuleProps)[]) {
         props[key] = {
           from: from[key],
-          to: r[key],
+          to: to[key],
         }
-      }*/
-/*
+      }
+
       this.action.dispatch('module-modify', {
         id,
         props,
-      })*/
+      })
     }
       break
 

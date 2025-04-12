@@ -9,7 +9,7 @@ export function modifySelected(
   idSet: Set<UID>,
   action: SelectionActionMode,
 ) {
-  if (typeCheck(idSet) !== 'set' || idSet.size <= 0) return
+  if (typeCheck(idSet) !== 'set') return
 
   let eventCallBackData = null
 

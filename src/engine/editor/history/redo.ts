@@ -23,7 +23,14 @@ export function redo(this: Editor, quiet: boolean = false): HistoryNode | false 
       break
 
     case 'history-modify':
+      payload.changes.map(({id, props}) => {
+        const redoProps: Partial<ModuleProps> = {}
 
+        Object.keys(props).forEach(propName => {
+          redoProps[propName] = props[propName]!['to']
+          this.batchModify(new Set([id]), redoProps)
+        })
+      })
       break
 
     case 'history-move':
@@ -54,8 +61,6 @@ export function redo(this: Editor, quiet: boolean = false): HistoryNode | false 
     this.replaceSelected(selectedModules)
     // console.log(selectedModules)
     this.action.dispatch('editor-selection-update')
-
-
 
     // this.events.onHistoryUpdated?.(this.history)
   }

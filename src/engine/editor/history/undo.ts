@@ -24,7 +24,15 @@ export function undo(this: Editor, quiet: boolean = false): HistoryNode | false 
       break
 
     case 'history-modify':
+      payload.changes.map(({id, props}) => {
+        const undoProps: Partial<ModuleProps> = {}
 
+        Object.keys(props).forEach(propName => {
+          console.log(props[propName]!['from'])
+          undoProps[propName] = props[propName]!['from']
+          this.batchModify(new Set([id]), undoProps)
+        })
+      })
       break
 
     case 'history-move':
@@ -55,6 +63,7 @@ export function undo(this: Editor, quiet: boolean = false): HistoryNode | false 
   // this.editor.updateVisibleModuleMap(this.editor.viewport.worldRect)
   if (!quiet) {
     const backedNodeSelectedModules = this.history.current!.data.payload.selectedModules
+    console.log(backedNodeSelectedModules)
     // restore selected modules
     this.replaceSelected(backedNodeSelectedModules)
     this.action.dispatch('editor-selection-update')

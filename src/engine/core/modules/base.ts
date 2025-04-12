@@ -9,6 +9,7 @@ export interface BasicModuleProps {
   opacity: Opacity
   shadow: boolean
   // position?: Point
+  // TODO deal with layer
   layer: number
 
   rotation: number

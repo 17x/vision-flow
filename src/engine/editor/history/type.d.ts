@@ -1,3 +1,5 @@
+import {ModuleModifyData} from '../actions/type'
+
 type HistoryPrev = HistoryNode | null
 type HistoryNext = HistoryPrev
 type HistorySelectedModules = Set<UID>
@@ -86,15 +88,7 @@ interface DuplicateOperation {
 interface ModifyOperation {
   type: 'history-modify'
   payload: {
-    changes: {
-      id: string // module ID that was modified
-      props: {
-        [key: string]: {
-          from: string | null | boolean
-          to: string | null | boolean
-        }
-      }
-    }[]
+    changes: ModuleModifyData[]
     selectedModules: HistorySelectedModules
   }
 }

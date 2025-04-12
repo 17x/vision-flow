@@ -22,7 +22,7 @@ export function createViewport(this: Editor): Viewport {
     selectionBox,
     scrollBarX,
     scrollBarY,
-  }: InitViewportDomReturn = initViewportDom()
+  }: InitViewportDomReturn = initViewportDom(this.id)
   const selectionCTX = selectionCanvas.getContext(
     '2d',
   ) as CanvasRenderingContext2D

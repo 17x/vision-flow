@@ -27,6 +27,7 @@ import {createViewport} from './viewport/createViewport.ts'
 import {destroyViewport} from './viewport/destroyViewport.ts'
 import {initEditor} from './initEditor.ts'
 import {fitRectToViewport} from './viewport/helper.ts'
+import uid from '../../utilities/Uid.ts'
 
 export interface EditorDataProps {
   id: UID;
@@ -83,7 +84,7 @@ class Editor {
                 },
               }: EditorInterface) {
     this.visibleModuleMap = new Map()
-    this.id = data.id
+    this.id = data.id || uid()
     this.config = config
     this.events = events
     this.action = new Action()

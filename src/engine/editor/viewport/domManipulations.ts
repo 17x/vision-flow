@@ -6,15 +6,29 @@ export interface InitViewportDomReturn {
   scrollBarX: HTMLDivElement
   scrollBarY: HTMLDivElement
 }
-export function initViewportDom(): InitViewportDomReturn {
+
+export function initViewportDom(id: UID): InitViewportDomReturn {
   const boxColor = '#1FB3FF'
   const boxBgColor = 'rgba(31,180,255,0.1)'
   const wrapper = document.createElement('div')
   const selectionBox = document.createElement('div')
   const selectionCanvas: HTMLCanvasElement = document.createElement('canvas')
+
   const mainCanvas: HTMLCanvasElement = document.createElement('canvas')
   const {scrollBarX, scrollBarY} = generateScrollBars()
+  const cssText = document.createElement('style')
+  const wrapperId = 'editor-wrapper-' + id
+  const mainCanvasId = 'editor-main-canvas-' + id
+  const selectionCanvasId = 'editor-selection-canvas-' + id
+  const selectionBoxId = 'editor-selection-box-' + id
 
+  cssText.textContent = `
+    #${mainCanvasId}{
+      position: absolute;
+    }
+  `
+
+  mainCanvas.id = mainCanvasId
   mainCanvas.setAttribute('editor-main-canvas', '')
   mainCanvas.style.backgroundColor = '#f0f0f0'
   mainCanvas.style.position = 'absolute'
@@ -24,6 +38,7 @@ export function initViewportDom(): InitViewportDomReturn {
   mainCanvas.style.height = '100%'
   mainCanvas.style.pointerEvents = 'none'
 
+  selectionCanvas.id = selectionCanvasId
   selectionCanvas.setAttribute('editor-selection-canvas', '')
   selectionCanvas.style.position = 'absolute'
   selectionCanvas.style.left = '0'
@@ -32,6 +47,7 @@ export function initViewportDom(): InitViewportDomReturn {
   selectionCanvas.style.height = '100%'
   selectionCanvas.style.pointerEvents = 'none'
 
+  wrapper.id = wrapperId
   wrapper.setAttribute('editor-wrapper', '')
   wrapper.style.userSelect = 'none'
   wrapper.style.position = 'relative'
@@ -41,13 +57,14 @@ export function initViewportDom(): InitViewportDomReturn {
   wrapper.style.width = '100%'
   wrapper.style.height = '100%'
 
+  selectionBox.id = selectionBoxId
   selectionBox.setAttribute('editor-selection-box', '')
   selectionBox.style.pointerEvents = 'none'
   selectionBox.style.position = 'absolute'
   selectionBox.style.border = '1px solid ' + boxColor
   selectionBox.style.backgroundColor = boxBgColor
 
-  wrapper.append(mainCanvas, selectionCanvas, scrollBarX, scrollBarY, selectionBox)
+  wrapper.append(mainCanvas, selectionCanvas, scrollBarX, scrollBarY, selectionBox, cssText)
 
   return {
     wrapper,

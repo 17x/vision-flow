@@ -64,7 +64,8 @@ function selectionRender(this: Editor) {
         // console.log(operation.data)
         const rect = {
           ...operation.data,
-          height: operation.data.width,
+          width: operation.data.size,
+          height: operation.data.size,
           opacity: 100,
           // rotation: 10,
           fillColor: '#fff',
@@ -72,6 +73,20 @@ function selectionRender(this: Editor) {
         }
         // console.log(rect)
         rects.push(rect)
+        break
+      case 'rotate':
+        console.log(operation.data)
+        const rect2 = {
+          ...operation.data,
+          width: operation.data.size,
+          height: operation.data.size,
+          opacity: 100,
+          // rotation: 10,
+          fillColor: '#ff0000',
+          lineColor: lineColor,
+        }
+        // console.log(rect)
+        rects.push(rect2)
         break
     }
   })

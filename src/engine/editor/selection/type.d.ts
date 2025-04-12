@@ -1,13 +1,5 @@
 type OperationHandlerType = 'resize' | 'rotate'
 
-// Base operation handler interface
-export interface OperationHandler {
-  id: string; // Unique identifier for the handler
-  type: HandlerType; // Type of the operation (resize, rotate, etc.)
-  cursor: string; // The cursor style when hovering over the handler
-  data: never; // Extra data for specific handler types (e.g., position, size)
-}
-
 type HandlerType = 'resize' | 'rotate';
 
 export type ResizeHandleName =
@@ -18,7 +10,11 @@ export type ResizeHandleName =
   | 'br'
   | 'b'
   | 'bl'
-  | 'l';
+  | 'l'
+  | 'rotate-tl'
+  | 'rotate-tr'
+  | 'rotate-br'
+  | 'rotate-bl'
 
 interface ResizeTransform {
   dx: number;
@@ -27,29 +23,29 @@ interface ResizeTransform {
   cy: number;
 }
 
-interface ResizeHandler {
-  id: string;
-  type: HandlerType;
-  name: ResizeHandleName
-  cursor: ResizeCursor;
-  moduleOrigin: ModuleProps
+// Base operation handler interface
+export interface OperationHandler {
+  id: string; // Unique identifier for the handler
+  type: HandlerType; // Type of the operation (resize, rotate, etc.)
+  cursor: string; // The cursor style when hovering over the handler
   data: {
     x: number;
     y: number;
-    width: number;
+    size: number;
     lineWidth: number
-    position: string;
     rotation: number;
   };
 }
 
+interface ResizeHandler extends OperationHandler {
+  type: 'resize';
+  name: ResizeHandleName
+  cursor: ResizeCursor;
+  moduleOrigin: ModuleProps
+}
+
 export interface RotateHandler extends OperationHandler {
   type: 'rotate';
-  data: {
-    x: number;
-    y: number;
-    radius: number;
-  };
 }
 
 export type OperationHandlers = RotateHandler | ResizeHandler

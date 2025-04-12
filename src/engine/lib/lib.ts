@@ -1,6 +1,7 @@
 // import typeCheck from '../../utilities/typeCheck.ts'
 
 import {
+  OperationHandlers,
   ResizeCursor,
   ResizeHandleName,
   ResizeHandler,
@@ -170,6 +171,46 @@ export function createHandlersForRect(module: ModuleType, scale: number, dpr: DP
 
   const localHandleOffsets = [
     {
+      type: 'rotate',
+      name: 'rotate-tl',
+      x: 0,
+      y: 0,
+      offsetX: -0.5,
+      offsetY: -0.5,
+      originCursor: 'rotate',
+      cursor: 'rotate',
+    }, // left-center
+    {
+      type: 'rotate',
+      name: 'rotate-tr',
+      x: 1,
+      y: 0,
+      offsetX: 0.5,
+      offsetY: -0.5,
+      originCursor: 'rotate',
+      cursor: 'rotate',
+    }, // left-center
+    {
+      type: 'rotate',
+      name: 'rotate-br',
+      x: 1,
+      y: 1,
+      offsetX: 0.5,
+      offsetY: 0.5,
+      originCursor: 'rotate',
+      cursor: 'rotate',
+    }, // left-center
+    {
+      type: 'rotate',
+      name: 'rotate-bl',
+      x: 0,
+      y: 1,
+      offsetX: -0.5,
+      offsetY: 0.5,
+      originCursor: 'rotate',
+      cursor: 'rotate',
+    },
+    {
       type: 'resize',
       name: 'tl',
       x: 0,
@@ -233,53 +274,14 @@ export function createHandlersForRect(module: ModuleType, scale: number, dpr: DP
       originCursor: 'ew-resize',
       cursor: 'ew-resize',
     }, // left-center
-    {
-      type: 'rotate',
-      name: 'rotate-tl',
-      x: 0,
-      y: 0,
-      offsetX: -0.5,
-      offsetY: -0.5,
-      originCursor: 'rotate',
-      cursor: 'rotate',
-    }, // left-center
-    {
-      type: 'rotate',
-      name: 'rotate-tr',
-      x: 1,
-      y: 0,
-      offsetX: 0.5,
-      offsetY: -0.5,
-      originCursor: 'rotate',
-      cursor: 'rotate',
-    }, // left-center
-    {
-      type: 'rotate',
-      name: 'rotate-br',
-      x: 1,
-      y: 1,
-      offsetX: 0.5,
-      offsetY: 0.5,
-      originCursor: 'rotate',
-      cursor: 'rotate',
-    }, // left-center
-    {
-      type: 'rotate',
-      name: 'rotate-bl',
-      x: 0,
-      y: 1,
-      offsetX: -0.5,
-      offsetY: 0.5,
-      originCursor: 'rotate',
-      cursor: 'rotate',
-    }, // left-center
+    // left-center
   ] as const
   const resizeHandlerLen = 10
   const resizeHandlerBorderWidth = 1
   const resizeHandlerScaledWidth = resizeHandlerLen / scale * dpr
   const resizeHandlerScaledLineWidth = resizeHandlerBorderWidth / scale * dpr
 
-  const handlers = localHandleOffsets.map((offset) => {
+  const handlers = localHandleOffsets.map((offset): OperationHandlers => {
     // Calculate the handle position in local coordinates
     const handleX = cx - width / 2 + offset.x * width
     const handleY = cy - height / 2 + offset.y * height
@@ -295,10 +297,10 @@ export function createHandlersForRect(module: ModuleType, scale: number, dpr: DP
       lineWidth = resizeHandlerScaledLineWidth
     } else {
       const currentRotateHandlerCenterX = handleX + offset.offsetX * resizeHandlerScaledWidth
-      const currentRotateHandlerCenterY = handleX + offset.offsetY * resizeHandlerScaledWidth
+      const currentRotateHandlerCenterY = handleY + offset.offsetY * resizeHandlerScaledWidth
       console.log(currentRotateHandlerCenterX, currentRotateHandlerCenterY)
       rotated = rotatePoint(currentRotateHandlerCenterX, currentRotateHandlerCenterY, cx, cy, rotation)
-      len = resizeHandlerScaledWidth
+      len = resizeHandlerScaledWidth * 2
     }
 
     return {
@@ -310,7 +312,7 @@ export function createHandlersForRect(module: ModuleType, scale: number, dpr: DP
       data: {
         x: rotated.x,
         y: rotated.y,
-        width: len,
+        size: len,
         lineWidth,
         // position: offset.name,
         rotation,

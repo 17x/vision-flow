@@ -60,7 +60,7 @@ export function redo(this: Editor, quiet: boolean = false): HistoryNode | false 
   if (!quiet) {
     this.replaceSelected(selectedModules)
     // console.log(selectedModules)
-    this.action.dispatch('editor-selection-update')
+    this.action.dispatch('selection-update')
 
     // this.events.onHistoryUpdated?.(this.history)
   }

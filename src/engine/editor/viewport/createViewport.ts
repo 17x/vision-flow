@@ -31,7 +31,7 @@ export function createViewport(this: Editor): Viewport {
   const eventsController = new AbortController()
   const resizeObserver = new ResizeObserver(
     throttle(() => {
-      this.action.dispatch('viewport-resize')
+      this.action.dispatch('world-resize')
     }, 200),
   )
   const {signal} = eventsController

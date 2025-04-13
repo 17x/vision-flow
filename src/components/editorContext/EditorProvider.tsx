@@ -6,9 +6,9 @@ import {StatusBar} from '../statusBar/StatusBar.tsx'
 import uid from '../../utilities/Uid.ts'
 import {HistoryNode} from '../../engine/editor/history/DoublyLinkedList.ts'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
-import {
-  OperationType,
-} from '../../engine/editor/type'
+/*import {
+  // OperationType,
+} from '../../engine/editor/type'*/
 import Header from '../header/Header.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
 import {FileType} from '../fileContext/FileContext.tsx'
@@ -133,7 +133,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }
 
   const executeAction = <K extends EditorEventType>(type: K, data?: EditorEventData<K>) => {
-    editorRef.current!.execute(type as OperationType, data)
+    editorRef.current!.execute(type as K, data)
   }
 
   return (

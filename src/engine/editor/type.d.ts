@@ -1,5 +1,6 @@
 import {ModuleProps} from '../core/modules/modules'
 import History from './history/history.ts'
+import {EditorEventType} from './actions/type'
 
 export type BasicEditorAreaSize = {
   width: 1000
@@ -12,9 +13,9 @@ export type ModuleMoveDirection =
   'module-move-left' |
   'module-move-right' |
   'module-move-shift'
+/*
 
-export type OperationType =
-  'select-all'
+export type OperationType = Pick<EditorEventType, 'select-all'
   | 'modify-selection'
   | 'selection-copy'
   | 'selection-delete'
@@ -29,8 +30,8 @@ export type OperationType =
   | 'module-modify'
   | 'module-move'
   | 'module-move-start'
-  | 'module-move-end'
-  | ModuleMoveDirection
+  | 'module-move-end'> & ModuleMoveDirection
+*/
 
 export type ModifyModule = Partial<ModuleProps>
 // export type ModifyModuleMap = Map<UID, ModifyModule>

@@ -1,5 +1,5 @@
 import resetCanvas from './viewport/resetCanvas.tsx'
-import {SelectionModifyData} from './actions/type'
+import {EditorEventType, SelectionModifyData} from './actions/type'
 import Editor from './editor.ts'
 import {redo} from './history/redo.ts'
 import {undo} from './history/undo.ts'
@@ -17,7 +17,33 @@ export function initEditor(this: Editor) {
 
   viewport.resizeObserver.observe(container)
 
-  on('viewport-resize', () => {
+  const forwardEventDependencyMap: Record<EditorEventType, EditorEventType[]> = {
+    'world-resize': ['world-update', 'editor-initialized'],
+    'editor-initialized': ['world-update'],
+    'module-map-update': ['visible-module-update'],
+    'world-update': ['visible-module-update'],
+    'world-zoom': ['world-update'],
+    'world-shift': ['world-update'],
+    'selection-all': ['selection-update'],
+    'selection-update': ['visible-selected-update'],
+    'selection-clear': ['selection-update'],
+    'selection-modify': ['selection-update'],
+    'module-delete': ['module-map-update', 'selection-update'],
+    'module-paste': ['module-map-update', 'selection-update'],
+    'module-duplicate': ['module-map-update', 'selection-update'],
+    'module-move': ['selection-update', 'visible-module-update'],
+    'module-add': ['module-map-update', 'selection-update'],
+    'module-operating': ['visible-module-update', 'selection-update'],
+    'module-modify': ['visible-module-update', 'selection-update'],
+    'visible-module-update': ['visible-selected-update'],
+    'module-hover-enter': ['visible-selected-update'],
+    'module-hover-leave': ['visible-selected-update'],
+    'history-undo': ['visible-module-update'],
+    'history-redo': ['visible-module-update'],
+    'history-pick': ['visible-module-update'],
+  }
+
+  on('world-resize', () => {
     this.updateViewport()
     // this.updateWorldRect()
 
@@ -37,7 +63,7 @@ export function initEditor(this: Editor) {
     // dispatch('editor-initialized')
   })
 
-  on('editor-module-map-update', (historyData: HistoryOperation) => {
+  on('module-map-update', (historyData: HistoryOperation) => {
     // this.replaceSelected(historyData.payload.selectedModules)
     this.updateVisibleModuleMap()
     dispatch('visible-module-update', true)
@@ -46,7 +72,7 @@ export function initEditor(this: Editor) {
     this.history.add(historyData)
   })
 
-  on('editor-selection-update', () => {
+  on('selection-update', () => {
     this.hoveredModule = null
 
     updateSelectionCanvasRenderData.call(this)
@@ -98,30 +124,30 @@ export function initEditor(this: Editor) {
     // this.events.onViewportUpdated?.(worldRect as BoundingRect)
   })
 
-  on('select-all', () => {
+  on('selection-all', () => {
     this.selectAll()
-    dispatch('editor-selection-update')
+    dispatch('selection-update')
   })
 
   on('selection-clear', () => {
     this.selectedModules.clear()
-    dispatch('editor-selection-update')
+    dispatch('selection-update')
   })
 
-  on('modify-selection', (data) => {
+  on('selection-modify', (data) => {
     const {mode, idSet} = data as SelectionModifyData
 
     this.modifySelected(idSet, mode)
-    dispatch('editor-selection-update')
+    dispatch('selection-update')
   })
 
-  on('selection-delete', () => {
+  on('module-delete', () => {
     const savedSelected = this.getSelected
     const backup = this.batchDelete(savedSelected)
 
     this.selectedModules.clear()
 
-    dispatch('editor-module-map-update', {
+    dispatch('module-map-update', {
       type: 'history-delete',
       payload: {
         modules: backup,
@@ -129,15 +155,15 @@ export function initEditor(this: Editor) {
       },
     })
 
-    dispatch('editor-selection-update')
+    dispatch('selection-update')
   })
 
-  on('selection-copy', () => {
+  on('module-copy', () => {
     this.copiedItems = this.batchCopy(this.getSelected, false)
     this.updateCopiedItemsDelta()
   })
 
-  on('selection-paste', (position?) => {
+  on('module-paste', (position?) => {
     if (this.copiedItems.length === 0) return
 
     let newModules: ModuleMap
@@ -170,7 +196,7 @@ export function initEditor(this: Editor) {
     this.replaceSelected(savedSelected)
     this.updateCopiedItemsDelta()
 
-    dispatch('editor-module-map-update', {
+    dispatch('module-map-update', {
       type: 'history-paste',
       payload: {
         modules: [...newModules.values()].map((mod) => mod.getDetails()),
@@ -178,10 +204,10 @@ export function initEditor(this: Editor) {
       },
     })
 
-    dispatch('editor-selection-update')
+    dispatch('selection-update')
   })
 
-  on('selection-duplicate', () => {
+  on('module-duplicate', () => {
     const temp: ModuleProps[] = this.batchCopy(this.selectedModules, false)
 
     temp.forEach((copiedItem) => {
@@ -198,7 +224,7 @@ export function initEditor(this: Editor) {
     const moduleProps = [...newModules.values()].map((mod) => mod.getDetails())
     // this.getSelected()
 
-    dispatch('editor-module-map-update', {
+    dispatch('module-map-update', {
       type: 'history-duplicate',
       payload: {
         modules: moduleProps,
@@ -206,10 +232,10 @@ export function initEditor(this: Editor) {
       },
     })
 
-    dispatch('editor-selection-update')
+    dispatch('selection-update')
   })
 
-  on('selection-move', ({direction, delta = {x: 0, y: 0}}) => {
+  on('module-move', ({direction, delta = {x: 0, y: 0}}) => {
     if (this.getSelected.size === 0) return
 
     const MODULE_MOVE_STEP = 5
@@ -236,7 +262,7 @@ export function initEditor(this: Editor) {
 
     // const savedSelected = this.getSelected
 
-    dispatch('editor-selection-update')
+    dispatch('selection-update')
     dispatch('visible-module-update')
     // console.log(999)
     // this.events.onSelectionUpdated?.(this.selectedModules, this.getSelectedPropsIfUnique)
@@ -259,7 +285,7 @@ export function initEditor(this: Editor) {
 
     const moduleProps = [...newModules.values()].map((mod) => mod.getDetails())
 
-    dispatch('editor-module-map-update', {
+    dispatch('module-map-update', {
       type: 'history-add',
       payload: {
         modules: moduleProps,
@@ -267,12 +293,12 @@ export function initEditor(this: Editor) {
       },
     })
 
-    dispatch('editor-selection-update')
+    dispatch('selection-update')
   })
 
   on('module-operating', () => {
     dispatch('visible-module-update')
-    dispatch('editor-selection-update')
+    dispatch('selection-update')
   })
 
   on('module-modify', (data) => {
@@ -287,7 +313,7 @@ export function initEditor(this: Editor) {
     })
 
     dispatch('visible-module-update')
-    dispatch('editor-selection-update')
+    dispatch('selection-update')
   })
 
   on('visible-module-update', (quite = false) => {

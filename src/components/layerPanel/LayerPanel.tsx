@@ -58,7 +58,7 @@ export const LayerPanel = ({data, selected}: LayerPanelProps) => {
              style={{height: ITEM_HEIGHT}}
              className={selected?.includes(item.id) ? 'bg-gray-400 text-white' : ''}
              onClick={() => {
-               executeAction('modify-selection', {mode: 'replace', idSet: new Set([item.id])})
+               executeAction('selection-modify', {mode: 'replace', idSet: new Set([item.id])})
              }}
              id={`layer-module-${item.id}`}
              key={item.id}>

@@ -47,16 +47,16 @@ export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position, copie
     // console.log(action)
     switch (action) {
       case 'copy':
-        executeAction('selection-copy')
+        executeAction('module-copy')
         break
       case 'paste':
-        executeAction('selection-paste', position)
+        executeAction('module-paste', position)
         break
       case 'delete':
-        executeAction('selection-delete')
+        executeAction('module-delete')
         break
       case 'duplicate':
-        executeAction('selection-duplicate')
+        executeAction('module-duplicate')
         break
     }
     // executeAction()

@@ -32,22 +32,28 @@ export interface ModuleModifyData {
 
 export type EditorEventMap = {
   'editor-initialized': never;
-  'editor-module-map-update': HistoryOperation;
-  /*
-  * selected has been changed
-  * */
-  'editor-selection-update': never
+  'world-resize': null;
+  'world-mouse-down': never;
+  'world-mouse-move': never;
+  'world-update': never;
+  'world-zoom': 'fit' | {
+    zoomFactor: number;
+    physicalPoint: Point;
+  };
+  'world-shift': Point;
   'visible-module-update': boolean;
   'visible-selected-update': never;
-  'modify-selection': SelectionModifyData;
+  'selection-update': never
+  'selection-modify': SelectionModifyData;
   'selection-clear': never;
-  'selection-copy': never;
-  'selection-paste': Point;
-  'selection-duplicate': never;
-  'selection-move': SelectionMoveData;
-  'selection-delete': never;
-  'select-all': never;
+  'selection-all': never;
+  'module-map-update': HistoryOperation;
+  'module-copy': never;
   'module-add': ModuleProps[];
+  'module-paste': Point;
+  'module-delete': never;
+  'module-move': SelectionMoveData;
+  'module-duplicate': never;
   'module-modify': ModuleModifyData
   'module-operating': never
   'module-hover-enter': UID;
@@ -55,17 +61,6 @@ export type EditorEventMap = {
   'history-redo': never;
   'history-undo': never;
   'history-pick': HistoryNode;
-  'viewport-resize': null;
-  'viewport-mouse-down': never;
-  'viewport-mouse-move': never;
-  'viewport-mouse-up': never;
-  'world-zoom': 'fit' | {
-    zoomFactor: number;
-    physicalPoint: Point;
-  };
-  'world-shift': Point;
-  'world-update': never;
-  'world-mouse-move': never;
   'context-menu': {
     idSet: Set<UID>;
     position: Position;

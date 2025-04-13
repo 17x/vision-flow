@@ -1,12 +1,13 @@
 import React, {useContext, useEffect} from 'react'
 import {OperationType, ModuleMoveDirection} from '../engine/editor/type'
 import EditorContext from './editorContext/EditorContext.tsx'
+import {EditorEventType} from '../engine/editor/actions/type'
 
 const ShortcutListener: React.FC = () => {
   const {executeAction, focused} = useContext(EditorContext)
 
   const handleKeyPress = (e: KeyboardEvent) => {
-    let shortcutCode: OperationType | null = null
+    let shortcutCode: EditorEventType | null = null
     const {key, ctrlKey, metaKey, shiftKey} = e
 
     const arrowKeys: { [key: string]: ModuleMoveDirection } = {
@@ -18,23 +19,23 @@ const ShortcutListener: React.FC = () => {
     const moveDirection = arrowKeys[key]
 
     if (key === 'a' && (ctrlKey || metaKey)) {
-      shortcutCode = 'select-all'
+      shortcutCode = 'selection-all'
     }
 
     if (key === 'c' && (ctrlKey || metaKey) && !shiftKey) {
-      shortcutCode = 'selection-copy'
+      shortcutCode = 'module-copy'
     }
 
     if (key === 'v' && (ctrlKey || metaKey)) {
-      shortcutCode = 'selection-paste'
+      shortcutCode = 'module-paste'
     }
 
     if (key === 'd' && (ctrlKey || metaKey)) {
-      shortcutCode = 'selection-duplicate'
+      shortcutCode = 'module-duplicate'
     }
 
     if (key === 'Delete' || key === 'Backspace') {
-      shortcutCode = 'selection-delete'
+      shortcutCode = 'module-delete'
     }
 
     if (key === 'Escape') {
@@ -51,7 +52,7 @@ const ShortcutListener: React.FC = () => {
 
     if (moveDirection) {
       // shortcutCode = arrowKeys[key]
-      shortcutCode = 'selection-move'
+      shortcutCode = 'module-move'
     }
 
     if (!shortcutCode) return

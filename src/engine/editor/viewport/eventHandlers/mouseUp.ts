@@ -51,7 +51,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
             moduleMap.get(id).y -= y
           })
 
-          this.action.dispatch('selection-move', {
+          this.action.dispatch('module-move', {
             direction: 'module-move-shift',
             delta: {x, y},
           })
@@ -59,7 +59,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
           const closestId = this.hoveredModule
 
           if (closestId && modifyKey && closestId === this._deselection) {
-            this.action.dispatch('modify-selection', {
+            this.action.dispatch('selection-modify', {
               mode: 'toggle',
               idSet: new Set([closestId]),
             })

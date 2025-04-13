@@ -1,10 +1,32 @@
 // eslint disabled
 import Editor from '../../engine/editor/editor.ts'
 
-export const createMockData = (editor: Editor) => {
+const createBaseDataByType = <T extends ModuleNames>(type: T = 'rectangle' as T): ModuleTypeMap[T] => {
   const baseX = 500
   const baseY = 500
-  const baseRectData: Omit<ShapePropsType, 'id' | 'layer'> = {
+
+  if (type === 'ellipse') {
+    return {
+      type: 'ellipse',
+      // x: 150,
+      // y: 150,
+      r1: baseX / 1.2,
+      r2: baseY / 1.2,
+      enableLine: true,
+      lineColor: '#000000',
+      lineWidth: 1,
+      enableFill: true,
+      fillColor: '#fff',
+      opacity: 100,
+      shadow: false,
+      radius: 0,
+      rotation: 0,
+    }
+
+    // Omit<ShapePropsType, 'id' | 'layer'> =
+  }
+
+  return {
     type: 'rectangle',
     // x: 150,
     // y: 150,
@@ -20,6 +42,14 @@ export const createMockData = (editor: Editor) => {
     radius: 0,
     rotation: 0,
   }
+
+}
+
+export const createMockData = (editor: Editor) => {
+  const baseX = 500
+  const baseY = 500
+  // const baseRectData = createBaseDataByType('rectangle')
+  const baseRectData = createBaseDataByType('ellipse')
   // const MOCK_ELE_LEN = 1
   const MOCK_ELE_LEN = 1
   // const MOCK_ELE_LEN = 200

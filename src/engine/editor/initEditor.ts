@@ -255,7 +255,7 @@ export function initEditor(this: Editor) {
     dispatch('module-updated')
   })
 
-  on('module-operated', (data) => {
+  on('module-modify', (data) => {
     dispatch('module-updated', {
       type: 'history-modify',
       payload: {

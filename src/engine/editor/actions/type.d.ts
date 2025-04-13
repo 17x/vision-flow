@@ -54,7 +54,7 @@ export type EditorEventMap = {
   'module-delete': never;
   'module-move': SelectionMoveData;
   'module-duplicate': never;
-  'module-operated': ModuleModifyData
+  'module-modify': ModuleModifyData
   'module-operating': never
   'module-hover-enter': UID;
   'module-hover-leave': UID;
@@ -69,7 +69,6 @@ export type EditorEventMap = {
     copiedItems: boolean
   };
 }
-
 
 const forwardEventDependencyMap: Record<EditorEventType, EditorEventType[]> = {
   'world-resized': ['world-updated'],
@@ -93,7 +92,7 @@ const forwardEventDependencyMap: Record<EditorEventType, EditorEventType[]> = {
   'module-paste': ['module-updated'],
   'module-duplicate': ['module-updated'],
   'module-operating': ['module-updated'],
-  'module-operated': ['module-updated'],
+  'module-modify': ['module-updated'],
   'module-updated': ['visible-module-updated', 'selection-updated'],
   'visible-module-updated': ['render-modules', 'visible-selection-updated'],
   'render-modules': [],

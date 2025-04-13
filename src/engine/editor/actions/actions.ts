@@ -61,8 +61,7 @@ class Action {
   }
 
   public execute<K extends EditorEventType>(type: K, data: EditorEventData<K>) {
-    this.dispatch(type, data)
-  }
+    this.dispatch(type, data)}
 
   public destroy() {
     this.eventsMap.clear()

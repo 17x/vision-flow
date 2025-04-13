@@ -31,7 +31,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
     const oldValue = props[keyName]
     const newValue = e.target.value
 
-    executeAction('module-modify', {
+    executeAction('module-modify', [{
       id: props.id,
       props: {
         [keyName]: {
@@ -39,7 +39,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           to: newValue,
         },
       },
-    })
+    }])
   }
 
   return (

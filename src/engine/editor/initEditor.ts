@@ -6,7 +6,6 @@ import {undo} from './history/undo.ts'
 import {pick} from './history/pick.ts'
 import {HistoryOperation} from './history/type'
 import {updateSelectionCanvasRenderData} from './selection/helper.ts'
-import {batchModify} from './modules/moduleModify.ts'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this

@@ -1,8 +1,8 @@
 import {updateSelectionBox} from '../domManipulations.ts'
 import Editor from '../../editor.ts'
-import {applyResize, applyRotating} from './funcs.ts'
+import {applyRotating} from './funcs.ts'
 import {applyResizeTransform} from '../../../lib/lib.ts'
-import {ModuleChangeProps, ModuleModifyData} from '../../actions/type'
+import {ModuleChangeProps} from '../../actions/type'
 
 function handleMouseUp(this: Editor, e: MouseEvent) {
   const leftMouseClick = e.button === 0
@@ -126,7 +126,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       }
         break
 
-      case 'mousedown':
+      case 'waiting':
         console.log(this.draggingModules)
         this.action.dispatch('selection-clear')
         break

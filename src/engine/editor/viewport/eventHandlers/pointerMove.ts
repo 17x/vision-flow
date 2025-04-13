@@ -4,7 +4,7 @@ import {
   rectInside,
 } from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
-import {areSetsEqual, worldToScreen, getSymmetricDifference} from '../../../lib/lib.ts'
+import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
 import {applyResize, applyRotating, updateHoveredModule} from './funcs.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
@@ -133,7 +133,8 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     }
       break
 
-    case 'mousedown': {
+    case 'waiting': {
+      console.log('mousedown')
       const MOVE_THROTTLE = 1
       const moved =
         Math.abs(viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) >

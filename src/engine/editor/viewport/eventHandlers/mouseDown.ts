@@ -17,7 +17,9 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
   this.viewport.mouseDownPoint.y = y
   this.viewport.mouseMovePoint.x = x
   this.viewport.mouseMovePoint.y = y
+
   const operator = updateHoveredModule.call(this)
+  console.log(operator)
   e.preventDefault()
 
   if (this.viewport.spaceKeyDown) {

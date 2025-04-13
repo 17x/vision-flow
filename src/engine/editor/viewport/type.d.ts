@@ -10,7 +10,7 @@ export type ViewportEventType =
 
 export type ViewportManipulationType =
   | 'static'
-  | 'mousedown'
+  | 'waiting'
   | 'panning'
   | 'dragging'
   | 'resizing'

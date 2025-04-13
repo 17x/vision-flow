@@ -50,8 +50,9 @@ export function createViewport(this: Editor): Viewport {
     mouseMovePoint,
   )
 
-  window.addEventListener('mousedown', handleMouseDown.bind(this), {
+  wrapper.addEventListener('mousedown', handleMouseDown.bind(this), {
     signal,
+    passive: false,
   })
   window.addEventListener('mouseup', handleMouseUp.bind(this), {signal})
   window.addEventListener('keydown', handleKeyDown.bind(this), {signal})

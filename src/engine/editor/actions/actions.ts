@@ -14,10 +14,8 @@ class Action {
   // subscribe
   public on<K extends EditorEventType>(
     eventName: K,
-    dependents: K[],
     callback: EventsCallback<K>,
   ) {
-
     if (this.eventsMap.has(eventName)) {
       this.eventsMap
         .get(eventName)!

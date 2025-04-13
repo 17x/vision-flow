@@ -90,7 +90,6 @@ export function initEditor(this: Editor) {
   on('module-updated', (historyData: HistoryOperation) => {
     dispatch('visible-module-updated')
     dispatch('selection-updated')
-    // this.events.onSelectionUpdated?.(this.selectedModules, this.getSelectedPropsIfUnique)
 
     if (historyData) {
       this.history.add(historyData)
@@ -208,13 +207,7 @@ export function initEditor(this: Editor) {
 
     this.batchMove(s, delta)
 
-    dispatch('module-updated' /*{
-      type: 'history-move',
-      payload: {
-        delta,
-        selectedModules: savedSelected,
-      },
-    }, false*/)
+    dispatch('module-updated')
   })
 
   on('module-add', (data) => {
@@ -257,13 +250,10 @@ export function initEditor(this: Editor) {
         return kvs[key] = change.props[key]!.to
       })
 
-      // console.log(change.props)
       this.batchModify(new Set([change.id]), kvs)
-      console.log(new Set([change.id]), kvs)
-      // return kvs
     })
 
-    dispatch('module-updated', {
+    this.history.add({
       type: 'history-modify',
       payload: {
         selectedModules: this.getSelected,
@@ -271,7 +261,9 @@ export function initEditor(this: Editor) {
       },
     })
 
-    // this.events.onSelectionUpdated?.(this.selectedModules, this.getSelectedPropsIfUnique)
+    this.events.onHistoryUpdated?.(this.history)
+
+    dispatch('module-updated')
   })
 
   on('render-modules', () => {

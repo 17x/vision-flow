@@ -1,7 +1,6 @@
-import {OperationType, EventHandlers} from './type'
+import {EventHandlers} from './type'
 import History from './history/history.ts'
 import Action from './actions/actions.ts'
-import {HistoryOperationType} from './history/type'
 import {
   generateBoundingRectFromTwoPoints,
   rectsOverlap,
@@ -28,6 +27,7 @@ import {destroyViewport} from './viewport/destroyViewport.ts'
 import {initEditor} from './initEditor.ts'
 import {fitRectToViewport} from './viewport/helper.ts'
 import uid from '../../utilities/Uid.ts'
+import {EditorEventType} from './actions/type'
 
 export interface EditorDataProps {
   id: UID;
@@ -134,9 +134,8 @@ class Editor {
   batchModify(
     idSet: Set<UID>,
     data: Partial<ModuleProps>,
-    historyCode?: HistoryOperationType,
   ) {
-    batchModify.call(this, idSet, data, historyCode)
+    batchModify.call(this, idSet, data)
   }
 
   // getModulesByLayerIndex() {}
@@ -273,7 +272,7 @@ class Editor {
     return null
   }
 
-  public execute(type: OperationType, data: unknown = null) {
+  public execute(type: EditorEventType, data: unknown = null) {
     // @ts-ignore
     this.action.execute(type, data)
   }
@@ -282,6 +281,8 @@ class Editor {
   renderModules() {
     // if (this.visibleModuleMap.size === 0) return
     // console.log(this.viewport)
+
+    console.log(this.visibleModuleMap)
     const animate = () => {
       render({
         ctx: this.viewport.mainCTX,

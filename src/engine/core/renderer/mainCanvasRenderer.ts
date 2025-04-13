@@ -14,7 +14,7 @@ interface RenderProps {
 
 const render = ({ctx, modules, frame}: RenderProps): void => {
   // console.log(frame)
-  const fixedFrame = {...frame, x: frame.cx, y: frame.cy}
+  const fixedFrame = {...frame, x: frame.cx, y: frame.cy} as RectangleRenderProps
   const rects: RectangleRenderProps[] = [fixedFrame]
   const lines: LineRenderProps[] = []
   const texts = []

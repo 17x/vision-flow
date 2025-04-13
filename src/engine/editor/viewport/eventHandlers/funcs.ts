@@ -101,9 +101,9 @@ export function applyResize(this: Editor, altKey: boolean, shiftKey: boolean) {
 
 export function applyRotating(this: Editor, shiftKey: boolean) {
   const {mouseDownPoint, mouseMovePoint, scale, dpr} = this.viewport
-  const {data: {rotation}, moduleOrigin, id} = this._rotatingOperator as RotateHandler
+  const {data: {rotation}, moduleOrigin} = this._rotatingOperator as RotateHandler
   const {cx, cy} = moduleOrigin
-  const module = this.moduleMap.get(id)
+  // const module = this.moduleMap.get(id)
 
   const downX = (mouseDownPoint.x - this.viewport.offset.x) / scale * dpr
   const downY = (mouseDownPoint.y - this.viewport.offset.y) / scale * dpr
@@ -123,9 +123,7 @@ export function applyRotating(this: Editor, shiftKey: boolean) {
   let newRotation = (rotation + rotationDelta) % 360
   if (newRotation < 0) newRotation += 360
 
-  module.rotation = newRotation
+  // module.rotation = newRotation
 
-  return {
-    rotation: module.rotation,
-  }
+  return newRotation
 }

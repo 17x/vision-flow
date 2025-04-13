@@ -6,6 +6,7 @@ import {undo} from './history/undo.ts'
 import {pick} from './history/pick.ts'
 import {HistoryOperation} from './history/type'
 import {updateSelectionCanvasRenderData} from './selection/helper.ts'
+import {batchModify} from './modules/moduleModify.ts'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
@@ -241,20 +242,32 @@ export function initEditor(this: Editor) {
 
     if (type === 'move') {
       this.batchMove(s, data as Point)
-    } else if (type === 'resize') {
-      this.batchModify(s, data as Point)
-    } else if (type === 'rotate') {
-      this.batchModify(s, data as Point)
+    } else if (type === 'resize' || type === 'rotate') {
+      this.batchModify(s, data)
     }
+
     dispatch('module-updated')
   })
 
   on('module-modify', (data) => {
+    data.map((change) => {
+      const kvs = {} as Partial<ModuleProps>
+
+      Object.keys(change.props).map((key) => {
+        return kvs[key] = change.props[key]!.to
+      })
+
+      // console.log(change.props)
+      this.batchModify(new Set([change.id]), kvs)
+      console.log(new Set([change.id]), kvs)
+      // return kvs
+    })
+
     dispatch('module-updated', {
       type: 'history-modify',
       payload: {
         selectedModules: this.getSelected,
-        changes: [data],
+        changes: data,
       },
     })
 

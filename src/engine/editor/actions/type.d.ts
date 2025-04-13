@@ -25,8 +25,11 @@ export type PropChange<T> = {
   to: T
 }
 
-export type ModuleChangeProps = {
+/*export type ModuleChangeProps = {
   [K in keyof ModuleProps]?: PropChange<ModuleProps[K]> | PropMoveOffset
+}*/
+export type ModuleChangeProps = {
+  [K in keyof ModuleProps]?: PropChange<ModuleProps[K]>
 }
 
 export interface ModuleModifyData {
@@ -61,7 +64,7 @@ export type EditorEventMap = {
   'module-modify': ModuleModifyData[]
   'module-modifying': {
     type: 'move' | 'resize' | 'rotate',
-    data: number | { x: number, y: number } | Rect
+    data: { rotation: number } | { x: number, y: number } | Rect
   }
   'module-hover-enter': UID;
   'module-hover-leave': UID;

@@ -120,7 +120,6 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
         type: 'resize',
         data: r,
       })
-      // this.action.dispatch('visible-module-update')
     }
       break
 
@@ -129,12 +128,12 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const {shiftKey} = e
       const centerPoint = this.getViewPointByWorldPoint(this._rotatingOperator!.moduleOrigin.cx, this._rotatingOperator!.moduleOrigin.cy)
 
-      applyRotating.call(this, shiftKey)
+      const rotation = applyRotating.call(this, shiftKey)
       updateCursor(viewport.wrapper, viewport.cursor, centerPoint, viewport.mouseMovePoint)
 
       this.action.dispatch('module-modifying', {
         type: 'rotate',
-        data: 1,
+        data: {rotation},
       })
     }
       break

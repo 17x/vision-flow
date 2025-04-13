@@ -51,7 +51,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
             moduleMap.get(id).y -= y
           })
 
-          this.action.dispatch('module-updated', {
+          this.action.dispatch('module-modify', {
             // direction: 'module-move-shift',
             delta: {x, y},
           })
@@ -96,7 +96,6 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
 
         const props: ModuleChangeProps = {} // explicitly typed
 
-        console.log(to)
         for (const key in from) {
           props[key] = {
             from: from[key],
@@ -104,10 +103,10 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
           }
         }
 
-        this.action.dispatch('module-modify', {
+        this.action.dispatch('module-modify', [{
           id,
           props,
-        })
+        }])
       }
         // this.viewport.wrapper.style.cursor = 'default'
         break
@@ -115,14 +114,12 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       case 'rotating': {
         const {shiftKey} = e
         const {id, data: {rotation}} = this._rotatingOperator!
+        const newRotation = applyRotating.call(this, shiftKey)
 
-        const {rotation: NewRotation} = applyRotating.call(this, shiftKey)
-        this.action.dispatch('module-modify', {
+        this.action.dispatch('module-modify', [{
           id,
-          props: {
-            rotation: {from: rotation, to: NewRotation},
-          },
-        })
+          props: {rotation: {from: rotation, to: newRotation}},
+        }])
       }
         break
 

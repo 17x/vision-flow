@@ -9,9 +9,7 @@ const PropPanel = ({props}: PropPanelProps) => {
   const [localProps, setLocalProps] = useState(props)
 
   useEffect(() => {
-    if (props) {
-      setLocalProps(props)
-    }
+    setLocalProps(props)
   }, [props])
 
   return <div className={'p-2'}>
@@ -36,7 +34,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
       newValue = Number(newValue)
     }
 
-    console.log(keyName, newValue)
+    // console.log(keyName, newValue)
 
     executeAction('module-modify', [{
       id: props.id,

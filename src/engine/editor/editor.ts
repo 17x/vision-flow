@@ -118,7 +118,7 @@ class Editor {
 
   batchCopy(
     from: Set<UID>,
-    includeIdentifiers = true
+    includeIdentifiers = true,
   ): ModuleProps[] {
     return batchCopy.call(this, from, includeIdentifiers)
   }
@@ -174,7 +174,7 @@ class Editor {
     })
   }
 
-  updateVisibleSelected(){
+  updateVisibleSelected() {
     this.visibleSelected.clear()
     this.operationHandlers.clear()
 

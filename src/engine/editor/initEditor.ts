@@ -31,7 +31,6 @@ export function initEditor(this: Editor) {
 
   onEvent('world-updated', () => {
     this.updateWorldRect()
-    this.updateVisibleModuleMap()
     this.events.onViewportUpdated?.(this.viewport.worldRect as BoundingRect)
     dispatch('visible-module-updated')
   })
@@ -61,6 +60,7 @@ export function initEditor(this: Editor) {
   })
 
   onAction('visible-module-updated', () => {
+    this.updateVisibleModuleMap()
     dispatch('render-modules')
     dispatch('visible-selection-updated')
   })

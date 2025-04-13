@@ -19,7 +19,7 @@ function handleContextMenu(this: Editor, e: MouseEvent) {
   const position = {...this.viewport.mouseMovePoint}
   let idSet = new Set<UID>()
 
-  console.log(selectedIdSet,lastId)
+  // console.log(selectedIdSet,lastId)
   if (lastId) {
     if (selectedIdSet.has(lastId)) {
       idSet = selectedIdSet

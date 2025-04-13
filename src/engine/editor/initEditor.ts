@@ -1,5 +1,5 @@
 import resetCanvas from './viewport/resetCanvas.tsx'
-import {SelectionModifyData} from './actions/type'
+import {ModuleModifyData, SelectionModifyData} from './actions/type'
 import Editor from './editor.ts'
 import {redo} from './history/redo.ts'
 import {undo} from './history/undo.ts'
@@ -203,10 +203,27 @@ export function initEditor(this: Editor) {
     const s = this.getSelected
 
     if (s.size === 0) return
+    const changes: ModuleModifyData[] = []
 
-    this.batchMove(s, delta)
+    s.forEach((id) => {
+      const module = this.moduleMap.get(id)
+      changes.push({
+        id,
+        props: {
+          x: {
+            from: module.x,
+            to: module.x + delta.x,
+          },
+          y: {
+            from: module.y,
+            to: module.y + delta.y,
+          },
+        },
+      })
+    })
 
-    dispatch('module-updated')
+    // this.batchMove(s, delta)
+    dispatch('module-modify', changes)
   })
 
   on('module-add', (data) => {

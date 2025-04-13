@@ -51,7 +51,7 @@ class Action {
     data?: EditorEventData<K>,
   ) {
     // console.info('action: ', type,data)
-    console.info('action: ', type)
+    // console.info('action: ', type)
 
     if (this.eventsMap.has(type)) {
       this.eventsMap.get(type)!.forEach((cb) => {
@@ -63,7 +63,7 @@ class Action {
   public execute<K extends EditorEventType>(type: K, data: EditorEventData<K>) {
     this.dispatch(type, data)
 
-    // console.log(type,data)
+    console.log(type,data)
   }
 
   public destroy() {

@@ -63,7 +63,7 @@ class Action {
   public execute<K extends EditorEventType>(type: K, data: EditorEventData<K>) {
     this.dispatch(type, data)
 
-    // console.log(type,data)
+    console.log(type,data)
   }
 
   public destroy() {

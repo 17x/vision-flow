@@ -98,7 +98,7 @@ export function initEditor(this: Editor) {
 
   on('selection-updated', () => {
     this.hoveredModule = null
-
+    // console.log(this.selectedModules)
     updateSelectionCanvasRenderData.call(this)
     this.events.onSelectionUpdated?.(this.selectedModules, this.getSelectedPropsIfUnique)
 

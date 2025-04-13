@@ -27,7 +27,7 @@ function handleContextMenu(this: Editor, e: MouseEvent) {
       idSet.add(lastId)
       this.addSelected(idSet)
       console.log(this.selectedModules)
-      this.action.dispatch('selection-update')
+      this.action.dispatch('selection-updated')
     }
   }
 

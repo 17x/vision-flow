@@ -43,11 +43,11 @@ export type EditorEventMap = {
   'world-shift': Point;
   'render-modules': boolean;
   'render-selection': never;
-  'selection-update': never
+  'selection-updated': never
   'selection-modify': SelectionModifyData;
   'selection-clear': never;
   'selection-all': never;
-  'module-map-updated': HistoryOperation;
+  'module-updated': HistoryOperation;
   'module-copy': never;
   'module-add': ModuleProps[];
   'module-paste': Point;
@@ -58,6 +58,8 @@ export type EditorEventMap = {
   'module-operating': never
   'module-hover-enter': UID;
   'module-hover-leave': UID;
+  'visible-module-updated': never;
+  'visible-selection-updated': never;
   'history-redo': never;
   'history-undo': never;
   'history-pick': HistoryNode;
@@ -67,3 +69,32 @@ export type EditorEventMap = {
     copiedItems: boolean
   };
 }
+
+const forwardEventDependencyMap: Record<EditorEventType, EditorEventType[]> = {
+  'world-resized': ['world-updated', 'editor-initialized'],
+  'editor-initialized': ['world-updated'],
+  'module-updated': ['render-modules', 'render-selection'],
+  'world-updated': ['render-modules'],
+  'world-zoom': ['world-updated'],
+  'world-shift': ['world-updated'],
+  'selection-all': ['selection-updated'],
+  'selection-clear': ['selection-updated'],
+  'selection-modify': ['selection-updated'],
+  'selection-updated': ['render-selection'],
+  'module-delete': ['module-updated', 'selection-updated'],
+  'module-paste': ['module-updated', 'selection-updated'],
+  'module-duplicate': ['module-updated', 'selection-updated'],
+  'module-move': ['selection-updated', 'render-modules'],
+  'module-add': ['module-updated', 'selection-updated'],
+  'module-operating': ['render-modules', 'selection-updated'],
+  'module-modify': ['render-modules', 'selection-updated'],
+  'render-modules': ['render-selection'],
+  'module-hover-enter': ['render-selection'],
+  'module-hover-leave': ['render-selection'],
+  'history-undo': ['module-updated'],
+  'history-redo': ['module-updated'],
+  'history-pick': ['module-updated'],
+}
+
+const onAction = action.on.bind(action)
+const onEvent = action.on.bind(action) // If you don't yet have a separate event system

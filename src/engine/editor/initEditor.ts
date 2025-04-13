@@ -10,42 +10,47 @@ import {updateSelectionCanvasRenderData} from './selection/helper.ts'
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
   const dispatch = action.dispatch.bind(action)
-  const on = action.on.bind(action)
-  // const off = action.off.bind(action)
+  const onAction = action.on.bind(action)
+  const onEvent = action.on.bind(action)
 
   container.appendChild(viewport.wrapper)
 
   viewport.resizeObserver.observe(container)
 
   const forwardEventDependencyMap: Record<EditorEventType, EditorEventType[]> = {
-    'world-resized': ['world-updated', 'editor-initialized'],
+    'world-resized': ['editor-initialized'],
     'editor-initialized': ['world-updated'],
-    'module-map-updated': ['render-modules'],
-    'world-updated': ['render-modules'],
+    'world-updated': ['visible-module-updated'],
     'world-zoom': ['world-updated'],
     'world-shift': ['world-updated'],
-    'selection-all': ['selection-update'],
-    'selection-update': ['render-selection'],
-    'selection-clear': ['selection-update'],
-    'selection-modify': ['selection-update'],
-    'module-delete': ['module-map-updated', 'selection-update'],
-    'module-paste': ['module-map-updated', 'selection-update'],
-    'module-duplicate': ['module-map-updated', 'selection-update'],
-    'module-move': ['selection-update', 'render-modules'],
-    'module-add': ['module-map-updated', 'selection-update'],
-    'module-operating': ['render-modules', 'selection-update'],
-    'module-modify': ['render-modules', 'selection-update'],
-    'render-modules': ['render-selection'],
-    'module-hover-enter': ['render-selection'],
-    'module-hover-leave': ['render-selection'],
-    'history-undo': ['render-modules'],
-    'history-redo': ['render-modules'],
-    'history-pick': ['render-modules'],
+    /* selections */
+    'selection-all': ['selection-updated'],
+    'selection-clear': ['selection-updated'],
+    'selection-modify': ['selection-updated'],
+    'selection-updated': ['visible-selection-updated'],
+    'visible-selection-updated': ['render-selection'],
+    'render-selection': [],
+    'module-hover-enter': ['visible-selection-updated'],
+    'module-hover-leave': ['visible-selection-updated'],
+    /* modules */
+    'module-add': ['module-updated'],
+    'module-delete': ['module-updated'],
+    'module-move': ['module-updated'],
+    'module-paste': ['module-updated'],
+    'module-duplicate': ['module-updated'],
+    'module-operating': ['module-updated'],
+    'module-modify': ['module-updated'],
+    'module-updated': ['visible-module-updated', 'selection-updated'],
+    'visible-module-updated': ['render-modules', 'visible-selection-updated'],
+    'render-modules': [],
+    /* history */
+    'history-undo': ['module-updated'],
+    'history-redo': ['module-updated'],
+    'history-pick': ['module-updated'],
   }
 
-  on('world-resized', () => {
+  onEvent('world-resized', () => {
     this.updateViewport()
-    // this.updateWorldRect()
 
     if (this.initialized) {
       dispatch('world-updated')
@@ -54,25 +59,22 @@ export function initEditor(this: Editor) {
     }
   })
 
-  on('editor-initialized', () => {
+  onEvent('editor-initialized', () => {
     dispatch('world-updated')
 
     this.initialized = true
     this.fitFrame()
     this.events.onInitialized?.()
-    // dispatch('editor-initialized')
   })
 
-  on('module-map-updated', (historyData: HistoryOperation) => {
-    // this.replaceSelected(historyData.payload.selectedModules)
+  onAction('module-updated', (historyData: HistoryOperation) => {
     this.updateVisibleModuleMap()
-    dispatch('render-modules', true)
-    // dispatch('editor-selection-update')
+    dispatch('render-modules')
 
     this.history.add(historyData)
   })
 
-  on('selection-update', () => {
+  onAction('selection-updated', () => {
     this.hoveredModule = null
 
     updateSelectionCanvasRenderData.call(this)
@@ -81,7 +83,7 @@ export function initEditor(this: Editor) {
     dispatch('render-selection')
   })
 
-  on('world-mouse-move', () => {
+  onEvent('world-mouse-move', () => {
     const p = this.getWorldPointByViewportPoint(
       this.viewport.mouseMovePoint.x,
       this.viewport.mouseMovePoint.y,
@@ -89,15 +91,14 @@ export function initEditor(this: Editor) {
     this.events.onWorldMouseMove?.(p as Point)
   })
 
-  on('world-updated', () => {
+  onEvent('world-updated', () => {
     this.updateWorldRect()
     this.updateVisibleModuleMap()
     this.events.onViewportUpdated?.(this.viewport.worldRect as BoundingRect)
     dispatch('render-modules')
-    // console.log(this.getVisibleSelected, {...this.viewport})
   })
 
-  on('world-zoom', (arg) => {
+  onAction('world-zoom', (arg) => {
     if (arg === 'fit') {
       this.fitFrame()
       dispatch('world-updated')
@@ -112,42 +113,39 @@ export function initEditor(this: Editor) {
         dispatch('world-updated')
       }
     }
-    // this.events.onViewportUpdated?.(worldRect as BoundingRect)
   })
 
-  on('world-shift', (data) => {
+  onAction('world-shift', (data) => {
     const {x, y} = data
     this.viewport.offset.x += x
     this.viewport.offset.y += y
     dispatch('world-updated')
-
-    // this.events.onViewportUpdated?.(worldRect as BoundingRect)
   })
 
-  on('selection-all', () => {
+  onAction('selection-all', () => {
     this.selectAll()
-    dispatch('selection-update')
+    dispatch('selection-updated')
   })
 
-  on('selection-clear', () => {
+  onAction('selection-clear', () => {
     this.selectedModules.clear()
-    dispatch('selection-update')
+    dispatch('selection-updated')
   })
 
-  on('selection-modify', (data) => {
+  onAction('selection-modify', (data) => {
     const {mode, idSet} = data as SelectionModifyData
 
     this.modifySelected(idSet, mode)
-    dispatch('selection-update')
+    dispatch('selection-updated')
   })
 
-  on('module-delete', () => {
+  onAction('module-delete', () => {
     const savedSelected = this.getSelected
     const backup = this.batchDelete(savedSelected)
 
     this.selectedModules.clear()
 
-    dispatch('module-map-updated', {
+    dispatch('module-updated', {
       type: 'history-delete',
       payload: {
         modules: backup,
@@ -155,15 +153,15 @@ export function initEditor(this: Editor) {
       },
     })
 
-    dispatch('selection-update')
+    dispatch('selection-updated')
   })
 
-  on('module-copy', () => {
+  onAction('module-copy', () => {
     this.copiedItems = this.batchCopy(this.getSelected, false)
     this.updateCopiedItemsDelta()
   })
 
-  on('module-paste', (position?) => {
+  onAction('module-paste', (position?) => {
     if (this.copiedItems.length === 0) return
 
     let newModules: ModuleMap
@@ -177,7 +175,6 @@ export function initEditor(this: Editor) {
       const offsetY = y - topLeftItem.y
 
       const offsetItems = this.copiedItems.map((item) => {
-
         return {
           ...item,
           x: item.x + offsetX,
@@ -196,7 +193,7 @@ export function initEditor(this: Editor) {
     this.replaceSelected(savedSelected)
     this.updateCopiedItemsDelta()
 
-    dispatch('module-map-updated', {
+    dispatch('module-updated', {
       type: 'history-paste',
       payload: {
         modules: [...newModules.values()].map((mod) => mod.getDetails()),
@@ -204,10 +201,10 @@ export function initEditor(this: Editor) {
       },
     })
 
-    dispatch('selection-update')
+    dispatch('selection-updated')
   })
 
-  on('module-duplicate', () => {
+  onAction('module-duplicate', () => {
     const temp: ModuleProps[] = this.batchCopy(this.selectedModules, false)
 
     temp.forEach((copiedItem) => {
@@ -222,9 +219,8 @@ export function initEditor(this: Editor) {
     this.replaceSelected(savedSelected)
 
     const moduleProps = [...newModules.values()].map((mod) => mod.getDetails())
-    // this.getSelected()
 
-    dispatch('module-map-updated', {
+    dispatch('module-updated', {
       type: 'history-duplicate',
       payload: {
         modules: moduleProps,
@@ -232,14 +228,13 @@ export function initEditor(this: Editor) {
       },
     })
 
-    dispatch('selection-update')
+    dispatch('selection-updated')
   })
 
-  on('module-move', ({direction, delta = {x: 0, y: 0}}) => {
+  onAction('module-move', ({direction, delta = {x: 0, y: 0}}) => {
     if (this.getSelected.size === 0) return
 
     const MODULE_MOVE_STEP = 5
-    // console.log(direction, delta)
 
     const savedSelected: Set<UID> = this.getSelected
 
@@ -260,12 +255,8 @@ export function initEditor(this: Editor) {
 
     this.batchMove(this.selectedModules, delta)
 
-    // const savedSelected = this.getSelected
-
-    dispatch('selection-update')
+    dispatch('selection-updated')
     dispatch('render-modules')
-    // console.log(999)
-    // this.events.onSelectionUpdated?.(this.selectedModules, this.getSelectedPropsIfUnique)
 
     this.history.add({
       type: 'history-move',
@@ -276,7 +267,7 @@ export function initEditor(this: Editor) {
     })
   })
 
-  on('module-add', (data) => {
+  onAction('module-add', (data) => {
     const newModules = this.batchAdd(this.batchCreate(data))
     const savedSelected = new Set(newModules.keys())
 
@@ -285,7 +276,7 @@ export function initEditor(this: Editor) {
 
     const moduleProps = [...newModules.values()].map((mod) => mod.getDetails())
 
-    dispatch('module-map-updated', {
+    dispatch('module-updated', {
       type: 'history-add',
       payload: {
         modules: moduleProps,
@@ -293,15 +284,15 @@ export function initEditor(this: Editor) {
       },
     })
 
-    dispatch('selection-update')
+    dispatch('selection-updated')
   })
 
-  on('module-operating', () => {
+  onAction('module-operating', () => {
     dispatch('render-modules')
-    dispatch('selection-update')
+    dispatch('selection-updated')
   })
 
-  on('module-modify', (data) => {
+  onAction('module-modify', (data) => {
     console.warn(data)
 
     this.history.add({
@@ -313,19 +304,15 @@ export function initEditor(this: Editor) {
     })
 
     dispatch('render-modules')
-    dispatch('selection-update')
+    dispatch('selection-updated')
   })
 
-  on('module-map-updated', (/*quite = false*/) => {
-    /*if (!quite) {
-      updateSelectionCanvasRenderData.call(this)
-      dispatch('render-selection')
-    }*/
+  onAction('module-updated', (/*quite = false*/) => {
     updateSelectionCanvasRenderData.call(this)
     dispatch('render-selection')
   })
 
-  on('render-modules', () => {
+  onEvent('render-modules', () => {
     resetCanvas(
       this.viewport.mainCTX,
       this.viewport.dpr,
@@ -335,55 +322,48 @@ export function initEditor(this: Editor) {
     this.renderModules()
   })
 
-  on('render-selection', () => {
-    // console.log(this.getVisibleSelectedModules)
-
-    // operators = this.operationHandlers,
+  onEvent('render-selection', () => {
     resetCanvas(
       this.viewport.selectionCTX,
       this.viewport.dpr,
       this.viewport.scale,
       this.viewport.offset,
     )
-    // console.log(this.getVisibleSelected)
     this.renderSelections()
   })
 
-  on('module-hover-enter', (id) => {
+  onAction('module-hover-enter', (id) => {
     this.hoveredModule = id
 
     updateSelectionCanvasRenderData.call(this)
     dispatch('render-selection')
   })
-  on('module-hover-leave', () => {
+  onAction('module-hover-leave', () => {
     this.hoveredModule = null
 
     updateSelectionCanvasRenderData.call(this)
     dispatch('render-selection')
   })
 
-  on('history-undo', () => {
+  onAction('history-undo', () => {
     undo.call(this)
-    // this.updateVisibleModuleMap()
-    dispatch('module-map-updated')
+    dispatch('module-updated')
     this.events.onHistoryUpdated?.(this.history)
   })
 
-  on('history-redo', () => {
+  onAction('history-redo', () => {
     redo.call(this)
-    // this.updateVisibleModuleMap()
-    dispatch('module-map-updated')
+    dispatch('module-updated')
     this.events.onHistoryUpdated?.(this.history)
   })
 
-  on('history-pick', (data) => {
+  onAction('history-pick', (data) => {
     pick.call(this, data)
-    // this.updateVisibleModuleMap()
-    dispatch('module-map-updated')
+    dispatch('module-updated')
     this.events.onHistoryUpdated?.(this.history)
   })
 
-  on('context-menu', ({idSet, position, copiedItems}) => {
+  onAction('context-menu', ({idSet, position, copiedItems}) => {
     this.events.onContextMenu?.(idSet, position, copiedItems)
   })
 }

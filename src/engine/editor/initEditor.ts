@@ -66,7 +66,6 @@ export function initEditor(this: Editor) {
   })
 
   onAction('visible-selection-updated', () => {
-    // updateSelectionCanvasRenderData()
     this.updateVisibleSelected()
     dispatch('render-selection')
   })
@@ -288,35 +287,29 @@ export function initEditor(this: Editor) {
 
   onAction('module-hover-enter', (id) => {
     this.hoveredModule = id
-
-    // updateSelectionCanvasRenderData.call(this)
     dispatch('visible-selection-updated')
   })
+
   onAction('module-hover-leave', () => {
     this.hoveredModule = null
-
-    // updateSelectionCanvasRenderData.call(this)
     dispatch('visible-selection-updated')
   })
 
   onAction('history-undo', () => {
     undo.call(this)
     dispatch('module-updated')
-    console.log(this.history)
     this.events.onHistoryUpdated?.(this.history)
   })
 
   onAction('history-redo', () => {
     redo.call(this)
     dispatch('module-updated')
-    console.log(this.history)
     this.events.onHistoryUpdated?.(this.history)
   })
 
   onAction('history-pick', (data) => {
     pick.call(this, data)
     dispatch('module-updated')
-    console.log(this.history)
     this.events.onHistoryUpdated?.(this.history)
   })
 

@@ -7,15 +7,20 @@ interface PropPanelProps {props?: ModuleProps}
 
 const PropPanel = ({props}: PropPanelProps) => {
   const [localProps, setLocalProps] = useState(props)
-
+  console.log(props, localProps)
   useEffect(() => {
-    setLocalProps({...props})
+    if (props) {
+      console.log(props)
+      if (!localProps || localProps.id !== props.id) {
+        setLocalProps({...props})
+      }
+    }
   }, [props])
 
   return <div className={'p-2'}>
     <h1 className={'bg-gray-400 text-white px-2'}><span>Properties</span></h1>
     <div className={'scrollbar-custom overflow-x-hidden overflow-y-auto p-2 border h-30 border-gray-200 select-none'}>
-      {props && <ShapePropsPanel props={localProps}/>}
+      { localProps && <ShapePropsPanel props={localProps}/>}
     </div>
   </div>
 }
@@ -25,11 +30,14 @@ export default PropPanel
 const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
   const {executeAction} = useContext(EditorContext)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(e)
-    // console.log(e.target.value)
     const keyName = e.target.name
     const oldValue = props[keyName]
-    const newValue = e.target.value
+    let newValue: string | number = e.target.value
+
+    if (keyName === 'x' || keyName === 'y' || keyName === 'width' || keyName === 'height') {
+      newValue = Number(newValue)
+    }
+    console.log(keyName, newValue)
 
     executeAction('module-modify', [{
       id: props.id,

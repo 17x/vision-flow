@@ -93,8 +93,8 @@ export function initEditor(this: Editor) {
     dispatch('selection-updated')
 
     if (historyData) {
-      console.log(historyData)
       this.history.add(historyData)
+      this.events.onHistoryUpdated?.(this.history)
     }
   })
 
@@ -225,9 +225,7 @@ export function initEditor(this: Editor) {
 
     this.batchMove(this.selectedModules, delta)
 
-    dispatch('module-updated')
-
-    this.history.add({
+    dispatch('module-updated', {
       type: 'history-move',
       payload: {
         delta,
@@ -259,17 +257,13 @@ export function initEditor(this: Editor) {
   })
 
   onAction('module-modify', (data) => {
-    console.warn(data)
-
-    this.history.add({
+    dispatch('module-updated', {
       type: 'history-modify',
       payload: {
         selectedModules: this.getSelected,
         changes: [data],
       },
     })
-
-    dispatch('module-updated')
   })
 
   onEvent('render-modules', () => {

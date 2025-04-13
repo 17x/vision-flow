@@ -6,13 +6,11 @@ import {
 import Editor from '../../editor.ts'
 import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
 import {applyResize, applyRotating, updateHoveredModule} from './funcs.ts'
-import {ModuleModifyData} from '../../actions/type'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
   const {
     action,
     draggingModules,
-    moduleMap,
     viewport,
     selectedShadow,
     _selectingModules,
@@ -41,8 +39,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const _selecting: Set<UID> = new Set()
       const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
 
-      // TODO test again
-      this.getVisibleModuleMap.forEach((module) => {
+      this.moduleMap.forEach((module) => {
         if (module.type === 'rectangle') {
           const boundingRect = module.getBoundingRect() as BoundingRect
 

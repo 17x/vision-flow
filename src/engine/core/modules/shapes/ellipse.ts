@@ -1,10 +1,13 @@
-import {ShapeProps} from './shape.ts'
-import Base from '../base.ts'
+import Base, {BasicModuleProps} from '../base.ts'
 import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
 
-export interface EllipseProps extends ShapeProps {
+export interface EllipseProps extends BasicModuleProps {
+  x: number
+  y: number
   r1: number
   r2: number
+  fillColor: FillColor
+  enableFill: boolean
 }
 
 class Ellipse extends Base {
@@ -41,13 +44,13 @@ class Ellipse extends Base {
     Omit<EllipseProps, 'id' | 'layer'> {
 
     return {
-      ...this.getSize(),
+      // ...this.getSize(),
       fillColor: this.fillColor,
       enableFill: this.enableFill,
       x: this.x,
       y: this.y,
       r1: this.r1,
-      height: this.r2,
+      r2: this.r2,
       ...super.getDetails(includeIdentifiers),
     } as T extends true ? EllipseProps : Omit<EllipseProps, 'id' | 'layer'>
   }

@@ -2,6 +2,7 @@ import {SelectionActionMode} from '../selection/type'
 import {HistoryNode} from '../history/DoublyLinkedList.ts'
 import {ModuleMoveDirection} from '../type'
 import {HistoryOperation} from '../history/type'
+import {ModulePropsWithoutIdentifiers} from '../../core/modules/modules'
 
 export interface SelectionModifyData {
   mode: SelectionActionMode;
@@ -56,7 +57,7 @@ export type EditorEventMap = {
   'selection-all': never;
   'module-updated': HistoryOperation;
   'module-copy': never;
-  'module-add': ModuleProps[];
+  'module-add': ModulePropsWithoutIdentifiers[];
   'module-paste': Point;
   'module-delete': never;
   'module-duplicate': never;

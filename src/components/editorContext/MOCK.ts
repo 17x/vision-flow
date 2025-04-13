@@ -1,7 +1,7 @@
 // eslint disabled
 import Editor from '../../engine/editor/editor.ts'
 
-const createBaseDataByType = <T extends ModuleNames>(type: T = 'rectangle' as T): ModuleTypeMap[T] => {
+const createBaseDataByType = <T extends ModuleNames>(type: T = 'rectangle' as T): ModulePropsWithoutIdentifiers => {
   const baseX = 500
   const baseY = 500
 

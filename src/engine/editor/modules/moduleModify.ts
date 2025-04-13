@@ -1,7 +1,7 @@
 import Editor from '../editor'
 import deepClone from '../../../utilities/deepClone.ts'
 import Rectangle from '../../core/modules/shapes/rectangle.ts'
-import Connector from '../../core/modules/connectors/connector.ts'
+import Ellipse, {EllipseProps} from '../../core/modules/shapes/ellipse.ts'
 
 export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): ModuleMap {
   const clonedData = deepClone(moduleDataList) as ModuleProps[]
@@ -24,8 +24,9 @@ export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): Module
     if (data.type === 'rectangle') {
       return new Rectangle(data)
     }
-    if (data.type === 'connector') {
-      return new Connector(data)
+
+    if (data.type === 'ellipse') {
+      return new Ellipse(data as EllipseProps)
     }
   }
 

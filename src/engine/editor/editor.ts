@@ -21,7 +21,7 @@ import {
 import {updateScrollBars} from './viewport/domManipulations.ts'
 import render from '../core/renderer/mainCanvasRenderer.ts'
 import selectionRender from './viewport/selectionRender.ts'
-import {worldToScreen, screenToWorld} from '../lib/lib.ts'
+import {worldToScreen, screenToWorld, createHandlersForRect} from '../lib/lib.ts'
 import {Viewport, ViewportManipulationType} from './viewport/type'
 import {createViewport} from './viewport/createViewport.ts'
 import {destroyViewport} from './viewport/destroyViewport.ts'
@@ -172,6 +172,32 @@ class Editor {
     sortedModules.forEach(module => {
       this.visibleModuleMap.set(module.id, module)
     })
+  }
+
+  updateVisibleSelected(){
+    this.visibleSelected.clear()
+    this.operationHandlers.clear()
+
+    this.getVisibleModuleMap.forEach((module) => {
+      if (this.selectedModules.has(module.id)) {
+        this.visibleSelected.add(module.id)
+      }
+    })
+
+    const module = this.getSelectedPropsIfUnique
+
+    if (module) {
+      const {scale, dpr} = this.viewport
+
+      createHandlersForRect(module, scale, dpr).forEach(
+        (p) => {
+          // console.log(p.data,p.cursor)
+          // p.data.width = localHandlerWidth / this.viewport.scale * this.viewport.dpr
+          // p.data.lineWidth = localHandlerBorderWidth / this.viewport.scale * this.viewport.dpr
+          this.operationHandlers.add(p)
+        },
+      )
+    }
   }
 
   public get getVisibleModuleMap(): ModuleMap {

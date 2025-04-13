@@ -31,7 +31,7 @@ export interface ModuleModifyData {
 }
 
 export type EditorEventMap = {
-  'editor-initialized': never;
+  // 'editor-initialized': never;
   'world-resized': null;
   'world-mouse-down': never;
   'world-mouse-move': never;
@@ -70,31 +70,37 @@ export type EditorEventMap = {
   };
 }
 
+
 const forwardEventDependencyMap: Record<EditorEventType, EditorEventType[]> = {
-  'world-resized': ['world-updated', 'editor-initialized'],
-  'editor-initialized': ['world-updated'],
-  'module-updated': ['render-modules', 'render-selection'],
-  'world-updated': ['render-modules'],
+  'world-resized': ['world-updated'],
+  // 'editor-initialized': ['world-updated'],
+  'world-updated': ['visible-module-updated'],
   'world-zoom': ['world-updated'],
   'world-shift': ['world-updated'],
+  /* selections */
   'selection-all': ['selection-updated'],
   'selection-clear': ['selection-updated'],
   'selection-modify': ['selection-updated'],
-  'selection-updated': ['render-selection'],
-  'module-delete': ['module-updated', 'selection-updated'],
-  'module-paste': ['module-updated', 'selection-updated'],
-  'module-duplicate': ['module-updated', 'selection-updated'],
-  'module-move': ['selection-updated', 'render-modules'],
-  'module-add': ['module-updated', 'selection-updated'],
-  'module-operating': ['render-modules', 'selection-updated'],
-  'module-modify': ['render-modules', 'selection-updated'],
-  'render-modules': ['render-selection'],
-  'module-hover-enter': ['render-selection'],
-  'module-hover-leave': ['render-selection'],
+  'selection-updated': ['visible-selection-updated'],
+  'visible-selection-updated': ['render-selection'],
+  'render-selection': [],
+  'module-hover-enter': ['visible-selection-updated'],
+  'module-hover-leave': ['visible-selection-updated'],
+  /* modules */
+  'module-add': ['module-updated'],
+  'module-delete': ['module-updated'],
+  'module-move': ['module-updated'],
+  'module-paste': ['module-updated'],
+  'module-duplicate': ['module-updated'],
+  'module-operating': ['module-updated'],
+  'module-modify': ['module-updated'],
+  'module-updated': ['visible-module-updated', 'selection-updated'],
+  'visible-module-updated': ['render-modules', 'visible-selection-updated'],
+  'render-modules': [],
+  'context-menu': [],
+  'module-copy': [],
+  /* history */
   'history-undo': ['module-updated'],
   'history-redo': ['module-updated'],
   'history-pick': ['module-updated'],
-}
-
-const onAction = action.on.bind(action)
-const onEvent = action.on.bind(action) // If you don't yet have a separate event system
+} as const

@@ -55,7 +55,7 @@ export function modifySelected(
 }
 
 export function updateSelectionCanvasRenderData(this: Editor) {
-  this.visibleSelected.clear()
+ /* this.visibleSelected.clear()
   this.operationHandlers.clear()
 
   this.getVisibleModuleMap.forEach((module) => {
@@ -63,7 +63,7 @@ export function updateSelectionCanvasRenderData(this: Editor) {
       this.visibleSelected.add(module.id)
     }
   })
-  console.log(this.visibleSelected)
+  console.log(this.visibleSelected)*/
   // this.highlightedModules = this.getVisibleSelected
 
   const module = this.getSelectedPropsIfUnique

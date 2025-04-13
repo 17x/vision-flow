@@ -106,7 +106,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       })
 
       // force update
-      this.action.dispatch('render-modules')
+      this.action.dispatch('module-operating')
     }
       break
 

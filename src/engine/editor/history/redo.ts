@@ -62,7 +62,6 @@ export function redo(this: Editor, quiet: boolean = false): HistoryNode | false 
     // console.log(selectedModules)
     this.action.dispatch('selection-updated')
 
-    // this.events.onHistoryUpdated?.(this.history)
   }
 
   return this.history.current as HistoryNode

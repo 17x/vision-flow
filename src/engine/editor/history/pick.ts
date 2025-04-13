@@ -30,8 +30,7 @@ export function pick(this: Editor, targetNode: HistoryNode) {
     this.replaceSelected(selectedModules)
 
 
-    this.events.onHistoryUpdated?.(this.history)
-  } else {
+   } else {
     // do sth...
   }
 }

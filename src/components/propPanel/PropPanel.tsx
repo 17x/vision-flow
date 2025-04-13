@@ -5,7 +5,6 @@ import {useEffect, useState} from 'react'
 interface PropPanelProps {props?: ModuleProps}
 
 const PropPanel = ({props}: PropPanelProps) => {
-  // const {selectedProps} = useContext(EditorContext)
   const [localProps, setLocalProps] = useState(props)
 
   useEffect(() => {

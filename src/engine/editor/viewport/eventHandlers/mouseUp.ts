@@ -104,7 +104,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
           }
         }
 
-        this.action.dispatch('module-modify', {
+        this.action.dispatch('module-operated', {
           id,
           props,
         })
@@ -117,7 +117,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
         const {id, data: {rotation}} = this._rotatingOperator!
 
         const {rotation: NewRotation} = applyRotating.call(this, shiftKey)
-        this.action.dispatch('module-modify', {
+        this.action.dispatch('module-operated', {
           id,
           props: {
             rotation: {from: rotation, to: NewRotation},

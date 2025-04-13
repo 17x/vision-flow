@@ -80,8 +80,9 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
             setSortedModules(arr)
           },
           onSelectionUpdated: (selected, props) => {
+            // console.log('onSelectionUpdated')
             setSelectedModules(Array.from(selected))
-            setSelectedProps({...props})
+            setSelectedProps(props)
             // console.log(selected,props)
           },
           onViewportUpdated: (viewportInfo) => {
@@ -172,7 +173,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           </div>
 
           <div style={{width: 200}} className={'h-full flex-shrink-0 border-l border-gray-200'}>
-            <PropPanel/>
+            <PropPanel props={selectedProps}/>
             <LayerPanel data={sortedModules}
                         selected={selectedModules}/>
             <HistoryPanel/>

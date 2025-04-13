@@ -89,6 +89,7 @@ export function initEditor(this: Editor) {
   on('module-updated', (historyData: HistoryOperation) => {
     dispatch('visible-module-updated')
     dispatch('selection-updated')
+    // this.events.onSelectionUpdated?.(this.selectedModules, this.getSelectedPropsIfUnique)
 
     if (historyData) {
       this.history.add(historyData)
@@ -254,7 +255,7 @@ export function initEditor(this: Editor) {
     dispatch('module-updated')
   })
 
-  on('module-modify', (data) => {
+  on('module-operated', (data) => {
     dispatch('module-updated', {
       type: 'history-modify',
       payload: {
@@ -262,6 +263,8 @@ export function initEditor(this: Editor) {
         changes: [data],
       },
     })
+
+    // this.events.onSelectionUpdated?.(this.selectedModules, this.getSelectedPropsIfUnique)
   })
 
   on('render-modules', () => {

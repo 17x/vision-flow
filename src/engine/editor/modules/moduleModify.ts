@@ -8,9 +8,19 @@ import Connector from '../../core/modules/connectors/connector.ts'
 export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): ModuleMap {
   const clonedData = deepClone(moduleDataList) as ModuleProps[]
   const newMap: ModuleMap = new Map()
+  let localMaxLayer = 0
+
   const create = (data: ModuleProps) => {
     if (!data.id) {
       data.id = this.createModuleId
+    }
+
+    if (isNaN(data.layer)) {
+      if (this.getNextLayerIndex > localMaxLayer) {
+        localMaxLayer = this.getNextLayerIndex
+      }
+
+      data.layer = localMaxLayer
     }
 
     if (data.type === 'rectangle') {

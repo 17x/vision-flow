@@ -6,11 +6,11 @@ import {applyResizeTransform} from '../../../lib/lib.ts'
 
 export function updateHoveredModule(this: Editor) {
   const {viewport} = this
-  const virtualPoint = this.getWorldPointByViewportPoint(
+  const worldPoint = this.getWorldPointByViewportPoint(
     viewport.mouseMovePoint.x,
     viewport.mouseMovePoint.y,
   )
-  let maxLayer = Number.MIN_SAFE_INTEGER
+  // const maxLayer = Number.MIN_SAFE_INTEGER
   let moduleId: UID | null = null
 
   const operationHandlers = [...this.operationHandlers].filter(
@@ -18,7 +18,7 @@ export function updateHoveredModule(this: Editor) {
       const {x, y, size, rotation} = operationHandler.data
 
       return isInsideRotatedRect(
-        virtualPoint,
+        worldPoint,
         {x, y, width: size, height: size},
         rotation,
       )
@@ -28,13 +28,34 @@ export function updateHoveredModule(this: Editor) {
   const operator = operationHandlers[operationHandlers.length - 1]
 
   if (operator) {
-    console.log(operator)
+    // console.log(operator)
     this.action.dispatch('module-hover-enter', operator.id)
     return operator
   }
 
-  this.getVisibleModuleMap.forEach((module) => {
+  const arr = [...this.getVisibleModuleMap.values()]
+
+  for (let i = arr.length - 1; i >= 0; i--) {
+    const module = arr[i]
+
     if (module.type === 'rectangle') {
+      const {id, x, y, width, height, rotation} = module as Rectangle
+      const f = isInsideRotatedRect(
+        worldPoint,
+        {x, y, width, height},
+        rotation,
+      )
+
+      if (f) {
+        moduleId = id
+        break
+      }
+    }
+  }
+
+  this.getVisibleModuleMap.forEach((module) => {
+    /*if (module.type === 'rectangle') {
+      console.log(module.layer)
       // @ts-ignore
       const {id, layer, x, y, width, height, rotation} = module as Rectangle
       const f = isInsideRotatedRect(
@@ -49,7 +70,7 @@ export function updateHoveredModule(this: Editor) {
           moduleId = id
         }
       }
-    }
+    }*/
   })
 
   if (this.hoveredModule !== moduleId) {

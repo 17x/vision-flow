@@ -21,11 +21,11 @@ export const createMockData = (editor: Editor) => {
     rotation: 0,
   }
   // const MOCK_ELE_LEN = 1
-  const MOCK_ELE_LEN = 10
+  const MOCK_ELE_LEN = 1
   // const MOCK_ELE_LEN = 200
   // const MOCK_ELE_LEN = 10000
   // const shiftSpeed = 2
-  // const shiftSpeed = 100
+  const shiftSpeed = 100
   // const MOCK_ELE_LEN = 2
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -42,10 +42,10 @@ export const createMockData = (editor: Editor) => {
   const modulesData = []
 
   for (let i = 0; i < MOCK_ELE_LEN; i++) {
-    const x = getRandomNumber(1000)
-    const y = getRandomNumber(1414)
-    // const x = baseX + (i * shiftSpeed)
-    // const y = baseY + (i * shiftSpeed)
+    // const x = getRandomNumber(1000)
+    // const y = getRandomNumber(1414)
+    const x = baseX + (i * shiftSpeed)
+    const y = baseY + (i * shiftSpeed)
     // console.log(x)
     modulesData.push({
       ...baseRectData,

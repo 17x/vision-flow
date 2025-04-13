@@ -2,7 +2,7 @@ import {CircleRenderProps, RectangleRenderProps} from '../../core/renderer/type'
 import Rectangle from '../../core/modules/shapes/rectangle.ts'
 import rectRender from '../../core/renderer/rectRender.ts'
 import circleRender from '../../core/renderer/circleRender.ts'
-import {drawCrossLine} from '../../lib/lib.ts'
+// import {drawCrossLine} from '../../lib/lib.ts'
 import Editor from '../editor.ts'
 
 function selectionRender(this: Editor) {
@@ -22,6 +22,7 @@ function selectionRender(this: Editor) {
 
   highlightedModules.forEach((id) => {
     const module = this.moduleMap.get(id)
+    // if(!module)debugger
     // console.log(module)
     const {
       x, y, width, height, rotation, lineWidth,

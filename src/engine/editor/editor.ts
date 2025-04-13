@@ -13,7 +13,7 @@ import {
   batchDelete,
   batchModify,
   batchMove,
-} from './modules/modules.ts'
+} from './modules/moduleModify.ts'
 import {OperationHandlers, ResizeHandler, SelectionActionMode} from './selection/type'
 import {
   modifySelected,
@@ -28,6 +28,7 @@ import {destroyViewport} from './viewport/destroyViewport.ts'
 import {initEditor} from './initEditor.ts'
 import {fitRectToViewport} from './viewport/helper.ts'
 import uid from '../../utilities/Uid.ts'
+
 export interface EditorDataProps {
   id: UID;
   modules: ModuleType[];
@@ -139,7 +140,7 @@ class Editor {
     batchModify.call(this, idSet, data, historyCode)
   }
 
-  getModulesByLayerIndex() {}
+  // getModulesByLayerIndex() {}
 
   getModulesByIdSet(idSet: Set<UID>): ModuleMap {
     const result: ModuleMap = new Map()
@@ -161,22 +162,21 @@ class Editor {
   updateVisibleModuleMap() {
     this.visibleModuleMap.clear()
 
-    this.moduleMap.forEach((module) => {
-      const boundingRect = module.getBoundingRect() as BoundingRect
-      // console.log(boundingRect,this.viewport.worldRect)
-      if (rectsOverlap(boundingRect, this.viewport.worldRect)) {
-        this.visibleModuleMap.set(module.id, module)
-      }
+    // Create an array from the Map, sort by the 'layer' property, and then add them to visibleModuleMap
+    const sortedModules = [...this.moduleMap.values()]
+      .filter(module => {
+        const boundingRect = module.getBoundingRect() as BoundingRect
+        return rectsOverlap(boundingRect, this.viewport.worldRect)
+      })
+      .sort((a, b) => a.layer - b.layer)
+
+    sortedModules.forEach(module => {
+      this.visibleModuleMap.set(module.id, module)
     })
   }
 
   public get getVisibleModuleMap(): ModuleMap {
     return new Map(this.visibleModuleMap)
-  }
-
-  public execute(type: OperationType, data: unknown = null) {
-    // @ts-ignore
-    this.action.execute(type, data)
   }
 
   public get getVisibleSelected() {
@@ -189,6 +189,18 @@ class Editor {
 
   public get getSelected(): Set<UID> {
     return new Set(this.selectedModules)
+  }
+
+  public get getNextLayerIndex(): number {
+    let max = 0
+
+    this.moduleMap.forEach((mod) => {
+      if (mod.layer > max) {
+        max = mod.layer
+      }
+    })
+
+    return max + 1
   }
 
   public modifySelected(idSet: Set<UID>, action: SelectionActionMode) {
@@ -227,13 +239,18 @@ class Editor {
     })
   }
 
-  public getSelectedPropsIfUnique() {
+  public get getSelectedPropsIfUnique(): ModuleProps | null {
     if (this.selectedModules.size === 1) {
       const unique = [...this.selectedModules.values()][0]
 
       return this.moduleMap.get(unique).getDetails()
     }
     return null
+  }
+
+  public execute(type: OperationType, data: unknown = null) {
+    // @ts-ignore
+    this.action.execute(type, data)
   }
 
   // viewport

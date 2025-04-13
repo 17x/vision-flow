@@ -63,10 +63,10 @@ export function updateSelectionCanvasRenderData(this: Editor) {
       this.visibleSelected.add(module.id)
     }
   })
-
+  console.log(this.visibleSelected)
   // this.highlightedModules = this.getVisibleSelected
 
-  const module = this.getSelectedPropsIfUnique()
+  const module = this.getSelectedPropsIfUnique
 
   if (module) {
     const {scale, dpr} = this.viewport

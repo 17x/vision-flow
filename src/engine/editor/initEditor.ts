@@ -47,8 +47,10 @@ export function initEditor(this: Editor) {
   })
 
   on('editor-selection-update', () => {
+    this.hoveredModule = null
+
     updateSelectionCanvasRenderData.call(this)
-    this.events.onSelectionUpdated?.(this.selectedModules, this.getSelectedPropsIfUnique())
+    this.events.onSelectionUpdated?.(this.selectedModules, this.getSelectedPropsIfUnique)
 
     dispatch('visible-selected-update')
   })
@@ -240,7 +242,7 @@ export function initEditor(this: Editor) {
     dispatch('editor-selection-update')
     dispatch('visible-module-update')
     // console.log(999)
-    // this.events.onSelectionUpdated?.(this.selectedModules, this.getSelectedPropsIfUnique())
+    // this.events.onSelectionUpdated?.(this.selectedModules, this.getSelectedPropsIfUnique)
 
     this.history.add({
       type: 'history-move',
@@ -275,6 +277,7 @@ export function initEditor(this: Editor) {
     dispatch('visible-module-update')
     dispatch('editor-selection-update')
   })
+
   on('module-modify', (data) => {
     console.warn(data)
 

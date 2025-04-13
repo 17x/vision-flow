@@ -2,9 +2,7 @@
 
 import {
   OperationHandlers,
-  ResizeCursor,
   ResizeHandleName,
-  ResizeHandler,
   ResizeTransform,
 } from '../editor/selection/type'
 import {RectangleProps} from '../core/modules/shapes/rectangle.ts'
@@ -88,11 +86,11 @@ export function worldToScreen(
   y: number;
 } {
 
-/*
-*
-x: canvasX * scale + offsetX,
-y: canvasY * scale + offsetY,
-* */
+  /*
+  *
+  x: canvasX * scale + offsetX,
+  y: canvasY * scale + offsetY,
+  * */
   return {
     x: ((point.x * scale) + offset.x * dpr) / dpr,
     y: ((point.y * scale) + offset.y * dpr) / dpr,
@@ -104,17 +102,16 @@ export const drawCrossLine = ({
                                 mousePoint,
                                 scale,
                                 dpr,
-                                offset: {x: offsetX, y: offsetY},
+                                offset,
                                 virtualRect: {left: minX, top: minY, right: maxX, bottom: maxY},
                               }: DrawCrossLineProps): void => {
   const textOffsetX = 10 / (dpr * scale)
   const textOffsetY = 10 / (dpr * scale)
   const {x, y} = screenToWorld(
+    mousePoint,
+    offset,
     scale,
-    offsetX * dpr,
-    offsetY * dpr,
-    mousePoint.x * dpr,
-    mousePoint.y * dpr,
+    dpr,
   )
   const crossLineColor = '#ff0000'
   const textColor = '#ff0000'
@@ -175,7 +172,7 @@ export function createHandlersForRect(
   module: ModuleType,
   scale: number,
   dpr: DPR,
-): ResizeHandler[] {
+): OperationHandlers[] {
   const {
     x: cx,
     y: cy,
@@ -372,7 +369,7 @@ function getCursor(
   cx: number,
   cy: number,
   threshold = 4,
-): ResizeCursor {
+) {
   const dx = x - cx
   const dy = y - cy
 
@@ -429,13 +426,6 @@ export function getResizeTransform(
   return base
 }
 
-type ResizeTransformResult = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-
 export function applyResizeTransform({
                                        downPoint,
                                        movePoint,
@@ -462,7 +452,7 @@ export function applyResizeTransform({
   dpr: number;
   altKey?: boolean;
   shiftKey?: boolean;
-}): ResizeTransformResult {
+}): Rect {
   // Calculate raw movement in screen coordinates
   const dxScreen = movePoint.x - downPoint.x
   const dyScreen = movePoint.y - downPoint.y

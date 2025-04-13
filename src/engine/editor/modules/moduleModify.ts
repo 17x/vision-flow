@@ -1,6 +1,4 @@
 import Editor from '../editor'
-import {HistoryOperationType} from '../history/type'
-import typeCheck from '../../../utilities/typeCheck.ts'
 import deepClone from '../../../utilities/deepClone.ts'
 import Rectangle from '../../core/modules/shapes/rectangle.ts'
 import Connector from '../../core/modules/connectors/connector.ts'
@@ -93,7 +91,7 @@ export function batchMove(this: Editor, from: Set<UID>, delta: Point) {
   })
 }
 
-export function batchModify(this: Editor, idSet: Set<UID>, data: Partial<ModuleProps>, historyCode?: HistoryOperationType) {
+export function batchModify(this: Editor, idSet: Set<UID>, data: Partial<ModuleProps>) {
   const modulesMap = this.getModulesByIdSet(idSet)
 
   modulesMap.forEach((module: ModuleProps) => {

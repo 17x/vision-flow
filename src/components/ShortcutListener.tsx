@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react'
-import { ModuleMoveDirection} from '../engine/editor/type'
+import {ModuleMoveDirection} from '../engine/editor/type'
 import EditorContext from './editorContext/EditorContext.tsx'
 import {EditorEventType} from '../engine/editor/actions/type'
 
@@ -17,6 +17,8 @@ const ShortcutListener: React.FC = () => {
       ArrowRight: 'module-move-right',
     }
     const moveDirection = arrowKeys[key]
+    const moveDelta = {x: 0, y: 0}
+    const MODULE_MOVE_STEP = 5
 
     if (key === 'a' && (ctrlKey || metaKey)) {
       shortcutCode = 'selection-all'
@@ -53,12 +55,27 @@ const ShortcutListener: React.FC = () => {
     if (moveDirection) {
       // shortcutCode = arrowKeys[key]
       shortcutCode = 'module-move'
+
+      switch (moveDirection) {
+        case 'module-move-down':
+          moveDelta.y = MODULE_MOVE_STEP
+          break
+        case 'module-move-up':
+          moveDelta.y = -MODULE_MOVE_STEP
+          break
+        case 'module-move-left':
+          moveDelta.x = -MODULE_MOVE_STEP
+          break
+        case 'module-move-right':
+          moveDelta.x = MODULE_MOVE_STEP
+          break
+      }
     }
 
     if (!shortcutCode) return
 
     if (moveDirection) {
-      executeAction(shortcutCode, {direction: moveDirection})
+      executeAction(shortcutCode, {delta: moveDelta})
     } else {
       executeAction(shortcutCode)
     }

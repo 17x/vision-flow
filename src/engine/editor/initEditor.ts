@@ -200,37 +200,20 @@ export function initEditor(this: Editor) {
     })
   })
 
-  on('module-move', ({direction, delta = {x: 0, y: 0}}) => {
-    if (this.getSelected.size === 0) return
+  on('module-move', ({delta = {x: 0, y: 0}}) => {
+    const s = this.getSelected
 
-    const MODULE_MOVE_STEP = 5
+    if (s.size === 0) return
 
-    const savedSelected: Set<UID> = this.getSelected
+    this.batchMove(s, delta)
 
-    switch (direction) {
-      case 'module-move-down':
-        delta.y = MODULE_MOVE_STEP
-        break
-      case 'module-move-up':
-        delta.y = -MODULE_MOVE_STEP
-        break
-      case 'module-move-left':
-        delta.x = -MODULE_MOVE_STEP
-        break
-      case 'module-move-right':
-        delta.x = MODULE_MOVE_STEP
-        break
-    }
-
-    this.batchMove(this.selectedModules, delta)
-
-    dispatch('module-updated', {
+    dispatch('module-updated' /*{
       type: 'history-move',
       payload: {
         delta,
         selectedModules: savedSelected,
       },
-    })
+    }, false*/)
   })
 
   on('module-add', (data) => {
@@ -251,7 +234,18 @@ export function initEditor(this: Editor) {
     })
   })
 
-  on('module-operating', () => {
+  on('module-modifying', ({type, data}) => {
+    const s = this.getSelected
+
+    if (s.size === 0) return
+
+    if (type === 'move') {
+      this.batchMove(s, data as Point)
+    } else if (type === 'resize') {
+      this.batchModify(s, data as Point)
+    } else if (type === 'rotate') {
+      this.batchModify(s, data as Point)
+    }
     dispatch('module-updated')
   })
 

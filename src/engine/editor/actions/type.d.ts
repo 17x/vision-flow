@@ -11,18 +11,22 @@ export interface SelectionModifyData {
 export type EditorEventType = keyof EditorEventMap;
 export type EditorEventData<T extends EditorEventType> = EditorEventMap[T];
 
-export type SelectionMoveData = {
-  direction: ModuleMoveDirection;
-  delta?: Point;
+export type ModuleMoveData = {
+  idSet?: Set<UID>;
+  // direction: ModuleMoveDirection;
+  delta: Point;
 };
 
+export type PropMoveOffset = {
+  offset: number
+}
 export type PropChange<T> = {
   from: T
   to: T
 }
 
 export type ModuleChangeProps = {
-  [K in keyof ModuleProps]?: PropChange<ModuleProps[K]>
+  [K in keyof ModuleProps]?: PropChange<ModuleProps[K]> | PropMoveOffset
 }
 
 export interface ModuleModifyData {
@@ -52,10 +56,13 @@ export type EditorEventMap = {
   'module-add': ModuleProps[];
   'module-paste': Point;
   'module-delete': never;
-  'module-move': SelectionMoveData;
   'module-duplicate': never;
-  'module-modify': ModuleModifyData
-  'module-operating': never
+  'module-move': ModuleMoveData;
+  'module-modify': ModuleModifyData[]
+  'module-modifying': {
+    type: 'move' | 'resize' | 'rotate',
+    data: number | { x: number, y: number } | Rect
+  }
   'module-hover-enter': UID;
   'module-hover-leave': UID;
   'visible-module-updated': never;
@@ -91,7 +98,7 @@ const forwardEventDependencyMap: Record<EditorEventType, EditorEventType[]> = {
   'module-move': ['module-updated'],
   'module-paste': ['module-updated'],
   'module-duplicate': ['module-updated'],
-  'module-operating': ['module-updated'],
+  'module-modifying': ['module-updated'],
   'module-modify': ['module-updated'],
   'module-updated': ['visible-module-updated', 'selection-updated'],
   'visible-module-updated': ['render-modules', 'visible-selection-updated'],

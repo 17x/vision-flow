@@ -70,10 +70,10 @@ export function applyResize(this: Editor, altKey: boolean, shiftKey: boolean) {
     name: handleName,
     data: {rotation},
     moduleOrigin,
-    id,
+    // id,
   } = this._resizingOperator!
   const {cx, cy, width, height} = moduleOrigin
-  const module = this.moduleMap.get(id)
+  // const module = this.moduleMap.get(id)
 
   const r = applyResizeTransform({
     downPoint: mouseDownPoint,
@@ -91,10 +91,10 @@ export function applyResize(this: Editor, altKey: boolean, shiftKey: boolean) {
   })
 
   // return
-  module.x = r.x
-  module.y = r.y
-  module.width = r.width
-  module.height = r.height
+  // module.x = r.x
+  // module.y = r.y
+  // module.width = r.width
+  // module.height = r.height
 
   return r
 }

@@ -51,8 +51,8 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
             moduleMap.get(id).y -= y
           })
 
-          this.action.dispatch('module-move', {
-            direction: 'module-move-shift',
+          this.action.dispatch('module-updated', {
+            // direction: 'module-move-shift',
             delta: {x, y},
           })
         } else {

@@ -6,6 +6,7 @@ import {
 import Editor from '../../editor.ts'
 import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
 import {applyResize, applyRotating, updateHoveredModule} from './funcs.ts'
+import {ModuleModifyData} from '../../actions/type'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
   const {
@@ -101,12 +102,11 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const x = (e.movementX * viewport.dpr) / viewport.scale
       const y = (e.movementY * viewport.dpr) / viewport.scale
 
-      draggingModules.forEach((id) => {
-        moduleMap.get(id).move(x, y)
-      })
-
       // force update
-      this.action.dispatch('module-operating')
+      this.action.dispatch('module-modifying', {
+        type: 'move',
+        data: {x, y},
+      })
     }
       break
 
@@ -114,9 +114,12 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       viewport.wrapper.setPointerCapture(e.pointerId)
       const {altKey, shiftKey} = e
 
-      applyResize.call(this, altKey, shiftKey)
+      const r = applyResize.call(this, altKey, shiftKey)
 
-      this.action.dispatch('module-operating')
+      this.action.dispatch('module-modifying', {
+        type: 'resize',
+        data: r,
+      })
       // this.action.dispatch('visible-module-update')
     }
       break
@@ -129,7 +132,10 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       applyRotating.call(this, shiftKey)
       updateCursor(viewport.wrapper, viewport.cursor, centerPoint, viewport.mouseMovePoint)
 
-      this.action.dispatch('module-operating')
+      this.action.dispatch('module-modifying', {
+        type: 'rotate',
+        data: 1,
+      })
     }
       break
 

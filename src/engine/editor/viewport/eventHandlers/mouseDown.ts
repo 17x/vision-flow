@@ -2,12 +2,12 @@ import Editor from '../../editor.ts'
 import {updateHoveredModule} from './funcs.ts'
 
 function handleMouseDown(this: Editor, e: MouseEvent) {
-  const {shiftKey, clientY, target, /*button,*/ clientX, metaKey, ctrlKey} =
+  const {shiftKey, clientY, target, button, clientX, metaKey, ctrlKey} =
     e
-
+  if (button !== 0) return
   if (!(target === this.viewport.wrapper)) return
   // const inViewport = target === this.viewport.wrapper
-  // const isLeftClick = button === 0
+  // const isLeftClick = button !== 0
   const modifyKey = ctrlKey || metaKey || shiftKey
 
   const x = clientX - this.viewport.rect!.x
@@ -52,7 +52,7 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
 
   // this.draggingModules = new Set(this.selectedModules)
   const isSelected = realSelected.has(hoveredModule)
-  console.log(isSelected)
+  // console.log(isSelected)
   if (realSelected.size === 0 || (!isSelected && !modifyKey)) {
     // Initial selection or replace selection without modifier key
     this.action.dispatch('modify-selection', {

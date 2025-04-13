@@ -52,27 +52,7 @@ export function updateHoveredModule(this: Editor) {
       }
     }
   }
-
-  this.getVisibleModuleMap.forEach((module) => {
-    /*if (module.type === 'rectangle') {
-      console.log(module.layer)
-      // @ts-ignore
-      const {id, layer, x, y, width, height, rotation} = module as Rectangle
-      const f = isInsideRotatedRect(
-        virtualPoint,
-        {x, y, width, height},
-        rotation,
-      )
-
-      if (f) {
-        if (layer > maxLayer) {
-          maxLayer = layer
-          moduleId = id
-        }
-      }
-    }*/
-  })
-
+ 
   if (this.hoveredModule !== moduleId) {
     if (this.hoveredModule) {
       this.action.dispatch('module-hover-leave', this.hoveredModule)

@@ -17,7 +17,11 @@ export function initEditor(this: Editor) {
 
   viewport.resizeObserver.observe(container)
 
-  on('viewport-resize', () => {
+  /*  const dependents = {
+      'viewport-resize': [],
+    }*/
+
+  on('viewport-resize', [], () => {
     this.updateViewport()
     // this.updateWorldRect()
 
@@ -26,6 +30,14 @@ export function initEditor(this: Editor) {
     } else {
       dispatch('editor-initialized')
     }
+  })
+
+  on('world-update', ['viewport-resize'], () => {
+    this.updateWorldRect()
+    this.updateVisibleModuleMap()
+    this.events.onViewportUpdated?.(this.viewport.worldRect as BoundingRect)
+    dispatch('visible-module-update')
+    // console.log(this.getVisibleSelected, {...this.viewport})
   })
 
   on('editor-initialized', () => {
@@ -48,7 +60,7 @@ export function initEditor(this: Editor) {
 
   on('editor-selection-update', () => {
     this.hoveredModule = null
-
+    console.log(this.selectedModules)
     updateSelectionCanvasRenderData.call(this)
     this.events.onSelectionUpdated?.(this.selectedModules, this.getSelectedPropsIfUnique)
 
@@ -61,14 +73,6 @@ export function initEditor(this: Editor) {
       this.viewport.mouseMovePoint.y,
     )
     this.events.onWorldMouseMove?.(p as Point)
-  })
-
-  on('world-update', () => {
-    this.updateWorldRect()
-    this.updateVisibleModuleMap()
-    this.events.onViewportUpdated?.(this.viewport.worldRect as BoundingRect)
-    dispatch('visible-module-update')
-    // console.log(this.getVisibleSelected, {...this.viewport})
   })
 
   on('world-zoom', (arg) => {
@@ -133,6 +137,7 @@ export function initEditor(this: Editor) {
   })
 
   on('selection-copy', () => {
+    console.log(this.getSelected)
     this.copiedItems = this.batchCopy(this.getSelected, false)
     this.updateCopiedItemsDelta()
   })

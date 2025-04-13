@@ -133,10 +133,7 @@ export function initEditor(this: Editor) {
   })
 
   on('selection-copy', () => {
-    this.copiedItems = this.batchCopy(
-      this.getSelected,
-      true,
-    )
+    this.copiedItems = this.batchCopy(this.getSelected, false)
     this.updateCopiedItemsDelta()
   })
 
@@ -185,7 +182,7 @@ export function initEditor(this: Editor) {
   })
 
   on('selection-duplicate', () => {
-    const temp: ModuleProps[] = this.batchCopy(this.selectedModules, true)
+    const temp: ModuleProps[] = this.batchCopy(this.selectedModules, false)
 
     temp.forEach((copiedItem) => {
       copiedItem!.x += this.CopyDeltaX

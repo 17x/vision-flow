@@ -76,17 +76,17 @@ function selectionRender(this: Editor) {
       }
         break
       case 'rotate': {
-       /* const rect2 = {
-          ...operation.data,
-          width: operation.data.size,
-          height: operation.data.size,
-          opacity: 100,
-          // rotation: 10,
-          fillColor: '#ff0000',
-          lineColor: lineColor,
-        }
+        /* const rect2 = {
+           ...operation.data,
+           width: operation.data.size,
+           height: operation.data.size,
+           opacity: 100,
+           // rotation: 10,
+           fillColor: '#ff0000',
+           lineColor: lineColor,
+         }
 
-        rects.push(rect2)*/
+         rects.push(rect2)*/
       }
         break
     }

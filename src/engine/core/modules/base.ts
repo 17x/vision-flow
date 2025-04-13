@@ -1,7 +1,7 @@
 export interface BasicModuleProps {
   id: UID
+  layer: number
   type: ModuleNames
-
   enableLine?: boolean
   lineColor: HexColor
   lineWidth: number
@@ -9,9 +9,6 @@ export interface BasicModuleProps {
   opacity: Opacity
   shadow: boolean
   // position?: Point
-  // TODO deal with layer
-  layer: number
-
   rotation: number
 }
 
@@ -50,21 +47,28 @@ class Base {
     this.layer = layer
   }
 
-  protected getDetails(): BasicModuleProps {
-    return {
-      id: this.id,
+  // protected getDetails(includeIdentifiers: true): BasicModuleProps
+  // protected getDetails(includeIdentifiers: false): Omit<BasicModuleProps, 'id' | 'layer'>
+  protected getDetails<T extends boolean>(includeIdentifiers: T = true as T): T extends true ? BasicModuleProps : Omit<BasicModuleProps, 'id' | 'layer'> {
+    const base = {
       type: this.type,
-
       enableLine: this.enableLine,
       lineColor: this.lineColor,
       lineWidth: this.lineWidth,
-
       opacity: this.opacity,
       shadow: this.shadow,
-      // position: this.position,
-      layer: this.layer,
       rotation: this.rotation,
     }
+
+    if (includeIdentifiers) {
+      return {
+        ...base,
+        id: this.id,
+        layer: this.layer,
+      } as BasicModuleProps
+    }
+
+    return base as T extends true ? BasicModuleProps : Omit<BasicModuleProps, 'id' | 'layer'>
   }
 
   protected getBoundingRect(): BoundingRect {

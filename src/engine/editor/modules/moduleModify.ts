@@ -50,13 +50,13 @@ export function batchAdd(this: Editor, modules: ModuleMap): ModuleMap {
   return modules
 }
 
-export function batchCopy(this: Editor, from: Set<UID>, removeId = false, addOn?: {
-  string: unknown
-}): ModuleProps[] {
+type BatchCopyFn = <T extends boolean>(this: Editor, idSet: Set<UID>, includeIdentifiers: T) => T extends true ? ModuleProps[] : Omit<ModuleProps, 'id' | 'layer'>[]
+
+export const batchCopy: BatchCopyFn = function (this, idSet, includeIdentifiers) {
   const result: ModuleProps[] = []
   const modulesMap: ModuleMap = new Map()
 
-  from.forEach(id => {
+  idSet.forEach(id => {
     const mod = this.moduleMap.get(id)
     if (mod) {
       modulesMap.set(id, mod)
@@ -64,28 +64,22 @@ export function batchCopy(this: Editor, from: Set<UID>, removeId = false, addOn?
   })
 
   modulesMap.forEach(mod => {
-    const data: ModuleProps = mod.getDetails()
-
-    if (removeId) {
-      delete data.id
-    }
-
-    if (typeCheck(addOn) === 'object') {
-      Object.assign(data, addOn)
-    }
+    const data: ModuleProps = mod.getDetails(includeIdentifiers)
 
     result.push(data)
   })
-
+  console.log(result)
   return result
 }
 
-export function batchDelete(this: Editor, from: Set<UID>): ModuleProps[] {
-  const backup: ModuleProps[] = this.batchCopy(from)
+export function batchDelete(this: Editor, idSet: Set<UID>): ModuleProps[] {
+  const backup: ModuleProps[] = this.batchCopy(idSet)
 
   backup.forEach(module => {
     this.moduleMap.delete(module.id)
   })
+
+  this.events.onModulesUpdated?.(this.moduleMap)
 
   return backup
 }

@@ -118,10 +118,9 @@ class Editor {
 
   batchCopy(
     from: Set<UID>,
-    removeId = false,
-    addOn?: { string: unknown },
+    includeIdentifiers = true
   ): ModuleProps[] {
-    return batchCopy.call(this, from, removeId, addOn)
+    return batchCopy.call(this, from, includeIdentifiers)
   }
 
   batchDelete(from: Set<UID>): ModuleProps[] {

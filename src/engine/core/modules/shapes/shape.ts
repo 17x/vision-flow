@@ -44,7 +44,12 @@ class Shape extends Base {
     this.enableFill = enableFill
   }
 
-  public getDetails(): ShapeProps {
+  public getDetails<T extends boolean>(
+    includeIdentifiers: T = true as T,
+  ): T extends true ?
+    ShapeProps :
+    Omit<ShapeProps, 'id' | 'layer'> {
+
     return {
       ...this.getSize(),
       fillColor: this.fillColor,
@@ -53,8 +58,8 @@ class Shape extends Base {
       y: this.y,
       width: this.width,
       height: this.height,
-      ...super.getDetails(),
-    }
+      ...super.getDetails(includeIdentifiers),
+    } as T extends true ? ShapeProps : Omit<ShapeProps, 'id' | 'layer'>
   }
 
   public getSize(): Size {

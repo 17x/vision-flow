@@ -110,7 +110,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
           <input
             type="checkbox"
             name="enableFill"
-            defaultChecked={props.enableFill}
+            value={props.enableFill}
             onChange={handleChange}
             className="ml-2"
           />
@@ -121,6 +121,9 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
             type="color"
             name="fillColor"
             value={props.fillColor}
+            onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+              console.log(e)
+            }}
             onChange={handleChange}
             className="w-10 h-10 p-1 rounded"
           />

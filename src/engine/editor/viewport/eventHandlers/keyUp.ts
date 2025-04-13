@@ -10,8 +10,14 @@ function handleKeyUp(this: Editor, e: KeyboardEvent) {
   }
 
   if (this.manipulationStatus === 'resizing') {
-    applyResize.call(this, e.altKey, e.shiftKey)
-    this.action.dispatch('render-modules')
+    const {altKey, shiftKey} = e
+
+    const r = applyResize.call(this, altKey, shiftKey)
+
+    this.action.dispatch('module-modifying', {
+      type: 'resize',
+      data: r,
+    })
   }
 }
 

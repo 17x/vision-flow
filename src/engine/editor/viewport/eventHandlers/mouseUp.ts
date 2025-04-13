@@ -2,7 +2,7 @@ import {updateSelectionBox} from '../domManipulations.ts'
 import Editor from '../../editor.ts'
 import {applyRotating} from './funcs.ts'
 import {applyResizeTransform} from '../../../lib/lib.ts'
-import {ModuleChangeProps} from '../../actions/type'
+import {ModuleChangeProps, ModuleModifyData} from '../../actions/type'
 
 function handleMouseUp(this: Editor, e: MouseEvent) {
   const leftMouseClick = e.button === 0
@@ -45,16 +45,39 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
 
         // mouse stay static
         if (moved) {
+          const changes: ModuleModifyData[] = []
+          this.action.dispatch('module-modifying', {
+            type: 'move',
+            data: {x: -x, y: -y},
+          })
           // move back to origin position and do the move again
           draggingModules.forEach((id) => {
-            moduleMap.get(id).x -= x
-            moduleMap.get(id).y -= y
+            // moduleMap.get(id).x -= x
+            // moduleMap.get(id).y -= y
+            const change: ModuleModifyData = {
+              id,
+              props: {
+                x: {
+                  from: moduleMap.get(id).x,
+                  to: moduleMap.get(id).x + x,
+                }, y: {
+                  from: moduleMap.get(id).y,
+                  to: moduleMap.get(id).y + y,
+                },
+              },
+            }
+
+            changes.push(change)
+            // moduleMap.get(id).x -= x
+            // moduleMap.get(id).y -= y
           })
 
-          this.action.dispatch('module-modify', {
-            // direction: 'module-move-shift',
-            delta: {x, y},
-          })
+          this.action.dispatch('module-modify', changes)
+
+          /*   this.action.dispatch('module-modify', [{
+               id,
+               props,
+             }])*/
         } else {
           const closestId = this.hoveredModule
 
@@ -124,7 +147,6 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
         break
 
       case 'waiting':
-        console.log(this.draggingModules)
         this.action.dispatch('selection-clear')
         break
       case 'static':

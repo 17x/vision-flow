@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react'
-import {OperationType, ModuleMoveDirection} from '../engine/editor/type'
+import { ModuleMoveDirection} from '../engine/editor/type'
 import EditorContext from './editorContext/EditorContext.tsx'
 import {EditorEventType} from '../engine/editor/actions/type'
 

@@ -32,22 +32,22 @@ export interface ModuleModifyData {
 
 export type EditorEventMap = {
   'editor-initialized': never;
-  'world-resize': null;
+  'world-resized': null;
   'world-mouse-down': never;
   'world-mouse-move': never;
-  'world-update': never;
+  'world-updated': never;
   'world-zoom': 'fit' | {
     zoomFactor: number;
     physicalPoint: Point;
   };
   'world-shift': Point;
-  'visible-module-update': boolean;
-  'visible-selected-update': never;
+  'render-modules': boolean;
+  'render-selection': never;
   'selection-update': never
   'selection-modify': SelectionModifyData;
   'selection-clear': never;
   'selection-all': never;
-  'module-map-update': HistoryOperation;
+  'module-map-updated': HistoryOperation;
   'module-copy': never;
   'module-add': ModuleProps[];
   'module-paste': Point;

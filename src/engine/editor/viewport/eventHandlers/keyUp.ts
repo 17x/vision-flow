@@ -11,7 +11,7 @@ function handleKeyUp(this: Editor, e: KeyboardEvent) {
 
   if (this.manipulationStatus === 'resizing') {
     applyResize.call(this, e.altKey, e.shiftKey)
-    this.action.dispatch('visible-module-update')
+    this.action.dispatch('render-modules')
   }
 }
 

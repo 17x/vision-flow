@@ -255,7 +255,7 @@ class Editor {
   // viewport
   renderModules() {
     // if (this.visibleModuleMap.size === 0) return
-
+    // console.log(this.viewport)
     const animate = () => {
       render({
         ctx: this.viewport.mainCTX,

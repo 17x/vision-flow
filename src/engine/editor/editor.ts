@@ -18,7 +18,6 @@ import {
   modifySelected,
 } from './selection/helper.ts'
 import {updateScrollBars} from './viewport/domManipulations.ts'
-import render from '../core/renderer/mainCanvasRenderer.ts'
 import selectionRender from './viewport/selectionRender.ts'
 import {worldToScreen, screenToWorld, createHandlersForRect} from '../lib/lib.ts'
 import {Viewport, ViewportManipulationType} from './viewport/type'

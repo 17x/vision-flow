@@ -349,53 +349,20 @@ class Editor {
     const minScale = 0.1 * dpr
     const maxScale = 5 * dpr
     let newScale = scale + zoom
-    // const offsetX = 0
-    // const offsetY = 0
-    /* const pointX = point.x * scale
-     const pointY = point.y * scale
-     const rect = {
-       x: 0,
-       y: 0,
-       width: this.viewport.rect!.width * dpr,
-       height: this.viewport.rect!.height * dpr,
-     }*/
-    /*    console.log(
-      pointX,
-      pointY,
-      rect,
-    )*/
+
     if (zoomTo) {
       newScale = zoom
     }
 
     if (newScale < minScale || newScale > maxScale) {return false}
 
-    // Clamp scale
     const clampedScale = Math.max(minScale, Math.min(maxScale, newScale))
 
-    // Calculate zoom factor
     const zoomFactor = clampedScale / scale
 
-    // Convert screen point to canvas coordinates before zoom
-    const canvasPoint = this.getWorldPointByViewportPoint(point.x, point.y)
-
-    // Calculate the offset adjustment so that the zoom is centered around the point
-    const newOffsetX = canvasPoint.x - (canvasPoint.x - offset.x) * zoomFactor
-    const newOffsetY = canvasPoint.y - (canvasPoint.y - offset.y) * zoomFactor
-    /*    console.log({
-          scale: clampedScale,
-          offset: {
-            x: newOffsetX,
-            y: newOffsetY,
-          },
-        })*/
-    // const newOffsetX = offset.x - (canvasPoint.x * (zoomFactor - 1))
-    // const newOffsetY = offset.y - (canvasPoint.y * (zoomFactor - 1))
-
-    // Apply updated values
-    // this.viewport.scale = clampedScale
-    // this.viewport.offset.x = newOffsetX
-    // this.viewport.offset.y = newOffsetY
+    const worldPoint = this.getWorldPointByViewportPoint(point.x, point.y)
+    const newOffsetX = worldPoint.x - (worldPoint.x - offset.x) * zoomFactor
+    const newOffsetY = worldPoint.y - (worldPoint.y - offset.y) * zoomFactor
 
     return {
       scale: clampedScale,

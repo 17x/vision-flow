@@ -186,7 +186,7 @@ class Editor {
 
     if (module) {
       const {scale, dpr} = this.viewport
-
+      console.log('create')
       createHandlersForRect(module, scale, dpr).forEach(
         (p) => {
           // console.log(p.data,p.cursor)

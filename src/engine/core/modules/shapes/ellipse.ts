@@ -1,14 +1,9 @@
 import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
-import {RenderPropsMap} from '../../renderer/type'
 import Shape, {ShapeProps} from './shape.ts'
 
 export interface EllipseProps extends ShapeProps {
-  // x: number
-  // y: number
   r1: number
   r2: number
-  // fillColor: FillColor
-  // enableFill: boolean
 }
 
 class Ellipse extends Shape {
@@ -50,38 +45,12 @@ class Ellipse extends Shape {
   getBoundingRect() {
     const {x: cx, y: cy, r1, r2, rotation} = this
 
-    // If no rotation, the bounding box is just the width and height based on r1 and r2
-    if (rotation === 0) {
-      return generateBoundingRectFromRotatedRect({
-        x: cx - r1,  // Left edge
-        y: cy - r2,  // Top edge
-        width: r1 * 2,  // Full width (r1 * 2)
-        height: r2 * 2, // Full height (r2 * 2)
-      }, rotation)
-    }
-  }
-
-  move(x: number, y: number) {
-    this.x += x
-    this.y += y
-  }
-
-  protected getRenderData(): RenderPropsMap {
-    const {x, y, fillColor, r1, r2} = this
-
-    return {
-      circles: [
-        {
-          x,
-          y,
-          lineColor: 'transparent',
-          fillColor,
-          r1,
-          r2,
-        },
-
-      ],
-    }
+    return generateBoundingRectFromRotatedRect({
+      x: cx - r1,
+      y: cy - r2,
+      width: r1 * 2,
+      height: r2 * 2,
+    }, rotation)
   }
 
   public hitTest(point: Point, borderPadding = 5): 'inside' | 'border' | null {

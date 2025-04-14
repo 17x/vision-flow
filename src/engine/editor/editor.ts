@@ -284,16 +284,15 @@ class Editor {
 
   // viewport
   renderModules() {
-    // if (this.visibleModuleMap.size === 0) return
-    // console.log(this.viewport)
-
-    console.log(this.visibleModuleMap)
     const animate = () => {
-      render({
-        ctx: this.viewport.mainCTX,
-        frame: this.viewport.frame,
-        modules: this.visibleModuleMap,
-      })
+      const {frame, mainCTX: ctx} = this.viewport
+
+      frame.render(ctx)
+
+      this.visibleModuleMap.forEach((module) => {
+          module.render(ctx)
+        },
+      )
     }
 
     requestAnimationFrame(animate)

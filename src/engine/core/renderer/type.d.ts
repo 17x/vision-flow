@@ -1,6 +1,6 @@
 import {RectangleProps} from '../modules/shapes/rectangle.ts'
 
-export interface RectangleRenderProps extends Omit<RectangleProps, 'id' | 'layer' | 'type'> {
+export interface RectangleRenderProps extends Omit<RectangleProps, 'id' & 'layer' & 'type'> {
   shadow?: string
 }
 
@@ -25,12 +25,6 @@ export interface CircleRenderProps {
   opacity?: RectangleProps['opacity']
   gradient?: RectangleProps['gradient']
   rotation?: RectangleProps['rotation']
-}
-
-export interface RenderPropsMap {
-  rects?: RectangleRenderProps[]
-  texts?: TextRenderProps[]
-  circles?: CircleRenderProps[]
 }
 
 export type RenderPropsList = RectangleRenderProps | TextRenderProps | CircleRenderProps

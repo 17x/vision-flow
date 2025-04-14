@@ -49,7 +49,7 @@ export function batchAdd(this: Editor, modules: ModuleMap): ModuleMap {
   return modules
 }
 
-type BatchCopyFn = <T extends boolean>(this: Editor, idSet: Set<UID>, includeIdentifiers: T) => T extends true ? ModuleProps[] : Omit<ModuleProps, 'id' | 'layer'>[]
+type BatchCopyFn = <T extends boolean>(this: Editor, idSet: Set<UID>, includeIdentifiers: T) => T extends true ? ModuleProps[] : Omit<ModuleProps, 'id' & 'layer'>[]
 
 export const batchCopy: BatchCopyFn = function (this, idSet, includeIdentifiers) {
   const result: ModuleProps[] = []

@@ -1,4 +1,3 @@
-import {TextRenderProps} from './type'
 import Rectangle from '../modules/shapes/rectangle.ts'
 
 interface RenderProps {

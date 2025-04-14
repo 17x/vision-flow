@@ -14,8 +14,8 @@ declare global {
   type ModuleProps = RectangleProps | EllipseProps
   type PropsWithoutIdentifiers<T extends keyof ModulePropsMap> = Omit<ModulePropsMap[T], 'id' & 'layer'>
   type ModuleNames = keyof ModuleTypeMap
-  type ModuleType = Rectangle | RoundedRectangle | Connector
-  type ModuleMap = Map<UID, ModuleType>
+  type ModuleInstance = Rectangle | Ellipse
+  type ModuleMap = Map<UID, ModuleInstance>
 }
 
 export {}

@@ -4,7 +4,7 @@ import EditorContext from '../editorContext/EditorContext.tsx'
 // import OptimizedDND from "./OptimizedDND.ts";
 
 interface LayerPanelProps {
-  data: ModuleType[]
+  data: ModuleInstance[]
   selected: UID[]
 }
 

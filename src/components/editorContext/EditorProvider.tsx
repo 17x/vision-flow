@@ -23,7 +23,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [historyArray, setHistoryArray] = useState<HistoryNode[]>([])
   const [worldPoint, setWorldPoint] = useState<Point>({x: 0, y: 0})
-  const [sortedModules, setSortedModules] = useState<ModuleType[]>([])
+  const [sortedModules, setSortedModules] = useState<ModuleInstance[]>([])
   const [selectedProps, setSelectedProps] = useState<ModuleProps>(null)
   const [selectedModules, setSelectedModules] = useState<UID[]>([])
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)

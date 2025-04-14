@@ -30,7 +30,7 @@ import {EditorEventType} from './actions/type'
 
 export interface EditorDataProps {
   id: UID;
-  modules: ModuleType[];
+  modules: ModuleInstance[];
 }
 
 export interface EditorConfig {
@@ -94,7 +94,7 @@ class Editor {
       acc.set(curr.id, curr)
 
       return acc
-    }, new Map<UID, ModuleType>())
+    }, new Map<UID, ModuleInstance>())
 
     this.init()
   }
@@ -152,7 +152,7 @@ class Editor {
     return result
   }
 
-  getModuleList(): ModuleType[] {
+  getModuleList(): ModuleInstance[] {
     return [...Object.values(this.moduleMap)]
   }
 
@@ -160,7 +160,7 @@ class Editor {
     this.visibleModuleMap.clear()
 
     // Create an array from the Map, sort by the 'layer' property, and then add them to visibleModuleMap
-    const sortedModules = [...this.moduleMap.values()]
+    const sortedModules = ([...this.moduleMap.values()] as ModuleInstance[])
       .filter(module => {
         const boundingRect = module.getBoundingRect() as BoundingRect
         return rectsOverlap(boundingRect, this.viewport.worldRect)
@@ -288,6 +288,7 @@ class Editor {
 
       frame.render(ctx)
 
+      // deduplicateObjectsByKeyValue
       this.visibleModuleMap.forEach((module) => {
           module.render(ctx)
         },

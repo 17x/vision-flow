@@ -169,7 +169,7 @@ export const getSymmetricDifference = <T>(
 }
 
 export function createHandlersForRect(
-  module: ModuleType,
+  module: ModuleInstance,
   scale: number,
   dpr: DPR,
 ): OperationHandlers[] {

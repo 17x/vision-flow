@@ -33,7 +33,7 @@ export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): Module
   clonedData.forEach(data => {
     const module = create.call(this, data)
 
-    newMap.set(data.id, module as ModuleType)
+    newMap.set(data.id, module as ModuleInstance)
   })
 
   return newMap

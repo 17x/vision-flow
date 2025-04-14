@@ -11,7 +11,7 @@ export interface BasicModuleProps {
 }
 
 class Base {
-  protected id: UID
+  readonly id: UID
   protected type: string
   protected enableLine: boolean
   protected lineWidth: number
@@ -19,7 +19,7 @@ class Base {
   protected opacity: Opacity
   protected rotation: Rotation
   protected shadow: Shadow
-  protected layer: number
+  readonly layer: number
 
   constructor({
                 id,

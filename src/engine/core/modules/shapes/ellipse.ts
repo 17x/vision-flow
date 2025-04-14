@@ -1,27 +1,23 @@
-import Base, {BasicModuleProps} from '../base.ts'
 import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
 import {RenderPropsMap} from '../../renderer/type'
+import Shape, {ShapeProps} from './shape.ts'
 
-export interface EllipseProps extends BasicModuleProps {
-  x: number
-  y: number
+export interface EllipseProps extends ShapeProps {
+  // x: number
+  // y: number
   r1: number
   r2: number
-  fillColor: FillColor
-  enableFill: boolean
+  // fillColor: FillColor
+  // enableFill: boolean
 }
 
-class Ellipse extends Base {
-  private x: number
-  private y: number
+class Ellipse extends Shape {
   r1: number
   r2: number
   readonly fillColor: FillColor
   readonly enableFill: boolean
 
   constructor({
-                x,
-                y,
                 fillColor,
                 enableFill = true,
                 r1,
@@ -30,8 +26,6 @@ class Ellipse extends Base {
               }: EllipseProps) {
     super(rest)
 
-    this.x = x
-    this.y = y
     this.r1 = r1!
     this.r2 = r2!
     this.fillColor = fillColor as FillColor
@@ -42,22 +36,15 @@ class Ellipse extends Base {
     includeIdentifiers: T = true as T,
   ): T extends true ?
     EllipseProps :
-    Omit<EllipseProps, 'id' | 'layer'> {
+    Omit<EllipseProps, 'id' & 'layer'> {
 
     return {
-      // ...this.getSize(),
+      ...super.getDetails(includeIdentifiers),
       fillColor: this.fillColor,
       enableFill: this.enableFill,
-      x: this.x,
-      y: this.y,
       r1: this.r1,
       r2: this.r2,
-      ...super.getDetails(includeIdentifiers),
-    } as T extends true ? EllipseProps : Omit<EllipseProps, 'id' | 'layer'>
-  }
-
-  public getSize(): Size {
-
+    } as T extends true ? EllipseProps : Omit<EllipseProps, 'id' & 'layer'>
   }
 
   getBoundingRect() {
@@ -125,7 +112,7 @@ class Ellipse extends Base {
   }
 
   render(ctx: CanvasRenderingContext2D) {
-    const {x, y, r1, r2, opacity, fillColor, rotation, dashLine, gradient} = this
+    const {x, y, r1, r2, opacity, fillColor, rotation, dashLine, gradient} = this.getDetails()
     const {
       lineWidth,
       lineColor,
@@ -138,12 +125,12 @@ class Ellipse extends Base {
 
     // Apply rotation if needed
     if (rotation !== 0) {
-      ctx.rotate(rotation * Math.PI / 180) // Convert to radians
+      ctx.rotate(rotation! * Math.PI / 180) // Convert to radians
     }
 
     // Apply fill style if enabled
     if (opacity > 0) {
-      ctx.fillStyle = fillColor
+      ctx.fillStyle = fillColor as string
       ctx.globalAlpha = opacity / 100 // Set the opacity
     }
 

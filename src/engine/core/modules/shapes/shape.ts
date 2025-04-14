@@ -1,27 +1,18 @@
 import Base, {BasicModuleProps} from '../base.ts'
-import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
 
 export interface ShapeProps extends BasicModuleProps {
   x: number
   y: number
-  width: number
-  height: number
   enableGradient?: boolean
   gradient?: Gradient
-
   enableFill?: boolean
   fillColor?: FillColor
-
-  /*first*/
   dashLine?: string
-  // rotation?: number
 }
 
 class Shape extends Base {
-  private x: number
-  private y: number
-  private width: number
-  private height: number
+  protected x: number
+  protected y: number
   readonly fillColor: FillColor
   readonly enableFill: boolean
 
@@ -30,16 +21,12 @@ class Shape extends Base {
                 y,
                 fillColor,
                 enableFill = true,
-                width,
-                height,
                 ...rest
               }: ShapeProps) {
     super(rest)
 
     this.x = x
     this.y = y
-    this.width = width!
-    this.height = height!
     this.fillColor = fillColor as FillColor
     this.enableFill = enableFill
   }
@@ -48,49 +35,15 @@ class Shape extends Base {
     includeIdentifiers: T = true as T,
   ): T extends true ?
     ShapeProps :
-    Omit<ShapeProps, 'id' | 'layer'> {
+    Omit<ShapeProps, 'id' & 'layer'> {
 
     return {
-      ...this.getSize(),
+      ...super.getDetails(includeIdentifiers),
       fillColor: this.fillColor,
       enableFill: this.enableFill,
       x: this.x,
       y: this.y,
-      width: this.width,
-      height: this.height,
-      ...super.getDetails(includeIdentifiers),
-    } as T extends true ? ShapeProps : Omit<ShapeProps, 'id' | 'layer'>
-  }
-
-  public getSize(): Size {
-    return {
-      width: 0,
-      height: 0,
-    }
-  }
-
-  getBoundingRect() {
-    const {x: cx, y: cy, width, height, rotation} = this
-
-    const x = cx - width / 2
-    const y = cy - height / 2
-
-    if (rotation === 0) {
-      return {
-        x,
-        y,
-        width,
-        height,
-        left: x,
-        top: y,
-        right: x + width,
-        bottom: y + height,
-        cx,
-        cy,
-      }
-    }
-
-    return generateBoundingRectFromRotatedRect({x, y, width, height}, rotation)
+    } as T extends true ? ShapeProps : Omit<ShapeProps, 'id' & 'layer'>
   }
 
   move(x: number, y: number) {

@@ -1,26 +1,60 @@
 import Shape, {ShapeProps} from './shape.ts'
-import {RenderPropsMap} from '../../renderer/type'
+import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
 
-// import {RectangleRenderProps, RenderPropsMap} from '../../renderer/type'
-
-export interface RectangleProps extends ShapeProps {}
+export interface RectangleProps extends ShapeProps {
+  width: number
+  height: number
+  radius?: number
+}
 
 class Rectangle extends Shape {
   readonly type = 'rectangle'
+  private width: number
+  private height: number
+  private radius: number
 
   constructor({
+                width,
+                height,
+                radius = 0,
                 ...rest
               }: RectangleProps) {
     super(rest)
-    // this.type = type
+    this.width = width!
+    this.height = height!
+    this.radius = radius!
   }
 
-  public getDetails<T extends boolean>(includeIdentifiers: T = true as T): T extends true ? RectangleProps : Omit<RectangleProps, 'id' | 'layer'> {
-    return super.getDetails(includeIdentifiers) as T extends true ? RectangleProps : Omit<RectangleProps, 'id' | 'layer'>
+  public getDetails<T extends boolean>(includeIdentifiers: T = true as T): T extends true ? RectangleProps : Omit<RectangleProps, 'id' & 'layer'> {
+    return {
+      width: this.width,
+      height: this.height,
+      ...super.getDetails(includeIdentifiers),
+    } as T extends true ? RectangleProps : Omit<RectangleProps, 'id' & 'layer'>
   }
 
-  public getBoundingRect(): BoundingRect {
-    return super.getBoundingRect()
+  getBoundingRect() {
+    const {x: cx, y: cy, width, height, rotation} = this
+
+    const x = cx - width / 2
+    const y = cy - height / 2
+
+    if (rotation === 0) {
+      return {
+        x,
+        y,
+        width,
+        height,
+        left: x,
+        top: y,
+        right: x + width,
+        bottom: y + height,
+        cx,
+        cy,
+      }
+    }
+
+    return generateBoundingRectFromRotatedRect({x, y, width, height}, rotation)
   }
 
   public hitTest(point: Point, borderPadding = 5): 'inside' | 'border' | null {
@@ -57,52 +91,6 @@ class Rectangle extends Shape {
     return null
   }
 
-  public getRenderData(): RenderPropsMap {
-    // const {x, y, fillColor, r1, r2} = this
-    const {
-      x,
-      y,
-      width,
-      height,
-      enableFill,
-      enableLine,
-      opacity,
-      lineWidth,
-      fillColor,
-      lineColor,
-      rotation,
-      gradient,
-      radius,
-      layer,
-    } = this
-    const rects: RectangleRenderProps[] = []
-
-    if ((enableFill && opacity > 0) || enableLine) {
-      rects.push(
-        {
-          ...super.getDetails(),
-          x,
-          y,
-          width,
-          height,
-          enableFill,
-          enableLine,
-          opacity,
-          lineWidth,
-          fillColor,
-          lineColor,
-          rotation,
-          gradient,
-          // radius,
-        },
-      )
-    }
-
-    return {
-      rects,
-    }
-  }
-
   render(ctx: CanvasRenderingContext2D): void {
     // const { x, y, width, height, fillColor } = this.getDetails();
     const {
@@ -110,7 +98,7 @@ class Rectangle extends Shape {
       // height,
       radius,
     } = this
-    const {x, y, width, height, rotation, opacity, fillColor, lineWidth, lineColor, dashLine} = super.getDetails()
+    const {x, y, width, height, rotation, opacity, fillColor, lineWidth, lineColor, dashLine} = this.getDetails()
 
     const LocalX = width / 2
     const LocalY = height / 2
@@ -122,8 +110,8 @@ class Rectangle extends Shape {
     ctx.translate(x, y)
 
     // Apply rotation if needed
-    if (rotation > 0) {
-      ctx.rotate(rotation * Math.PI / 180)
+    if (rotation! > 0) {
+      ctx.rotate(rotation! * Math.PI / 180)
     }
 
     // Apply fill style if enabled

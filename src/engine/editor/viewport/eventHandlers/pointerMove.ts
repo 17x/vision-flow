@@ -40,12 +40,10 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
 
       this.moduleMap.forEach((module) => {
-        if (module.type === 'rectangle') {
-          const boundingRect = module.getBoundingRect() as BoundingRect
+        const boundingRect = module.getBoundingRect()
 
-          if (rectInside(boundingRect, virtualSelectionRect)) {
-            _selecting.add(module.id)
-          }
+        if (rectInside(boundingRect, virtualSelectionRect)) {
+          _selecting.add(module.id)
         }
       })
 

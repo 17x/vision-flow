@@ -4,24 +4,6 @@ export interface RectangleRenderProps extends Omit<RectangleProps, 'id' | 'layer
   shadow?: string
 }
 
-/*
-export type OrderedProps = [
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  enableFill: boolean,
-  fillColor: string,
-  enableLine: boolean,
-  lineColor: string,
-  lineWidth: number,
-  radius: number,
-  opacity: number,
-  enableGradient: boolean,
-  gradient: Gradient,
-  rotation: number,
-]*/
-
 interface TextRenderProps {
   x: number;
   y: number;
@@ -44,3 +26,11 @@ export interface CircleRenderProps {
   gradient?: RectangleProps['gradient']
   rotation?: RectangleProps['rotation']
 }
+
+export interface RenderPropsMap {
+  rects?: RectangleRenderProps[]
+  texts?: TextRenderProps[]
+  circles?: CircleRenderProps[]
+}
+
+export type RenderPropsList = RectangleRenderProps | TextRenderProps | CircleRenderProps

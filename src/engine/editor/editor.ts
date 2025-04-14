@@ -266,8 +266,13 @@ class Editor {
   public get getSelectedPropsIfUnique(): ModuleProps | null {
     if (this.selectedModules.size === 1) {
       const unique = [...this.selectedModules.values()][0]
+      const module = this.moduleMap.get(unique)
 
-      return this.moduleMap.get(unique).getDetails()
+      if (module) {
+        return this.moduleMap.get(unique).getDetails()
+      }
+
+      return null
     }
     return null
   }
@@ -489,8 +494,8 @@ class Editor {
     // console.log(testFrame)
     // console.log(frame)
     // console.log(viewportRect)
-
-    const {scale, offsetX, offsetY} = fitRectToViewport(frame, viewportRect, 0.95)
+    const frameRect = frame.getBoundingRect()
+    const {scale, offsetX, offsetY} = fitRectToViewport(frameRect as Rect, viewportRect, 0.95)
 
     // console.log(virtualRect)
     // console.log(scale, offsetX, offsetY)

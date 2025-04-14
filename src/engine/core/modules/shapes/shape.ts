@@ -14,14 +14,14 @@ export interface ShapeProps extends BasicModuleProps {
 
   /*first*/
   dashLine?: string
-  rotation: number
+  // rotation?: number
 }
 
 class Shape extends Base {
-  readonly x: number
-  readonly y: number
-  width: number
-  height: number
+  private x: number
+  private y: number
+  private width: number
+  private height: number
   readonly fillColor: FillColor
   readonly enableFill: boolean
 

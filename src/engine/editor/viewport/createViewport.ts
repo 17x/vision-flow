@@ -80,7 +80,7 @@ export function createViewport(this: Editor): Viewport {
     spaceKeyDown: false,
     zooming: false,
     dpr: this.config.dpr,
-    frame: createFrame('A4'),
+    frame: createFrame('A4', this.id),
     offset: {x: 0, y: 0},
     viewportRect,
     worldRect,

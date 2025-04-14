@@ -1,9 +1,8 @@
-import {RectangleRenderProps} from '../../core/renderer/type'
-import {generateBoundingRectFromRect} from '../../core/utils.ts'
+import Rectangle from '../../core/modules/shapes/rectangle.ts'
 
 /*
 * Fit a world coordinate based rect into pixel-based viewport
-* which can put the rect middle of the viewport
+* which can set the rect middle of the viewport
 * paddingScale can leave some space between the frame and the viewport boundary
 * */
 export const fitRectToViewport = (rect: Rect, viewport: Rect, paddingScale = 0.98): {
@@ -28,11 +27,11 @@ export const fitRectToViewport = (rect: Rect, viewport: Rect, paddingScale = 0.9
 
 type FrameType = 'A4' | 'A4L' | 'photo1'
 
-export const createFrame = (p: FrameType = 'A4'): Partial<RectangleRenderProps> & BoundingRect => {
+export const createFrame = (p: FrameType, id: UID): Rectangle => {
   let width: number = 0
   let height: number = 0
-  const x: number = 0
-  const y: number = 0
+  let x: number = 0
+  let y: number = 0
 
   if (p === 'A4' || p === 'A4L') {
     const RATIO = 1.414142857
@@ -50,27 +49,19 @@ export const createFrame = (p: FrameType = 'A4'): Partial<RectangleRenderProps> 
     height = 55
   }
 
-  const rect = generateBoundingRectFromRect({x, y, width, height})
-  return {
-    ...rect,
-    opacity: 100,
-    lineWidth: 1,
-    lineColor: '#000000',
-    fillColor: '#fff',
-  }
-}
+  x = width / 2
+  y = height / 2
 
-export const createBoundingRect = (x: number, y: number, width: number, height: number): BoundingRect => {
-  return {
+  return new Rectangle({
+    id,
     x,
     y,
     width,
     height,
-    left: x,
-    top: y,
-    right: x + width,
-    bottom: y + height,
-    cx: x + width / 2,
-    cy: y + height / 2,
-  }
+    opacity: 100,
+    lineWidth: 1,
+    lineColor: '#000000',
+    fillColor: '#fff',
+    layer: -1,
+  })
 }

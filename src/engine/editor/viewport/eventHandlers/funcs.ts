@@ -37,8 +37,13 @@ export function updateHoveredModule(this: Editor) {
 
   for (let i = arr.length - 1; i >= 0; i--) {
     const module = arr[i]
-
-    if (module.type === 'rectangle') {
+    const hitTest = module.hitTest(worldPoint)
+    if (hitTest) {
+      console.log(hitTest)
+      moduleId = module.id
+      break
+    }
+    /*if (module.type === 'rectangle') {
       const {id, x, y, width, height, rotation} = module as Rectangle
       const f = isInsideRotatedRect(
         worldPoint,
@@ -50,9 +55,9 @@ export function updateHoveredModule(this: Editor) {
         moduleId = id
         break
       }
-    }
+    }*/
   }
- 
+
   if (this.hoveredModule !== moduleId) {
     if (this.hoveredModule) {
       this.action.dispatch('module-hover-leave', this.hoveredModule)

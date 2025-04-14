@@ -1,31 +1,31 @@
+import {RenderPropsMap} from '../renderer/type'
+
 export interface BasicModuleProps {
   id: UID
   layer: number
-  type: ModuleNames
+  // type: ModuleNames
   enableLine?: boolean
   lineColor: HexColor
   lineWidth: number
 
   opacity: Opacity
-  shadow: boolean
+  shadow?: boolean
   // position?: Point
-  rotation: number
+  rotation?: number
 }
 
 class Base {
   readonly id: UID
-  readonly type: ModuleNames
-  private readonly enableLine: boolean
+  readonly enableLine: boolean
   private readonly lineWidth: number
   private readonly lineColor: HexColor
-  private readonly opacity: Opacity
+  readonly opacity: Opacity
   readonly rotation: Rotation
   private readonly shadow: Shadow
   readonly layer: number
 
   constructor({
                 id,
-                type,
                 lineColor,
                 lineWidth = 1,
                 opacity = 100,
@@ -36,7 +36,6 @@ class Base {
                 enableLine = true,
               }: BasicModuleProps) {
     this.id = id
-    this.type = type
     this.enableLine = enableLine
     this.lineColor = lineColor
     this.lineWidth = lineWidth
@@ -51,7 +50,7 @@ class Base {
   // protected getDetails(includeIdentifiers: false): Omit<BasicModuleProps, 'id' | 'layer'>
   protected getDetails<T extends boolean>(includeIdentifiers: T = true as T): T extends true ? BasicModuleProps : Omit<BasicModuleProps, 'id' | 'layer'> {
     const base = {
-      type: this.type,
+      // type: this.type,
       enableLine: this.enableLine,
       lineColor: this.lineColor,
       lineWidth: this.lineWidth,
@@ -84,6 +83,10 @@ class Base {
       cx: 0,
       cy: 0,
     }
+  }
+
+  protected getRenderData(): RenderPropsMap {
+    return {}
   }
 }
 

@@ -1,38 +1,37 @@
-import {CircleRenderProps} from "./type"
-import deduplicateObjectsByKeyValue from "./deduplicate.ts"
+import {CircleRenderProps} from './type'
+import deduplicateObjectsByKeyValue from './deduplicate.ts'
+import {setFloatOnProps} from '../utils.ts'
 
-const circleRender = (ctx: CanvasRenderingContext2D, rects: CircleRenderProps[]): void => {
-  let uintArray = rects
+const circleRender = (ctx: CanvasRenderingContext2D, circles: CircleRenderProps[]): void => {
+  let uintArray = circles
 
   if (uintArray.length > 1000) {
-    uintArray = rects.map(item => ({
-      ...item,
-      x: Math.floor(item.x),
-      y: Math.floor(item.y),
-    }))
+    uintArray = circles.map(item => {
+      return setFloatOnProps(item, ['x', 'y', 'r1', 'r2'])
+    })
   }
 
-  const rectQueue: CircleRenderProps[] = deduplicateObjectsByKeyValue(uintArray)
+  const circleQueue: CircleRenderProps[] = deduplicateObjectsByKeyValue(uintArray)
 
   ctx.save()
+  // console.log(circleQueue)
 
-  rectQueue.forEach(({
-                       x,
-                       y,
-                       r1,
-                       r2,
-                       fillColor = '',
-                       lineColor = '',
-                       lineWidth = 1,
-                       opacity = 100,
-                       gradient,
-                       rotation = 0,
-                       dashLine = ''
-                     }: CircleRenderProps) => {
+  circleQueue.forEach(({
+                         x,
+                         y,
+                         r1,
+                         r2,
+                         fillColor = '',
+                         lineColor = '',
+                         lineWidth = 1,
+                         opacity = 100,
+                         gradient,
+                         rotation = 0,
+                         dashLine = '',
+                       }: CircleRenderProps) => {
 
     // Save current context state to avoid transformations affecting other drawings
     ctx.save()
-
     // Move context to the circle's center
     ctx.translate(x, y)
 

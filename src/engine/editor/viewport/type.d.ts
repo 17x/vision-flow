@@ -1,4 +1,5 @@
 import {RectangleRenderProps} from '../../core/renderer/type'
+import Rectangle from '../../core/modules/shapes/rectangle.ts'
 
 export type ViewportEventType =
   'viewport-resize'
@@ -40,7 +41,7 @@ export interface Viewport {
   * A rect that based on world coordinate, x=0, y=0
   * Its size can be modified
   * */
-  frame: Partial<RectangleRenderProps> & BoundingRect
+  frame: Rectangle
   /*
   * mouseDownPoint
   * relative position to wrapper's top-left

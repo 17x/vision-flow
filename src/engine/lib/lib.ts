@@ -70,8 +70,8 @@ export function screenToWorld(
 } {
 
   return {
-    x: (point.x * dpr - offset.x * dpr) / scale,
-    y: (point.y * dpr - offset.y * dpr) / scale,
+    x: (point.x * dpr - offset.x) / scale,
+    y: (point.y * dpr - offset.y) / scale,
   }
 }
 
@@ -92,8 +92,8 @@ export function worldToScreen(
   y: canvasY * scale + offsetY,
   * */
   return {
-    x: ((point.x * scale) + offset.x * dpr) / dpr,
-    y: ((point.y * scale) + offset.y * dpr) / dpr,
+    x: ((point.x * scale) + offset.x) / dpr,
+    y: ((point.y * scale) + offset.y) / dpr,
   }
 }
 

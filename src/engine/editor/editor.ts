@@ -24,10 +24,9 @@ import {Viewport, ViewportManipulationType} from './viewport/type'
 import {createViewport} from './viewport/createViewport.ts'
 import {destroyViewport} from './viewport/destroyViewport.ts'
 import {initEditor} from './initEditor.ts'
-import {fitRectToViewport} from './viewport/helper.ts'
 import uid from '../../utilities/Uid.ts'
 import {EditorEventType} from './actions/type'
-import {CenterBasedRect} from '../type'
+import {zoomAtPoint} from './viewport/helper.ts'
 
 export interface EditorDataProps {
   id: UID;
@@ -308,110 +307,34 @@ class Editor {
   }
 
   updateWorldRect() {
-    const {dpr} = this.viewport
+    const {dpr, offset} = this.viewport
     const {width, height} = this.viewport.viewportRect
-    const p1 = this.getWorldPointByViewportPoint(0, 0)
+    const p1 = this.getWorldPointByViewportPoint(offset.x, offset.y)
     const p2 = this.getWorldPointByViewportPoint(width / dpr, height / dpr)
 
     this.viewport.worldRect = generateBoundingRectFromTwoPoints(p1, p2)
   }
 
-  zoomAtPoint(
-    point: Point,
-    zoomFactor: number,
-  ): {
-    scale: number;
-    offset: {
-      x: number;
-      y: number;
-    };
-  } | false {
-    const {dpr, rect, viewportRect, worldRect} = this.viewport
-    const paddingScale = -zoomFactor
-    const pixelOffsetX = point.x - rect.width / 2
-    const pixelOffsetY = point.y - rect.height / 2
-    const centerAreaThresholdX = rect.width / 8
-    const centerAreaThresholdY = rect.height / 8
-    const f = fitRectToViewport(worldRect, viewportRect, paddingScale / 2)
-    let newOffsetX = f.offsetX / dpr
-    let newOffsetY = f.offsetY / dpr
-    let newScale = f.scale
-
-    if (Math.abs(pixelOffsetX) > centerAreaThresholdX) {
-      newOffsetX = newOffsetX - pixelOffsetX * zoomFactor * dpr
-    }
-
-    if (Math.abs(pixelOffsetY) > centerAreaThresholdY) {
-      newOffsetY = newOffsetY - pixelOffsetY * zoomFactor * dpr
-    }
-
-    console.log(
-      {
-        scale: newScale,
-        offset: {
-          x: newOffsetX,
-          y: newOffsetY,
-        },
-      },
-    )
-    return {
-      scale: newScale,
+  /*
+    zoomAtPoint(
+      zoomFactor: number,
+      point: Point,
+    ): {
+      scale: number;
       offset: {
-        x: newOffsetX,
-        y: newOffsetY,
-      },
-    }
-  }
-
-  zoomTo(zoom: number) {
-    const {dpr, scale, rect, offset} = this.viewport
-    const minScale = 0.01 * dpr
-    const maxScale = 500 * dpr
-    const point = {x: rect.width / 2, y: rect.height / 2}
-    if (zoom > maxScale || zoom < minScale) return false
-
-    let zoomFactor = (zoom - scale) / 2
-
-/*    if (zoom > 1) {
-      zoomFactor -= 1
+        x: number;
+        y: number;
+      }
+    } | false {
+      return zoomAtPoint.call(this, point, zoomFactor)
     }*/
-    console.log(this.viewport.worldRect)
-    console.log(zoomFactor)
-    console.log(this.zoomAtPoint(point, zoomFactor))
-    return this.zoomAtPoint(point, zoomFactor)
 
-    /*console.log(
-      this.zoomAtPoint(point, -(scale - zoom) + 1),
-    )*/
-    /* console.log(
-       {
-         scale: zoom,
-         offset: {
-           x: offset.x - (offset.x / dpr * zoom) / 2,
-           t: offset.y,
-         },
-       },
-     )
-     return {
-       scale: zoom,
-       offset: {
-         x: offset.x - (offset.x / dpr * zoom) / 2,
-         y: offset.y,
-       },
-     }*/
-  }
+  zoom(zoom: number, point?: Point): { x: number, y: number } {
+    const {rect} = this.viewport
 
-  setTranslateViewport(x: number, y: number) {
-    this.viewport.offset.x = 0
-    this.viewport.offset.y = 0
-    this.translateViewport(x, y)
-  }
+    point = point || {x: rect.width / 2, y: rect.height / 2}
 
-  translateViewport(x: number, y: number) {
-    this.viewport.offset.x += x
-    this.viewport.offset.y += y
-    // this.viewport.updateWorldRect()
-    // this.viewport.render()
+    return zoomAtPoint.call(this, point, zoom)
   }
 
   updateScrollBar() {
@@ -457,30 +380,6 @@ class Editor {
       scale,
       dpr,
     )
-  }
-
-  fitFrame() {
-    const {frame, viewportRect, dpr} = this.viewport
-    /* const testFrame = generateBoundingRectFromRotatedRect({
-       x: 800,
-       y: 800,
-       width: 100,
-       height: 100
-     }, 50)*/
-    // console.log(testFrame)
-    // console.log(frame)
-    // console.log(viewportRect)
-    const frameRect = frame.getBoundingRect()
-    const {scale, offsetX, offsetY} = fitRectToViewport(frameRect, viewportRect, 0.02)
-
-    // console.log(virtualRect)
-    // console.log(scale, offsetX, offsetY)
-    this.viewport.scale = scale
-    this.viewport.offset.x = offsetX / dpr
-    this.viewport.offset.y = offsetY / dpr
-    // this.action.dispatch('world-update')
-    // this.viewport.render()
-    // this.viewport.updateWorldRect()
   }
 
   //eslint-disable-block

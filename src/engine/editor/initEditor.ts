@@ -7,6 +7,7 @@ import {pick} from './history/pick.ts'
 import {HistoryOperation} from './history/type'
 import {updateSelectionCanvasRenderData} from './selection/helper.ts'
 import zoom from '../../components/statusBar/zoom'
+import {fitRectToViewport} from './viewport/helper.ts'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
@@ -22,16 +23,16 @@ export function initEditor(this: Editor) {
 
     if (!this.initialized) {
       this.initialized = true
-      this.fitFrame()
-
+      dispatch('world-zoom', 'fit')
       this.events.onInitialized?.()
+    } else {
+      dispatch('world-updated')
     }
-
-    dispatch('world-updated')
   })
 
   on('world-updated', () => {
     this.updateWorldRect()
+    console.log(this.viewport.scale, this.viewport.offset, this.viewport.worldRect)
     this.events.onViewportUpdated?.({
       status: this.manipulationStatus,
       scale: this.viewport.scale,
@@ -45,33 +46,46 @@ export function initEditor(this: Editor) {
 
   on('world-zoom', (arg) => {
     if (arg === 'fit') {
-      this.fitFrame()
+      const {frame, viewportRect} = this.viewport
+      const frameRect = frame.getBoundingRect()
+      const {scale, offsetX, offsetY} = fitRectToViewport(frameRect, viewportRect, 0.02)
+
+      this.viewport.scale = scale
+      this.viewport.offset.x = offsetX
+      this.viewport.offset.y = offsetY
+
       dispatch('world-updated')
     } else {
+      const {scale, dpr} = this.viewport
       let result = null
+      let newScale = 1
+      const minScale = 0.01 * dpr
+      const maxScale = 500 * dpr
+      let point = arg.physicalPoint
 
       if (arg.zoomTo) {
-        result = this.zoomTo(arg.zoomFactor)
+        if (arg.zoomFactor > maxScale) return
+        newScale = arg.zoomFactor
       } else if (arg.zoomBy) {
-        result = this.zoomAtPoint({x: this.viewport.rect.width / 2, y: this.viewport.rect.height / 2}, arg.zoomFactor)
-      } else {
-        result = this.zoomAtPoint(arg.physicalPoint!, arg.zoomFactor)
+        // clamp
+        newScale = Math.max(minScale, Math.min(scale + arg.zoomFactor, newScale))
       }
 
-      if (result) {
-        const {scale, offset} = result
-        this.viewport.scale = scale
-        this.viewport.offset.x = offset.x!
-        this.viewport.offset.y = offset.y!
-        dispatch('world-updated')
-      }
+      result = this.zoom(newScale, point)
+
+      this.viewport.scale = newScale
+      this.viewport.offset.x = result.x!
+      this.viewport.offset.y = result.y!
+      dispatch('world-updated')
     }
   })
 
   on('world-shift', (data) => {
     const {x, y} = data
-    this.viewport.offset.x += x
-    this.viewport.offset.y += y
+    // console.log(x, y)
+    const {dpr} = this.viewport
+    this.viewport.offset.x += x * dpr
+    this.viewport.offset.y += y * dpr
     dispatch('world-updated')
   })
 
@@ -302,7 +316,7 @@ export function initEditor(this: Editor) {
   on('render-modules', () => {
     resetCanvas(
       this.viewport.mainCTX,
-      this.viewport.dpr,
+      // this.viewport.dpr,
       this.viewport.scale,
       this.viewport.offset,
     )
@@ -312,7 +326,7 @@ export function initEditor(this: Editor) {
   on('render-selection', () => {
     resetCanvas(
       this.viewport.selectionCTX,
-      this.viewport.dpr,
+      // this.viewport.dpr,
       this.viewport.scale,
       this.viewport.offset,
     )

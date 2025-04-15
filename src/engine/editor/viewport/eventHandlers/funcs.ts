@@ -1,5 +1,4 @@
 import Editor from '../../editor.ts'
-import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 import {isInsideRotatedRect} from '../../../core/utils.ts'
 import {OperationHandlers, RotateHandler} from '../../selection/type'
 import {applyResizeTransform} from '../../../lib/lib.ts'
@@ -110,10 +109,10 @@ export function applyRotating(this: Editor, shiftKey: boolean) {
   const {cx, cy} = moduleOrigin
   // const module = this.moduleMap.get(id)
 
-  const downX = (mouseDownPoint.x - this.viewport.offset.x) / scale * dpr
-  const downY = (mouseDownPoint.y - this.viewport.offset.y) / scale * dpr
-  const moveX = (mouseMovePoint.x - this.viewport.offset.x) / scale * dpr
-  const moveY = (mouseMovePoint.y - this.viewport.offset.y) / scale * dpr
+  const downX = (mouseDownPoint.x - this.viewport.offset.x / dpr) / scale * dpr
+  const downY = (mouseDownPoint.y - this.viewport.offset.y / dpr) / scale * dpr
+  const moveX = (mouseMovePoint.x - this.viewport.offset.x / dpr) / scale * dpr
+  const moveY = (mouseMovePoint.y - this.viewport.offset.y / dpr) / scale * dpr
 
   const startAngle = Math.atan2(downY - cy, downX - cx)
   const currentAngle = Math.atan2(moveY - cy, moveX - cx)

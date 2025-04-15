@@ -6,6 +6,7 @@ import {undo} from './history/undo.ts'
 import {pick} from './history/pick.ts'
 import {HistoryOperation} from './history/type'
 import {updateSelectionCanvasRenderData} from './selection/helper.ts'
+import zoom from '../../components/statusBar/zoom'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
@@ -22,6 +23,14 @@ export function initEditor(this: Editor) {
     if (!this.initialized) {
       this.initialized = true
       this.fitFrame()
+      this.events.onViewportUpdated?.({
+        status: this.manipulationStatus,
+        scale: this.viewport.scale,
+        width: this.viewport.viewportRect.width,
+        height: this.viewport.viewportRect.height,
+        offsetX: this.viewport.offset.x,
+        offsetY: this.viewport.offset.y,
+      })
       this.events.onInitialized?.()
     }
 
@@ -39,13 +48,20 @@ export function initEditor(this: Editor) {
       this.fitFrame()
       dispatch('world-updated')
     } else {
-      const r = this.zoomAtPoint(arg.physicalPoint, arg.zoomFactor)
+      let result = null
 
-      if (r) {
-        const {scale, offset} = r
+      if (arg.zoomTo) {
+        result = this.zoomTo(arg.zoomFactor)
+      } else {
+        result = this.zoomAtPoint(arg.physicalPoint!, arg.zoomFactor)
+      }
+
+      if (result) {
+        console.log(result)
+        const {scale, offset} = result
         this.viewport.scale = scale
-        this.viewport.offset.x = offset.x
-        this.viewport.offset.y = offset.y
+        this.viewport.offset.x = offset.x!
+        this.viewport.offset.y = offset.y!
         dispatch('world-updated')
       }
     }

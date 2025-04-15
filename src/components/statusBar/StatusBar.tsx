@@ -18,7 +18,14 @@ export const StatusBar: React.FC<StatusBarProps> = ({className = '', worldPoint}
         viewport &&
           <>
               <ZoomSelect key={viewport.scale} scale={viewport.scale} onChange={(newScale) => {
-                executeAction('world-zoom', newScale as never)
+                if (newScale === 'fit') {
+                  executeAction('world-zoom', 'fit')
+                } else {
+                  executeAction('world-zoom', {
+                    zoomTo: true,
+                    zoomFactor: newScale,
+                  })
+                }
               }}/>
               <div
                   className={'text-xs line-clamp-1'}>{`dx:${worldPoint.x.toFixed(2)} dy:${worldPoint.y.toFixed(2)}`}</div>

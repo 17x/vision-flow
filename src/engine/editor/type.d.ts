@@ -42,16 +42,14 @@ export type EditorAction = {
   children?: EditorAction[];
 };
 
-/*
-export interface ViewportInfo extends Size {
+export interface ViewportData extends Size {
   offsetX: number
   offsetY: number
   scale: number
-  dx: number
-  dy: number
+  // dx: number
+  // dy: number
   status: string
 }
-*/
 
 export interface WorldInfo extends Size {
   offsetX: number
@@ -66,7 +64,7 @@ type InitializedHandler = () => void;
 type HistoryUpdatedHandler = (history: History) => void;
 type ModulesUpdatedHandler = (moduleMap: ModuleMap) => void;
 type SelectionUpdatedHandler = (selected: Set<UID>, selectedProps?: ModuleProps) => void;
-type ViewportUpdatedHandler = (viewportInfo: BoundingRect) => void;
+type ViewportUpdatedHandler = (viewportInfo: ViewportData) => void;
 type WorldUpdatedHandler = (worldInfo: WorldInfo) => void;
 type WorldMouseMoveUpdatedHandler = (point: Point) => void;
 type ContextMenuHandler = (idSet: Set<UID>, position: Point, copiedItems: boolean) => void;

@@ -45,8 +45,9 @@ export type EditorEventMap = {
   'world-mouse-move': never;
   'world-updated': never;
   'world-zoom': 'fit' | {
+    zoomTo?: boolean
     zoomFactor: number;
-    physicalPoint: Point;
+    physicalPoint?: Point;
   };
   'world-shift': Point;
   'render-modules': boolean;

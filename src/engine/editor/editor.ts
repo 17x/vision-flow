@@ -187,7 +187,7 @@ class Editor {
 
     if (module) {
       const {scale, dpr} = this.viewport
-      console.log('create')
+      // console.log('create')
       createHandlersForRect(module, scale, dpr).forEach(
         (p) => {
           // console.log(p.data,p.cursor)
@@ -269,7 +269,7 @@ class Editor {
       const module = this.moduleMap.get(unique)
 
       if (module) {
-        return this.moduleMap.get(unique).getDetails()
+        return module.getDetails()
       }
 
       return null
@@ -316,30 +316,9 @@ class Editor {
     this.viewport.worldRect = generateBoundingRectFromTwoPoints(p1, p2)
   }
 
-  /*
-    zoom(idx: number, point?: Point) {
-      // console.log(idx)
-      const minZoom = 0.1;
-      const maxZoom = 10;
-      this.viewport.scale += idx;
-      // console.log(point)
-      // console.log(this.viewport.currentZoom)
-      if (this.viewport.scale < minZoom) {
-        this.viewport.scale = minZoom;
-      }
-      if (this.viewport.scale > maxZoom) {
-        this.viewport.scale = maxZoom;
-      }
-
-      this.viewport.updateVirtualRect();
-      this.viewport.render();
-    }
-  */
-
   zoomAtPoint(
     point: Point,
     zoom: number,
-    zoomTo: boolean = false,
   ): {
     scale: number;
     offset: {
@@ -348,24 +327,23 @@ class Editor {
     };
   } | false {
     const {dpr, rect, viewportRect, worldRect} = this.viewport
-    // const minScale = 0.01 * dpr
-    // const maxScale = 500 * dpr
-    // let newScale = zoomTo ? zoom : oldScale + zoom
+    const paddingScale = -zoom
+    const newZoom = zoom
     const pixelOffsetX = point.x - rect.width / 2
     const pixelOffsetY = point.y - rect.height / 2
     const centerAreaThresholdX = rect.width / 8
     const centerAreaThresholdY = rect.height / 8
-    const f = fitRectToViewport(worldRect, viewportRect, -zoom)
+    const f = fitRectToViewport(worldRect, viewportRect, paddingScale)
     let newOffsetX = f.offsetX / dpr
     let newOffsetY = f.offsetY / dpr
     let newScale = f.scale
 
     if (Math.abs(pixelOffsetX) > centerAreaThresholdX) {
-      newOffsetX = newOffsetX - pixelOffsetX * zoom * dpr
+      newOffsetX = newOffsetX - pixelOffsetX * newZoom * dpr
     }
 
     if (Math.abs(pixelOffsetY) > centerAreaThresholdY) {
-      newOffsetY = newOffsetY - pixelOffsetY * zoom * dpr
+      newOffsetY = newOffsetY - pixelOffsetY * newZoom * dpr
     }
 
     return {
@@ -377,20 +355,17 @@ class Editor {
     }
   }
 
-  zoomTo(newScale: number | 'fit') {
-    console.log(newScale)
-    if (newScale === 'fit') {
-      this.fitFrame()
-    } else {
-      this.zoomAtPoint(
-        {
-          x: this.viewport.rect!.width / 2,
-          y: this.viewport.viewportRect.height / 2,
-        },
-        newScale,
-        true,
-      )
-    }
+  zoomTo(zoom: number) {
+    const {dpr, scale, rect} = this.viewport
+    const minScale = 0.01 * dpr
+    const maxScale = 500 * dpr
+    const point = {x: rect.width / 2, y: rect.height / 2}
+    if (zoom > maxScale || zoom < minScale) return false
+    // console.log(this.viewport)
+    console.log(point)
+    console.log(scale , zoom)
+    console.log(scale - zoom)
+    return this.zoomAtPoint(point, scale - zoom)
   }
 
   setTranslateViewport(x: number, y: number) {

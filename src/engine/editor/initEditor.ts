@@ -23,14 +23,7 @@ export function initEditor(this: Editor) {
     if (!this.initialized) {
       this.initialized = true
       this.fitFrame()
-      this.events.onViewportUpdated?.({
-        status: this.manipulationStatus,
-        scale: this.viewport.scale,
-        width: this.viewport.viewportRect.width,
-        height: this.viewport.viewportRect.height,
-        offsetX: this.viewport.offset.x,
-        offsetY: this.viewport.offset.y,
-      })
+
       this.events.onInitialized?.()
     }
 
@@ -39,7 +32,14 @@ export function initEditor(this: Editor) {
 
   on('world-updated', () => {
     this.updateWorldRect()
-    this.events.onViewportUpdated?.(this.viewport.worldRect as BoundingRect)
+    this.events.onViewportUpdated?.({
+      status: this.manipulationStatus,
+      scale: this.viewport.scale,
+      width: this.viewport.viewportRect.width,
+      height: this.viewport.viewportRect.height,
+      offsetX: this.viewport.offset.x,
+      offsetY: this.viewport.offset.y,
+    })
     dispatch('visible-module-updated')
   })
 
@@ -57,7 +57,6 @@ export function initEditor(this: Editor) {
       }
 
       if (result) {
-        console.log(result)
         const {scale, offset} = result
         this.viewport.scale = scale
         this.viewport.offset.x = offset.x!

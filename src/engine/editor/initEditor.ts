@@ -32,14 +32,14 @@ export function initEditor(this: Editor) {
 
   on('world-updated', () => {
     this.updateWorldRect()
-    console.log(this.viewport.scale, this.viewport.offset, this.viewport.worldRect)
+    // console.log(this.viewport.scale, this.viewport.offset, this.viewport.worldRect)
     this.events.onViewportUpdated?.({
-      status: this.manipulationStatus,
-      scale: this.viewport.scale,
       width: this.viewport.viewportRect.width,
       height: this.viewport.viewportRect.height,
+      scale: this.viewport.scale,
       offsetX: this.viewport.offset.x,
       offsetY: this.viewport.offset.y,
+      status: this.manipulationStatus,
     })
     dispatch('visible-module-updated')
   })
@@ -64,14 +64,16 @@ export function initEditor(this: Editor) {
       let point = arg.physicalPoint
 
       if (arg.zoomTo) {
-        if (arg.zoomFactor > maxScale) return
         newScale = arg.zoomFactor
       } else if (arg.zoomBy) {
-        // clamp
-        newScale = Math.max(minScale, Math.min(scale + arg.zoomFactor, newScale))
+        newScale = scale + arg.zoomFactor
       }
 
+      // clamp
+      newScale = Math.max(minScale, Math.min(newScale, maxScale))
       result = this.zoom(newScale, point)
+
+      // console.log(newScale)
 
       this.viewport.scale = newScale
       this.viewport.offset.x = result.x!

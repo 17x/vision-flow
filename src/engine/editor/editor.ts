@@ -159,6 +159,7 @@ class Editor {
   updateVisibleModuleMap() {
     this.visibleModuleMap.clear()
 
+    // console.log(this.viewport.offset, this.viewport.worldRect)
     // Create an array from the Map, sort by the 'layer' property, and then add them to visibleModuleMap
     const sortedModules = ([...this.moduleMap.values()] as ModuleInstance[])
       .filter(module => {
@@ -307,27 +308,13 @@ class Editor {
   }
 
   updateWorldRect() {
-    const {dpr, offset} = this.viewport
+    const {dpr} = this.viewport
     const {width, height} = this.viewport.viewportRect
-    const p1 = this.getWorldPointByViewportPoint(offset.x, offset.y)
+    const p1 = this.getWorldPointByViewportPoint(0, 0)
     const p2 = this.getWorldPointByViewportPoint(width / dpr, height / dpr)
 
     this.viewport.worldRect = generateBoundingRectFromTwoPoints(p1, p2)
   }
-
-  /*
-    zoomAtPoint(
-      zoomFactor: number,
-      point: Point,
-    ): {
-      scale: number;
-      offset: {
-        x: number;
-        y: number;
-      }
-    } | false {
-      return zoomAtPoint.call(this, point, zoomFactor)
-    }*/
 
   zoom(zoom: number, point?: Point): { x: number, y: number } {
     const {rect} = this.viewport

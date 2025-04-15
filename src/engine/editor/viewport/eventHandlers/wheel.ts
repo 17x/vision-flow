@@ -1,5 +1,5 @@
-import { isNegativeZero } from "../../../core/utils.ts"
-import Editor from "../../editor.ts"
+import {isNegativeZero} from '../../../core/utils.ts'
+import Editor from '../../editor.ts'
 
 function handleWheel(this: Editor, event: WheelEvent) {
   // Prevent page zoom
@@ -7,8 +7,8 @@ function handleWheel(this: Editor, event: WheelEvent) {
   // console.log(this.manipulationStatus)
   event.preventDefault()
   event.stopPropagation()
-  if (this.manipulationStatus !== "static") return
-  const { zooming, panning, scrolling, zoomFactor, translateX, translateY } =
+  if (this.manipulationStatus !== 'static') return
+  const {zooming, panning, scrolling, zoomFactor, translateX, translateY} =
     detectGestures(event)
 
   // console.log(`${zooming ? 'zooming' : ''} ${panning ? 'panning' : ''} ${scrolling ? 'scrolling' : ''} `)
@@ -16,15 +16,14 @@ function handleWheel(this: Editor, event: WheelEvent) {
   this.viewport.zooming = zooming
 
   if (zooming) {
-    console.log(zoomFactor)
-    this.action.dispatch("world-zoom", {
+    // console.log(zoomFactor)
+    this.action.dispatch('world-zoom', {
+      zoomBy:true,
       zoomFactor,
       physicalPoint: this.viewport.mouseMovePoint,
     })
-    // this.zoomAtPoint(this.viewport.mouseMovePoint, zoomFactor)
-    // this.setTranslateViewport(shiftX, shiftY)
   } else if (panning || scrolling) {
-    this.action.dispatch("world-shift", {
+    this.action.dispatch('world-shift', {
       x: translateX,
       y: translateY,
     })
@@ -52,7 +51,7 @@ const detectGestures = (() => {
   const zoomSpeedB = 0.1
 
   return (event: WheelEvent) => {
-    const { deltaX, deltaY, altKey } = event
+    const {deltaX, deltaY, altKey} = event
     if (_timer) {
       clearTimeout(_timer)
     }
@@ -77,7 +76,7 @@ const detectGestures = (() => {
     if (EVENT_BUFFER.length >= ACTION_THRESHOLD) {
       // detect zooming
       const allXAreMinusZero = EVENT_BUFFER.every((e) =>
-        isNegativeZero(e.deltaX)
+        isNegativeZero(e.deltaX),
       )
       const allYAreFloat = EVENT_BUFFER.every((e) => isFloat(e.deltaY))
       const absBiggerThan4 = EVENT_BUFFER.every((e) => Math.abs(e.deltaY) > 4)
@@ -87,7 +86,7 @@ const detectGestures = (() => {
       if (allXAreMinusZero && allYAreFloat && !absBiggerThan4) {
         gestureLock = true
 
-        console.log("touchpadZoomingLock")
+        console.log('touchpadZoomingLock')
         // console.log([...EVENT_BUFFER])
         // zoomFactor = deltaY > 0 ? -.1 : .1
         // zooming = true

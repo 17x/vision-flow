@@ -77,8 +77,8 @@ export const fitRectToViewport = (rect: Rect, viewport: Rect, paddingScale = 0.0
 
 export function zoomAtPoint(
   this: Editor,
-  point: Point,
-  zoomFactor: number,
+  atPoint: Point,
+  newScale: number,
 ):
   {
     x: number;
@@ -86,37 +86,25 @@ export function zoomAtPoint(
   } {
   const {dpr, scale, rect, offset, viewportRect, worldRect} = this.viewport
   // const paddingScale = -zoomFactor
-  const pixelOffsetX = point.x - rect.width / 2
-  const pixelOffsetY = point.y - rect.height / 2
+  const pixelOffsetX = atPoint.x - rect.width / 2
+  const pixelOffsetY = atPoint.y - rect.height / 2
   const centerAreaThresholdX = rect.width / 8
   const centerAreaThresholdY = rect.height / 8
-  console.log(point)
-  /*  const virtualRect = {
-      x: 0, y: 0, width: worldRect.width, height: worldRect.height,
-    }*/
-  // const f = fitRectToViewport(virtualRect, viewportRect, paddingScale / 2)
+  console.log(atPoint)
+
   let newOffsetX = offset.x
   let newOffsetY = offset.y
-  let newScale = scale + zoomFactor
-  const minScale = 0.01 * dpr
-  const maxScale = 500 * dpr
-  let clampedScale = Math.max(minScale, Math.min(maxScale, newScale))
-  // if (clampedScale > maxScale || clampedScale < minScale) return false
-  console.log(clampedScale)
-  // fitRectToViewport
+
   if (Math.abs(pixelOffsetX) > centerAreaThresholdX) {
-    newOffsetX = newOffsetX - pixelOffsetX * zoomFactor * dpr
+    newOffsetX = newOffsetX - pixelOffsetX * newScale * dpr
   }
 
   if (Math.abs(pixelOffsetY) > centerAreaThresholdY) {
-    newOffsetY = newOffsetY - pixelOffsetY * zoomFactor * dpr
+    newOffsetY = newOffsetY - pixelOffsetY * newScale * dpr
   }
 
   return {
-    // scale: newScale,
-    offset: {
-      x: newOffsetX,
-      y: newOffsetY,
-    },
+    x: newOffsetX,
+    y: newOffsetY,
   }
 }

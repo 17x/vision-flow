@@ -49,7 +49,7 @@ class Editor {
   config: EditorConfig
   private moduleCounter = 0
   readonly moduleMap: ModuleMap
-  private readonly snapPoints: SnapPointData[] = []
+  // private readonly snapPoints: SnapPointData[] = []
   private readonly visibleModuleMap: ModuleMap
   readonly action: Action
   readonly container: HTMLDivElement
@@ -174,12 +174,12 @@ class Editor {
     })
   }
 
-  updateSnapPoints() {
+  /*updateSnapPoints() {
     this.snapPoints.length = 0
     this.visibleModuleMap.forEach(module => {
       this.snapPoints.push(...module.getSnapPoints())
     })
-  }
+  }*/
 
   updateVisibleSelected() {
     this.visibleSelected.clear()

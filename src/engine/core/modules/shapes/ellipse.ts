@@ -145,7 +145,9 @@ class Ellipse extends Shape {
     ctx.restore()
   }
 
-  getOperators() {}
+  getOperators():O {
+    return []
+  }
 
   public getSnapPoints(): SnapPointData[] {
     const {x: cx, y: cy, r1, r2, id} = this

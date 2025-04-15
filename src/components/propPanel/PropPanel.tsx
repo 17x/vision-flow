@@ -50,62 +50,62 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
   return (
     <div className="z-30 text-sm">
       {/* Shape Properties Group */}
-      <div className="mb-4 ">
-        <div className="px-4 w-full h-full flex justify-between items-center">
+      <div className="mb-1 ">
+        <div className=" w-full h-full flex justify-between items-center">
           <span className={''}>X:</span>
           <input
             type="number"
             name="x"
             value={props.x}
             onChange={handleChange}
-            className="w-16 px-2 py-1 text-black rounded"
+            className="w-16  py-1 text-black rounded"
           />
         </div>
-        <div className="px-4 w-full h-full flex justify-between items-center">
+        <div className=" w-full h-full flex justify-between items-center">
           <span className={''}>Y:</span>
           <input
             type="number"
             name="y"
             value={props.y}
             onChange={handleChange}
-            className="w-16 px-2 py-1 text-black rounded"
+            className="w-16  py-1 text-black rounded"
           />
         </div>
-        <div className="px-4 w-full h-full flex justify-between items-center">
+        <div className=" w-full h-full flex justify-between items-center">
           <span className={''}>Width:</span>
           <input
             type="number"
             name="width"
             value={props.width}
             onChange={handleChange}
-            className="w-16 px-2 py-1 text-black rounded"
+            className="w-16  py-1 text-black rounded"
           />
         </div>
-        <div className="px-4 w-full h-full flex justify-between items-center">
+        <div className=" w-full h-full flex justify-between items-center">
           <span>Height:</span>
           <input
             type="number"
             name="height"
             value={props.height}
             onChange={handleChange}
-            className="w-16 px-2 py-1 text-black rounded"
+            className="w-16  py-1 text-black rounded"
           />
         </div>
-        <div className="px-4 w-full h-full flex justify-between items-center">
+        <div className=" w-full h-full flex justify-between items-center">
           <span>Rotation:</span>
           <input
             type="number"
             name="rotation"
             value={props.rotation}
             onChange={handleChange}
-            className="w-16 px-2 py-1 text-black rounded"
+            className="w-16  py-1 text-black rounded"
           />
         </div>
       </div>
 
       {/* Fill and Line Properties Group */}
-      <div className="mb-4">
-        <div className="px-4 w-full h-full flex justify-between items-center">
+      <div className="mb-1">
+        <div className=" w-full h-full flex justify-between items-center">
           <span>Enable Fill</span>
           <input
             type="checkbox"
@@ -115,7 +115,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
             className="ml-2"
           />
         </div>
-        <div className="px-4 w-full h-full flex justify-between items-center">
+        <div className=" w-full h-full flex justify-between items-center">
           <span>Fill Color:</span>
           <input
             type="color"
@@ -128,7 +128,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
             className="w-10 h-10 p-1 rounded"
           />
         </div>
-        <div className="px-4 w-full h-full flex justify-between items-center">
+        <div className=" w-full h-full flex justify-between items-center">
           <span>Enable Line</span>
           <input
             type="checkbox"
@@ -138,7 +138,7 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
             className="ml-2"
           />
         </div>
-        <div className="px-4 w-full h-full flex justify-between items-center">
+        <div className=" w-full h-full flex justify-between items-center">
           <span>Line Color:</span>
           <input
             type="color"
@@ -148,21 +148,21 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
             className="w-10 h-10 p-1 rounded"
           />
         </div>
-        <div className="px-4 w-full h-full flex justify-between items-center">
+        <div className=" w-full h-full flex justify-between items-center">
           <span className={''}>Line Width:</span>
           <input
             type="number"
             name="lineWidth"
             value={props.lineWidth}
             onChange={handleChange}
-            className="w-16 px-2 py-1 text-black rounded"
+            className="w-16  py-1 text-black rounded"
           />
         </div>
       </div>
 
       {/* Appearance Group */}
-      <div className="mb-4">
-        {/*<div className="px-4 w-full h-full flex justify-between items-center">
+      <div className="mb-1">
+        {/*<div className=" w-full h-full flex justify-between items-center">
           <span>Shadow</span>
           <input
             type="checkbox"
@@ -172,14 +172,14 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
             className="ml-2"
           />
         </div>*/}
-        <div className="px-4 w-full h-full flex justify-between items-center">
+        <div className=" w-full h-full flex justify-between items-center">
           <span>Opacity:</span>
           <input
             type="number"
             name="opacity"
             value={props.opacity}
             onChange={handleChange}
-            className="w-16 px-2 py-1 text-black rounded"
+            className="w-16  py-1 text-black rounded"
           />
         </div>
       </div>

@@ -93,7 +93,7 @@ export function initEditor(this: Editor) {
 
   on('visible-module-updated', () => {
     this.updateVisibleModuleMap()
-    this.updateSnapPoints()
+    // this.updateSnapPoints()
     dispatch('render-modules')
     dispatch('visible-selection-updated')
   })

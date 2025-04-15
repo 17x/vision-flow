@@ -52,8 +52,7 @@ export function initEditor(this: Editor) {
 
       if (arg.zoomTo) {
         result = this.zoomTo(arg.zoomFactor)
-      }
-      if (arg.zoomBy) {
+      } else if (arg.zoomBy) {
         result = this.zoomAtPoint({x: this.viewport.rect.width / 2, y: this.viewport.rect.height / 2}, arg.zoomFactor)
       } else {
         result = this.zoomAtPoint(arg.physicalPoint!, arg.zoomFactor)

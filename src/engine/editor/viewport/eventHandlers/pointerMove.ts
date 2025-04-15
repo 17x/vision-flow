@@ -84,6 +84,8 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       break
 
     case 'panning':
+      viewport.wrapper.setPointerCapture(e.pointerId)
+
       action.dispatch('world-shift',
         {
           x: e.movementX,

@@ -5,7 +5,7 @@ import {CircleRenderProps} from '../../engine/core/renderer/type'
 // import {PropsWithoutIdentifiers} from '../../engine/core/modules/modules'
 // import {ModulePropsMap} from '../../engine/core/modules/modules'
 
-const createBaseDataByType = <T extends ModuleNames>(type: T = 'rectangle' as T, x: number = 250, y: number = 250): PropsWithoutIdentifiers<T> => {
+const createBaseDataByType = <T extends ModuleNames>(type: T = 'rectangle' as T, x: number = 150, y: number = 150): PropsWithoutIdentifiers<T> => {
   if (type === 'ellipse') {
     return {
       type: 'ellipse',
@@ -30,8 +30,8 @@ const createBaseDataByType = <T extends ModuleNames>(type: T = 'rectangle' as T,
       type: 'rectangle',
       x,
       y,
-      width: x / 1.2,
-      height: y / 1.2,
+      width: x / 1.5,
+      height: y / 1.5,
       enableLine: true,
       lineColor: '#000000',
       lineWidth: 1,
@@ -92,7 +92,7 @@ export const createMockData = (editor: Editor) => {
     }*/
   const modulesData = []
 
-  modulesData.push(createBaseDataByType('ellipse'))
+  // modulesData.push(createBaseDataByType('ellipse'))
   modulesData.push(createBaseDataByType('rectangle'))
   editor.action.dispatch('module-add', modulesData)
 }

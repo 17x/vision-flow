@@ -72,7 +72,7 @@ export function initEditor(this: Editor) {
       // clamp
       newScale = Math.max(minScale, Math.min(newScale, maxScale))
       result = this.zoom(newScale, point)
-
+// return
       // console.log(newScale)
 
       this.viewport.scale = newScale
@@ -318,17 +318,16 @@ export function initEditor(this: Editor) {
   on('render-modules', () => {
     resetCanvas(
       this.viewport.mainCTX,
-      // this.viewport.dpr,
       this.viewport.scale,
       this.viewport.offset,
     )
+
     this.renderModules()
   })
 
   on('render-selection', () => {
     resetCanvas(
       this.viewport.selectionCTX,
-      // this.viewport.dpr,
       this.viewport.scale,
       this.viewport.offset,
     )

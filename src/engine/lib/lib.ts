@@ -344,7 +344,7 @@ export function createHandlersForRect(
   return handlers
 }
 
-function rotatePoint(
+export function rotatePoint(
   px: number,
   py: number,
   cx: number,
@@ -363,7 +363,7 @@ function rotatePoint(
   }
 }
 
-function getCursor(
+export function getCursor(
   x: number,
   y: number,
   cx: number,

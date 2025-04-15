@@ -1,6 +1,8 @@
 import Shape, {ShapeProps} from './shape.ts'
 import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
 import {OperationHandlers} from '../../../editor/selection/type'
+import {getCursor, rotatePoint} from '../../../lib/lib.ts'
+import {SnapPointData} from '../../../editor/type'
 
 export interface RectangleProps extends ShapeProps {
   width: number
@@ -264,6 +266,27 @@ class Rectangle extends Shape {
     return handlers
   }
 
+  public getSnapPoints(): SnapPointData[] {
+    const {x: cx, y: cy, width, height, id} = this
+    const halfWidth = width / 2
+    const halfHeight = height / 2
+
+    // Define basic snap points: center, corners, and edge centers
+    const points: SnapPointData[] = [
+      {id, x: cx, y: cy, type: 'center'},
+      {id, x: cx - halfWidth, y: cy - halfHeight, type: 'corner-tl'},
+      {id, x: cx + halfWidth, y: cy - halfHeight, type: 'corner-tr'},
+      {id, x: cx + halfWidth, y: cy + halfHeight, type: 'corner-br'},
+      {id, x: cx - halfWidth, y: cy + halfHeight, type: 'corner-bl'},
+      {id, x: cx, y: cy - halfHeight, type: 'edge-top'},
+      {id, x: cx + halfWidth, y: cy, type: 'edge-right'},
+      {id, x: cx, y: cy + halfHeight, type: 'edge-bottom'},
+      {id, x: cx - halfWidth, y: cy, type: 'edge-left'},
+    ]
+
+    return points
+  }
+
   render(ctx: CanvasRenderingContext2D): void {
     // const { x, y, width, height, fillColor } = this.getDetails();
     const {
@@ -297,7 +320,7 @@ class Rectangle extends Shape {
     if (lineWidth > 0) {
       ctx.lineWidth = lineWidth
       ctx.strokeStyle = lineColor
-      ctx.lineJoin = 'round'
+      ctx.lineJoin = 'miter'
     }
 
     // return

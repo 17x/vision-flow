@@ -92,7 +92,7 @@ export const createMockData = (editor: Editor) => {
     }*/
   const modulesData = []
 
-  // modulesData.push(createBaseDataByType('ellipse'))
+  modulesData.push(createBaseDataByType('ellipse'))
   modulesData.push(createBaseDataByType('rectangle'))
   editor.action.dispatch('module-add', modulesData)
 }

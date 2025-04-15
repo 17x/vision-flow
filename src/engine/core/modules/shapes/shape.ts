@@ -11,8 +11,8 @@ export interface ShapeProps extends BasicModuleProps {
 }
 
 class Shape extends Base {
-  protected x: number
-  protected y: number
+  public x: number
+  public y: number
   readonly fillColor: FillColor
   readonly enableFill: boolean
 

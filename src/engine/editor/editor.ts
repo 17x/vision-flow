@@ -1,4 +1,4 @@
-import {EventHandlers} from './type'
+import {EventHandlers, SnapPointData} from './type'
 import History from './history/history.ts'
 import Action from './actions/actions.ts'
 import {
@@ -49,6 +49,7 @@ class Editor {
   config: EditorConfig
   private moduleCounter = 0
   readonly moduleMap: ModuleMap
+  private readonly snapPoints: SnapPointData[] = []
   private readonly visibleModuleMap: ModuleMap
   readonly action: Action
   readonly container: HTMLDivElement
@@ -170,6 +171,13 @@ class Editor {
 
     sortedModules.forEach(module => {
       this.visibleModuleMap.set(module.id, module)
+    })
+  }
+
+  updateSnapPoints() {
+    this.snapPoints.length = 0
+    this.visibleModuleMap.forEach(module => {
+      this.snapPoints.push(...module.getSnapPoints())
     })
   }
 

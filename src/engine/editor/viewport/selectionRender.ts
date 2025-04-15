@@ -34,7 +34,7 @@ function selectionRender(this: Editor) {
       height: centerPointWidth * 2,
       fillColor: fillColor,
       lineColor: 'transparent',
-      lineWidth: lineWidth / this.viewport.scale * this.viewport.dpr,
+      lineWidth: 1 / this.viewport.scale * this.viewport.dpr,
       rotation,
       opacity: 100,
     }
@@ -46,10 +46,10 @@ function selectionRender(this: Editor) {
       height,
       fillColor,
       lineColor,
-      lineWidth: lineWidth / this.viewport.scale * this.viewport.dpr,
+      lineWidth: 1 / this.viewport.scale * this.viewport.dpr,
       rotation,
       opacity: 0,
-      dashLine: '[3, 5]',
+      // dashLine: '[3, 5]',
     }
 
     rects.push(boundaryRect)
@@ -93,15 +93,18 @@ function selectionRender(this: Editor) {
   })
 
   if (this.hoveredModule) {
-    const {x, y} = this.getVisibleModuleMap.get(this.hoveredModule)
-    dots.push({
-      x,
-      y,
-      lineColor: 'transparent',
-      fillColor,
-      r1: centerPointWidth,
-      r2: centerPointWidth,
-    })
+    const module = this.getVisibleModuleMap.get(this.hoveredModule)
+
+    if (module) {
+      dots.push({
+        x: module.x,
+        y: module.y,
+        lineColor: 'transparent',
+        fillColor,
+        r1: centerPointWidth,
+        r2: centerPointWidth,
+      })
+    }
   }
 
   rectRender(ctx, rects)

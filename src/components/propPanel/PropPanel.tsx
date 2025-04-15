@@ -148,6 +148,16 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
             className="w-10 h-10 p-1 rounded"
           />
         </div>
+        <div className="px-4 w-full h-full flex justify-between items-center">
+          <span className={''}>Line Width:</span>
+          <input
+            type="number"
+            name="lineWidth"
+            value={props.lineWidth}
+            onChange={handleChange}
+            className="w-16 px-2 py-1 text-black rounded"
+          />
+        </div>
       </div>
 
       {/* Appearance Group */}

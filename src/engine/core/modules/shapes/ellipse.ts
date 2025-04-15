@@ -1,5 +1,6 @@
 import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
 import Shape, {ShapeProps} from './shape.ts'
+import {SnapPointData} from '../../../editor/type'
 
 export interface EllipseProps extends ShapeProps {
   r1: number
@@ -144,6 +145,22 @@ class Ellipse extends Shape {
     ctx.restore()
   }
 
+  getOperators() {}
+
+  public getSnapPoints(): SnapPointData[] {
+    const {x: cx, y: cy, r1, r2, id} = this
+
+    // Define snap points: center, cardinal edge points (top, right, bottom, left)
+    const points: SnapPointData[] = [
+      {id, x: cx, y: cy, type: 'center'},
+      {id, x: cx, y: cy - r2, type: 'edge-top'},
+      {id, x: cx + r1, y: cy, type: 'edge-right'},
+      {id, x: cx, y: cy + r2, type: 'edge-bottom'},
+      {id, x: cx - r1, y: cy, type: 'edge-left'},
+    ]
+
+    return points
+  }
 }
 
 export default Ellipse

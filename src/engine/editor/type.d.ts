@@ -60,6 +60,11 @@ export interface WorldInfo extends Size {
   status: string
 }
 
+export interface SnapPointData extends Point {
+  id: UID,
+  type: string
+}
+
 type InitializedHandler = () => void;
 type HistoryUpdatedHandler = (history: History) => void;
 type ModulesUpdatedHandler = (moduleMap: ModuleMap) => void;

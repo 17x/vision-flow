@@ -5,7 +5,7 @@ import {CircleRenderProps} from '../../engine/core/renderer/type'
 // import {PropsWithoutIdentifiers} from '../../engine/core/modules/modules'
 // import {ModulePropsMap} from '../../engine/core/modules/modules'
 
-const createBaseDataByType = <T extends ModuleNames>(type: T = 'rectangle' as T, x: number = 500, y: number = 500): PropsWithoutIdentifiers<T> => {
+const createBaseDataByType = <T extends ModuleNames>(type: T = 'rectangle' as T, x: number = 250, y: number = 250): PropsWithoutIdentifiers<T> => {
   if (type === 'ellipse') {
     return {
       type: 'ellipse',

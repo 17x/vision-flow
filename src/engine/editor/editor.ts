@@ -27,6 +27,7 @@ import {initEditor} from './initEditor.ts'
 import {fitRectToViewport} from './viewport/helper.ts'
 import uid from '../../utilities/Uid.ts'
 import {EditorEventType} from './actions/type'
+import {CenterBasedRect} from '../type'
 
 export interface EditorDataProps {
   id: UID;
@@ -307,9 +308,10 @@ class Editor {
   }
 
   updateWorldRect() {
+    const {dpr} = this.viewport
     const {width, height} = this.viewport.viewportRect
     const p1 = this.getWorldPointByViewportPoint(0, 0)
-    const p2 = this.getWorldPointByViewportPoint(width, height)
+    const p2 = this.getWorldPointByViewportPoint(width / dpr, height / dpr)
 
     this.viewport.worldRect = generateBoundingRectFromTwoPoints(p1, p2)
   }
@@ -345,34 +347,35 @@ class Editor {
       y: number;
     };
   } | false {
-    const {offset, scale, dpr} = this.viewport
-    const minScale = 0.1 * dpr
-    const maxScale = 5 * dpr
-    let newScale = scale + zoom
+    const {offset, scale: oldScale, dpr, frame, rect, viewportRect, worldRect} = this.viewport
+    const minScale = 0.01 * dpr
+    const maxScale = 500 * dpr
+    // let newScale = zoomTo ? zoom : oldScale + zoom
+    const pixelOffsetX = point.x - rect.width / 2
+    const pixelOffsetY = point.y - rect.height / 2
+    const centerAreaThresholdX = rect.width / 8
+    const centerAreaThresholdY = rect.height / 8
+    const f = fitRectToViewport(worldRect, viewportRect, -zoom)
+    let newOffsetX = f.offsetX / dpr
+    let newOffsetY = f.offsetY / dpr
+    let newScale = f.scale
 
-    if (zoomTo) {
-      newScale = zoom
+    if (Math.abs(pixelOffsetX) > centerAreaThresholdX) {
+      console.log('offsetX', pixelOffsetX)
+      newOffsetX = newOffsetX - pixelOffsetX * zoom
     }
 
-    if (newScale < minScale || newScale > maxScale) {return false}
-
-    const clampedScale = Math.max(minScale, Math.min(maxScale, newScale))
-
-    const zoomFactor = clampedScale / scale
-
-    const worldPoint = this.getWorldPointByViewportPoint(point.x, point.y)
-    const newOffsetX = worldPoint.x - (worldPoint.x - offset.x) * zoomFactor
-    const newOffsetY = worldPoint.y - (worldPoint.y - offset.y) * zoomFactor
-
+    if (Math.abs(pixelOffsetY) > centerAreaThresholdY) {
+      console.log('offsetY', pixelOffsetY)
+      newOffsetY = newOffsetY - pixelOffsetY * zoom
+    }
     return {
-      scale: clampedScale,
+      scale: newScale,
       offset: {
         x: newOffsetX,
         y: newOffsetY,
       },
     }
-    // this.viewport.render()
-    // this.updateWorldRect()
   }
 
   zoomTo(newScale: number | 'fit') {
@@ -461,7 +464,7 @@ class Editor {
     // console.log(frame)
     // console.log(viewportRect)
     const frameRect = frame.getBoundingRect()
-    const {scale, offsetX, offsetY} = fitRectToViewport(frameRect as Rect, viewportRect, 0.95)
+    const {scale, offsetX, offsetY} = fitRectToViewport(frameRect, viewportRect, 0.02)
 
     // console.log(virtualRect)
     // console.log(scale, offsetX, offsetY)

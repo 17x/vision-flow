@@ -5,7 +5,7 @@ import Rectangle from '../../core/modules/shapes/rectangle.ts'
 * which can set the rect middle of the viewport
 * paddingScale can leave some space between the frame and the viewport boundary
 * */
-export const fitRectToViewport = (rect: Rect, viewport: Rect, paddingScale = 0.98): {
+export const fitRectToViewport = (rect: Rect, viewport: Rect, paddingScale = 0.02): {
   scale: number
   offsetX: number
   offsetY: number
@@ -14,13 +14,32 @@ export const fitRectToViewport = (rect: Rect, viewport: Rect, paddingScale = 0.9
   const {width: rectWidth, height: rectHeight} = rect
   const scaleX = viewWidth / rectWidth
   const scaleY = viewHeight / rectHeight
-  const scale = Math.min(scaleX, scaleY) * paddingScale
+  const scale = Math.min(scaleX, scaleY) - Math.min(scaleX, scaleY) * paddingScale
   const offsetX = ((viewWidth - rectWidth * scale) / 2 - rect.x * scale)
   const offsetY = ((viewHeight - rectHeight * scale) / 2 - rect.y * scale)
 
   return {
     scale,
     offsetX,
+    offsetY,
+  }
+}
+export const fitHeightToViewport = (rectHeight: number, viewport: Rect, paddingScale = 0.98): {
+  scale: number
+  offsetX: number
+  offsetY: number
+} => {
+  const {width: viewWidth, height: viewHeight} = viewport
+  // const {width: rectWidth, height: rectHeight} = rect
+  // const scaleX = viewWidth / rectWidth
+  const scaleY = viewHeight / rectHeight
+  const scale = scaleY * paddingScale
+  // const offsetX = ((viewWidth - rectWidth * scale) / 2 - rect.x * scale)
+  const offsetY = ((viewHeight - rectHeight * scale) / 2 - rect.y * scale)
+
+  return {
+    scale,
+    // offsetX,
     offsetY,
   }
 }
@@ -47,6 +66,9 @@ export const createFrame = (p: FrameType, id: UID): Rectangle => {
   } else if (p === 'photo1') {
     width = 35
     height = 55
+  } else if (p === 'bigSquare') {
+    width = 500
+    height = 500
   }
 
   x = width / 2

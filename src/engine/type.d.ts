@@ -25,6 +25,7 @@ declare  global {
   }
 
   type Rect = Size & Point
+  type CenterBasedRect = Rect
   type BoundingRect = Size & Point & {
     top: number;
     bottom: number;

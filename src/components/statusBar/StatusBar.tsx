@@ -21,7 +21,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({className = '', worldPoint}
                 executeAction('world-zoom', newScale as never)
               }}/>
               <div
-                  className={'text-xs line-clamp-1'}>{`dx:${worldPoint.x.toFixed(2)} dx:${worldPoint.y.toFixed(2)}`}</div>
+                  className={'text-xs line-clamp-1'}>{`dx:${worldPoint.x.toFixed(2)} dy:${worldPoint.y.toFixed(2)}`}</div>
           </>
       }
     </footer>

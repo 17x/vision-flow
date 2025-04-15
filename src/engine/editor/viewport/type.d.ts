@@ -49,6 +49,7 @@ export interface Viewport {
   mouseDownPoint: Point
   mouseMovePoint: Point
   offset: Point
+  /* BoundingRect in the browser dom model*/
   rect: BoundingRect
   /*
   * viewportRect:

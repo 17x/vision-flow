@@ -347,9 +347,9 @@ class Editor {
       y: number;
     };
   } | false {
-    const {offset, scale: oldScale, dpr, frame, rect, viewportRect, worldRect} = this.viewport
-    const minScale = 0.01 * dpr
-    const maxScale = 500 * dpr
+    const {dpr, rect, viewportRect, worldRect} = this.viewport
+    // const minScale = 0.01 * dpr
+    // const maxScale = 500 * dpr
     // let newScale = zoomTo ? zoom : oldScale + zoom
     const pixelOffsetX = point.x - rect.width / 2
     const pixelOffsetY = point.y - rect.height / 2
@@ -361,12 +361,10 @@ class Editor {
     let newScale = f.scale
 
     if (Math.abs(pixelOffsetX) > centerAreaThresholdX) {
-      console.log('offsetX', pixelOffsetX)
       newOffsetX = newOffsetX - pixelOffsetX * zoom * dpr
     }
 
     if (Math.abs(pixelOffsetY) > centerAreaThresholdY) {
-      console.log('offsetY', pixelOffsetY)
       newOffsetY = newOffsetY - pixelOffsetY * zoom * dpr
     }
 

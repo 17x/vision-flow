@@ -362,13 +362,14 @@ class Editor {
 
     if (Math.abs(pixelOffsetX) > centerAreaThresholdX) {
       console.log('offsetX', pixelOffsetX)
-      newOffsetX = newOffsetX - pixelOffsetX * zoom * 2
+      newOffsetX = newOffsetX - pixelOffsetX * zoom * dpr
     }
 
     if (Math.abs(pixelOffsetY) > centerAreaThresholdY) {
       console.log('offsetY', pixelOffsetY)
-      newOffsetY = newOffsetY - pixelOffsetY * zoom * 2
+      newOffsetY = newOffsetY - pixelOffsetY * zoom * dpr
     }
+
     return {
       scale: newScale,
       offset: {

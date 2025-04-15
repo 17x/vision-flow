@@ -23,7 +23,7 @@ const ShortcutListener: React.FC = () => {
       zoomBy: true,
       zoomFactor: 0.5,
     }
-    console.log(key, metaKey)
+    // console.log(key, metaKey)
     if (key === '=' && (metaKey)) {
       shortcutCode = 'world-zoom'
     }

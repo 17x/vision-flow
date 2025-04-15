@@ -332,11 +332,11 @@ class Editor {
     const pixelOffsetY = point.y - rect.height / 2
     const centerAreaThresholdX = rect.width / 8
     const centerAreaThresholdY = rect.height / 8
-    const f = fitRectToViewport(worldRect, viewportRect, paddingScale)
+    const f = fitRectToViewport(worldRect, viewportRect, paddingScale / 2)
     let newOffsetX = f.offsetX / dpr
     let newOffsetY = f.offsetY / dpr
     let newScale = f.scale
-    console.log(this.viewport.scale, worldRect, {...this.viewport.offset})
+
     if (Math.abs(pixelOffsetX) > centerAreaThresholdX) {
       newOffsetX = newOffsetX - pixelOffsetX * zoomFactor * dpr
     }
@@ -345,6 +345,15 @@ class Editor {
       newOffsetY = newOffsetY - pixelOffsetY * zoomFactor * dpr
     }
 
+    console.log(
+      {
+        scale: newScale,
+        offset: {
+          x: newOffsetX,
+          y: newOffsetY,
+        },
+      },
+    )
     return {
       scale: newScale,
       offset: {
@@ -360,31 +369,36 @@ class Editor {
     const maxScale = 500 * dpr
     const point = {x: rect.width / 2, y: rect.height / 2}
     if (zoom > maxScale || zoom < minScale) return false
-    // console.log(this.viewport)
-    // console.log(point)
-    console.log(scale, zoom)
-    console.log('zoomFactor: ', scale - zoom - 1)
-    return this.zoomAtPoint(point, scale - zoom - 1)
 
-    console.log(
+    let zoomFactor = (zoom - scale) / 2
+
+/*    if (zoom > 1) {
+      zoomFactor -= 1
+    }*/
+    console.log(this.viewport.worldRect)
+    console.log(zoomFactor)
+    console.log(this.zoomAtPoint(point, zoomFactor))
+    return this.zoomAtPoint(point, zoomFactor)
+
+    /*console.log(
       this.zoomAtPoint(point, -(scale - zoom) + 1),
-    )
-    console.log(
-      {
-        scale: zoom,
-        offset: {
-          x: offset.x - (offset.x / dpr * zoom) / 2,
-          t: offset.y,
-        },
-      },
-    )
-    return {
-      scale: zoom,
-      offset: {
-        x: offset.x - (offset.x / dpr * zoom) / 2,
-        y: offset.y,
-      },
-    }
+    )*/
+    /* console.log(
+       {
+         scale: zoom,
+         offset: {
+           x: offset.x - (offset.x / dpr * zoom) / 2,
+           t: offset.y,
+         },
+       },
+     )
+     return {
+       scale: zoom,
+       offset: {
+         x: offset.x - (offset.x / dpr * zoom) / 2,
+         y: offset.y,
+       },
+     }*/
   }
 
   setTranslateViewport(x: number, y: number) {

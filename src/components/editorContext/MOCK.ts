@@ -1,11 +1,8 @@
 // eslint disabled
 import Editor from '../../engine/editor/editor.ts'
 import {CircleRenderProps} from '../../engine/core/renderer/type'
-// import {ModuleNames} from '../../engine/core/modules/modules'
-// import {PropsWithoutIdentifiers} from '../../engine/core/modules/modules'
-// import {ModulePropsMap} from '../../engine/core/modules/modules'
 
-const createBaseDataByType = <T extends ModuleNames>(type: T = 'rectangle' as T, x: number = 150, y: number = 150): PropsWithoutIdentifiers<T> => {
+const createBaseDataByType = <T extends ModuleNames>(type: T = 'rectangle' as T, x: number = 300, y: number = 300): PropsWithoutIdentifiers<T> => {
   if (type === 'ellipse') {
     return {
       type: 'ellipse',
@@ -17,7 +14,7 @@ const createBaseDataByType = <T extends ModuleNames>(type: T = 'rectangle' as T,
       lineColor: '#000',
       lineWidth: 1,
       enableFill: true,
-      fillColor: '#ff0000',
+      fillColor: '#f89f9f',
       opacity: 100,
       shadow: false,
       radius: 0,
@@ -93,6 +90,6 @@ export const createMockData = (editor: Editor) => {
   const modulesData = []
 
   modulesData.push(createBaseDataByType('ellipse'))
-  modulesData.push(createBaseDataByType('rectangle'))
+  modulesData.push(createBaseDataByType('rectangle', 500, 500))
   editor.action.dispatch('module-add', modulesData)
 }

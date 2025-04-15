@@ -19,8 +19,8 @@ class Ellipse extends Shape {
                 r1,
                 r2,
                 ...rest
-              }: EllipseProps) {
-    super(rest)
+              }: Omit<EllipseProps, 'type'>) {
+    super({type: 'rectangle', ...rest})
 
     this.r1 = r1!
     this.r2 = r2!
@@ -79,6 +79,42 @@ class Ellipse extends Shape {
     }
 
     return null
+  }
+
+  public getHighlightModule(lineWidth: number, lineColor: string) {
+    const {x, y, r1, r2, rotation, layer, id} = this
+
+    return new Ellipse({
+      x,
+      y,
+      r1,
+      r2,
+      lineColor,
+      lineWidth,
+      rotation,
+      layer,
+      id: id + 'highlight',
+      opacity: 0,
+    })
+  }
+
+  getOperators() {
+    return []
+  }
+
+  public getSnapPoints(): SnapPointData[] {
+    const {x: cx, y: cy, r1, r2, id} = this
+
+    // Define snap points: center, cardinal edge points (top, right, bottom, left)
+    const points: SnapPointData[] = [
+      {id, x: cx, y: cy, type: 'center'},
+      {id, x: cx, y: cy - r2, type: 'edge-top'},
+      {id, x: cx + r1, y: cy, type: 'edge-right'},
+      {id, x: cx, y: cy + r2, type: 'edge-bottom'},
+      {id, x: cx - r1, y: cy, type: 'edge-left'},
+    ]
+
+    return points
   }
 
   render(ctx: CanvasRenderingContext2D) {
@@ -143,25 +179,6 @@ class Ellipse extends Shape {
 
     // Restore the context to avoid affecting subsequent drawings
     ctx.restore()
-  }
-
-  getOperators():O {
-    return []
-  }
-
-  public getSnapPoints(): SnapPointData[] {
-    const {x: cx, y: cy, r1, r2, id} = this
-
-    // Define snap points: center, cardinal edge points (top, right, bottom, left)
-    const points: SnapPointData[] = [
-      {id, x: cx, y: cy, type: 'center'},
-      {id, x: cx, y: cy - r2, type: 'edge-top'},
-      {id, x: cx + r1, y: cy, type: 'edge-right'},
-      {id, x: cx, y: cy + r2, type: 'edge-bottom'},
-      {id, x: cx - r1, y: cy, type: 'edge-left'},
-    ]
-
-    return points
   }
 }
 

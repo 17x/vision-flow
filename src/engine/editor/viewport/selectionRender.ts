@@ -7,7 +7,7 @@ import Editor from '../editor.ts'
 
 function selectionRender(this: Editor) {
   if (this.moduleMap.size === 0) return
-  const {selectionCTX: ctx, dpr, offset, worldRect, scale: scale, mouseMovePoint} = this.viewport
+  const {selectionCTX: ctx, dpr, offset, worldRect, scale, mouseMovePoint} = this.viewport
   const rects: RectangleRenderProps[] = []
   const dots: CircleRenderProps[] = []
   const fillColor = '#5491f8'
@@ -22,44 +22,30 @@ function selectionRender(this: Editor) {
 
   highlightedModules.forEach((id) => {
     const module = this.moduleMap.get(id)
-    // if(!module)debugger
-    // console.log(module)
-    const {
-      x, y, width, height, rotation, lineWidth,
-    } = (module as Rectangle).getDetails()
-    const centerPointRect = {
-      x,
-      y,
-      width: centerPointWidth * 2,
-      height: centerPointWidth * 2,
-      fillColor: fillColor,
-      lineColor: 'transparent',
-      lineWidth: 1 / this.viewport.scale * this.viewport.dpr,
-      rotation,
-      opacity: 100,
-    }
+    const {x, y, rotation} = (module as Rectangle).getDetails()
+    const lineWidth = 1 / this.viewport.scale * this.viewport.dpr
+    const mod = module!.getHighlightModule(lineWidth, fillColor) as ModuleInstance
 
-    const boundaryRect = {
-      x,
-      y,
-      width,
-      height,
-      fillColor,
-      lineColor,
-      lineWidth: 1 / this.viewport.scale * this.viewport.dpr,
-      rotation,
-      opacity: 0,
-      // dashLine: '[3, 5]',
-    }
-
-    rects.push(boundaryRect)
+    mod!.render(ctx)
 
     if (id !== this.hoveredModule) {
+      const centerPointRect = {
+        x,
+        y,
+        width: centerPointWidth * 2,
+        height: centerPointWidth * 2,
+        fillColor: fillColor,
+        lineColor: 'transparent',
+        lineWidth,
+        rotation,
+        opacity: 100,
+      }
       rects.push(centerPointRect)
     }
   })
 
   this.operationHandlers.forEach(operation => {
+    console.log(operation)
     switch (operation.type) {
       case 'resize': {
         // console.log(operation.data)

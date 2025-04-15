@@ -3,6 +3,7 @@ import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
 import {OperationHandlers} from '../../../editor/selection/type'
 import {getCursor, rotatePoint} from '../../../lib/lib.ts'
 import {SnapPointData} from '../../../editor/type'
+import {handlerOffsets} from '../handleBasics.ts'
 
 export interface RectangleProps extends ShapeProps {
   width: number
@@ -94,6 +95,23 @@ class Rectangle extends Shape {
     return null
   }
 
+  public getHighlightModule(lineWidth: number, lineColor: string): ModuleInstance {
+    const {x, y, width, height, rotation, layer, id} = this
+    return new Rectangle({
+      x,
+      y,
+      width,
+      height,
+      // fillColor,
+      lineColor,
+      lineWidth,
+      rotation,
+      layer,
+      id: id + 'highlight',
+      opacity: 0,
+    })
+  }
+
   public getOperators(scale: number, dpr: DPR) {
     const {
       x: cx,
@@ -104,119 +122,12 @@ class Rectangle extends Shape {
       rotation,
     } = this
 
-    const localHandleOffsets = [
-      {
-        type: 'rotate',
-        name: 'rotate-tl',
-        x: 0,
-        y: 0,
-        offsetX: -0.5,
-        offsetY: -0.5,
-        originCursor: 'rotate',
-        cursor: 'rotate',
-      }, // left-center
-      {
-        type: 'rotate',
-        name: 'rotate-tr',
-        x: 1,
-        y: 0,
-        offsetX: 0.5,
-        offsetY: -0.5,
-        originCursor: 'rotate',
-        cursor: 'rotate',
-      }, // left-center
-      {
-        type: 'rotate',
-        name: 'rotate-br',
-        x: 1,
-        y: 1,
-        offsetX: 0.5,
-        offsetY: 0.5,
-        originCursor: 'rotate',
-        cursor: 'rotate',
-      }, // left-center
-      {
-        type: 'rotate',
-        name: 'rotate-bl',
-        x: 0,
-        y: 1,
-        offsetX: -0.5,
-        offsetY: 0.5,
-        originCursor: 'rotate',
-        cursor: 'rotate',
-      },
-      {
-        type: 'resize',
-        name: 'tl',
-        x: 0,
-        y: 0,
-        originCursor: 'nwse-resize',
-        cursor: 'nwse-resize',
-      }, // top-left
-      {
-        type: 'resize',
-        name: 't',
-        x: 0.5,
-        y: 0,
-        originCursor: 'ns-resize',
-        cursor: 'ns-resize',
-      }, // top-center
-      {
-        type: 'resize',
-        name: 'tr',
-        x: 1,
-        y: 0,
-        originCursor: 'nesw-resize',
-        cursor: 'nesw-resize',
-      }, // top-right
-      {
-        type: 'resize',
-        name: 'r',
-        x: 1,
-        y: 0.5,
-        originCursor: 'ew-resize',
-        cursor: 'ew-resize',
-      }, // right-center
-      {
-        type: 'resize',
-        name: 'br',
-        x: 1,
-        y: 1,
-        originCursor: 'nwse-resize',
-        cursor: 'nwse-resize',
-      }, // bottom-right
-      {
-        type: 'resize',
-        name: 'b',
-        x: 0.5,
-        y: 1,
-        originCursor: 'ns-resize',
-        cursor: 'ns-resize',
-      }, // bottom-center
-      {
-        type: 'resize',
-        name: 'bl',
-        x: 0,
-        y: 1,
-        originCursor: 'nesw-resize',
-        cursor: 'nesw-resize',
-      }, // bottom-left
-      {
-        type: 'resize',
-        name: 'l',
-        x: 0,
-        y: 0.5,
-        originCursor: 'ew-resize',
-        cursor: 'ew-resize',
-      }, // left-center
-      // left-center
-    ] as const
     const resizeHandlerLen = 10
     const resizeHandlerBorderWidth = 1
     const resizeHandlerScaledWidth = (resizeHandlerLen / scale) * dpr
     const resizeHandlerScaledLineWidth = (resizeHandlerBorderWidth / scale) * dpr
 
-    const handlers = localHandleOffsets.map((offset): OperationHandlers => {
+    const handlers = handlerOffsets.map((offset): OperationHandlers => {
       // Calculate the handle position in local coordinates
       const handleX = cx - width / 2 + offset.x * width
       const handleY = cy - height / 2 + offset.y * height

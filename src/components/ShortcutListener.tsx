@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from 'react'
 import {ModuleMoveDirection} from '../engine/editor/type'
 import EditorContext from './editorContext/EditorContext.tsx'
-import {EditorEventType} from '../engine/editor/actions/type'
+import {EditorEventMap, EditorEventType} from '../engine/editor/actions/type'
 
 const ShortcutListener: React.FC = () => {
   const {executeAction, focused} = useContext(EditorContext)
@@ -19,6 +19,19 @@ const ShortcutListener: React.FC = () => {
     const moveDirection = arrowKeys[key]
     const moveDelta = {x: 0, y: 0}
     const MODULE_MOVE_STEP = 5
+    const zoomData: EditorEventMap['world-zoom'] = {
+      zoomBy: true,
+      zoomFactor: 0.5,
+    }
+    console.log(key, metaKey)
+    if (key === '=' && (metaKey)) {
+      shortcutCode = 'world-zoom'
+    }
+
+    if (key === '-' && (metaKey)) {
+      shortcutCode = 'world-zoom'
+      zoomData.zoomFactor = -0.5
+    }
 
     if (key === 'a' && (ctrlKey || metaKey)) {
       shortcutCode = 'selection-all'
@@ -76,6 +89,8 @@ const ShortcutListener: React.FC = () => {
 
     if (moveDirection) {
       executeAction(shortcutCode, {delta: moveDelta})
+    } else if (shortcutCode === 'world-zoom') {
+      executeAction(shortcutCode, zoomData)
     } else {
       executeAction(shortcutCode)
     }

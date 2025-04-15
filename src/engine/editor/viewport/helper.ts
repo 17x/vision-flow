@@ -90,7 +90,7 @@ export function zoomAtPoint(
   const centerAreaThresholdX = rect.width / 8
   const centerAreaThresholdY = rect.height / 8
   const scaleFactor = newScale / scale
-  const idx = newScale < scale ? -0.1 : 0.1
+  const idx = newScale < scale ? -0.2 : 0.2
 
   if (scaleFactor === 0) {
     return offset

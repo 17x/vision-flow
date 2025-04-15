@@ -137,6 +137,7 @@ class Rectangle extends Shape {
       let rotated
 
       if (offset.type === 'resize') {
+
         rotated = rotatePoint(handleX, handleY, cx, cy, rotation)
         cursor = getCursor(rotated.x, rotated.y, cx, cy, rotation)
         len = resizeHandlerScaledWidth

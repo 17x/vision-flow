@@ -83,7 +83,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
 
     case 'panning':
       viewport.wrapper.setPointerCapture(e.pointerId)
-
+      updateCursor.call(this, 'grabbing')
       action.dispatch('world-shift',
         {
           x: e.movementX,
@@ -158,6 +158,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       break
 
     case 'static': {
+      console.log('static')
       const r = detectHoveredModule.call(this)
       const {viewport} = this
 

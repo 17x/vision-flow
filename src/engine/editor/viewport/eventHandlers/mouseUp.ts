@@ -1,4 +1,4 @@
-import {updateSelectionBox} from '../domManipulations.ts'
+import {updateCursor, updateSelectionBox} from '../domManipulations.ts'
 import Editor from '../../editor.ts'
 import {ModuleModifyData} from '../../actions/type'
 import Base from '../../../core/modules/base.ts'
@@ -28,6 +28,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
         break
 
       case 'panning':
+        updateCursor.call(this, 'grabbing')
         // this.viewport.translateViewport(e.movementX, e.movementY)
 
         break

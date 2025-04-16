@@ -123,10 +123,11 @@ export const updateSelectionBox = (selectionBox: HTMLDivElement, {x, y, height, 
   selectionBox.style.display = show ? 'block' : 'none'
 }
 
-export function updateCursor(this: Editor, type: 'rotate' | 'resize' | 'default', position?: Point | ResizeDirection, angle?: number) {
+export function updateCursor(this: Editor, type: 'rotate' | 'resize' | 'default' | 'grabbing', position?: Point | ResizeDirection, angle?: number) {
   const {wrapper, cursor} = this.viewport
 
   if (type === 'default') {
+    // debugger
     wrapper.style.cursor = 'default'
     cursor.style.display = 'none'
     return
@@ -134,6 +135,12 @@ export function updateCursor(this: Editor, type: 'rotate' | 'resize' | 'default'
 
   if (type === 'resize') {
     wrapper.style.cursor = `${position as ResizeDirection}-resize`
+    cursor.style.display = 'none'
+    return
+  }
+
+  if (type === 'grabbing') {
+    wrapper.style.cursor = `grabbing`
     cursor.style.display = 'none'
     return
   }

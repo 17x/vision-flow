@@ -1,4 +1,4 @@
-export const handlerOffsets = [
+export const HANDLER_OFFSETS = [
   {
     type: 'rotate',
     name: 'rotate-tl',

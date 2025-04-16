@@ -1,9 +1,9 @@
 import Shape, {ShapeProps} from './shape.ts'
 import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
 import {OperationHandlers} from '../../../editor/selection/type'
-import {getCursor, rotatePoint} from '../../../lib/lib.ts'
+import {rotatePoint} from '../../../lib/lib.ts'
 import {SnapPointData} from '../../../editor/type'
-import {handlerOffsets} from '../handleBasics.ts'
+import {HANDLER_OFFSETS} from '../handleBasics.ts'
 
 export interface RectangleProps extends ShapeProps {
   width: number
@@ -112,7 +112,9 @@ class Rectangle extends Shape {
     })
   }
 
-  public getOperators(scale: number, dpr: DPR) {
+  public getOperators(
+    resizeConfig: { lineWidth: number, lineColor: string, size: number },
+    rotateConfig: { lineWidth: number, lineColor: string, size: number }) {
     const {
       x: cx,
       y: cy,
@@ -122,56 +124,62 @@ class Rectangle extends Shape {
       rotation,
     } = this
 
-    const resizeHandlerLen = 10
-    const resizeHandlerBorderWidth = 1
-    const resizeHandlerScaledWidth = (resizeHandlerLen / scale) * dpr
-    const resizeHandlerScaledLineWidth = (resizeHandlerBorderWidth / scale) * dpr
-
-    const handlers = handlerOffsets.map((offset): OperationHandlers => {
+    const handlers = HANDLER_OFFSETS.map((OFFSET): OperationHandlers => {
       // Calculate the handle position in local coordinates
-      const handleX = cx - width / 2 + offset.x * width
-      const handleY = cy - height / 2 + offset.y * height
-      let cursor: ResizeCursor = offset.cursor as ResizeCursor
-      let len
-      let lineWidth = 0
-      let rotated
+      const currentCenterX = cx - width / 2 + OFFSET.x * width
+      const currentCenterY = cy - height / 2 + OFFSET.y * height
+      const currentModuleProps: Omit<RectangleProps, 'type'> = {
+        id,
+        width: 0,
+        height: 0,
+        x: currentCenterX,
+        y: currentCenterY,
+        lineColor: '',
+        lineWidth: 0,
+        rotation: 0,
+        layer: this.layer,
+        opacity: 0,
+      }
 
-      if (offset.type === 'resize') {
+      // let cursor: ResizeCursor = OFFSET.cursor as ResizeCursor
 
-        rotated = rotatePoint(handleX, handleY, cx, cy, rotation)
-        cursor = getCursor(rotated.x, rotated.y, cx, cy, rotation)
-        len = resizeHandlerScaledWidth
-        lineWidth = resizeHandlerScaledLineWidth
-      } else {
-        const currentRotateHandlerCenterX =
-          handleX + offset.offsetX * resizeHandlerScaledWidth
-        const currentRotateHandlerCenterY =
-          handleY + offset.offsetY * resizeHandlerScaledWidth
-        // console.log(currentRotateHandlerCenterX, currentRotateHandlerCenterY);
-        rotated = rotatePoint(
+      if (OFFSET.type === 'resize') {
+        const rotated = rotatePoint(currentCenterX, currentCenterY, cx, cy, rotation)
+        // cursor = getCursor(rotated.x, rotated.y, cx, cy, rotation)
+        currentModuleProps.id += 'resize'
+        currentModuleProps.x = rotated.x
+        currentModuleProps.y = rotated.y
+        currentModuleProps.width = resizeConfig.size
+        currentModuleProps.height = resizeConfig.size
+        currentModuleProps.lineWidth = resizeConfig.lineWidth
+        currentModuleProps.lineColor = resizeConfig.lineColor
+      } else if (OFFSET.type === 'rotate') {
+        const currentRotateHandlerCenterX = currentCenterX + OFFSET.offsetX * resizeConfig.lineWidth
+        const currentRotateHandlerCenterY = currentCenterY + OFFSET.offsetY * resizeConfig.lineWidth
+        const rotated = rotatePoint(
           currentRotateHandlerCenterX,
           currentRotateHandlerCenterY,
           cx,
           cy,
           rotation,
         )
-        len = resizeHandlerScaledWidth * 2
+
+        currentModuleProps.id += 'rotate'
+        currentModuleProps.x = rotated.x
+        currentModuleProps.y = rotated.y
+        currentModuleProps.width = rotateConfig.size
+        currentModuleProps.height = rotateConfig.size
+        currentModuleProps.lineWidth = rotateConfig.lineWidth
+        currentModuleProps.lineColor = rotateConfig.lineColor
       }
 
       return {
         id: `${id}`,
-        type: offset.type,
-        name: offset.name,
-        cursor,
+        type: OFFSET.type,
+        name: OFFSET.name,
+        // cursor,
         moduleOrigin: {cx, cy, width, height},
-        data: {
-          x: rotated.x,
-          y: rotated.y,
-          size: len,
-          lineWidth,
-          // position: offset.name,
-          rotation,
-        },
+        module: new Rectangle(currentModuleProps),
       }
     })
 

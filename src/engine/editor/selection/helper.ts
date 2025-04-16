@@ -56,15 +56,27 @@ export function modifySelected(
 
 export function updateSelectionCanvasRenderData(this: Editor) {
   const moduleProps = this.getSelectedPropsIfUnique
-  console.log(moduleProps)
+
+  return
   if (moduleProps) {
-    const {scale, dpr} = this.viewport
     const module = this.moduleMap.get(moduleProps.id)
-    const o = module!.getOperators(scale, dpr)
+    const {scale, dpr} = this.viewport
+    const lineWidth = 1 / scale * dpr
+    const resizeSize = 2 / scale * dpr
+    const lineColor = '#5491f8'
+
+    const o = module!.getOperators({
+      size: resizeSize,
+      lineColor,
+      lineWidth,
+    }, {
+      size: 1,
+      lineColor: '',
+      lineWidth: 0,
+    })
 
     o.forEach(
       (p) => {
-
         this.operationHandlers.add(p)
       },
     )

@@ -3,7 +3,7 @@ import {isInsideRotatedRect} from '../../../core/utils.ts'
 import {OperationHandlers, RotateHandler} from '../../selection/type'
 import {applyResizeTransform} from '../../../lib/lib.ts'
 
-export function updateHoveredModule(this: Editor) {
+export function detectHoveredModule(this: Editor) {
   const {viewport} = this
   const worldPoint = this.getWorldPointByViewportPoint(
     viewport.mouseMovePoint.x,
@@ -12,15 +12,12 @@ export function updateHoveredModule(this: Editor) {
   // const maxLayer = Number.MIN_SAFE_INTEGER
   let moduleId: UID | null = null
 
+  // console.log(this.operationHandlers)
   const operationHandlers = [...this.operationHandlers].filter(
-    (operationHandler: OperationHandlers) => {
-      const {x, y, size, rotation} = operationHandler.data
-
-      return isInsideRotatedRect(
-        worldPoint,
-        {x, y, width: size, height: size},
-        rotation,
-      )
+    (operationHandler) => {
+      // console.log(operationHandler)
+      // const {x, y, size, rotation} = operationHandler.data
+      return operationHandler.module.hitTest(worldPoint)
     },
   )
 

@@ -4,14 +4,15 @@ import rectRender from '../../core/renderer/rectRender.ts'
 import circleRender from '../../core/renderer/circleRender.ts'
 // import {drawCrossLine} from '../../lib/lib.ts'
 import Editor from '../editor.ts'
+import Ellipse, {EllipseProps} from '../../core/modules/shapes/ellipse.ts'
 
 function selectionRender(this: Editor) {
   if (this.moduleMap.size === 0) return
   const {selectionCTX: ctx, dpr, offset, worldRect, scale, mouseMovePoint} = this.viewport
-  const rects: RectangleRenderProps[] = []
-  const dots: CircleRenderProps[] = []
+  // const rects: RectangleRenderProps[] = []
+  // const dots: CircleRenderProps[] = []
   const fillColor = '#5491f8'
-  const lineColor = '#5491f8'
+  // const lineColor = '#5491f8'
   const selected = this.getVisibleSelected
   const highlightedModules = new Set<UID>(selected)
   const centerPointWidth = 2 / this.viewport.scale * this.viewport.dpr
@@ -22,16 +23,19 @@ function selectionRender(this: Editor) {
 
   highlightedModules.forEach((id) => {
     const module = this.moduleMap.get(id)
-    const {x, y, rotation} = (module as Rectangle).getDetails()
+    const {x, y, rotation, layer} = (module as Rectangle).getDetails()
     const lineWidth = 1 / this.viewport.scale * this.viewport.dpr
-    const mod = module!.getHighlightModule(lineWidth, fillColor) as ModuleInstance
+    const highlightModule = module!.getHighlightModule(lineWidth, fillColor) as ModuleInstance
 
-    mod!.render(ctx)
+    highlightModule!.render(ctx)
 
     if (id !== this.hoveredModule) {
-      const centerPointRect = {
+
+      const centerDotRect = new Rectangle({
         x,
         y,
+        layer,
+        id: id + 'hover-center',
         width: centerPointWidth * 2,
         height: centerPointWidth * 2,
         fillColor: fillColor,
@@ -39,62 +43,37 @@ function selectionRender(this: Editor) {
         lineWidth,
         rotation,
         opacity: 100,
-      }
-      rects.push(centerPointRect)
+      })
+
+      centerDotRect.render(ctx)
     }
   })
 
   this.operationHandlers.forEach(operation => {
-    console.log(operation)
-    switch (operation.type) {
-      case 'resize': {
-        // console.log(operation.data)
-        const rect = {
-          ...operation.data,
-          width: operation.data.size,
-          height: operation.data.size,
-          opacity: 100,
-          // rotation: 10,
-          fillColor: '#fff',
-          lineColor: lineColor,
-        }
-        rects.push(rect)
-      }
-        break
-      case 'rotate': {
-        /* const rect2 = {
-           ...operation.data,
-           width: operation.data.size,
-           height: operation.data.size,
-           opacity: 100,
-           // rotation: 10,
-           fillColor: '#ff0000',
-           lineColor: lineColor,
-         }
-
-         rects.push(rect2)*/
-      }
-        break
-    }
+    operation.module.render(ctx)
   })
 
   if (this.hoveredModule) {
     const module = this.getVisibleModuleMap.get(this.hoveredModule)
 
     if (module) {
-      dots.push({
+      const moduleProps = module.getDetails() as EllipseProps
+      const dot = new Ellipse({
         x: module.x,
         y: module.y,
-        lineColor: 'transparent',
-        fillColor,
+        layer: module.layer,
         r1: centerPointWidth,
         r2: centerPointWidth,
+        fillColor,
+        lineWidth: 0,
+        lineColor: 'transparent',
+        id: moduleProps.id + 'hover-center',
+        opacity: 100,
       })
+
+      dot.render(ctx)
     }
   }
-
-  rectRender(ctx, rects)
-  circleRender(ctx, dots)
 
   // if (this.enableCrossLine && this.drawCrossLine) {
   /*if (this.viewport.enableCrossLine && this.viewport.drawCrossLine) {

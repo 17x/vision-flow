@@ -58,7 +58,7 @@ class Editor {
   viewport: Viewport
   readonly selectedModules: Set<UID> = new Set()
   readonly visibleSelected: Set<UID> = new Set()
-  readonly operationHandlers: Set<OperationHandlers> = new Set()
+  readonly operationHandlers: OperationHandlers[] = []
 
   // resizeHandleSize: number = 10
   copiedItems: ModuleProps[] = []
@@ -183,7 +183,7 @@ class Editor {
 
   updateVisibleSelected() {
     this.visibleSelected.clear()
-    this.operationHandlers.clear()
+    this.operationHandlers.length = 0
 
     this.getVisibleModuleMap.forEach((module) => {
       if (this.selectedModules.has(module.id)) {
@@ -191,19 +191,36 @@ class Editor {
       }
     })
 
-    const module = this.getSelectedPropsIfUnique
+    const moduleProps = this.getSelectedPropsIfUnique
 
-    if (module) {
+    if (moduleProps) {
+      const module = this.moduleMap.get(moduleProps.id)
       const {scale, dpr} = this.viewport
+      const lineWidth = 1 / scale * dpr
+      const resizeSize = 2 / scale * dpr
+      const lineColor = '#5491f8'
+
+      const operators = module!.getOperators({
+        size: resizeSize,
+        lineColor,
+        lineWidth,
+      }, {
+        size: 1,
+        lineColor: '',
+        lineWidth: 0,
+      })
+
+      this.operationHandlers.push(...operators)
+
       // console.log('create')
-      createHandlersForRect(module, scale, dpr).forEach(
-        (p) => {
-          // console.log(p.data,p.cursor)
-          // p.data.width = localHandlerWidth / this.viewport.scale * this.viewport.dpr
-          // p.data.lineWidth = localHandlerBorderWidth / this.viewport.scale * this.viewport.dpr
-          this.operationHandlers.add(p)
-        },
-      )
+      /*     createHandlersForRect(moduleProps, scale, dpr).forEach(
+            (p) => {
+              // console.log(p.data,p.cursor)
+              // p.data.width = localHandlerWidth / this.viewport.scale * this.viewport.dpr
+              // p.data.lineWidth = localHandlerBorderWidth / this.viewport.scale * this.viewport.dpr
+              this.operationHandlers.add(p)
+            },
+          )*/
     }
   }
 

@@ -5,7 +5,7 @@ import {
 } from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
 import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
-import {applyResize, applyRotating, updateHoveredModule} from './funcs.ts'
+import {applyResize, applyRotating, detectHoveredModule} from './funcs.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
   const {
@@ -155,7 +155,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       break
 
     case 'static': {
-      const r = updateHoveredModule.call(this)
+      const r = detectHoveredModule.call(this)
       const {viewport} = this
 
       if (r) {

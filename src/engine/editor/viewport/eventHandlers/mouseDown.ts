@@ -1,5 +1,5 @@
 import Editor from '../../editor.ts'
-import {updateHoveredModule} from './funcs.ts'
+import {detectHoveredModule} from './funcs.ts'
 
 function handleMouseDown(this: Editor, e: MouseEvent) {
   const {shiftKey, clientY, target, button, clientX, metaKey, ctrlKey} =
@@ -18,7 +18,7 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
   this.viewport.mouseMovePoint.x = x
   this.viewport.mouseMovePoint.y = y
 
-  const operator = updateHoveredModule.call(this)
+  const operator = detectHoveredModule.call(this)
   // console.log(operator)
   e.preventDefault()
 

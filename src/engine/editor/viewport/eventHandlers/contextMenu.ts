@@ -1,5 +1,5 @@
 import Editor from '../../editor.ts'
-import {updateHoveredModule} from './funcs.ts'
+import {detectHoveredModule} from './funcs.ts'
 
 function handleContextMenu(this: Editor, e: MouseEvent) {
   // const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
@@ -13,7 +13,7 @@ function handleContextMenu(this: Editor, e: MouseEvent) {
     }
   */
 
-  updateHoveredModule.call(this)
+  detectHoveredModule.call(this)
   const lastId = this.hoveredModule
   const selectedIdSet = this.getSelected
   const position = {...this.viewport.mouseMovePoint}

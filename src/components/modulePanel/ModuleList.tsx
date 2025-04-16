@@ -41,7 +41,23 @@ export const ModuleList: React.FC<ModulePanelProps> = () => {
                key={index}
 
                onClick={() => {
-                 executeAction('module-add', [module.props])
+                 const props = module.props as ModuleProps
+
+                 if (props.type === 'rectangle') {
+                   props.x = getRandomNumber(1000)
+                   props.y = getRandomNumber(2000)
+                   props.width = getRandomNumber(200)
+                   props.height = getRandomNumber(200)
+                 }
+
+                 if (props.type === 'ellipse') {
+                   props.x = getRandomNumber(1000)
+                   props.y = getRandomNumber(2000)
+                   props.r1 = getRandomNumber(200)
+                   props.r1 = getRandomNumber(200)
+                 }
+
+                 executeAction('module-add', [props])
                }}
           >
             <div style={{
@@ -52,4 +68,14 @@ export const ModuleList: React.FC<ModulePanelProps> = () => {
       }
     </div>
   )
+}
+
+const getRandomHexColor = (): string => {
+  return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`
+}
+
+// @ts-ignore
+
+const getRandomNumber = (max: number): number => {
+  return Math.floor(Math.random() * max)
 }

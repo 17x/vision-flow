@@ -5,18 +5,31 @@ import Ellipse, {EllipseProps} from '../../core/modules/shapes/ellipse.ts'
 
 function selectionRender(this: Editor) {
   if (this.moduleMap.size === 0) return
+
   const {selectionCTX: ctx} = this.viewport
   const fillColor = '#5491f8'
-  // const lineColor = '#5491f8'
+  const lineColor = '#5491f8'
   const selected = this.getVisibleSelected
-  const highlightedModules = new Set<UID>(selected)
   const centerPointWidth = 2 / this.viewport.scale * this.viewport.dpr
+  const lineWidth = 1 / this.viewport.scale * this.viewport.dpr
+  const centerPoints = new Set<UID>(selected)
 
-  if (this.hoveredModule) {
-    highlightedModules.add(this.hoveredModule)
+  if(this.hoveredModule){
+    centerPoints.add(this.hoveredModule)
   }
 
-  highlightedModules.forEach((id) => {
+  // render selection box for modules
+  selected.forEach((id) => {
+    const module = this.moduleMap.get(id)
+
+    if (module) {
+      const moduleSelectionBoundary = module.getSelectedBoxModule(lineWidth, lineColor)
+      moduleSelectionBoundary.render(ctx)
+    }
+  })
+
+  // render center points
+  centerPoints.forEach((id) => {
     const module = this.moduleMap.get(id)
     const {x, y, rotation, layer} = (module as Rectangle).getDetails()
     const lineWidth = 1 / this.viewport.scale * this.viewport.dpr
@@ -24,6 +37,7 @@ function selectionRender(this: Editor) {
 
     highlightModule!.render(ctx)
 
+    // selected
     if (id !== this.hoveredModule) {
       const centerDotRect = new Rectangle({
         x,
@@ -47,7 +61,7 @@ function selectionRender(this: Editor) {
     operation.module.render(ctx)
   })
 
-  if (this.hoveredModule) {
+/*  if (this.hoveredModule) {
     const module = this.getVisibleModuleMap.get(this.hoveredModule)
 
     if (module) {
@@ -67,7 +81,7 @@ function selectionRender(this: Editor) {
 
       dot.render(ctx)
     }
-  }
+  }*/
 
   // if (this.enableCrossLine && this.drawCrossLine) {
   /*if (this.viewport.enableCrossLine && this.viewport.drawCrossLine) {

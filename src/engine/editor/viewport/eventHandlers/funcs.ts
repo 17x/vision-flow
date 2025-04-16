@@ -33,7 +33,7 @@ export function detectHoveredModule(this: Editor) {
     const module = arr[i]
     const hitTest = module.hitTest(worldPoint)
     if (hitTest) {
-      console.log(hitTest)
+      // console.log(hitTest)
       moduleId = module.id
       break
     }

@@ -1,9 +1,6 @@
 import Shape, {ShapeProps} from './shape.ts'
 import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
-import {OperationHandlers} from '../../../editor/selection/type'
-import {rotatePoint} from '../../../lib/lib.ts'
 import {SnapPointData} from '../../../editor/type'
-import {HANDLER_OFFSETS} from '../handleBasics.ts'
 
 export interface RectangleProps extends ShapeProps {
   width: number
@@ -35,6 +32,17 @@ class Rectangle extends Shape {
       height: this.height,
       ...super.getDetails(includeIdentifiers),
     } as T extends true ? RectangleProps : Omit<RectangleProps, 'id' & 'layer'>
+  }
+
+  public getRect(): CenterBasedRect {
+    const {x, y, width, height} = this
+
+    return {
+      x,
+      y,
+      width,
+      height,
+    }
   }
 
   public getBoundingRect() {
@@ -95,6 +103,22 @@ class Rectangle extends Shape {
     return null
   }
 
+  public getSelectedBoxModule(lineWidth: number, lineColor: string): Rectangle {
+    const {id, rotation, layer} = this
+
+    const rectProp = {
+      ...this.getRect(),
+      lineColor,
+      lineWidth,
+      rotation,
+      layer,
+      id: id + '-selected-box',
+      opacity: 0,
+    }
+
+    return new Rectangle(rectProp)
+  }
+
   public getHighlightModule(lineWidth: number, lineColor: string): ModuleInstance {
     const {x, y, width, height, rotation, layer, id} = this
     return new Rectangle({
@@ -114,71 +138,10 @@ class Rectangle extends Shape {
 
   public getOperators(
     resizeConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string },
-    rotateConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string }) {
-    const {x: cx, y: cy, id, width, height, rotation} = this
+    rotateConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string },
+  ) {
 
-    const handlers = HANDLER_OFFSETS.map((OFFSET): OperationHandlers => {
-      // Calculate the handle position in local coordinates
-      const currentCenterX = cx - width / 2 + OFFSET.x * width
-      const currentCenterY = cy - height / 2 + OFFSET.y * height
-      const currentModuleProps: Omit<RectangleProps, 'type'> = {
-        id,
-        width: 0,
-        height: 0,
-        x: currentCenterX,
-        y: currentCenterY,
-        lineColor: '',
-        lineWidth: 0,
-        rotation,
-        layer: this.layer,
-        opacity: 100,
-      }
-
-      // let cursor: ResizeCursor = OFFSET.cursor as ResizeCursor
-
-      if (OFFSET.type === 'resize') {
-        const rotated = rotatePoint(currentCenterX, currentCenterY, cx, cy, rotation)
-        // cursor = getCursor(rotated.x, rotated.y, cx, cy, rotation)
-        currentModuleProps.id += 'resize'
-        currentModuleProps.x = rotated.x
-        currentModuleProps.y = rotated.y
-        currentModuleProps.width = resizeConfig.size
-        currentModuleProps.height = resizeConfig.size
-        currentModuleProps.lineWidth = resizeConfig.lineWidth
-        currentModuleProps.lineColor = resizeConfig.lineColor
-        currentModuleProps.fillColor = resizeConfig.fillColor
-      } else if (OFFSET.type === 'rotate') {
-        const currentRotateHandlerCenterX = currentCenterX + OFFSET.offsetX * resizeConfig.lineWidth
-        const currentRotateHandlerCenterY = currentCenterY + OFFSET.offsetY * resizeConfig.lineWidth
-        const rotated = rotatePoint(
-          currentRotateHandlerCenterX,
-          currentRotateHandlerCenterY,
-          cx,
-          cy,
-          rotation,
-        )
-
-        currentModuleProps.id += 'rotate'
-        currentModuleProps.x = rotated.x
-        currentModuleProps.y = rotated.y
-        currentModuleProps.width = rotateConfig.size
-        currentModuleProps.height = rotateConfig.size
-        currentModuleProps.lineWidth = rotateConfig.lineWidth
-        currentModuleProps.lineColor = rotateConfig.lineColor
-        currentModuleProps.fillColor = rotateConfig.fillColor
-      }
-
-      return {
-        id: `${id}`,
-        type: OFFSET.type,
-        name: OFFSET.name,
-        // cursor,
-        moduleOrigin: {cx, cy, width, height},
-        module: new Rectangle(currentModuleProps),
-      }
-    })
-
-    return handlers
+    return super.getOperators(resizeConfig, rotateConfig, this.getRect())
   }
 
   public getSnapPoints(): SnapPointData[] {

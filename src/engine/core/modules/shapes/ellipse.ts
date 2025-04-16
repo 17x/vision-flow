@@ -1,6 +1,7 @@
 import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
 import Shape, {ShapeProps} from './shape.ts'
 import {SnapPointData} from '../../../editor/type'
+import Rectangle from './rectangle.ts'
 
 export interface EllipseProps extends ShapeProps {
   r1: number
@@ -43,17 +44,6 @@ class Ellipse extends Shape {
     } as T extends true ? EllipseProps : Omit<EllipseProps, 'id' & 'layer'>
   }
 
-  getBoundingRect() {
-    const {x: cx, y: cy, r1, r2, rotation} = this
-
-    return generateBoundingRectFromRotatedRect({
-      x: cx - r1,
-      y: cy - r2,
-      width: r1 * 2,
-      height: r2 * 2,
-    }, rotation)
-  }
-
   public hitTest(point: Point, borderPadding = 5): 'inside' | 'border' | null {
     const {x: cx, y: cy, r1, r2, rotation = 0} = this
 
@@ -81,6 +71,44 @@ class Ellipse extends Shape {
     return null
   }
 
+  public getBoundingRect() {
+    const {x: cx, y: cy, r1, r2, rotation} = this
+
+    return generateBoundingRectFromRotatedRect({
+      x: cx - r1,
+      y: cy - r2,
+      width: r1 * 2,
+      height: r2 * 2,
+    }, rotation)
+  }
+
+  public getRect(): CenterBasedRect {
+    const {x, y, r1, r2} = this
+
+    return {
+      x,
+      y,
+      width: r1 * 2,
+      height: r2 * 2,
+    }
+  }
+
+  public getSelectedBoxModule(lineWidth: number, lineColor: string): Rectangle {
+    const {id, rotation, layer} = this
+
+    const rectProp = {
+      ...this.getRect(),
+      lineColor,
+      lineWidth,
+      rotation,
+      layer,
+      id: id + '-selected-box',
+      opacity: 0,
+    }
+
+    return new Rectangle(rectProp)
+  }
+
   public getHighlightModule(lineWidth: number, lineColor: string) {
     const {x, y, r1, r2, rotation, layer, id} = this
 
@@ -98,8 +126,13 @@ class Ellipse extends Shape {
     })
   }
 
-  getOperators() {
-    return []
+  public getOperators(
+    resizeConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string },
+    rotateConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string },
+    // boundingRect?: BoundingRect,
+  ) {
+    // const {x: cx, y: cy, id, width, height, rotation} = this
+    return super.getOperators(resizeConfig, rotateConfig, this.getBoundingRect())
   }
 
   public getSnapPoints(): SnapPointData[] {

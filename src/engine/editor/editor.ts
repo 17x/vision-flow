@@ -197,30 +197,23 @@ class Editor {
       const module = this.moduleMap.get(moduleProps.id)
       const {scale, dpr} = this.viewport
       const lineWidth = 1 / scale * dpr
-      const resizeSize = 2 / scale * dpr
+      const resizeSize = 10 / scale * dpr
+      const rotateSize = 30 / scale * dpr
       const lineColor = '#5491f8'
 
       const operators = module!.getOperators({
         size: resizeSize,
         lineColor,
         lineWidth,
+        fillColor: '#fff',
       }, {
-        size: 1,
-        lineColor: '',
+        size: rotateSize,
+        lineColor: 'transparent',
         lineWidth: 0,
+        fillColor: 'transparent',
       })
 
       this.operationHandlers.push(...operators)
-
-      // console.log('create')
-      /*     createHandlersForRect(moduleProps, scale, dpr).forEach(
-            (p) => {
-              // console.log(p.data,p.cursor)
-              // p.data.width = localHandlerWidth / this.viewport.scale * this.viewport.dpr
-              // p.data.lineWidth = localHandlerBorderWidth / this.viewport.scale * this.viewport.dpr
-              this.operationHandlers.add(p)
-            },
-          )*/
     }
   }
 

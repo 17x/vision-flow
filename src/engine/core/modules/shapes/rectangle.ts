@@ -113,16 +113,9 @@ class Rectangle extends Shape {
   }
 
   public getOperators(
-    resizeConfig: { lineWidth: number, lineColor: string, size: number },
-    rotateConfig: { lineWidth: number, lineColor: string, size: number }) {
-    const {
-      x: cx,
-      y: cy,
-      id,
-      width,
-      height,
-      rotation,
-    } = this
+    resizeConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string },
+    rotateConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string }) {
+    const {x: cx, y: cy, id, width, height, rotation} = this
 
     const handlers = HANDLER_OFFSETS.map((OFFSET): OperationHandlers => {
       // Calculate the handle position in local coordinates
@@ -138,7 +131,7 @@ class Rectangle extends Shape {
         lineWidth: 0,
         rotation: 0,
         layer: this.layer,
-        opacity: 0,
+        opacity: 100,
       }
 
       // let cursor: ResizeCursor = OFFSET.cursor as ResizeCursor
@@ -153,6 +146,7 @@ class Rectangle extends Shape {
         currentModuleProps.height = resizeConfig.size
         currentModuleProps.lineWidth = resizeConfig.lineWidth
         currentModuleProps.lineColor = resizeConfig.lineColor
+        currentModuleProps.fillColor = resizeConfig.fillColor
       } else if (OFFSET.type === 'rotate') {
         const currentRotateHandlerCenterX = currentCenterX + OFFSET.offsetX * resizeConfig.lineWidth
         const currentRotateHandlerCenterY = currentCenterY + OFFSET.offsetY * resizeConfig.lineWidth
@@ -171,6 +165,7 @@ class Rectangle extends Shape {
         currentModuleProps.height = rotateConfig.size
         currentModuleProps.lineWidth = rotateConfig.lineWidth
         currentModuleProps.lineColor = rotateConfig.lineColor
+        currentModuleProps.fillColor = rotateConfig.fillColor
       }
 
       return {

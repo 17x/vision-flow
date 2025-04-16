@@ -1,16 +1,11 @@
-import {CircleRenderProps, RectangleRenderProps} from '../../core/renderer/type'
 import Rectangle from '../../core/modules/shapes/rectangle.ts'
-import rectRender from '../../core/renderer/rectRender.ts'
-import circleRender from '../../core/renderer/circleRender.ts'
 // import {drawCrossLine} from '../../lib/lib.ts'
 import Editor from '../editor.ts'
 import Ellipse, {EllipseProps} from '../../core/modules/shapes/ellipse.ts'
 
 function selectionRender(this: Editor) {
   if (this.moduleMap.size === 0) return
-  const {selectionCTX: ctx, dpr, offset, worldRect, scale, mouseMovePoint} = this.viewport
-  // const rects: RectangleRenderProps[] = []
-  // const dots: CircleRenderProps[] = []
+  const {selectionCTX: ctx} = this.viewport
   const fillColor = '#5491f8'
   // const lineColor = '#5491f8'
   const selected = this.getVisibleSelected
@@ -30,7 +25,6 @@ function selectionRender(this: Editor) {
     highlightModule!.render(ctx)
 
     if (id !== this.hoveredModule) {
-
       const centerDotRect = new Rectangle({
         x,
         y,

@@ -72,7 +72,7 @@ export type EditorEventMap = {
   'module-modify': ModuleModifyData[]
   'module-modifying': {
     type: 'move' | 'resize' | 'rotate',
-    data: { rotation: number } | { x: number, y: number } | Rect
+    data: Partial<ModuleProps>
   }
   'module-hover-enter': UID;
   'module-hover-leave': UID;

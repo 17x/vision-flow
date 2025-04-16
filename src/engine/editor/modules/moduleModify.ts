@@ -14,9 +14,10 @@ export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): Module
     }
 
     if (isNaN(data.layer)) {
-      if (this.getNextLayerIndex > localMaxLayer) {
-        localMaxLayer = this.getNextLayerIndex
-      }
+      const maxFromModuleMap = this.getMaxLayerIndex
+
+      localMaxLayer = Math.max(localMaxLayer, maxFromModuleMap)
+      localMaxLayer++
 
       data.layer = localMaxLayer
     }
@@ -52,23 +53,20 @@ export function batchAdd(this: Editor, modules: ModuleMap): ModuleMap {
 type BatchCopyFn = <T extends boolean>(this: Editor, idSet: Set<UID>, includeIdentifiers: T) => T extends true ? ModuleProps[] : Omit<ModuleProps, 'id' & 'layer'>[]
 
 export const batchCopy: BatchCopyFn = function (this, idSet, includeIdentifiers) {
-  const result: ModuleProps[] = []
   const modulesMap: ModuleMap = new Map()
+  const moduleArr: ModuleInstance[] = []
 
   idSet.forEach(id => {
     const mod = this.moduleMap.get(id)
     if (mod) {
+      moduleArr.push(mod)
       modulesMap.set(id, mod)
     }
   })
 
-  modulesMap.forEach(mod => {
-    const data: ModuleProps = mod.getDetails(includeIdentifiers)
+  moduleArr.sort((a, b) => a.layer - b.layer)
 
-    result.push(data)
-  })
-  console.log(result)
-  return result
+  return moduleArr.map(mod => mod.getDetails(includeIdentifiers))
 }
 
 export function batchDelete(this: Editor, idSet: Set<UID>): ModuleProps[] {

@@ -84,7 +84,19 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       case 'resizing': {
         const {altKey, shiftKey} = e
         const props = applyResize.call(this, altKey, shiftKey)
-        console.log(this._rotatingOperator)
+        const moduleOrigin = this._resizingOperator?.moduleOrigin
+        const rollbackProps: Partial<ModuleProps> = {}
+
+        Object.keys(props).forEach((key) => {
+          rollbackProps[key] = moduleOrigin[key]
+        })
+
+        // rotate back
+        this.action.dispatch('module-modifying', {
+          type: 'resize',
+          data: rollbackProps,
+        })
+
         this.action.dispatch('module-modify', [{
           id: this._resizingOperator!.id,
           props,
@@ -95,6 +107,14 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       case 'rotating': {
         const {shiftKey} = e
         const newRotation = Base.applyRotating.call(this, shiftKey)
+        const {rotation} = this._rotatingOperator?.moduleOrigin!
+        const rollbackProps: Partial<ModuleProps> = {rotation}
+
+        // rotate back
+        this.action.dispatch('module-modifying', {
+          type: 'resize',
+          data: rollbackProps,
+        })
 
         this.action.dispatch('module-modify', [{
           id: this._rotatingOperator!.id,

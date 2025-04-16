@@ -70,7 +70,7 @@ export function applyResize(this: Editor, altKey: boolean, shiftKey: boolean) {
 
   if (relatedModule) {
     const con = relatedModule.constructor as ModuleInstance
-    console.log(resizeParam)
+    // console.log(resizeParam)
     return con.applyResizeTransform(resizeParam)
   }/*
   if (type === 'rectangle') {

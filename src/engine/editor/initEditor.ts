@@ -253,7 +253,7 @@ export function initEditor(this: Editor) {
     })*/
 
     // this.batchMove(s, delta)
-    dispatch('module-modify', changes)
+    // dispatch('module-modify', changes)
   })
 
   on('module-move', ({delta = {x: 0, y: 0}}) => {
@@ -325,16 +325,16 @@ export function initEditor(this: Editor) {
       Object.keys(kv).map((keyName) => {
         const fromValue = module[keyName]
         const toValue = kv[keyName]
-
+        // console.log(fromValue, toValue)
         return props[keyName] = {
           from: fromValue,
           to: toValue,
         }
       })
-
       this.batchModify(new Set([id]), kv)
       changes.push(change)
     })
+    console.log(changes)
 
     this.history.add({
       type: 'history-modify',

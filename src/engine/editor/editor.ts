@@ -27,6 +27,7 @@ import {initEditor} from './initEditor.ts'
 import uid from '../../utilities/Uid.ts'
 import {EditorEventType} from './actions/type'
 import {zoomAtPoint} from './viewport/helper.ts'
+import deduplicateObjectsByKeyValue from '../core/renderer/deduplicate.ts'
 
 export interface EditorDataProps {
   id: UID;
@@ -233,16 +234,16 @@ class Editor {
     return new Set(this.selectedModules)
   }
 
-  public get getNextLayerIndex(): number {
+  public get getMaxLayerIndex(): number {
     let max = 0
-
     this.moduleMap.forEach((mod) => {
+      // console.log(mod.layer)
       if (mod.layer > max) {
         max = mod.layer
       }
     })
 
-    return max + 1
+    return max
   }
 
   public modifySelected(idSet: Set<UID>, action: SelectionActionMode) {
@@ -308,6 +309,8 @@ class Editor {
 
       frame.render(ctx)
 
+      // deduplicateObjectsByKeyValue()
+      // console.log(this.visibleModuleMap.size)
       // deduplicateObjectsByKeyValue
       this.visibleModuleMap.forEach((module) => {
           module.render(ctx)

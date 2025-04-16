@@ -113,7 +113,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       // const cursorDirection = getResizeDirection(centerPoint, viewport.mouseMovePoint)
 
       const r = applyResize.call(this, altKey, shiftKey)
-      console.log(r)
+      // console.log(r)
       this.action.dispatch('module-modifying', {
         type: 'resize',
         data: r,

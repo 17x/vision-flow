@@ -233,6 +233,29 @@ export function initEditor(this: Editor) {
     })
   })
 
+  on('module-layer', () => {
+   /* const s = this.getSelected
+
+    if (s.size === 0) return
+    const changes: ModuleModifyData[] = []
+
+    s.forEach((id) => {
+      const module = this.moduleMap.get(id)
+      if (module) {
+        changes.push({
+          id,
+          props: {
+            x: module.x + delta.x,
+            y: module.y + delta.y,
+          },
+        })
+      }
+    })*/
+
+    // this.batchMove(s, delta)
+    dispatch('module-modify', changes)
+  })
+
   on('module-move', ({delta = {x: 0, y: 0}}) => {
     const s = this.getSelected
 

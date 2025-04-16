@@ -233,7 +233,8 @@ export function initEditor(this: Editor) {
     })
   })
 
-  on('module-layer', () => {
+  on('module-layer', (data) => {
+    console.log(data)
    /* const s = this.getSelected
 
     if (s.size === 0) return

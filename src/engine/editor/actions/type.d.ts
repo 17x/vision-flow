@@ -68,6 +68,7 @@ export type EditorEventMap = {
   'module-paste': Point;
   'module-delete': never;
   'module-duplicate': never;
+  'module-layer': { method: 'up' | 'down' | 'top' | 'bottom', idSet: Set<UID> };
   'module-move': ModuleMoveData;
   'module-modify': ModuleModifyData[]
   'module-modifying': {

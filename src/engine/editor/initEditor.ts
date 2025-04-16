@@ -312,7 +312,7 @@ export function initEditor(this: Editor) {
       this.batchModify(new Set([id]), kv)
       changes.push(change)
     })
-    console.log(changes)
+
     this.history.add({
       type: 'history-modify',
       payload: {

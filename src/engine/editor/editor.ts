@@ -302,6 +302,7 @@ class Editor {
 
   // viewport
   renderModules() {
+    // console.log('renderModules')
     const animate = () => {
       const {frame, mainCTX: ctx} = this.viewport
 
@@ -318,6 +319,8 @@ class Editor {
   }
 
   renderSelections() {
+    // console.log('renderSelections')
+
     const animate = () => {
       selectionRender.call(this)
     }

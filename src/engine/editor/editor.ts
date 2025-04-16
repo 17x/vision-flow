@@ -81,7 +81,7 @@ class Editor {
                 data,
                 events = {},
                 config = {
-                  dpr: 2,
+                  dpr: 4,
                 },
               }: EditorInterface) {
     this.visibleModuleMap = new Map()

@@ -132,7 +132,7 @@ class Ellipse extends Shape {
     // boundingRect?: BoundingRect,
   ) {
     // const {x: cx, y: cy, id, width, height, rotation} = this
-    return super.getOperators(resizeConfig, rotateConfig, this.getBoundingRect())
+    return super.getOperators(resizeConfig, rotateConfig, this.getRect())
   }
 
   public getSnapPoints(): SnapPointData[] {

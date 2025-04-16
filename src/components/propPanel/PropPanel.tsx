@@ -22,19 +22,22 @@ const PropPanel = ({props}: PropPanelProps) => {
 
 export default PropPanel
 
-const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
+const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
   const {executeAction} = useContext(EditorContext)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e)
-    const keyName = e.target.name
+    const keyName = e.target.name as keyof ModuleProps
     const oldValue = props[keyName]
     let newValue: string | number = e.target.value
 
-    if (keyName === 'x' || keyName === 'y' || keyName === 'width' || keyName === 'height') {
+    if ([
+      'x',
+      'y',
+      'width',
+      'height',
+    ].includes(keyName)) {
       newValue = Number(newValue)
     }
-
-    // console.log(keyName, newValue)
 
     executeAction('module-modify', [{
       id: props.id,

@@ -1,8 +1,9 @@
 import {updateSelectionBox} from '../domManipulations.ts'
 import Editor from '../../editor.ts'
-import {ModuleChangeProps, ModuleModifyData} from '../../actions/type'
-import Rectangle from '../../../core/modules/shapes/rectangle.ts'
+import {HistoryModuleChangeProps, ModuleModifyData} from '../../actions/type'
+// import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 import Base from '../../../core/modules/base.ts'
+import {applyResize} from './funcs.ts'
 
 function handleMouseUp(this: Editor, e: MouseEvent) {
   const leftMouseClick = e.button === 0
@@ -33,12 +34,10 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
         break
 
       case 'dragging': {
-        const x =
-          ((viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) *
+        const x = ((viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) *
             viewport.dpr) /
           viewport.scale
-        const y =
-          ((viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) *
+        const y = ((viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) *
             viewport.dpr) /
           viewport.scale
         const moved = !(x === 0 && y === 0)
@@ -51,7 +50,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
             data: {x: -x, y: -y},
           })
 
-          // move back to origin position and do the move again
+          // Move back to origin position and do the move again
           draggingModules.forEach((id) => {
             const module = moduleMap.get(id)
 
@@ -59,20 +58,13 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
               const change: ModuleModifyData = {
                 id,
                 props: {
-                  x: {
-                    from: module.x,
-                    to: module.x + x,
-                  }, y: {
-                    from: module.y,
-                    to: module.y + y,
-                  },
+                  x: module.x + x,
+                  y: module.y + y,
                 },
               }
 
               changes.push(change)
             }
-            // moduleMap.get(id).x -= x
-            // moduleMap.get(id).y -= y
           })
 
           this.action.dispatch('module-modify', changes)
@@ -91,56 +83,22 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
 
       case 'resizing': {
         const {altKey, shiftKey} = e
-        const {mouseDownPoint, mouseMovePoint, scale, dpr} = this.viewport
-        const {name: handleName, module: {rotation}, moduleOrigin, id} = this._resizingOperator!
-        const {x, y, type, width, height} = moduleOrigin
-        let to = {}
-        const from: Partial<ModuleProps> = {
-          x,
-          y,
-          width,
-          height,
-        }
-        const resizeParam = {
-          downPoint: mouseDownPoint,
-          movePoint: mouseMovePoint,
-          dpr,
-          scale,
-          initialWidth: width,
-          initialHeight: height,
-          rotation,
-          handleName,
-          altKey,
-          shiftKey,
-          initialCX: x,
-          initialCY: y,
-        }
+        const props = applyResize.call(this, altKey, shiftKey)
 
-        if (type === 'rectangle') {
-          to = Rectangle.applyResizeTransform(resizeParam) as Partial<ModuleProps>
-        }
-
-        const props: ModuleChangeProps = {} // explicitly typed
-
-        for (const key in from) {
-          props[key] = {
-            from: from[key],
-            to: to[key],
-          }
-        }
-
-        this.action.dispatch('module-modify', [{id, props}])
+        this.action.dispatch('module-modify', [{
+          id: this._rotatingOperator!.id,
+          props,
+        }])
       }
         break
 
       case 'rotating': {
         const {shiftKey} = e
-        const {id, module: {rotation}} = this._rotatingOperator!
         const newRotation = Base.applyRotating.call(this, shiftKey)
 
         this.action.dispatch('module-modify', [{
-          id,
-          props: {rotation: {from: rotation, to: newRotation}},
+          id: this._rotatingOperator!.id,
+          props: {rotation: newRotation},
         }])
       }
         break

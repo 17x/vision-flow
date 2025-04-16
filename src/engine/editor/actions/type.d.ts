@@ -29,13 +29,18 @@ export type PropChange<T> = {
 /*export type ModuleChangeProps = {
   [K in keyof ModuleProps]?: PropChange<ModuleProps[K]> | PropMoveOffset
 }*/
-export type ModuleChangeProps = {
+export type HistoryModuleChangeItem = {
+  id: UID
+  props: HistoryModuleChangeProps
+}
+
+export type HistoryModuleChangeProps = {
   [K in keyof ModuleProps]?: PropChange<ModuleProps[K]>
 }
 
 export interface ModuleModifyData {
   id: UID
-  props: ModuleChangeProps
+  props: Partial<ModuleProps>
 }
 
 export type EditorEventMap = {

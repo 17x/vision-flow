@@ -1,5 +1,6 @@
 import Editor from '../../editor.ts'
 import Rectangle from '../../../core/modules/shapes/rectangle.ts'
+import {ModuleType} from 'i18next'
 
 export function detectHoveredModule(this: Editor) {
   const {viewport} = this
@@ -54,24 +55,28 @@ export function applyResize(this: Editor, altKey: boolean, shiftKey: boolean) {
     name: handleName,
     module: {rotation},
     moduleOrigin,
-    // id,
   } = this._resizingOperator!
-  const {x, y, type, width, height} = moduleOrigin
+  const {id} = moduleOrigin
   const resizeParam = {
     downPoint: mouseDownPoint,
     movePoint: mouseMovePoint,
     dpr,
     scale,
-    initialWidth: width,
-    initialHeight: height,
     rotation,
     handleName,
     altKey,
     shiftKey,
-    initialCX: x,
-    initialCY: y,
+    moduleOrigin,
   }
+
+  const relatedModule = this.moduleMap.get(id)
+
+  if (relatedModule) {
+    const con = relatedModule.constructor as ModuleInstance
+    console.log(resizeParam)
+    return con.applyResizeTransform(resizeParam)
+  }/*
   if (type === 'rectangle') {
     return Rectangle.applyResizeTransform(resizeParam)
-  }
+  }*/
 }

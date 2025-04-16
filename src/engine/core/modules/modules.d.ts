@@ -12,7 +12,7 @@ declare global {
     'ellipse': EllipseProps
   }
   type ModuleProps = RectangleProps | EllipseProps
-  type ModulePropsType<T extends keyof ModulePropsMap> = ModulePropsMap[T]
+  // type ModulePropsType<T extends keyof ModulePropsMap> = ModulePropsMap[T]
   type PropsWithoutIdentifiers<T extends keyof ModulePropsMap> = Omit<ModulePropsMap[T], 'id' & 'layer'>
   type ModuleNames = keyof ModuleTypeMap
   type ModuleInstance = Rectangle | Ellipse

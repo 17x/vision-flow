@@ -1,4 +1,4 @@
-import {ModuleModifyData} from '../actions/type'
+import {HistoryModuleChangeItem, HistoryModuleChangeProps, ModuleModifyData} from '../actions/type'
 
 type HistoryPrev = HistoryNode | null
 type HistoryNext = HistoryPrev
@@ -88,7 +88,7 @@ interface DuplicateOperation {
 interface ModifyOperation {
   type: 'history-modify'
   payload: {
-    changes: ModuleModifyData[]
+    changes: HistoryModuleChangeItem[]
     selectedModules: HistorySelectedModules
   }
 }

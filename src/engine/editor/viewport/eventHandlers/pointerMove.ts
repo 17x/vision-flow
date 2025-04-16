@@ -111,6 +111,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
 
       const r = applyResize.call(this, altKey, shiftKey)
 
+      console.log(r)
       this.action.dispatch('module-modifying', {
         type: 'resize',
         data: r,

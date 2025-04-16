@@ -1,5 +1,5 @@
 import resetCanvas from './viewport/resetCanvas.tsx'
-import {ModuleModifyData, SelectionModifyData} from './actions/type'
+import {HistoryModuleChangeItem, HistoryModuleChangeProps, ModuleModifyData, SelectionModifyData} from './actions/type'
 import Editor from './editor.ts'
 import {redo} from './history/redo.ts'
 import {undo} from './history/undo.ts'
@@ -241,19 +241,15 @@ export function initEditor(this: Editor) {
 
     s.forEach((id) => {
       const module = this.moduleMap.get(id)
-      changes.push({
-        id,
-        props: {
-          x: {
-            from: module.x,
-            to: module.x + delta.x,
+      if (module) {
+        changes.push({
+          id,
+          props: {
+            x: module.x + delta.x,
+            y: module.y + delta.y,
           },
-          y: {
-            from: module.y,
-            to: module.y + delta.y,
-          },
-        },
-      })
+        })
+      }
     })
 
     // this.batchMove(s, delta)
@@ -293,21 +289,35 @@ export function initEditor(this: Editor) {
   })
 
   on('module-modify', (data) => {
-    data.map((change) => {
-      const kvs = {} as Partial<ModuleProps>
+    const changes: HistoryModuleChangeItem[] = []
+    // console.log(data)
 
-      Object.keys(change.props).map((key) => {
-        return kvs[key] = change.props[key]!.to
+    data.map(({id, props: kv}) => {
+      const props = {}
+      const change = {id, props}
+      const module = this.moduleMap.get(id)
+
+      if (!module) return
+
+      Object.keys(kv).map((keyName) => {
+        const fromValue = module[keyName]
+        const toValue = kv[keyName]
+
+        return props[keyName] = {
+          from: fromValue,
+          to: toValue,
+        }
       })
 
-      this.batchModify(new Set([change.id]), kvs)
+      this.batchModify(new Set([id]), kv)
+      changes.push(change)
     })
-
+    console.log(changes)
     this.history.add({
       type: 'history-modify',
       payload: {
         selectedModules: this.getSelected,
-        changes: data,
+        changes,
       },
     })
 
@@ -340,7 +350,7 @@ export function initEditor(this: Editor) {
       return
     }
 
-    console.log(this.hoveredModule, id)
+    // console.log(this.hoveredModule, id)
 
     this.hoveredModule = id
     dispatch('visible-selection-updated')

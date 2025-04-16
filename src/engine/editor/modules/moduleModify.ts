@@ -86,7 +86,7 @@ export function batchDelete(this: Editor, idSet: Set<UID>): ModuleProps[] {
 export function batchMove(this: Editor, from: Set<UID>, delta: Point) {
   const modulesMap: ModuleMap = this.getModulesByIdSet(from)
 
-  modulesMap.forEach((module: ModuleProps) => {
+  modulesMap.forEach((module: ModuleInstance) => {
     module.x += delta.x
     module.y += delta.y
   })
@@ -95,9 +95,10 @@ export function batchMove(this: Editor, from: Set<UID>, delta: Point) {
 export function batchModify(this: Editor, idSet: Set<UID>, data: Partial<ModuleProps>) {
   const modulesMap = this.getModulesByIdSet(idSet)
 
-  modulesMap.forEach((module: ModuleProps) => {
+  modulesMap.forEach((module: ModuleInstance) => {
     Object.keys(data).forEach((key) => {
-      module[key] = data[key]
+      const keyName = key as keyof ModuleProps
+      module[keyName] = data[key]
     })
   })
 }

@@ -62,33 +62,33 @@ class Rectangle extends Shape {
     return null
   }
 
-  static applyResizeTransform({
-                                downPoint,
-                                movePoint,
-                                initialWidth,
-                                initialHeight,
-                                initialCX,
-                                initialCY,
-                                rotation,
-                                handleName,
-                                scale,
-                                dpr,
-                                altKey = false,
-                                shiftKey = false,
-                              }: {
+  static applyResizeTransform = ({
+                                   downPoint,
+                                   movePoint,
+                                   moduleOrigin,
+                                   rotation,
+                                   handleName,
+                                   scale,
+                                   dpr,
+                                   altKey = false,
+                                   shiftKey = false,
+                                 }: {
     downPoint: { x: number; y: number };
     movePoint: { x: number; y: number };
-    initialWidth: number;
-    initialHeight: number;
-    initialCX: number;
-    initialCY: number;
+    moduleOrigin: RectangleProps
     rotation: number;
     handleName: ResizeHandleName;
     scale: number;
     dpr: number;
     altKey?: boolean;
     shiftKey?: boolean;
-  }): Rect {
+  }): Rect => {
+    const {
+      width: initialWidth,
+      height: initialHeight,
+      x: initialCX,
+      y: initialCY,
+    } = moduleOrigin
     // Calculate raw movement in screen coordinates
     const dxScreen = movePoint.x - downPoint.x
     const dyScreen = movePoint.y - downPoint.y

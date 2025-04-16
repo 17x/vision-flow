@@ -71,6 +71,30 @@ const ShapePropsPanel = ({props}: { props: ShapePropsType }) => {
             className="w-16  py-1 text-black rounded"
           />
         </div>
+        {
+          props.type === 'ellipse' && <>
+                <div className=" w-full h-full flex justify-between items-center">
+                    <span className={''}>r1:</span>
+                    <input
+                        type="number"
+                        name="r1"
+                        value={props.r1}
+                        onChange={handleChange}
+                        className="w-16  py-1 text-black rounded"
+                    />
+                </div>
+                <div className=" w-full h-full flex justify-between items-center">
+                    <span>r2:</span>
+                    <input
+                        type="number"
+                        name="r2"
+                        value={props.r2}
+                        onChange={handleChange}
+                        className="w-16  py-1 text-black rounded"
+                    />
+                </div>
+            </>
+        }
         <div className=" w-full h-full flex justify-between items-center">
           <span className={''}>Width:</span>
           <input

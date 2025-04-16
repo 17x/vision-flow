@@ -27,7 +27,7 @@ export interface OperationHandler {
   id: string;
   type: HandlerType
   /*
-  * moduleOrigin is a detailed object of the related module instance
+  * moduleOrigin is a detailed representation of the corresponding module instance.
   * */
   moduleOrigin: ModuleProps
   module: ModuleInstance

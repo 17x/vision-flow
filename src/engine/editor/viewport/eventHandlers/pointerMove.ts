@@ -1,7 +1,6 @@
 import {updateCursor, updateSelectionBox} from '../domManipulations.ts'
 import {
   generateBoundingRectFromTwoPoints,
-  rectInside,
 } from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
 import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
@@ -41,9 +40,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
 
       this.moduleMap.forEach((module) => {
-        const boundingRect = module.getBoundingRect()
-
-        if (rectInside(boundingRect, virtualSelectionRect)) {
+        if (module.isInsideRect(virtualSelectionRect)) {
           _selecting.add(module.id)
         }
       })

@@ -59,7 +59,7 @@ class Shape extends Base {
     resizeConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string },
     rotateConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string },
     boundingRect: CenterBasedRect,
-    moduleOrigin:ModuleProps
+    moduleOrigin: ModuleProps,
   ): OperationHandlers[] {
     const {x: cx, y: cy, width, height} = boundingRect
     // const id = this.id
@@ -129,6 +129,16 @@ class Shape extends Base {
     return handlers
   }
 
+  public isInsideRect(outer: BoundingRect): boolean {
+    const inner = this.getBoundingRect()
+
+    return (
+      inner.left >= outer.left &&
+      inner.right <= outer.right &&
+      inner.top >= outer.top &&
+      inner.bottom <= outer.bottom
+    )
+  }
 }
 
 export default Shape

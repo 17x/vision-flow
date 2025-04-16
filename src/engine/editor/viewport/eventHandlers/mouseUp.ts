@@ -50,34 +50,32 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
             type: 'move',
             data: {x: -x, y: -y},
           })
+
           // move back to origin position and do the move again
           draggingModules.forEach((id) => {
-            // moduleMap.get(id).x -= x
-            // moduleMap.get(id).y -= y
-            const change: ModuleModifyData = {
-              id,
-              props: {
-                x: {
-                  from: moduleMap.get(id).x,
-                  to: moduleMap.get(id).x + x,
-                }, y: {
-                  from: moduleMap.get(id).y,
-                  to: moduleMap.get(id).y + y,
-                },
-              },
-            }
+            const module = moduleMap.get(id)
 
-            changes.push(change)
+            if (module) {
+              const change: ModuleModifyData = {
+                id,
+                props: {
+                  x: {
+                    from: module.x,
+                    to: module.x + x,
+                  }, y: {
+                    from: module.y,
+                    to: module.y + y,
+                  },
+                },
+              }
+
+              changes.push(change)
+            }
             // moduleMap.get(id).x -= x
             // moduleMap.get(id).y -= y
           })
 
           this.action.dispatch('module-modify', changes)
-
-          /*   this.action.dispatch('module-modify', [{
-               id,
-               props,
-             }])*/
         } else {
           const closestId = this.hoveredModule
 
@@ -131,12 +129,8 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
           }
         }
 
-        this.action.dispatch('module-modify', [{
-          id,
-          props,
-        }])
+        this.action.dispatch('module-modify', [{id, props}])
       }
-        // this.viewport.wrapper.style.cursor = 'default'
         break
 
       case 'rotating': {
@@ -155,15 +149,6 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
         this.action.dispatch('selection-clear')
         break
       case 'static':
-        // console.log(this.hoveredModules)
-        /*console.log(this.handlingModules)
-        if (this.hoveredModules.size === 0) {
-          this.action.dispatch({
-            type: 'selection-clear',
-            data: null,
-          })
-        }*/
-        // console.log()
         if (e.ctrlKey || e.metaKey || e.shiftKey) {
           this.toggleSelected(draggingModules)
         } else {

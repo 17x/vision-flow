@@ -60,14 +60,14 @@ export function rectsOverlap(r1: BoundingRect, r2: BoundingRect): boolean {
   )
 }
 
-export function rectInside(inner: BoundingRect, outer: BoundingRect): boolean {
+/*export function rectInside(inner: BoundingRect, outer: BoundingRect): boolean {
   return (
     inner.left >= outer.left &&
     inner.right <= outer.right &&
     inner.top >= outer.top &&
     inner.bottom <= outer.bottom
   )
-}
+}*/
 
 export const isInsideRotatedRect = ({x: mouseX, y: mouseY}: Point, rect: Rect, rotation: number): boolean => {
   const {

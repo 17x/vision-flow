@@ -17,7 +17,7 @@ class Base {
   protected lineWidth: number
   protected lineColor: HexColor
   protected opacity: Opacity
-  protected rotation: Rotation
+  public rotation: Rotation
   protected shadow: Shadow
   readonly layer: number
 

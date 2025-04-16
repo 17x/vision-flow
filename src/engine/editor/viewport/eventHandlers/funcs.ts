@@ -1,6 +1,6 @@
 import Editor from '../../editor.ts'
-import {isInsideRotatedRect} from '../../../core/utils.ts'
-import {OperationHandlers, RotateHandler} from '../../selection/type'
+// import {isInsideRotatedRect} from '../../../core/utils.ts'
+import {RotateHandler} from '../../selection/type'
 import {applyResizeTransform} from '../../../lib/lib.ts'
 
 export function detectHoveredModule(this: Editor) {
@@ -15,8 +15,6 @@ export function detectHoveredModule(this: Editor) {
   // console.log(this.operationHandlers)
   const operationHandlers = [...this.operationHandlers].filter(
     (operationHandler) => {
-      // console.log(operationHandler)
-      // const {x, y, size, rotation} = operationHandler.data
       return operationHandler.module.hitTest(worldPoint)
     },
   )
@@ -39,19 +37,6 @@ export function detectHoveredModule(this: Editor) {
       moduleId = module.id
       break
     }
-    /*if (module.type === 'rectangle') {
-      const {id, x, y, width, height, rotation} = module as Rectangle
-      const f = isInsideRotatedRect(
-        worldPoint,
-        {x, y, width, height},
-        rotation,
-      )
-
-      if (f) {
-        moduleId = id
-        break
-      }
-    }*/
   }
 
   if (this.hoveredModule !== moduleId) {
@@ -69,7 +54,7 @@ export function applyResize(this: Editor, altKey: boolean, shiftKey: boolean) {
   const {mouseDownPoint, mouseMovePoint, scale, dpr} = this.viewport
   const {
     name: handleName,
-    data: {rotation},
+    module: {rotation},
     moduleOrigin,
     // id,
   } = this._resizingOperator!
@@ -102,7 +87,7 @@ export function applyResize(this: Editor, altKey: boolean, shiftKey: boolean) {
 
 export function applyRotating(this: Editor, shiftKey: boolean) {
   const {mouseDownPoint, mouseMovePoint, scale, dpr} = this.viewport
-  const {data: {rotation}, moduleOrigin} = this._rotatingOperator as RotateHandler
+  const {module: {rotation}, moduleOrigin} = this._rotatingOperator as RotateHandler
   const {cx, cy} = moduleOrigin
   // const module = this.moduleMap.get(id)
 

@@ -129,7 +129,7 @@ class Rectangle extends Shape {
         y: currentCenterY,
         lineColor: '',
         lineWidth: 0,
-        rotation: 0,
+        rotation,
         layer: this.layer,
         opacity: 100,
       }

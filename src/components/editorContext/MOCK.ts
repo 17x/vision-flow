@@ -9,7 +9,7 @@ const createBaseDataByType = <T extends ModuleNames>(type: T = 'rectangle' as T,
       x,
       y,
       r1: x / 1.2,
-      r2: y / 1.2,
+      r2: x / 1.2,
       enableLine: true,
       lineColor: '#000',
       lineWidth: 1,
@@ -89,7 +89,8 @@ export const createMockData = (editor: Editor) => {
     }*/
   const modulesData = []
 
-  // modulesData.push(createBaseDataByType('ellipse'))
+  modulesData.push(createBaseDataByType('ellipse'))
+  modulesData.push(createBaseDataByType('ellipse', 300, 700))
   modulesData.push(createBaseDataByType('rectangle', 500, 500))
   editor.action.dispatch('module-add', modulesData)
 }

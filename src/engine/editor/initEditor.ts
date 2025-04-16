@@ -336,6 +336,12 @@ export function initEditor(this: Editor) {
   })
 
   on('module-hover-enter', (id) => {
+    if (this.hoveredModule && id && this.hoveredModule === id) {
+      return
+    }
+
+    console.log(this.hoveredModule, id)
+
     this.hoveredModule = id
     dispatch('visible-selection-updated')
   })

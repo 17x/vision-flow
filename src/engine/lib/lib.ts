@@ -1,53 +1,7 @@
-// import typeCheck from '../../utilities/typeCheck.ts'
-
 import {
-  OperationHandlers,
   ResizeHandleName,
   ResizeTransform,
 } from '../editor/selection/type'
-import {RectangleProps} from '../core/modules/shapes/rectangle.ts'
-
-export const getBoxControlPoints = (
-  cx: number,
-  cy: number,
-  w: number,
-  h: number,
-  rotation: number,
-): Point[] => {
-  const halfW = w / 2
-  const halfH = h / 2
-
-  // Convert rotation angle from degrees to radians
-  const angle = rotation * (Math.PI / 180)
-
-  // Precompute sine and cosine to optimize repeated calculations
-  const cosAngle = Math.cos(angle)
-  const sinAngle = Math.sin(angle)
-
-  // Control points before rotation
-  const points: Point[] = [
-    {x: cx - halfW, y: cy - halfH}, // Top-left
-    {x: cx, y: cy - halfH}, // Top-center
-    {x: cx + halfW, y: cy - halfH}, // Top-right
-    {x: cx + halfW, y: cy}, // Right-center
-    {x: cx + halfW, y: cy + halfH}, // Bottom-right
-    {x: cx, y: cy + halfH}, // Bottom-center
-    {x: cx - halfW, y: cy + halfH}, // Bottom-left
-    {x: cx - halfW, y: cy}, // Left-center
-  ]
-
-  // Rotate each point around the center
-  return points.map(({x, y}) => {
-    const dx = x - cx
-    const dy = y - cy
-
-    // Apply rotation
-    return {
-      x: cx + dx * cosAngle - dy * sinAngle,
-      y: cy + dx * sinAngle + dy * cosAngle,
-    }
-  })
-}
 
 interface DrawCrossLineProps {
   ctx: CanvasRenderingContext2D;
@@ -187,34 +141,6 @@ export function rotatePoint(
   }
 }
 
-export function getCursor(
-  x: number,
-  y: number,
-  cx: number,
-  cy: number,
-  threshold = 4,
-) {
-  const dx = x - cx
-  const dy = y - cy
-
-  const absDx = Math.abs(dx)
-  const absDy = Math.abs(dy)
-
-  // Corner handles
-  if (absDx > threshold && absDy > threshold) {
-    if (dx < 0 && dy < 0) return 'nwse-resize' // Top-left
-    if (dx > 0 && dy < 0) return 'nesw-resize' // Top-right
-    if (dx > 0 && dy > 0) return 'nwse-resize' // Bottom-right
-    if (dx < 0 && dy > 0) return 'nesw-resize' // Bottom-left
-  }
-
-  // Side handles
-  if (absDx <= threshold && absDy > threshold) return 'ns-resize' // Top or Bottom
-  if (absDy <= threshold && absDx > threshold) return 'ew-resize' // Left or Right
-
-  return 'default'
-}
-
 export function getResizeTransform(
   name: ResizeHandleName,
   symmetric = false,
@@ -248,99 +174,4 @@ export function getResizeTransform(
   }
 
   return base
-}
-
-export function applyResizeTransform({
-                                       downPoint,
-                                       movePoint,
-                                       initialWidth,
-                                       initialHeight,
-                                       initialCX,
-                                       initialCY,
-                                       rotation,
-                                       handleName,
-                                       scale,
-                                       dpr,
-                                       altKey = false,
-                                       shiftKey = false,
-                                     }: {
-  downPoint: { x: number; y: number };
-  movePoint: { x: number; y: number };
-  initialWidth: number;
-  initialHeight: number;
-  initialCX: number;
-  initialCY: number;
-  rotation: number;
-  handleName: ResizeHandleName;
-  scale: number;
-  dpr: number;
-  altKey?: boolean;
-  shiftKey?: boolean;
-}): Rect {
-  // Calculate raw movement in screen coordinates
-  const dxScreen = movePoint.x - downPoint.x
-  const dyScreen = movePoint.y - downPoint.y
-
-  // Convert to canvas coordinates and apply DPR
-  const dx = (dxScreen / scale) * dpr
-  const dy = (dyScreen / scale) * dpr
-
-  // Convert rotation to radians and calculate rotation matrix
-  const angle = -rotation * (Math.PI / 180)
-  const cos = Math.cos(angle)
-  const sin = Math.sin(angle)
-
-  // Transform the movement vector into the object's local coordinate system
-  const localDX = dx * cos - dy * sin
-  const localDY = dx * sin + dy * cos
-
-  // Get the resize transform based on the handle
-  const t = getResizeTransform(handleName, altKey)
-
-  // Calculate the size changes in local coordinates
-  let deltaX = localDX * t.dx
-  let deltaY = localDY * t.dy
-
-  // Maintain aspect ratio if shift key is pressed
-  if (shiftKey) {
-    const aspect = initialWidth / initialHeight
-    const absDeltaX = Math.abs(deltaX)
-    const absDeltaY = Math.abs(deltaY)
-
-    // For corner handles, use the larger movement
-    if (t.dx !== 0 && t.dy !== 0) {
-      if (absDeltaX > absDeltaY) {
-        deltaY = deltaX / aspect
-      } else {
-        deltaX = deltaY * aspect
-      }
-    }
-    // For horizontal handles, maintain aspect ratio based on width change
-    else if (t.dx !== 0) {
-      deltaY = deltaX / aspect
-    }
-    // For vertical handles, maintain aspect ratio based on height change
-    else if (t.dy !== 0) {
-      deltaX = deltaY * aspect
-    }
-  }
-
-  // Apply the resize transform
-  const factor = altKey ? 2 : 1
-  const width = Math.abs(initialWidth + deltaX * factor)
-  const height = Math.abs(initialHeight + deltaY * factor)
-
-  // Calculate the center movement in local coordinates
-  const centerDeltaX = -deltaX * t.cx * factor
-  const centerDeltaY = -deltaY * t.cy * factor
-
-  // Transform the center movement back to global coordinates
-  const globalCenterDeltaX = centerDeltaX * cos + centerDeltaY * sin
-  const globalCenterDeltaY = -centerDeltaX * sin + centerDeltaY * cos
-
-  // Calculate the new center position
-  const x = initialCX + globalCenterDeltaX
-  const y = initialCY + globalCenterDeltaY
-
-  return {x, y, width, height}
 }

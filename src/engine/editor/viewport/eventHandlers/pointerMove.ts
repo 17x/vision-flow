@@ -4,7 +4,7 @@ import {
 } from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
 import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
-import {applyResize, detectHoveredModule} from './funcs.ts'
+import {applyResize, detectHoveredModule, getResizeDirection, getRotateAngle} from './funcs.ts'
 import Base from '../../../core/modules/base.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
@@ -108,9 +108,11 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     case 'resizing': {
       viewport.wrapper.setPointerCapture(e.pointerId)
       const {altKey, shiftKey} = e
+      // const {x, y} = this._rotatingOperator!.moduleOrigin
+      // const centerPoint = this.getViewPointByWorldPoint(x, y)
+      // const cursorDirection = getResizeDirection(centerPoint, viewport.mouseMovePoint)
 
       const r = applyResize.call(this, altKey, shiftKey)
-
       console.log(r)
       this.action.dispatch('module-modifying', {
         type: 'resize',
@@ -122,10 +124,12 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
     case 'rotating': {
       viewport.wrapper.setPointerCapture(e.pointerId)
       const {shiftKey} = e
-      const centerPoint = this.getViewPointByWorldPoint(this._rotatingOperator!.moduleOrigin.cx, this._rotatingOperator!.moduleOrigin.cy)
-
+      const {x, y} = this._rotatingOperator!.moduleOrigin
+      const centerPoint = this.getViewPointByWorldPoint(x, y)
       const rotation = Base.applyRotating.call(this, shiftKey)
-      updateCursor(viewport.wrapper, viewport.cursor, centerPoint, viewport.mouseMovePoint)
+      const cursorAngle = getRotateAngle(centerPoint, viewport.mouseMovePoint)
+
+      updateCursor.call(this, 'rotate', viewport.mouseMovePoint, cursorAngle)
 
       this.action.dispatch('module-modifying', {
         type: 'rotate',
@@ -160,14 +164,19 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       if (r) {
         if (r.type === 'rotate') {
           const centerPoint = this.getViewPointByWorldPoint(r.moduleOrigin.x, r.moduleOrigin.y)
+          const angle = getRotateAngle(centerPoint, viewport.mouseMovePoint)
 
-          updateCursor(viewport.wrapper, viewport.cursor, centerPoint, viewport.mouseMovePoint)
-        } else {
-          updateCursor(viewport.wrapper, viewport.cursor, 'hide')
-          viewport.wrapper.style.cursor = r.cursor
+          updateCursor.call(this, 'rotate', viewport.mouseMovePoint, angle)
+        } else if (r.type === 'resize') {
+          const {x, y} = r.moduleOrigin
+          const centerPoint = this.getViewPointByWorldPoint(x, y)
+          const cursorDirection = getResizeDirection(centerPoint, viewport.mouseMovePoint)
+
+          updateCursor.call(this, 'resize', cursorDirection)
+
         }
       } else {
-        updateCursor(viewport.wrapper, viewport.cursor, 'hide')
+        updateCursor.call(this, 'default')
       }
 
       viewport.wrapper.releasePointerCapture(e.pointerId)

@@ -210,7 +210,7 @@ class Editor {
         size: rotateSize,
         lineColor: 'transparent',
         lineWidth: 0,
-        fillColor: 'transparent',
+        fillColor: '#ff0000',
       })
 
       this.operationHandlers.push(...operators)

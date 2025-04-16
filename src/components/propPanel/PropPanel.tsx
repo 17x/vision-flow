@@ -25,9 +25,7 @@ export default PropPanel
 const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
   const {executeAction} = useContext(EditorContext)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e)
     const keyName = e.target.name as keyof ModuleProps
-    const oldValue = props[keyName]
     let newValue: string | number = e.target.value
 
     if ([

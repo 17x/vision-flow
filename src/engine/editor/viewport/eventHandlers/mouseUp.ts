@@ -1,7 +1,6 @@
 import {updateSelectionBox} from '../domManipulations.ts'
 import Editor from '../../editor.ts'
-import {HistoryModuleChangeProps, ModuleModifyData} from '../../actions/type'
-// import Rectangle from '../../../core/modules/shapes/rectangle.ts'
+import {ModuleModifyData} from '../../actions/type'
 import Base from '../../../core/modules/base.ts'
 import {applyResize} from './funcs.ts'
 
@@ -84,9 +83,9 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       case 'resizing': {
         const {altKey, shiftKey} = e
         const props = applyResize.call(this, altKey, shiftKey)
-
+        console.log(this._rotatingOperator)
         this.action.dispatch('module-modify', [{
-          id: this._rotatingOperator!.id,
+          id: this._resizingOperator!.id,
           props,
         }])
       }

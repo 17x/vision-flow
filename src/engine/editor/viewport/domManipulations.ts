@@ -1,3 +1,6 @@
+import Editor from '../editor.ts'
+import {ResizeDirection} from '../selection/type'
+
 export interface InitViewportDomReturn {
   wrapper: HTMLDivElement
   selectionBox: HTMLDivElement
@@ -120,34 +123,39 @@ export const updateSelectionBox = (selectionBox: HTMLDivElement, {x, y, height, 
   selectionBox.style.display = show ? 'block' : 'none'
 }
 
-export const updateCursor = (wrapper: HTMLDivElement, cursor: HTMLDivElement, centerPoint: Point | 'hide', mousePoint?: Point) => {
-  if (centerPoint === 'hide') {
-    cursor.style.display = 'none'
+export function updateCursor(this: Editor, type: 'rotate' | 'resize' | 'default', position?: Point | ResizeDirection, angle?: number) {
+  const {wrapper, cursor} = this.viewport
+
+  if (type === 'default') {
     wrapper.style.cursor = 'default'
+    cursor.style.display = 'none'
     return
   }
 
-  cursor.innerHTML = `
+  if (type === 'resize') {
+    wrapper.style.cursor = `${position as ResizeDirection}-resize`
+    cursor.style.display = 'none'
+    return
+  }
+
+  wrapper.style.cursor = 'none'
+
+  if (type === 'rotate') {
+    const size = 24
+    const offset = size / 2
+    const {x, y} = position as Point
+    cursor.innerHTML = `
        <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.99 18.93">
   <path d="M15.57,16.04c.48-.57,1-1.1,1.5-1.65.35-.38.54-.85,1.15-.82.72.04,1.01.78.55,1.34-1.07,1.3-2.37,2.5-3.44,3.82-.69.48-1.09,0-1.56-.48-.91-.95-1.92-2.07-2.78-3.07-.3-.35-.58-.72-.33-1.19.39-.73,1.08-.39,1.53.07.52.55,1.01,1.17,1.51,1.74.07.08.17.19.26.22,0-.81.02-1.64-.08-2.44-.51-4.07-3.48-7.36-7.47-8.32-1.12-.27-2.22-.25-3.37-.24.15.2.34.39.52.56.51.47,1.2.95,1.66,1.44.69.73-.3,1.84-1.1,1.19-.91-.74-1.83-1.68-2.7-2.48-.38-.35-1.06-.81-1.29-1.26-.21-.4-.1-.54.14-.89C1.59,2.57,2.79,1.18,4.11.18c.76-.58,1.72.38,1.13,1.14l-2.3,2.09c.76.04,1.52-.01,2.28.06,5.2.47,9.42,4.43,10.22,9.59.15.99.1,1.98.14,2.98Z"/>
 </svg>
   `
-  cursor.style.display = 'block'
-  wrapper.style.cursor = 'none'
-  const size = 24
-  const offset = size / 2
 
-  const dx = mousePoint!.x - centerPoint.x
-  const dy = mousePoint!.y - centerPoint.y
-  const angleRad = Math.atan2(dy, dx)
-  const angleDeg = angleRad * (180 / Math.PI)
-  let normalizedAngle = angleDeg
-  if (normalizedAngle < 0) normalizedAngle += 360
+    // for svg icon direction
+    angle! += 45
 
-  // for svg icon direction
-  normalizedAngle += 45
-
-  cursor.style.transformOrigin = 'center center'
-  cursor.style.transform = `translate(${mousePoint!.x - offset}px, ${mousePoint!.y - offset}px) rotate(${normalizedAngle}deg)`
+    cursor.style.display = 'block'
+    cursor.style.transformOrigin = 'center center'
+    cursor.style.transform = `translate(${x - offset}px, ${y - offset}px) rotate(${angle}deg)`
+  }
 }

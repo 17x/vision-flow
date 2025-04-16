@@ -2,7 +2,7 @@ export type SelectionActionMode = 'add' | 'delete' | 'toggle' | 'replace'
 
 type HandlerType = 'move' | 'resize' | 'rotate';
 
-enum ResizeDirection {
+export enum ResizeDirection {
   N = 'n',
   S = 's',
   E = 'e',

@@ -4,7 +4,7 @@ import {
 } from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
 import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
-import {applyResize, detectHoveredModule, getResizeDirection, getRotateAngle} from './funcs.ts'
+import {applyResize, detectHoveredModule, getResizeCursor, getRotateAngle} from './funcs.ts'
 import Base from '../../../core/modules/base.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
@@ -170,8 +170,8 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
         } else if (r.type === 'resize') {
           const {x, y} = r.moduleOrigin
           const centerPoint = this.getViewPointByWorldPoint(x, y)
-          const cursorDirection = getResizeDirection(centerPoint, viewport.mouseMovePoint)
-
+          const cursorDirection = getResizeCursor(viewport.mouseMovePoint, centerPoint)
+          console.log(cursorDirection)
           updateCursor.call(this, 'resize', cursorDirection)
 
         }

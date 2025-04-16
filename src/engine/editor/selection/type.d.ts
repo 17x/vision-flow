@@ -1,6 +1,6 @@
-type OperationHandlerType = 'resize' | 'rotate'
+export type SelectionActionMode = 'add' | 'delete' | 'toggle' | 'replace'
 
-type HandlerType = 'resize' | 'rotate';
+type HandlerType = 'move' | 'resize' | 'rotate';
 
 export type ResizeHandleName =
   | 'tl'
@@ -23,25 +23,28 @@ interface ResizeTransform {
   cy: number;
 }
 
-// Base operation handler interface
 export interface OperationHandler {
   id: string;
-  type: HandlerType; // Type of the operation (resize, rotate, etc.)
-  // cursor: string; // The cursor style when hovering over the handler
-  moduleOrigin: { cx: number, cy: number, width: number, height: number }
+  type: HandlerType
+  /*
+  * moduleOrigin is a detailed object of the related module instance
+  * */
+  moduleOrigin: ModuleProps
   module: ModuleInstance
 }
 
 interface ResizeHandler extends OperationHandler {
   type: 'resize';
   name: ResizeHandleName
-  // cursor: ResizeCursor;
 }
 
 export interface RotateHandler extends OperationHandler {
   type: 'rotate';
 }
 
-export type OperationHandlers = RotateHandler | ResizeHandler
-export type SelectionActionMode = 'add' | 'delete' | 'toggle' | 'replace'
+export interface MoveHandler extends OperationHandler {
+  type: 'move';
+}
+
+export type OperationHandlers = RotateHandler | ResizeHandler | MoveHandler
 

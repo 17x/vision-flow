@@ -1,3 +1,5 @@
+import Editor from '../../editor/editor.ts'
+import {RotateHandler} from '../../editor/selection/type'
 
 export interface BasicModuleProps {
   id: UID
@@ -72,6 +74,31 @@ class Base {
 
   protected render(_ctx: CanvasRenderingContext2D): void {
     return undefined
+  }
+
+  static applyRotating(this: Editor, shiftKey: boolean) {
+    const {mouseDownPoint, mouseMovePoint, scale, dpr, offset} = this.viewport
+    const {module: {rotation}, moduleOrigin} = this._rotatingOperator as RotateHandler
+    const {x, y} = moduleOrigin
+
+    const downX = (mouseDownPoint.x - offset.x / dpr) / scale * dpr
+    const downY = (mouseDownPoint.y - offset.y / dpr) / scale * dpr
+    const moveX = (mouseMovePoint.x - offset.x / dpr) / scale * dpr
+    const moveY = (mouseMovePoint.y - offset.y / dpr) / scale * dpr
+
+    const startAngle = Math.atan2(downY - y, downX - x)
+    const currentAngle = Math.atan2(moveY - y, moveX - x)
+
+    let rotationDelta = (currentAngle - startAngle) * (180 / Math.PI)
+
+    if (shiftKey) {
+      rotationDelta = Math.round(rotationDelta / 15) * 15
+    }
+
+    let newRotation = (rotation + rotationDelta) % 360
+    if (newRotation < 0) newRotation += 360
+
+    return newRotation
   }
 
 }

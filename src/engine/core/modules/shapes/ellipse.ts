@@ -29,21 +29,6 @@ class Ellipse extends Shape {
     this.enableFill = enableFill
   }
 
-  public getDetails<T extends boolean>(
-    includeIdentifiers: T = true as T,
-  ): T extends true ?
-    EllipseProps :
-    Omit<EllipseProps, 'id' & 'layer'> {
-
-    return {
-      ...super.getDetails(includeIdentifiers),
-      fillColor: this.fillColor,
-      enableFill: this.enableFill,
-      r1: this.r1,
-      r2: this.r2,
-    } as T extends true ? EllipseProps : Omit<EllipseProps, 'id' & 'layer'>
-  }
-
   public hitTest(point: Point, borderPadding = 5): 'inside' | 'border' | null {
     const {x: cx, y: cy, r1, r2, rotation = 0} = this
 
@@ -69,6 +54,21 @@ class Ellipse extends Shape {
     }
 
     return null
+  }
+
+  public getDetails<T extends boolean>(
+    includeIdentifiers: T = true as T,
+  ): T extends true ?
+    EllipseProps :
+    Omit<EllipseProps, 'id' & 'layer'> {
+
+    return {
+      ...super.getDetails(includeIdentifiers),
+      fillColor: this.fillColor,
+      enableFill: this.enableFill,
+      r1: this.r1,
+      r2: this.r2,
+    } as T extends true ? EllipseProps : Omit<EllipseProps, 'id' & 'layer'>
   }
 
   public getBoundingRect() {
@@ -129,10 +129,9 @@ class Ellipse extends Shape {
   public getOperators(
     resizeConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string },
     rotateConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string },
-    // boundingRect?: BoundingRect,
   ) {
-    // const {x: cx, y: cy, id, width, height, rotation} = this
-    return super.getOperators(resizeConfig, rotateConfig, this.getRect())
+    return super.getOperators(resizeConfig, rotateConfig, this.getRect(), this.getDetails(true),
+    )
   }
 
   public getSnapPoints(): SnapPointData[] {

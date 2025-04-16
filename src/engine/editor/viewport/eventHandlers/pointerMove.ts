@@ -5,7 +5,8 @@ import {
 } from '../../../core/utils.ts'
 import Editor from '../../editor.ts'
 import {areSetsEqual, getSymmetricDifference} from '../../../lib/lib.ts'
-import {applyResize, applyRotating, detectHoveredModule} from './funcs.ts'
+import {applyResize, detectHoveredModule} from './funcs.ts'
+import Base from '../../../core/modules/base.ts'
 
 export default function handlePointerMove(this: Editor, e: PointerEvent) {
   const {
@@ -125,7 +126,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       const {shiftKey} = e
       const centerPoint = this.getViewPointByWorldPoint(this._rotatingOperator!.moduleOrigin.cx, this._rotatingOperator!.moduleOrigin.cy)
 
-      const rotation = applyRotating.call(this, shiftKey)
+      const rotation = Base.applyRotating.call(this, shiftKey)
       updateCursor(viewport.wrapper, viewport.cursor, centerPoint, viewport.mouseMovePoint)
 
       this.action.dispatch('module-modifying', {
@@ -160,7 +161,7 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
 
       if (r) {
         if (r.type === 'rotate') {
-          const centerPoint = this.getViewPointByWorldPoint(r.moduleOrigin.cx, r.moduleOrigin.cy)
+          const centerPoint = this.getViewPointByWorldPoint(r.moduleOrigin.x, r.moduleOrigin.y)
 
           updateCursor(viewport.wrapper, viewport.cursor, centerPoint, viewport.mouseMovePoint)
         } else {

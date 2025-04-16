@@ -1,9 +1,8 @@
 import {updateSelectionBox} from '../domManipulations.ts'
 import Editor from '../../editor.ts'
-import {applyRotating} from './funcs.ts'
-import {applyResizeTransform} from '../../../lib/lib.ts'
 import {ModuleChangeProps, ModuleModifyData} from '../../actions/type'
 import Rectangle from '../../../core/modules/shapes/rectangle.ts'
+import Base from '../../../core/modules/base.ts'
 
 function handleMouseUp(this: Editor, e: MouseEvent) {
   const leftMouseClick = e.button === 0
@@ -143,7 +142,7 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
       case 'rotating': {
         const {shiftKey} = e
         const {id, module: {rotation}} = this._rotatingOperator!
-        const newRotation = applyRotating.call(this, shiftKey)
+        const newRotation = Base.applyRotating.call(this, shiftKey)
 
         this.action.dispatch('module-modify', [{
           id,

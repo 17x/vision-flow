@@ -158,7 +158,6 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
       break
 
     case 'static': {
-      console.log('static')
       const r = detectHoveredModule.call(this)
       const {viewport} = this
 

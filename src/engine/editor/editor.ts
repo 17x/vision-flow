@@ -198,7 +198,7 @@ class Editor {
       const {scale, dpr} = this.viewport
       const lineWidth = 1 / scale * dpr
       const resizeSize = 10 / scale * dpr
-      const rotateSize = 30 / scale * dpr
+      const rotateSize = 15 / scale * dpr
       const lineColor = '#5491f8'
 
       const operators = module!.getOperators({
@@ -210,7 +210,7 @@ class Editor {
         size: rotateSize,
         lineColor: 'transparent',
         lineWidth: 0,
-        fillColor: '#ff0000',
+        fillColor: 'transparent',
       })
 
       this.operationHandlers.push(...operators)

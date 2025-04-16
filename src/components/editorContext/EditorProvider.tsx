@@ -129,8 +129,6 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 
   const checkInside = (e) => {
     if (containerRef.current) {
-      console.log(containerRef!.current, e.target)
-      console.log(containerRef!.current?.contains(e.target))
       setFocused(containerRef!.current?.contains(e.target))
     }
   }

@@ -11,7 +11,6 @@ const ShortcutListener: React.FC = () => {
 
     let shortcutCode: EditorEventType | null = null
     const {key, ctrlKey, metaKey, shiftKey} = e
-    console.log(document.activeElement)
     const arrowKeys: { [key: string]: ModuleMoveDirection } = {
       ArrowUp: 'module-move-up',
       ArrowDown: 'module-move-down',

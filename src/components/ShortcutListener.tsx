@@ -9,7 +9,7 @@ const ShortcutListener: React.FC = () => {
   const handleKeyPress = (e: KeyboardEvent) => {
     let shortcutCode: EditorEventType | null = null
     const {key, ctrlKey, metaKey, shiftKey} = e
-
+    console.log(document.activeElement)
     const arrowKeys: { [key: string]: ModuleMoveDirection } = {
       ArrowUp: 'module-move-up',
       ArrowDown: 'module-move-down',
@@ -94,14 +94,15 @@ const ShortcutListener: React.FC = () => {
     } else {
       executeAction(shortcutCode)
     }
+
     e.stopPropagation()
     e.preventDefault()
   }
 
   useEffect(() => {
-    // if (!focused) return
+    if (!focused) return
 
-    window.addEventListener('keydown', handleKeyPress)
+    window.addEventListener('keydown', handleKeyPress, {capture: true})
 
     return () => {
       window.removeEventListener('keydown', handleKeyPress)

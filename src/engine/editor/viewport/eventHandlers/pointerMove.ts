@@ -171,9 +171,8 @@ export default function handlePointerMove(this: Editor, e: PointerEvent) {
           const {x, y} = r.moduleOrigin
           const centerPoint = this.getViewPointByWorldPoint(x, y)
           const cursorDirection = getResizeCursor(viewport.mouseMovePoint, centerPoint)
-          console.log(cursorDirection)
-          updateCursor.call(this, 'resize', cursorDirection)
 
+          updateCursor.call(this, 'resize', cursorDirection)
         }
       } else {
         updateCursor.call(this, 'default')

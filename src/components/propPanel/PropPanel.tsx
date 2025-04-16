@@ -23,11 +23,11 @@ const PropPanel = ({props}: PropPanelProps) => {
 export default PropPanel
 
 const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
-  const {executeAction} = useContext(EditorContext)
+  const {executeAction, focused} = useContext(EditorContext)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const keyName = e.target.name as keyof ModuleProps
     let newValue: string | number = e.target.value
-
+    // console.log(focused)
     if ([
       'x',
       'y',
@@ -43,10 +43,22 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
         [keyName]: newValue,
       },
     }])
+
+    e.preventDefault()
+    e.stopPropagation()
   }
 
   return (
-    <div className="z-30 text-sm">
+    <div className="z-30 text-sm"
+         onKeyDown={(e) => {
+           e.preventDefault()
+           e.stopPropagation()
+         }}
+         onKeyUp={(e) => {
+           e.preventDefault()
+           e.stopPropagation()
+         }}
+    >
       {/* Shape Properties Group */}
       <div className="mb-1 ">
         <div className=" w-full h-full flex justify-between items-center">

@@ -50,14 +50,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
 
   return (
     <div className="z-30 text-sm"
-         onKeyDown={(e) => {
-           e.preventDefault()
-           e.stopPropagation()
-         }}
-         onKeyUp={(e) => {
-           e.preventDefault()
-           e.stopPropagation()
-         }}
+
     >
       {/* Shape Properties Group */}
       <div className="mb-1 ">

@@ -7,6 +7,8 @@ const ShortcutListener: React.FC = () => {
   const {executeAction, focused} = useContext(EditorContext)
 
   const handleKeyPress = (e: KeyboardEvent) => {
+    if (!focused) return
+
     let shortcutCode: EditorEventType | null = null
     const {key, ctrlKey, metaKey, shiftKey} = e
     console.log(document.activeElement)
@@ -100,9 +102,7 @@ const ShortcutListener: React.FC = () => {
   }
 
   useEffect(() => {
-    if (!focused) return
-
-    window.addEventListener('keydown', handleKeyPress, {capture: true})
+    window.addEventListener('keydown', handleKeyPress)
 
     return () => {
       window.removeEventListener('keydown', handleKeyPress)

@@ -107,13 +107,16 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
 
     const element = elementRef.current
+
     if (element) {
+      window.addEventListener('mousedown', checkInside)
       element.addEventListener('focus', handleFocus)
       element.addEventListener('blur', handleBlur)
     }
 
     return () => {
       if (element) {
+        window.removeEventListener('mousedown', checkInside)
         element.removeEventListener('focus', handleFocus)
         element.removeEventListener('blur', handleBlur)
       }
@@ -124,6 +127,13 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
   }, [file])
 
+  const checkInside = (e) => {
+    if (containerRef.current) {
+      console.log(containerRef!.current, e.target)
+      console.log(containerRef!.current?.contains(e.target))
+      setFocused(containerRef!.current?.contains(e.target))
+    }
+  }
   const handleFocus = () => setFocused(true)
   const handleBlur = () => setFocused(false)
 

@@ -1,7 +1,8 @@
+
 export interface BasicModuleProps {
   id: UID
   layer: number
-  type: string
+  type: keyof ModuleTypeMap
   enableLine?: boolean
   lineColor: HexColor
   lineWidth: number
@@ -12,7 +13,7 @@ export interface BasicModuleProps {
 
 class Base {
   readonly id: UID
-  protected type: string
+  readonly type: string
   protected enableLine: boolean
   protected lineWidth: number
   protected lineColor: HexColor

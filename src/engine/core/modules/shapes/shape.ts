@@ -59,6 +59,7 @@ class Shape extends Base {
     resizeConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string },
     rotateConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string },
     boundingRect: CenterBasedRect,
+    moduleOrigin:ModuleProps
   ): OperationHandlers[] {
     const {x: cx, y: cy, width, height} = boundingRect
     // const id = this.id
@@ -120,7 +121,7 @@ class Shape extends Base {
         type: OFFSET.type,
         name: OFFSET.name,
         // cursor,
-        moduleOrigin: {cx, cy, width, height},
+        moduleOrigin,
         module: new Rectangle(currentModuleProps),
       }
     })

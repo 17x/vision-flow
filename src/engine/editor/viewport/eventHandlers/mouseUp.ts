@@ -3,6 +3,7 @@ import Editor from '../../editor.ts'
 import {applyRotating} from './funcs.ts'
 import {applyResizeTransform} from '../../../lib/lib.ts'
 import {ModuleChangeProps, ModuleModifyData} from '../../actions/type'
+import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 
 function handleMouseUp(this: Editor, e: MouseEvent) {
   const leftMouseClick = e.button === 0
@@ -95,14 +96,15 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
         const {altKey, shiftKey} = e
         const {mouseDownPoint, mouseMovePoint, scale, dpr} = this.viewport
         const {name: handleName, module: {rotation}, moduleOrigin, id} = this._resizingOperator!
-        const {cx, cy, width, height} = moduleOrigin
+        const {x, y, type, width, height} = moduleOrigin
+        let to = {}
         const from: Partial<ModuleProps> = {
-          x: cx,
-          y: cy,
+          x,
+          y,
           width,
           height,
         }
-        const to = applyResizeTransform({
+        const resizeParam = {
           downPoint: mouseDownPoint,
           movePoint: mouseMovePoint,
           dpr,
@@ -113,9 +115,13 @@ function handleMouseUp(this: Editor, e: MouseEvent) {
           handleName,
           altKey,
           shiftKey,
-          initialCX: cx,
-          initialCY: cy,
-        }) as Partial<ModuleProps>
+          initialCX: x,
+          initialCY: y,
+        }
+
+        if (type === 'rectangle') {
+          to = Rectangle.applyResizeTransform(resizeParam) as Partial<ModuleProps>
+        }
 
         const props: ModuleChangeProps = {} // explicitly typed
 

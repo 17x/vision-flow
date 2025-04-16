@@ -1,8 +1,6 @@
 import {ResizeHandler, SelectionActionMode} from './type'
 import typeCheck from '../../../utilities/typeCheck.ts'
 import Editor from '../editor.ts'
-import {RectangleProps} from '../../core/modules/shapes/rectangle.ts'
-import {createHandlersForRect} from '../../lib/lib.ts'
 
 export function modifySelected(
   this: Editor,

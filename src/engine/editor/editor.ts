@@ -19,7 +19,7 @@ import {
 } from './selection/helper.ts'
 import {updateScrollBars} from './viewport/domManipulations.ts'
 import selectionRender from './viewport/selectionRender.ts'
-import {worldToScreen, screenToWorld, createHandlersForRect} from '../lib/lib.ts'
+import {worldToScreen, screenToWorld} from '../lib/lib.ts'
 import {Viewport, ViewportManipulationType} from './viewport/type'
 import {createViewport} from './viewport/createViewport.ts'
 import {destroyViewport} from './viewport/destroyViewport.ts'

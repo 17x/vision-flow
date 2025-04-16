@@ -1,7 +1,6 @@
 import Editor from '../../editor.ts'
-// import {isInsideRotatedRect} from '../../../core/utils.ts'
 import {RotateHandler} from '../../selection/type'
-import {applyResizeTransform} from '../../../lib/lib.ts'
+import Rectangle from '../../../core/modules/shapes/rectangle.ts'
 
 export function detectHoveredModule(this: Editor) {
   const {viewport} = this
@@ -58,10 +57,10 @@ export function applyResize(this: Editor, altKey: boolean, shiftKey: boolean) {
     moduleOrigin,
     // id,
   } = this._resizingOperator!
-  const {cx, cy, width, height} = moduleOrigin
+  console.log(moduleOrigin)
+  const {id, x, y, type, width, height} = moduleOrigin
   // const module = this.moduleMap.get(id)
-
-  const r = applyResizeTransform({
+  const resizeParam = {
     downPoint: mouseDownPoint,
     movePoint: mouseMovePoint,
     dpr,
@@ -72,32 +71,26 @@ export function applyResize(this: Editor, altKey: boolean, shiftKey: boolean) {
     handleName,
     altKey,
     shiftKey,
-    initialCX: cx,
-    initialCY: cy,
-  })
-
-  // return
-  // module.x = r.x
-  // module.y = r.y
-  // module.width = r.width
-  // module.height = r.height
-
-  return r
+    initialCX: x,
+    initialCY: y,
+  }
+  if (type === 'rectangle') {
+    return Rectangle.applyResizeTransform(resizeParam)
+  }
 }
 
 export function applyRotating(this: Editor, shiftKey: boolean) {
   const {mouseDownPoint, mouseMovePoint, scale, dpr} = this.viewport
   const {module: {rotation}, moduleOrigin} = this._rotatingOperator as RotateHandler
-  const {cx, cy} = moduleOrigin
-  // const module = this.moduleMap.get(id)
+  const {x, y} = moduleOrigin
 
   const downX = (mouseDownPoint.x - this.viewport.offset.x / dpr) / scale * dpr
   const downY = (mouseDownPoint.y - this.viewport.offset.y / dpr) / scale * dpr
   const moveX = (mouseMovePoint.x - this.viewport.offset.x / dpr) / scale * dpr
   const moveY = (mouseMovePoint.y - this.viewport.offset.y / dpr) / scale * dpr
 
-  const startAngle = Math.atan2(downY - cy, downX - cx)
-  const currentAngle = Math.atan2(moveY - cy, moveX - cx)
+  const startAngle = Math.atan2(downY - y, downX - x)
+  const currentAngle = Math.atan2(moveY - y, moveX - x)
 
   let rotationDelta = (currentAngle - startAngle) * (180 / Math.PI)
 

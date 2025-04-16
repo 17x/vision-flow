@@ -1,6 +1,8 @@
 import Shape, {ShapeProps} from './shape.ts'
 import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
 import {SnapPointData} from '../../../editor/type'
+import {getResizeTransform} from '../../../lib/lib.ts'
+import {ResizeHandleName} from '../../../editor/selection/type'
 
 export interface RectangleProps extends ShapeProps {
   width: number
@@ -24,6 +26,135 @@ class Rectangle extends Shape {
     this.width = width!
     this.height = height!
     this.radius = radius!
+  }
+
+  public hitTest(point: Point, borderPadding = 5): 'inside' | 'border' | null {
+    const {x: cx, y: cy, width, height, rotation = 0} = this
+
+    const cos = Math.cos(-rotation)
+    const sin = Math.sin(-rotation)
+
+    const dx = point.x - cx
+    const dy = point.y - cy
+
+    // Rotate the point into the rectangle's local space
+    const localX = dx * cos + dy * sin
+    const localY = -dx * sin + dy * cos
+
+    const halfWidth = width / 2
+    const halfHeight = height / 2
+
+    const withinX = localX >= -halfWidth && localX <= halfWidth
+    const withinY = localY >= -halfHeight && localY <= halfHeight
+
+    if (withinX && withinY) {
+      const nearLeft = Math.abs(localX + halfWidth) <= borderPadding
+      const nearRight = Math.abs(localX - halfWidth) <= borderPadding
+      const nearTop = Math.abs(localY + halfHeight) <= borderPadding
+      const nearBottom = Math.abs(localY - halfHeight) <= borderPadding
+
+      if (nearLeft || nearRight || nearTop || nearBottom) {
+        return 'border'
+      }
+      return 'inside'
+    }
+
+    return null
+  }
+
+  static applyResizeTransform({
+                                downPoint,
+                                movePoint,
+                                initialWidth,
+                                initialHeight,
+                                initialCX,
+                                initialCY,
+                                rotation,
+                                handleName,
+                                scale,
+                                dpr,
+                                altKey = false,
+                                shiftKey = false,
+                              }: {
+    downPoint: { x: number; y: number };
+    movePoint: { x: number; y: number };
+    initialWidth: number;
+    initialHeight: number;
+    initialCX: number;
+    initialCY: number;
+    rotation: number;
+    handleName: ResizeHandleName;
+    scale: number;
+    dpr: number;
+    altKey?: boolean;
+    shiftKey?: boolean;
+  }): Rect {
+    // Calculate raw movement in screen coordinates
+    const dxScreen = movePoint.x - downPoint.x
+    const dyScreen = movePoint.y - downPoint.y
+
+    // Convert to canvas coordinates and apply DPR
+    const dx = (dxScreen / scale) * dpr
+    const dy = (dyScreen / scale) * dpr
+
+    // Convert rotation to radians and calculate rotation matrix
+    const angle = -rotation * (Math.PI / 180)
+    const cos = Math.cos(angle)
+    const sin = Math.sin(angle)
+
+    // Transform the movement vector into the object's local coordinate system
+    const localDX = dx * cos - dy * sin
+    const localDY = dx * sin + dy * cos
+
+    // Get the resize transform based on the handle
+    const t = getResizeTransform(handleName, altKey)
+
+    // Calculate the size changes in local coordinates
+    let deltaX = localDX * t.dx
+    let deltaY = localDY * t.dy
+
+    // Maintain aspect ratio if shift key is pressed
+    if (shiftKey) {
+      const aspect = initialWidth / initialHeight
+      const absDeltaX = Math.abs(deltaX)
+      const absDeltaY = Math.abs(deltaY)
+
+      // For corner handles, use the larger movement
+      if (t.dx !== 0 && t.dy !== 0) {
+        if (absDeltaX > absDeltaY) {
+          deltaY = deltaX / aspect
+        } else {
+          deltaX = deltaY * aspect
+        }
+      }
+      // For horizontal handles, maintain aspect ratio based on width change
+      else if (t.dx !== 0) {
+        deltaY = deltaX / aspect
+      }
+      // For vertical handles, maintain aspect ratio based on height change
+      else if (t.dy !== 0) {
+        deltaX = deltaY * aspect
+      }
+    }
+
+    // Apply the resize transform
+    const factor = altKey ? 2 : 1
+    const width = Math.abs(initialWidth + deltaX * factor)
+    const height = Math.abs(initialHeight + deltaY * factor)
+
+    // Calculate the center movement in local coordinates
+    const centerDeltaX = -deltaX * t.cx * factor
+    const centerDeltaY = -deltaY * t.cy * factor
+
+    // Transform the center movement back to global coordinates
+    const globalCenterDeltaX = centerDeltaX * cos + centerDeltaY * sin
+    const globalCenterDeltaY = -centerDeltaX * sin + centerDeltaY * cos
+
+    // Calculate the new center position
+    const x = initialCX + globalCenterDeltaX
+    const y = initialCY + globalCenterDeltaY
+
+    return {x, y, width, height}
   }
 
   public getDetails<T extends boolean>(includeIdentifiers: T = true as T): T extends true ? RectangleProps : Omit<RectangleProps, 'id' & 'layer'> {
@@ -69,40 +200,6 @@ class Rectangle extends Shape {
     return generateBoundingRectFromRotatedRect({x, y, width, height}, rotation)
   }
 
-  public hitTest(point: Point, borderPadding = 5): 'inside' | 'border' | null {
-    const {x: cx, y: cy, width, height, rotation = 0} = this
-
-    const cos = Math.cos(-rotation)
-    const sin = Math.sin(-rotation)
-
-    const dx = point.x - cx
-    const dy = point.y - cy
-
-    // Rotate the point into the rectangle's local space
-    const localX = dx * cos + dy * sin
-    const localY = -dx * sin + dy * cos
-
-    const halfWidth = width / 2
-    const halfHeight = height / 2
-
-    const withinX = localX >= -halfWidth && localX <= halfWidth
-    const withinY = localY >= -halfHeight && localY <= halfHeight
-
-    if (withinX && withinY) {
-      const nearLeft = Math.abs(localX + halfWidth) <= borderPadding
-      const nearRight = Math.abs(localX - halfWidth) <= borderPadding
-      const nearTop = Math.abs(localY + halfHeight) <= borderPadding
-      const nearBottom = Math.abs(localY - halfHeight) <= borderPadding
-
-      if (nearLeft || nearRight || nearTop || nearBottom) {
-        return 'border'
-      }
-      return 'inside'
-    }
-
-    return null
-  }
-
   public getSelectedBoxModule(lineWidth: number, lineColor: string): Rectangle {
     const {id, rotation, layer} = this
 
@@ -141,7 +238,7 @@ class Rectangle extends Shape {
     rotateConfig: { lineWidth: number, lineColor: string, size: number, fillColor: string },
   ) {
 
-    return super.getOperators(resizeConfig, rotateConfig, this.getRect())
+    return super.getOperators(resizeConfig, rotateConfig, this.getRect(), this.getDetails(true))
   }
 
   public getSnapPoints(): SnapPointData[] {

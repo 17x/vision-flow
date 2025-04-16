@@ -42,17 +42,18 @@ export const ModuleList: React.FC<ModulePanelProps> = () => {
 
                onClick={() => {
                  const props = module.props as ModuleProps
+                 props.x = getRandomNumber(1000)
+                 props.y = getRandomNumber(2000)
+                 props.lineWidth = 10
+                 props.lineColor = getRandomHexColor()
+                 props.fillColor = getRandomHexColor()
 
                  if (props.type === 'rectangle') {
-                   props.x = getRandomNumber(1000)
-                   props.y = getRandomNumber(2000)
                    props.width = getRandomNumber(200)
                    props.height = getRandomNumber(200)
                  }
 
                  if (props.type === 'ellipse') {
-                   props.x = getRandomNumber(1000)
-                   props.y = getRandomNumber(2000)
                    props.r1 = getRandomNumber(200)
                    props.r1 = getRandomNumber(200)
                  }

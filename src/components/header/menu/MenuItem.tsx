@@ -1,12 +1,11 @@
 import React, {useContext, useState} from "react"
 import {useTranslation} from "react-i18next"
-import {NestedActions} from "./Menu.tsx"
 import EditorContext from "../../editorContext/EditorContext.tsx"
 import {LuChevronRight} from "react-icons/lu"
-
+/*
 interface MenuItemProps {
   menu: NestedActions
-}
+}*/
 
 const MenuItem: React.FC<MenuItemProps> = ({
                                              menu,

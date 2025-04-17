@@ -57,7 +57,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position, copie
     }
   }, [idSet, position, copiedItems])
 
-  console.log(9)
+  // console.log(9)
   const handleContextAction = (action: string) => {
     // console.log(action)
     switch (action) {

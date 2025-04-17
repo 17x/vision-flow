@@ -19,6 +19,7 @@ export interface ContextMenuProps {
 
 export const ContextMenu: FC<ContextMenuProps> = memo(({data: {idSet, position, copiedItems}, onClose}) => {
   const {t} = useTranslation()
+
   const {executeAction} = useContext(EditorContext)
   const [menuItems, setMenuItems] = useState([])
   const groupClass = 'absolute bg-white shadow-lg rounded-md border border-gray-200 py-1 z-50'
@@ -130,3 +131,4 @@ export const ContextMenu: FC<ContextMenuProps> = memo(({data: {idSet, position, 
     </div>
   )
 })
+

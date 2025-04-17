@@ -1,4 +1,4 @@
-import {useContext, useEffect, useRef, useState} from 'react'
+import {memo, useContext, useEffect, useRef, useState} from 'react'
 import EditorContext from '../editorContext/EditorContext.tsx'
 // import {useTranslation} from "react-i18next";
 // import OptimizedDND from "./OptimizedDND.ts";
@@ -9,7 +9,7 @@ interface LayerPanelProps {
 }
 
 const ITEM_HEIGHT = 28
-export const LayerPanel = ({data, selected}: LayerPanelProps) => {
+export const LayerPanel = memo(({data, selected}: LayerPanelProps) => {
   // const {t} = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null)
   const targetRef = useRef<HTMLDivElement>(null)
@@ -85,4 +85,4 @@ export const LayerPanel = ({data, selected}: LayerPanelProps) => {
     </div>
   )
 }
-
+)

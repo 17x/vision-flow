@@ -1,9 +1,9 @@
-import {useContext, useEffect, useRef} from 'react'
+import {memo, useContext, useEffect, useRef} from 'react'
 import EditorContext from '../editorContext/EditorContext.tsx'
 import {useTranslation} from 'react-i18next'
 import {I18nHistoryDataItem} from '../../i18n/type'
 
-export const HistoryPanel = () => {
+export const HistoryPanel = memo(() => {
   const {historyArray, historyCurrent, applyHistoryNode} = useContext(EditorContext)
   const {t} = useTranslation()
   const targetRef = useRef<HTMLDivElement>(null)
@@ -57,4 +57,4 @@ export const HistoryPanel = () => {
       </div>
     </div>
   )
-}
+})

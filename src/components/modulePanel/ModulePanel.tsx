@@ -1,11 +1,11 @@
-import React, {useState, useCallback, useRef, useEffect} from 'react'
+import React, {useState, useCallback, useRef, useEffect, memo} from 'react'
 import {ModuleList} from "./ModuleList.tsx"
 
 interface ModulePanelProps {
   className?: string;
 }
 
-export const ModulePanel: React.FC<ModulePanelProps> = ({className = ''}) => {
+export const ModulePanel: React.FC<ModulePanelProps> = memo(({className = ''}) => {
   const [width, setWidth] = useState<number>(300)
   const isDragging = useRef(false)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -59,4 +59,4 @@ export const ModulePanel: React.FC<ModulePanelProps> = ({className = ''}) => {
       />
     </div>
   )
-}
+})

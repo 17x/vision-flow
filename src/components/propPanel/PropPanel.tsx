@@ -1,24 +1,24 @@
-import {useContext, useEffect, useState} from 'react'
+import {memo, useContext, useEffect, useState} from 'react'
 import EditorContext from '../editorContext/EditorContext.tsx'
 
 // import EditorContext from '../editorContext/EditorContext.tsx'
 
 interface PropPanelProps {props?: ModuleProps}
 
-const PropPanel = ({props}: PropPanelProps) => {
-  const [localProps, setLocalProps] = useState(props)
+const PropPanel = memo(({props}: PropPanelProps) => {
+    const [localProps, setLocalProps] = useState(props)
 
-  useEffect(() => {
-    setLocalProps(props)
-  }, [props])
-
-  return <div className={'p-2'}>
-    <h1 className={'bg-gray-400 text-white px-2'}><span>Properties</span></h1>
-    <div className={'scrollbar-custom overflow-x-hidden overflow-y-auto p-2 border h-30 border-gray-200 select-none'}>
-      {localProps && <ShapePropsPanel props={localProps}/>}
+    useEffect(() => {
+      setLocalProps(props)
+    }, [props])
+    return <div className={'p-2'}>
+      <h1 className={'bg-gray-400 text-white px-2'}><span>Properties</span></h1>
+      <div className={'scrollbar-custom overflow-x-hidden overflow-y-auto p-2 border h-30 border-gray-200 select-none'}>
+        {localProps && <ShapePropsPanel props={localProps}/>}
+      </div>
     </div>
-  </div>
-}
+  },
+)
 
 export default PropPanel
 

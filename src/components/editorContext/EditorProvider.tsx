@@ -28,7 +28,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [selectedProps, setSelectedProps] = useState<ModuleProps>(null)
   const [selectedModules, setSelectedModules] = useState<UID[]>([])
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
-  const contextMenuData = useRef({
+  const [contextMenuData, setContextMenoData] = useState({
     idSet: new Set(),
     position: {x: 0, y: 0},
     copiedItems: false,
@@ -93,16 +93,13 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
             setWorldPoint(point)
           },
           onContextMenu: (idSet, position, copiedItems) => {
-            console.log(idSet, position)
+            // console.log(idSet, position)
             setShowContextMenu(true)
-            contextMenuData.current.idSet = idSet
-            contextMenuData.current.position = position
-            contextMenuData.current.copiedItems = copiedItems
-            /*setContextMenuData({
+            setContextMenoData({
               idSet,
               position,
               copiedItems,
-            })*/
+            })
           },
         },
       })
@@ -149,53 +146,50 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     editorRef.current!.execute(type as K, data)
   }
 
-  return (
-    <EditorContext.Provider value={{
-      focused,
-      historyArray,
-      // worldPoint: worldPoint.current,
-      selectedModules,
-      selectedProps,
-      historyCurrent,
-      viewport,
-      editorRef,
-      applyHistoryNode,
-      executeAction,
-    }}>
-      <div ref={elementRef} data-focused={focused} autoFocus={true} tabIndex={0}
-           className={'outline-0 w-full h-full flex flex-col'}>
-        <ShortcutListener/>
+  return <EditorContext.Provider value={{
+    focused,
+    historyArray,
+    // worldPoint: worldPoint.current,
+    selectedModules,
+    selectedProps,
+    historyCurrent,
+    viewport,
+    editorRef,
+    applyHistoryNode,
+    executeAction,
+  }}>
+    <div ref={elementRef} data-focused={focused} autoFocus={true} tabIndex={0}
+         className={'outline-0 w-full h-full flex flex-col'}>
+      <ShortcutListener/>
 
-        <Header/>
+      <Header/>
 
-        <main className={'flex flex-row overflow-hidden h-full'}>
-          <ModulePanel/>
+      <main className={'flex flex-row overflow-hidden h-full'}>
+        <ModulePanel/>
 
-          <div className={'flex flex-col w-full h-full overflow-hidden relative'}>
-            <div ref={containerRef}
-                 editor-container={'true'}
-                 className={'relative overflow-hidden flex w-full h-full'}
-            ></div>
-            <StatusBar worldPoint={worldPoint}/>
-            {
-              showContextMenu &&
-                <ContextMenu data={contextMenuData.current} onClose={() => {
-                  setShowContextMenu(false)
-                }}/>
-            }
-          </div>
+        <div className={'flex flex-col w-full h-full overflow-hidden relative'}>
+          <div ref={containerRef}
+               editor-container={'true'}
+               className={'relative overflow-hidden flex w-full h-full'}
+          ></div>
+          <StatusBar worldPoint={worldPoint}/>
+          {
+            showContextMenu &&
+              <ContextMenu data={contextMenuData} onClose={() => {
+                setShowContextMenu(false)
+              }}/>
+          }
+        </div>
+        <div style={{width: 200}} className={'h-full flex-shrink-0 border-l border-gray-200'}>
+          <PropPanel props={selectedProps}/>
+          <LayerPanel data={sortedModules}
+                      selected={selectedModules}/>
+          <HistoryPanel/>
+        </div>
+      </main>
 
-          <div style={{width: 200}} className={'h-full flex-shrink-0 border-l border-gray-200'}>
-            <PropPanel props={selectedProps}/>
-            <LayerPanel data={sortedModules}
-                        selected={selectedModules}/>
-            <HistoryPanel/>
-          </div>
-        </main>
-
-      </div>
-    </EditorContext.Provider>
-  )
+    </div>
+  </EditorContext.Provider>
 }
 
 export default EditorProvider

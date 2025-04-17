@@ -1,5 +1,5 @@
 import ZoomSelect from './zoom'
-import {useContext, useEffect, useReducer, useState} from 'react'
+import {useContext, useEffect} from 'react'
 import EditorContext from '../editorContext/EditorContext.tsx'
 
 interface StatusBarProps {
@@ -9,16 +9,8 @@ interface StatusBarProps {
 
 export const StatusBar: React.FC<StatusBarProps> = ({className = '', worldPoint}) => {
   const {viewport, executeAction} = useContext(EditorContext)
-  // console.log(viewport)
-  // const [worldPointState] = useReducer(worldPositionReducer, { x: 0, y: 0 });
-  // console.log(worldPointState)
   if (!viewport) return null
 
-  useEffect(() => {
-    // console.log(worldPoint)
-     // setLocalPoint({...worldPoint})
-  }, [worldPoint])
-  // console.log(viewport)
   return (
     <footer className={className + 'w-full h-8 flex justify-between pr-1 items-center border-t border-gray-200'}>
       {

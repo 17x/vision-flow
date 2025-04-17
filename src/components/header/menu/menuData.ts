@@ -118,8 +118,8 @@ export default [
   fileMenu,
   editMenu,
   viewMenu,
-  shapeMenu,
-  connectionMenu,
-  textMenu,
-  layerMenu,
+  // shapeMenu,
+  // connectionMenu,
+  // textMenu,
+  // layerMenu,
 ]

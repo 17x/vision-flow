@@ -43,7 +43,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position, copie
         ],
       },
     ]
-
+    console.log(idSet)
     setMenuItems(ITEMS)
 
     const remove = () => {
@@ -104,7 +104,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position, copie
             console.log('item')
           }}/>
 
-          const showDivider = index === 2 || index === 4 || index === 7
+          /*const showDivider = index === 2 || index === 4 || index === 7
           const showChild = item.children && item.children.length > 0
 
           return <div key={item.id} className={'relative group'}>
@@ -123,7 +123,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position, copie
                 }
                 </div>
             }
-          </div>
+          </div>*/
         })
       }
     </div>

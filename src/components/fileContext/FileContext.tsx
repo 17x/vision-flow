@@ -1,4 +1,4 @@
-import {createContext} from "react"
+import {createContext} from 'react'
 
 export interface FileType {
   id: UID
@@ -18,22 +18,23 @@ interface FileContextType {
   closeFile: (id: UID) => void
   createFile: (v: FileType) => void
   handleCreating: (v: boolean) => void
+  startCreateFile: VoidFunction
 }
 
 const FileContext = createContext<FileContextType>({
   fileMap: new Map([
     [
-      "fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb",
+      'fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb',
       {
-        "id": "fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb",
-        "name": "Untitled 1",
-        "config": {},
-        "data": {}
-      }
-    ]
+        'id': 'fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb',
+        'name': 'Untitled 1',
+        'config': {},
+        'data': {},
+      },
+    ],
   ]),
   fileList: [],
-  currentFileId: "fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb",
+  currentFileId: 'fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb',
   creating: false,
   switchFile: () => {
   },
@@ -42,6 +43,8 @@ const FileContext = createContext<FileContextType>({
   createFile: () => {
   },
   handleCreating: () => {
+  },
+  startCreateFile: () => {
   },
 })
 

@@ -68,7 +68,10 @@ const FileProvider: FC = () => {
     fileMap.current.set(file.id, file)
     updateFileList()
     setCurrentFileId(file.id)
+  }
 
+  const startCreateFile = () => {
+    setCreating(true)
   }
 
   const handleCreating = (v: boolean) => {
@@ -84,6 +87,7 @@ const FileProvider: FC = () => {
       switchFile,
       closeFile,
       createFile,
+      startCreateFile,
       handleCreating,
     }}>
       <div className={'w-full h-full flex flex-col select-none'}>

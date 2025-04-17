@@ -1,4 +1,4 @@
-import {FC, useEffect, useReducer, useRef, useState} from 'react'
+import {FC, useContext, useEffect, useReducer, useRef, useState} from 'react'
 import Editor from '../../engine/editor/editor.ts'
 import ShortcutListener from '../ShortcutListener.tsx'
 import {ModulePanel} from '../modulePanel/ModulePanel.tsx'
@@ -11,7 +11,7 @@ import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 } from '../../engine/editor/type'*/
 import Header from '../header/Header.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
-import {FileType} from '../fileContext/FileContext.tsx'
+import FileContext, {FileType} from '../fileContext/FileContext.tsx'
 import EditorContext from './EditorContext.tsx'
 import PropPanel from '../propPanel/PropPanel.tsx'
 import {createMockData} from './MOCK.ts'
@@ -54,6 +54,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   })
   const elementRef = useRef<HTMLDivElement>(null)
   const [focused, setFocused] = useState(true)
+  const {startCreateFile} = useContext(FileContext)
 
   useEffect(() => {
     let editor: Editor
@@ -157,6 +158,10 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     console.log(type)
     if (type === 'print') {
       setShowPrint(true)
+      return
+    }
+    if (type === 'newFile') {
+      startCreateFile()
       return
     }
 

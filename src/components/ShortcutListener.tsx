@@ -22,18 +22,22 @@ const ShortcutListener: React.FC = memo(() => {
       const MODULE_MOVE_STEP = 5
       const zoomData: EditorEventMap['world-zoom'] = {
         zoomBy: true,
-        zoomFactor: 0.5,
+        zoomFactor: 0.1,
       }
       // console.log(key, metaKey)
-      if (key === '=' && (metaKey)) {
+      if (key === '=' && metaKey) {
         shortcutCode = 'world-zoom'
       }
 
-      if (key === '-' && (metaKey)) {
+      if (key === '-' && metaKey) {
         shortcutCode = 'world-zoom'
-        zoomData.zoomFactor = -0.5
+        zoomData.zoomFactor = -0.1
       }
 
+      if (key === 's' && (ctrlKey || metaKey)) {
+        shortcutCode = 'saveFile'
+      }
+      
       if (key === 'a' && (ctrlKey || metaKey)) {
         shortcutCode = 'selection-all'
       }

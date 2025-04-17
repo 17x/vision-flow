@@ -1,6 +1,6 @@
 import {SelectionActionMode} from '../selection/type'
 import {HistoryNode} from '../history/DoublyLinkedList.ts'
-import {ModuleMoveDirection} from '../type'
+// import {ModuleMoveDirection} from '../type'
 import {HistoryOperation} from '../history/type'
 import {ModulePropsWithoutIdentifiers} from '../../core/modules/modules'
 

@@ -1,5 +1,6 @@
 import {ModuleProps} from '../core/modules/modules'
 import History from './history/history.ts'
+import {RectangleProps} from '../core/modules/shapes/rectangle.ts'
 
 export type ModuleMoveDirection =
   'module-move-up' |
@@ -7,7 +8,6 @@ export type ModuleMoveDirection =
   'module-move-left' |
   'module-move-right' |
   'module-move-shift'
-
 
 export type EditorAction = {
   id: string;
@@ -58,4 +58,15 @@ export declare type EventHandlers = {
   onWorldMouseMove?: WorldMouseMoveUpdatedHandler
   onContextMenu?: ContextMenuHandler
   onModuleCopied?: ModuleCopiedHandler
+}
+
+interface EditorExportFileType {
+  data: ModuleProps[]
+  id: UID,
+  config?: {
+    dpr: number
+    scale: number
+    offset: { x: number, y: number }
+    frame: RectangleProps
+  }
 }

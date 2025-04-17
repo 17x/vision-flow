@@ -1,10 +1,8 @@
 import {createContext} from 'react'
+import {EditorExportFileType} from '../../engine/editor/type'
 
-export interface FileType {
-  id: UID
+export interface FileType extends EditorExportFileType {
   name: string
-  config: unknown
-  data: unknown
 }
 
 export type FileMap = Map<string, FileType>;
@@ -18,6 +16,7 @@ interface FileContextType {
   closeFile: (id: UID) => void
   createFile: (v: FileType) => void
   handleCreating: (v: boolean) => void
+  saveFileToLocal: (v: EditorExportFileType) => void
   startCreateFile: VoidFunction
 }
 
@@ -45,6 +44,8 @@ const FileContext = createContext<FileContextType>({
   handleCreating: () => {
   },
   startCreateFile: () => {
+  },
+  saveFileToLocal: () => {
   },
 })
 

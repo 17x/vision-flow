@@ -45,7 +45,7 @@ export function batchAdd(this: Editor, modules: ModuleMap): ModuleMap {
     this.moduleMap.set(mod.id, mod)
   })
 
-  this.events.onModulesUpdated?.(this.moduleMap)
+  // this.events.onModulesUpdated?.(this.moduleMap)
 
   return modules
 }
@@ -76,7 +76,7 @@ export function batchDelete(this: Editor, idSet: Set<UID>): ModuleProps[] {
     this.moduleMap.delete(module.id)
   })
 
-  this.events.onModulesUpdated?.(this.moduleMap)
+  // this.events.onModulesUpdated?.(this.moduleMap)
 
   return backup
 }

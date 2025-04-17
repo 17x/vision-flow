@@ -1,4 +1,4 @@
-import {EventHandlers, SnapPointData} from './type'
+import {EditorExportFileType, EventHandlers, SnapPointData} from './type'
 import History from './history/history.ts'
 import Action from './actions/actions.ts'
 import {
@@ -32,7 +32,7 @@ import resetCanvas from './viewport/resetCanvas.tsx'
 
 export interface EditorDataProps {
   id: UID;
-  modules: ModuleInstance[];
+  modules: ModuleProps[];
 }
 
 export interface EditorConfig {
@@ -93,11 +93,12 @@ class Editor {
     this.container = container
     this.history = new History(this)
     this.viewport = createViewport.call(this)
-    this.moduleMap = data.modules.reduce<ModuleMap>((acc, curr) => {
-      acc.set(curr.id, curr)
+    this.moduleMap = new Map()
+    const modules: ModuleMap = this.batchCreate(data.modules)
 
-      return acc
-    }, new Map<UID, ModuleInstance>())
+    modules.forEach((module) => {
+      this.moduleMap.set(module.id, module)
+    })
 
     this.init()
   }
@@ -330,10 +331,31 @@ class Editor {
       })
     }*/
 
-  public printOut(ctx): void {
+  public printOut(ctx: CanvasRenderingContext2D): void {
     this.moduleMap.forEach((module) => {
       module.render(ctx)
     })
+  }
+
+  public exportToFiles(): EditorExportFileType {
+    const {dpr, scale, offset, frame} = this.viewport
+
+    const result: EditorExportFileType = {
+      id: this.id,
+      config: {
+        dpr,
+        scale,
+        offset,
+        frame: frame.getDetails(),
+      },
+      data: [],
+    }
+
+    this.moduleMap.forEach((module) => {
+      result.data.push(module.getDetails())
+    })
+
+    return result
   }
 
   renderSelections() {

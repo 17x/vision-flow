@@ -1,6 +1,6 @@
-import {FC, FormEvent, useContext, useRef, useState} from "react"
-import uid from "../utilities/Uid.ts"
-import FileContext, {FileType} from "./fileContext/FileContext.tsx"
+import {FC, FormEvent, useContext, useRef, useState} from 'react'
+import uid from '../utilities/Uid.ts'
+import FileContext, {FileType} from './fileContext/FileContext.tsx'
 
 const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', onBgClick}) => {
   const formRef = useRef<HTMLFormElement>(null)
@@ -25,7 +25,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
     const newFile: FileType = {
       id: uid(),
       name: filename,
-      data: {}, config: {},
+      data: [],
     }
     createFile(newFile)
     handleCreating(false)
@@ -35,7 +35,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
     className={`fixed top-0 left-0 z-20 w-full h-full flex flex-row items-center justify-center text-sm select-none`}>
     <div
       style={{
-        backgroundColor: bg
+        backgroundColor: bg,
       }}
       onClick={() => onBgClick && onBgClick()}
       className={'absolute top-0 left-0 w-full h-full flex flex-row items-center justify-center text-sm select-none'}>

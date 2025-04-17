@@ -5,6 +5,7 @@ import EditorProvider from '../editorContext/EditorProvider.tsx'
 import MOCK_FILE_MAP from '../../mock.ts'
 import Files from '../files/Files.tsx'
 import LanguageSwitcher from '../language/languageSwitcher.tsx'
+import {EditorExportFileType} from '../../engine/editor/type'
 
 const FileProvider: FC = () => {
   const fileMap = useRef<FileMap>(new Map())
@@ -13,15 +14,18 @@ const FileProvider: FC = () => {
   const [fileList, setFileList] = useState<FileType[]>([])
   const fileLen = fileMap.current.size
   const showCreateFile = fileLen === 0 || creating
-  // console.log(currentFileId)
+  const STORAGE_ID = 'VISION_FLOW_FILE_MAP'
+  const FILE_ID_PREFIX = 'VISION_FLOW_FILE_'
 
   useEffect(() => {
-    if (MOCK_FILE_MAP.size > 0) {
-      fileMap.current = MOCK_FILE_MAP
-      updateFileList()
+    /*  if (MOCK_FILE_MAP.size > 0) {
+        fileMap.current = MOCK_FILE_MAP
+        updateFileList()
 
-      setCurrentFileId(listFileMap()[0].id)
-    }
+        setCurrentFileId(listFileMap()[0].id)
+      }*/
+
+    readFileFromLocal()
   }, [])
 
   const updateFileList = (): FileType[] => {
@@ -29,13 +33,18 @@ const FileProvider: FC = () => {
 
     setFileList(arr)
 
+    if (!currentFileId) {
+      if (arr[0]) {
+        switchFile(arr[0].id)
+      }
+    }
     return arr
   }
 
   const listFileMap = () => Array.from(fileMap.current.values())
 
   const switchFile = (id: UID) => {
-    console.log(fileList)
+    // console.log(fileList)
     setCurrentFileId(id)
   }
 
@@ -78,6 +87,39 @@ const FileProvider: FC = () => {
     setCreating(v)
   }
 
+  const saveFileToLocal = (file: EditorExportFileType) => {
+    let item = localStorage.getItem(STORAGE_ID)
+    let savedFileMap = JSON.parse(item!)
+    const fileId = FILE_ID_PREFIX + file.id
+
+    if (!savedFileMap) {
+      savedFileMap = {}
+    }
+    console.log(file)
+    savedFileMap[file.id] = fileId
+    localStorage.setItem(STORAGE_ID, JSON.stringify(savedFileMap))
+    localStorage.setItem(fileId, JSON.stringify(file))
+    console.log('saved')
+  }
+
+  const readFileFromLocal = () => {
+    let item = localStorage.getItem(STORAGE_ID)
+    let savedFileMap = JSON.parse(item!)
+
+    if (savedFileMap) {
+      // console.log(savedFileMap)
+      Object.values(savedFileMap).forEach((fileStorageKey) => {
+        const fileRawData = localStorage.getItem(fileStorageKey as string)
+        const fileData = JSON.parse(fileRawData!)
+
+      console.log(fileData)
+        fileMap.current.set(fileData.id, fileData)
+      })
+    }
+
+    updateFileList()
+  }
+
   return (
     <FileContext.Provider value={{
       fileMap: fileMap.current,
@@ -88,6 +130,7 @@ const FileProvider: FC = () => {
       closeFile,
       createFile,
       startCreateFile,
+      saveFileToLocal,
       handleCreating,
     }}>
       <div className={'w-full h-full flex flex-col select-none'}>

@@ -1,14 +1,10 @@
-import {FC, useContext, useEffect, useReducer, useRef, useState} from 'react'
+import {FC, useContext, useEffect, useRef, useState} from 'react'
 import Editor from '../../engine/editor/editor.ts'
 import ShortcutListener from '../ShortcutListener.tsx'
 import {ModulePanel} from '../modulePanel/ModulePanel.tsx'
 import {StatusBar} from '../statusBar/StatusBar.tsx'
-import uid from '../../utilities/Uid.ts'
 import {HistoryNode} from '../../engine/editor/history/DoublyLinkedList.ts'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
-/*import {
-  // OperationType,
-} from '../../engine/editor/type'*/
 import Header from '../header/Header.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
 import FileContext, {FileType} from '../fileContext/FileContext.tsx'
@@ -32,6 +28,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [copiedItems, setCopiedItems] = useState<ModuleProps[]>([])
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const [showPrint, setShowPrint] = useState(false)
+  const [saved, setSaved] = useState(false)
   const [historyStatus, setHistoryStatus] = useState<{
     id: HistoryNode['id']
     hasPrev: boolean
@@ -54,19 +51,18 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   })
   const elementRef = useRef<HTMLDivElement>(null)
   const [focused, setFocused] = useState(true)
-  const {currentFileId, startCreateFile} = useContext(FileContext)
+  const {currentFileId, startCreateFile, saveFileToLocal} = useContext(FileContext)
 
   useEffect(() => {
     let editor: Editor
     if (containerRef.current) {
-      const newUID = uid()
-
+      // const newUID = file.id
+      // console.log(file)
       editor = new Editor({
         container: containerRef!.current,
         data: {
-          id: newUID,
-          // size: basicEditorAreaSize,
-          modules: [],
+          id: file.id,
+          modules: file.data,
         },
         config: {
           dpr: 2,
@@ -74,7 +70,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         },
         events: {
           onInitialized: () => {
-            createMockData(editor)
+            // createMockData(editor)
           },
           onHistoryUpdated: (historyTree) => {
             setHistoryArray(historyTree!.toArray())
@@ -145,7 +141,9 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       setFocused(containerRef!.current?.contains(e.target))
     }
   }
+
   const handleFocus = () => setFocused(true)
+
   const handleBlur = () => setFocused(false)
 
   const applyHistoryNode = (node: HistoryNode) => {
@@ -155,13 +153,19 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }
 
   const executeAction = <K extends EditorEventType>(type: K, data?: EditorEventData<K>) => {
-    console.log(type)
     if (type === 'print') {
       setShowPrint(true)
       return
     }
     if (type === 'newFile') {
       startCreateFile()
+      return
+    }
+
+    if (type === 'saveFile') {
+      const editorData: FileType = editorRef.current!.exportToFiles() as FileType
+      editorData.name = file.name
+      saveFileToLocal(editorData)
       return
     }
 

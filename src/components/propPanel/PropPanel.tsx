@@ -1,5 +1,6 @@
 import {memo, useContext, useEffect, useState} from 'react'
 import EditorContext from '../editorContext/EditorContext.tsx'
+import {ProtectedInput} from './protectedInput.tsx'
 
 // import EditorContext from '../editorContext/EditorContext.tsx'
 
@@ -56,7 +57,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
       <div className="mb-1 ">
         <div className=" w-full h-full flex justify-between items-center">
           <span className={''}>X:</span>
-          <input
+          <ProtectedInput
             type="number"
             name="x"
             value={props.x}
@@ -66,7 +67,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
         </div>
         <div className=" w-full h-full flex justify-between items-center">
           <span className={''}>Y:</span>
-          <input
+          <ProtectedInput
             type="number"
             name="y"
             value={props.y}
@@ -78,7 +79,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
           props.type === 'ellipse' && <>
                 <div className=" w-full h-full flex justify-between items-center">
                     <span className={''}>r1:</span>
-                    <input
+                    <ProtectedInput
                         type="number"
                         name="r1"
                         value={props.r1}
@@ -88,7 +89,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
                 </div>
                 <div className=" w-full h-full flex justify-between items-center">
                     <span>r2:</span>
-                    <input
+                    <ProtectedInput
                         type="number"
                         name="r2"
                         value={props.r2}
@@ -100,7 +101,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
         }
         <div className=" w-full h-full flex justify-between items-center">
           <span className={''}>Width:</span>
-          <input
+          <ProtectedInput
             type="number"
             name="width"
             value={props.width}
@@ -110,7 +111,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
         </div>
         <div className=" w-full h-full flex justify-between items-center">
           <span>Height:</span>
-          <input
+          <ProtectedInput
             type="number"
             name="height"
             value={props.height}
@@ -120,7 +121,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
         </div>
         <div className=" w-full h-full flex justify-between items-center">
           <span>Rotation:</span>
-          <input
+          <ProtectedInput
             type="number"
             name="rotation"
             value={props.rotation}
@@ -134,7 +135,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
       <div className="mb-1">
         <div className=" w-full h-full flex justify-between items-center">
           <span>Enable Fill</span>
-          <input
+          <ProtectedInput
             type="checkbox"
             name="enableFill"
             value={props.enableFill}
@@ -144,7 +145,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
         </div>
         <div className=" w-full h-full flex justify-between items-center">
           <span>Fill Color:</span>
-          <input
+          <ProtectedInput
             type="color"
             name="fillColor"
             value={props.fillColor}
@@ -157,7 +158,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
         </div>
         <div className=" w-full h-full flex justify-between items-center">
           <span>Enable Line</span>
-          <input
+          <ProtectedInput
             type="checkbox"
             name="enableLine"
             defaultChecked={props.enableLine}
@@ -167,7 +168,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
         </div>
         <div className=" w-full h-full flex justify-between items-center">
           <span>Line Color:</span>
-          <input
+          <ProtectedInput
             type="color"
             name="lineColor"
             value={props.lineColor}
@@ -177,7 +178,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
         </div>
         <div className=" w-full h-full flex justify-between items-center">
           <span className={''}>Line Width:</span>
-          <input
+          <ProtectedInput
             type="number"
             name="lineWidth"
             value={props.lineWidth}
@@ -191,7 +192,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
       <div className="mb-1">
         {/*<div className=" w-full h-full flex justify-between items-center">
           <span>Shadow</span>
-          <input
+          <ProtectedInput
             type="checkbox"
             name="shadow"
             defaultChecked={props.shadow}
@@ -201,7 +202,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
         </div>*/}
         <div className=" w-full h-full flex justify-between items-center">
           <span>Opacity:</span>
-          <input
+          <ProtectedInput
             type="number"
             name="opacity"
             value={props.opacity}

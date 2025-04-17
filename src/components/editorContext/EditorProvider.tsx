@@ -54,7 +54,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   })
   const elementRef = useRef<HTMLDivElement>(null)
   const [focused, setFocused] = useState(true)
-  const {startCreateFile} = useContext(FileContext)
+  const {currentFileId, startCreateFile} = useContext(FileContext)
 
   useEffect(() => {
     let editor: Editor
@@ -183,7 +183,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }}>
     <div ref={elementRef} data-focused={focused} autoFocus={true} tabIndex={0}
          className={'outline-0 w-full h-full flex flex-col'}>
-      <ShortcutListener/>
+      {currentFileId === file.id && <ShortcutListener/>}
 
       <Header/>
 

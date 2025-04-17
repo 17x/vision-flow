@@ -1,8 +1,9 @@
-import {FC, useContext, useEffect, useState} from 'react'
+import {FC, memo, useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {I18nHistoryDataItem} from '../../i18n/type'
 import EditorContext from '../editorContext/EditorContext.tsx'
 import {LuChevronRight} from 'react-icons/lu'
+import {MenuType} from '../header/menu/type'
 
 export interface ContextMenuDataType {
   idSet: Set<UID>
@@ -16,14 +17,14 @@ export interface ContextMenuProps {
   onClose: () => void
 }
 
-export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position, copiedItems}, onClose}) => {
+export const ContextMenu: FC<ContextMenuProps> = memo(({data: {idSet, position, copiedItems}, onClose}) => {
   const {t} = useTranslation()
   const {executeAction} = useContext(EditorContext)
   const [menuItems, setMenuItems] = useState([])
   const groupClass = 'absolute bg-white shadow-lg rounded-md border border-gray-200 py-1 z-50'
 
   useEffect(() => {
-    const ITEMS = [
+    const ITEMS: MenuType[] = [
       {id: 'copy', disabled: idSet.size === 0},
       {id: 'paste', disabled: !copiedItems},
       {id: 'delete', disabled: idSet.size === 0},
@@ -43,7 +44,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position, copie
         ],
       },
     ]
-    console.log(idSet)
+    // console.log(idSet)
     setMenuItems(ITEMS)
 
     const remove = () => {
@@ -101,7 +102,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position, copie
       {
         menuItems.map((item, index) => {
           return <MenuItem key={index} item={item} onClick={() => {
-            console.log('item')
+            // console.log('item')
           }}/>
 
           /*const showDivider = index === 2 || index === 4 || index === 7
@@ -128,4 +129,4 @@ export const ContextMenu: FC<ContextMenuProps> = ({data: {idSet, position, copie
       }
     </div>
   )
-}
+})

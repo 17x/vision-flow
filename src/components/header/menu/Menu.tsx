@@ -1,17 +1,17 @@
-import React, {useEffect, useMemo, useRef, useState} from "react"
-import {useTranslation} from "react-i18next"
-import {useSelector} from "react-redux"
-import {RootState} from "../../../redux/store.ts"
-import {MenuActionRecord, MenuActionType} from "../../../redux/menuSlice.ts"
-import MenuItem from "./MenuItem.tsx"
+import React, {memo, useEffect, useMemo, useRef, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {MenuActionRecord, MenuActionType} from '../../../redux/menuSlice.ts'
+import MenuItem from './MenuItem.tsx'
+import MenuData from './MenuData.ts'
 
-const MenuBar: React.FC = () => {
+const MenuBar: React.FC = memo(({worldPoint}:{worldPoint:Point}) => {
   const [open, setOpen] = useState<boolean>(false)
   const [openId, setOpenId] = useState<string | null>(null)
   const {t} = useTranslation()
   const componentRef = useRef<HTMLDivElement>(null)
-  const originActions = useSelector((state: RootState) => state.menu.actions)
-  const actions = useMemo(() => flattenedToNested(originActions), [originActions])
+  // const originActions = useSelector((state: RootState) => state.menu.actions)
+  // const actions = useMemo(() => flattenedToNested(originActions), [originActions])
+  const actions = MenuData
 
   useEffect(() => {
     const detectClose = (e: MouseEvent) => {
@@ -21,13 +21,16 @@ const MenuBar: React.FC = () => {
       }
     }
 
-    window.addEventListener("click", detectClose)
+    console.log(MenuData)
+
+    window.addEventListener('click', detectClose)
 
     return () => {
-      window.removeEventListener("click", detectClose)
+      window.removeEventListener('click', detectClose)
     }
   })
 
+  console.log('menu')
   return <div className="h-8 text-sm select-none border-gray-200 box-border">
     <div ref={componentRef} className={'pl-2 h-full inline-flex'}>
       {
@@ -64,7 +67,7 @@ const MenuBar: React.FC = () => {
         })
       }</div>
   </div>
-}
+})
 
 export type NestedActions = {
   children?: NestedActions[]

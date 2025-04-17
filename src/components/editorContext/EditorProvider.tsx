@@ -1,4 +1,4 @@
-import {FC, useEffect, useRef, useState} from 'react'
+import {FC, useEffect, useReducer, useRef, useState} from 'react'
 import Editor from '../../engine/editor/editor.ts'
 import ShortcutListener from '../ShortcutListener.tsx'
 import {ModulePanel} from '../modulePanel/ModulePanel.tsx'
@@ -23,11 +23,12 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [historyArray, setHistoryArray] = useState<HistoryNode[]>([])
   const [worldPoint, setWorldPoint] = useState<Point>({x: 0, y: 0})
+  // const worldPoint = useRef<Point>({x: 0, y: 0})
   const [sortedModules, setSortedModules] = useState<ModuleInstance[]>([])
   const [selectedProps, setSelectedProps] = useState<ModuleProps>(null)
   const [selectedModules, setSelectedModules] = useState<UID[]>([])
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
-  const [contextMenuData, setContextMenuData] = useState<ContextMenuDataType>({
+  const contextMenuData = useRef({
     idSet: new Set(),
     position: {x: 0, y: 0},
     copiedItems: false,
@@ -94,11 +95,14 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           onContextMenu: (idSet, position, copiedItems) => {
             console.log(idSet, position)
             setShowContextMenu(true)
-            setContextMenuData({
+            contextMenuData.current.idSet = idSet
+            contextMenuData.current.position = position
+            contextMenuData.current.copiedItems = copiedItems
+            /*setContextMenuData({
               idSet,
               position,
               copiedItems,
-            })
+            })*/
           },
         },
       })
@@ -149,6 +153,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     <EditorContext.Provider value={{
       focused,
       historyArray,
+      // worldPoint: worldPoint.current,
       selectedModules,
       selectedProps,
       historyCurrent,
@@ -174,7 +179,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
             <StatusBar worldPoint={worldPoint}/>
             {
               showContextMenu &&
-                <ContextMenu data={contextMenuData} onClose={() => {
+                <ContextMenu data={contextMenuData.current} onClose={() => {
                   setShowContextMenu(false)
                 }}/>
             }

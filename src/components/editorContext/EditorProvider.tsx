@@ -17,6 +17,7 @@ import PropPanel from '../propPanel/PropPanel.tsx'
 import {createMockData} from './MOCK.ts'
 import {ContextMenu} from '../contextMenu/ContextMenu.tsx'
 import {EditorEventData, EditorEventType} from '../../engine/editor/actions/type'
+import {Print} from '../print/print.tsx'
 
 const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const editorRef = useRef<Editor>(null)
@@ -30,6 +31,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const [copiedItems, setCopiedItems] = useState<ModuleProps[]>([])
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
+  const [showPrint, setShowPrint] = useState(false)
   const [historyStatus, setHistoryStatus] = useState<{
     id: HistoryNode['id']
     hasPrev: boolean
@@ -152,6 +154,12 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }
 
   const executeAction = <K extends EditorEventType>(type: K, data?: EditorEventData<K>) => {
+    console.log(type)
+    if (type === 'print') {
+      setShowPrint(true)
+      return
+    }
+
     editorRef.current!.execute(type as K, data)
   }
 
@@ -198,7 +206,11 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         </div>
       </main>
 
+      {showPrint && <Print editorRef={editorRef} onClose={() => {
+        setShowPrint(false)
+      }}/>}
     </div>
+
   </EditorContext.Provider>
 }
 

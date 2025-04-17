@@ -28,6 +28,7 @@ import uid from '../../utilities/Uid.ts'
 import {EditorEventType} from './actions/type'
 import {zoomAtPoint} from './viewport/helper.ts'
 import deduplicateObjectsByKeyValue from '../core/renderer/deduplicate.ts'
+import resetCanvas from './viewport/resetCanvas.tsx'
 
 export interface EditorDataProps {
   id: UID;
@@ -312,6 +313,7 @@ class Editor {
       // deduplicateObjectsByKeyValue()
       // console.log(this.visibleModuleMap.size)
       // deduplicateObjectsByKeyValue
+
       this.visibleModuleMap.forEach((module) => {
           module.render(ctx)
         },
@@ -319,6 +321,19 @@ class Editor {
     }
 
     requestAnimationFrame(animate)
+  }
+
+  /*  public get getModulesInsideOfFrame(): ModuleInstance[] {
+      const arr = []
+      this.moduleMap.forEach((module) => {
+
+      })
+    }*/
+
+  public printOut(ctx): void {
+    this.moduleMap.forEach((module) => {
+      module.render(ctx)
+    })
   }
 
   renderSelections() {

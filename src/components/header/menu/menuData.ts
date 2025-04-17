@@ -8,7 +8,7 @@ export const fileMenu: MenuItemType = {
     {id: 'openFile', disabled: false},
     {id: 'saveFile', disabled: false},
     {id: 'saveAs', disabled: false},
-    {id: 'importFile', disabled: false},
+    // {id: 'importFile', disabled: false},
     {
       id: 'exportFile',
       disabled: false,

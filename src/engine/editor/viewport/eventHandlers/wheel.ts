@@ -8,9 +8,10 @@ function handleWheel(this: Editor, event: WheelEvent) {
   event.preventDefault()
   event.stopPropagation()
   if (this.manipulationStatus !== 'static') return
-  const {zooming, panning, scrolling, zoomFactor, translateX, translateY} =
+  const {trackpad, zooming, panning, scrolling, zoomFactor, translateX, translateY} =
     detectGestures(event)
 
+  console.log(trackpad)
   // console.log(`${zooming ? 'zooming' : ''} ${panning ? 'panning' : ''} ${scrolling ? 'scrolling' : ''} `)
 
   this.viewport.zooming = zooming
@@ -49,6 +50,7 @@ const detectGestures = (() => {
   let gestureLock = false
   const zoomSpeedA = 0.01
   const zoomSpeedB = 0.1
+  let trackpad = false
 
   return (event: WheelEvent) => {
     const {deltaX, deltaY, altKey} = event
@@ -67,6 +69,7 @@ const detectGestures = (() => {
     zooming = false
     scrolling = false
     panning = false
+    console.log(deltaX, deltaY)
 
     if (altKey) {
       zooming = true
@@ -85,7 +88,7 @@ const detectGestures = (() => {
 
       if (allXAreMinusZero && allYAreFloat && !absBiggerThan4) {
         gestureLock = true
-
+        trackpad = true
         console.log('touchpadZoomingLock')
         // console.log([...EVENT_BUFFER])
         // zoomFactor = deltaY > 0 ? -.1 : .1
@@ -166,6 +169,7 @@ const detectGestures = (() => {
     }, DELAY)
 
     return {
+      trackpad,
       zooming,
       panning,
       scrolling,

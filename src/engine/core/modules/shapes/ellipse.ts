@@ -250,11 +250,16 @@ class Ellipse extends Shape {
   }
 
   render(ctx: CanvasRenderingContext2D) {
-    const {x, y, r1, r2, opacity, fillColor, rotation, dashLine, gradient} = this.getDetails()
+    let {x, y, r1, r2, opacity, fillColor, rotation, dashLine, gradient} = this.getDetails()
     const {
       lineWidth,
       lineColor,
     } = super.getDetails()
+
+    x = Math.round(x)
+    y = Math.round(y)
+    r1 = Math.round(r1)
+    r2 = Math.round(r2)
 
     // Save current context state to avoid transformations affecting other drawings
     ctx.save()

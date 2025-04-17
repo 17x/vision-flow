@@ -269,8 +269,13 @@ class Rectangle extends Shape {
       // height,
       radius,
     } = this
-    const {x, y, width, height, rotation, opacity, fillColor, lineWidth, lineColor, dashLine} = this.getDetails()
+    let {x, y, width, height, rotation, opacity, fillColor, lineWidth, lineColor, dashLine} = this.getDetails()
 
+    x = Math.round(x)
+    y = Math.round(y)
+    width = Math.round(width)
+    height = Math.round(height)
+    // console.log(x, y, width, height)
     const LocalX = width / 2
     const LocalY = height / 2
 

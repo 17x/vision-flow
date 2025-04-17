@@ -3,7 +3,7 @@ import {useTranslation} from 'react-i18next'
 import {I18nHistoryDataItem} from '../../i18n/type'
 import EditorContext from '../editorContext/EditorContext.tsx'
 import {LuChevronRight} from 'react-icons/lu'
-import {MenuType} from '../header/menu/type'
+import {MenuItemType} from '../header/menu/type'
 
 export interface ContextMenuProps {
   position: Point
@@ -14,12 +14,12 @@ export interface ContextMenuProps {
 export const ContextMenu: FC<ContextMenuProps> = memo(({position, onClose}) => {
   const {t} = useTranslation()
   const {selectedModules, copiedItems, historyStatus, executeAction} = useContext(EditorContext)
-  const [menuItems, setMenuItems] = useState<MenuType[]>([])
+  const [menuItems, setMenuItems] = useState<MenuItemType[]>([])
   const groupClass = 'absolute bg-white shadow-lg rounded-md border border-gray-200 py-1 z-50'
 
   useEffect(() => {
     const noSelectedModule = selectedModules.length === 0
-    const ITEMS: MenuType[] = [
+    const ITEMS: MenuItemType[] = [
       {id: 'copy', editorActionCode: 'module-copy', disabled: noSelectedModule},
       {id: 'paste', editorActionCode: 'module-paste', disabled: copiedItems.length === 0},
       {id: 'duplicate', editorActionCode: 'module-duplicate', disabled: noSelectedModule},
@@ -54,7 +54,7 @@ export const ContextMenu: FC<ContextMenuProps> = memo(({position, onClose}) => {
   }, [selectedModules, position, copiedItems])
 
   // console.log(9)
-  const handleContextAction = (item: MenuType) => {
+  const handleContextAction = (item: MenuItemType) => {
     const {editorActionCode} = item
 
     if (editorActionCode === 'module-paste') {
@@ -64,7 +64,7 @@ export const ContextMenu: FC<ContextMenuProps> = memo(({position, onClose}) => {
     }
   }
 
-  const MenuItem: FC<{ item: MenuType, onMouseUp: VoidFunction }> = ({item, onMouseUp}) => {
+  const MenuItem: FC<{ item: MenuItemType, onMouseUp: VoidFunction }> = ({item, onMouseUp}) => {
     const menuText = t(item.id, {returnObjects: true}) as I18nHistoryDataItem
     const hasChildren = item.children && item.children.length > 0
 

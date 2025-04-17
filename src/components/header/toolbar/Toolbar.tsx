@@ -1,27 +1,18 @@
 import {LayerDown, LayerToBottom, LayerToTop, LayerUp} from './Icons/LayerIcons.tsx'
 import {Fragment, memo, ReactNode, useContext} from 'react'
-// import {OperationType} from '../../../engine/editor/type'
 import EditorContext from '../../editorContext/EditorContext.tsx'
 import {NamedIcon} from '../../lib/icon/icon.tsx'
 import {t} from 'i18next'
 import {I18nHistoryDataItem} from '../../../i18n/type'
-import {EditorEventType} from '../../../engine/editor/actions/type'
-import {MenuType} from '../menu/type'
+import {MenuItemType} from '../menu/type'
 
 const IconSize = 20
 const IconColor = 'text-black'
 
-export interface ToolbarActionType {
-  id: string
-  icon: string
-  disabled?: boolean
-  divide?: boolean
-}
-
 const Toolbar: React.FC = memo(() => {
     const {executeAction, historyStatus, selectedModules} = useContext(EditorContext)
 
-    const actions: MenuType[] = [
+    const actions: MenuItemType[] = [
       {id: 'save', icon: 'save', disabled: true, divide: true},
       {id: 'undo', editorActionCode: 'history-undo', icon: 'undo', disabled: !historyStatus.hasPrev},
       {id: 'redo', editorActionCode: 'history-redo', icon: 'redo', disabled: !historyStatus.hasNext, divide: true},

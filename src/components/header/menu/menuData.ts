@@ -1,6 +1,6 @@
-import {MenuType} from './type'
+import {MenuItemType} from './type'
 
-export const fileMenu: MenuType = {
+export const fileMenu: MenuItemType = {
   id: 'file',
   disabled: false,
   children: [
@@ -23,7 +23,7 @@ export const fileMenu: MenuType = {
   ],
 }
 
-export const editMenu: MenuType = {
+export const editMenu: MenuItemType = {
   id: 'edit',
   disabled: false,
   children: [
@@ -39,7 +39,7 @@ export const editMenu: MenuType = {
   ],
 }
 
-export const viewMenu: MenuType = {
+export const viewMenu: MenuItemType = {
   id: 'view',
   disabled: false,
   children: [
@@ -52,7 +52,7 @@ export const viewMenu: MenuType = {
   ],
 }
 
-export const shapeMenu: MenuType = {
+export const shapeMenu: MenuItemType = {
   id: 'shape',
   disabled: false,
   children: [
@@ -71,7 +71,7 @@ export const shapeMenu: MenuType = {
   ],
 }
 
-export const connectionMenu: MenuType = {
+export const connectionMenu: MenuItemType = {
   id: 'connection',
   disabled: false,
   children: [
@@ -84,7 +84,7 @@ export const connectionMenu: MenuType = {
   ],
 }
 
-export const textMenu: MenuType = {
+export const textMenu: MenuItemType = {
   id: 'text',
   disabled: false,
   children: [
@@ -100,7 +100,7 @@ export const textMenu: MenuType = {
   ],
 }
 
-export const layerMenu: MenuType = {
+export const layerMenu: MenuItemType = {
   id: 'layer',
   disabled: false,
   children: [

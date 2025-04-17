@@ -4,7 +4,6 @@ import {detectHoveredModule} from './funcs.ts'
 function handleMouseDown(this: Editor, e: MouseEvent) {
   const {shiftKey, clientY, target, button, clientX, metaKey, ctrlKey} =
     e
-  if (button !== 0) return
   if (!(target === this.viewport.wrapper)) return
   // const inViewport = target === this.viewport.wrapper
   // const isLeftClick = button !== 0
@@ -21,6 +20,7 @@ function handleMouseDown(this: Editor, e: MouseEvent) {
   const operator = detectHoveredModule.call(this)
   // console.log(operator)
   e.preventDefault()
+  if (button !== 0) return
 
   if (this.viewport.spaceKeyDown) {
     return (this.manipulationStatus = 'panning')

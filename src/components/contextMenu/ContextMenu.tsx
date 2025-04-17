@@ -13,29 +13,29 @@ export interface ContextMenuProps {
 
 export const ContextMenu: FC<ContextMenuProps> = memo(({position, onClose}) => {
   const {t} = useTranslation()
-  const {selectedModules, copiedItems, executeAction} = useContext(EditorContext)
+  const {selectedModules, copiedItems, historyStatus, executeAction} = useContext(EditorContext)
   const [menuItems, setMenuItems] = useState<MenuType[]>([])
   const groupClass = 'absolute bg-white shadow-lg rounded-md border border-gray-200 py-1 z-50'
 
   useEffect(() => {
     const noSelectedModule = selectedModules.length === 0
     const ITEMS: MenuType[] = [
-      {id: 'copy', disabled: noSelectedModule},
-      {id: 'paste', disabled: copiedItems.length === 0},
-      {id: 'delete', disabled: noSelectedModule},
-      {id: 'duplicate', disabled: noSelectedModule},
+      {id: 'copy', editorActionCode: 'module-copy', disabled: noSelectedModule},
+      {id: 'paste', editorActionCode: 'module-paste', disabled: copiedItems.length === 0},
+      {id: 'duplicate', editorActionCode: 'module-duplicate', disabled: noSelectedModule},
+      {id: 'delete', editorActionCode: 'module-delete', disabled: noSelectedModule, divide: true},
       // {id: 'group', disabled: selectedModules.size < 2},
       // {id: 'ungroup', disabled: noSelectedModule},
-      // {id: 'lock', disabled: noSelectedModule},
-      // {id: 'unlock', disabled: noSelectedModule},
+      {id: 'undo', editorActionCode: 'history-undo', disabled: !historyStatus.hasPrev},
+      {id: 'redo', editorActionCode: 'history-redo', disabled: !historyStatus.hasNext},
       {
         id: 'layer',
         disabled: noSelectedModule,
         children: [
-          {id: 'sendToBack', disabled: noSelectedModule},
-          {id: 'bringToFront', disabled: noSelectedModule},
-          {id: 'sendBackward', disabled: noSelectedModule},
-          {id: 'bringForward', disabled: noSelectedModule},
+          {id: 'sendToBack', editorActionCode: 'module-layer', editorActionData: 'bottom', disabled: noSelectedModule},
+          {id: 'bringToFront', editorActionCode: 'module-layer', editorActionData: 'top', disabled: noSelectedModule},
+          {id: 'sendBackward', editorActionCode: 'module-layer', editorActionData: 'down', disabled: noSelectedModule},
+          {id: 'bringForward', editorActionCode: 'module-layer', editorActionData: 'up', disabled: noSelectedModule},
         ],
       },
     ]
@@ -54,23 +54,14 @@ export const ContextMenu: FC<ContextMenuProps> = memo(({position, onClose}) => {
   }, [selectedModules, position, copiedItems])
 
   // console.log(9)
-  const handleContextAction = (action: string) => {
-    // console.log(action)
-    switch (action) {
-      case 'copy':
-        executeAction('module-copy')
-        break
-      case 'paste':
-        executeAction('module-paste', position)
-        break
-      case 'delete':
-        executeAction('module-delete')
-        break
-      case 'duplicate':
-        executeAction('module-duplicate')
-        break
+  const handleContextAction = (item: MenuType) => {
+    const {editorActionCode} = item
+
+    if (editorActionCode === 'module-paste') {
+      executeAction('module-paste', position)
+    } else {
+      executeAction(editorActionCode!)
     }
-    // executeAction()
   }
 
   const MenuItem: FC<{ item: MenuType, onMouseUp: VoidFunction }> = ({item, onMouseUp}) => {
@@ -92,7 +83,7 @@ export const ContextMenu: FC<ContextMenuProps> = memo(({position, onClose}) => {
           <div className={groupClass + ' z-60 group-hover:block hidden left-full top-0 border-l-0 rounded-none '}>
             {
               item.children!.map((child, childIndex) => {
-                return <MenuItem key={childIndex} item={child} onMouseUp={() => handleContextAction(item.id)}/>
+                return <MenuItem key={childIndex} item={child} onMouseUp={() => handleContextAction(child)}/>
               })
             }
           </div>
@@ -114,7 +105,7 @@ export const ContextMenu: FC<ContextMenuProps> = memo(({position, onClose}) => {
       {
         menuItems.map((item, index) => {
           return <MenuItem key={index} item={item} onMouseUp={() => {
-            handleContextAction(item.id)
+            handleContextAction(item)
             onClose()
           }}/>
 

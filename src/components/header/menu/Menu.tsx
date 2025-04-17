@@ -1,6 +1,5 @@
 import React, {memo, useEffect, useMemo, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MenuActionRecord, MenuActionType} from '../../../redux/menuSlice.ts'
 import MenuItem from './MenuItem.tsx'
 import MenuData from './MenuData.ts'
 
@@ -68,38 +67,5 @@ const MenuBar: React.FC = memo(() => {
       }</div>
   </div>
 })
-
-export type NestedActions = {
-  children?: NestedActions[]
-} & MenuActionType
-
-function flattenedToNested(menuData: MenuActionRecord): NestedActions[] {
-  const rootMap: Map<string, NestedActions> = new Map()
-
-  // Build a records for all items
-  Object.values(menuData).forEach((item) => {
-    rootMap.set(item.id, {...item, children: []})
-  })
-
-  // Create the nested structure
-  const nestedMenu: NestedActions[] = []
-
-  rootMap.forEach((currentAction) => {
-
-    const parentAction = rootMap.get(currentAction.parent!)
-    if (parentAction) {
-      // If the item has a parent,
-      // add it to the parent's children array
-      parentAction.children!.push(currentAction)
-    } else {
-      // If the item has no parent,
-      // it's a top-level item,
-      // so add it to the nestedMenu
-      nestedMenu.push(currentAction)
-    }
-  })
-
-  return nestedMenu
-}
 
 export default MenuBar

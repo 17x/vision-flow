@@ -5,6 +5,7 @@ export interface MenuType {
   editorActionCode?: EditorEventType,
   editorActionData?: 'up' | 'down' | 'top' | 'bottom',
   disabled: boolean
+  icon?: string
   divide?: boolean
   children?: MenuType[]
 }

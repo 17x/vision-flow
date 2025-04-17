@@ -32,10 +32,10 @@ export const ContextMenu: FC<ContextMenuProps> = memo(({position, onClose}) => {
         id: 'layer',
         disabled: noSelectedModule,
         children: [
-          {id: 'sendToBack', editorActionCode: 'module-layer', editorActionData: 'bottom', disabled: noSelectedModule},
-          {id: 'bringToFront', editorActionCode: 'module-layer', editorActionData: 'top', disabled: noSelectedModule},
-          {id: 'sendBackward', editorActionCode: 'module-layer', editorActionData: 'down', disabled: noSelectedModule},
           {id: 'bringForward', editorActionCode: 'module-layer', editorActionData: 'up', disabled: noSelectedModule},
+          {id: 'sendBackward', editorActionCode: 'module-layer', editorActionData: 'down', disabled: noSelectedModule},
+          {id: 'bringToFront', editorActionCode: 'module-layer', editorActionData: 'top', disabled: noSelectedModule},
+          {id: 'sendToBack', editorActionCode: 'module-layer', editorActionData: 'bottom', disabled: noSelectedModule},
         ],
       },
     ]

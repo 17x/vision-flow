@@ -6,6 +6,7 @@ import {NamedIcon} from '../../lib/icon/icon.tsx'
 import {t} from 'i18next'
 import {I18nHistoryDataItem} from '../../../i18n/type'
 import {EditorEventType} from '../../../engine/editor/actions/type'
+import {MenuType} from '../menu/type'
 
 const IconSize = 20
 const IconColor = 'text-black'
@@ -20,16 +21,29 @@ export interface ToolbarActionType {
 const Toolbar: React.FC = memo(() => {
     const {executeAction, historyStatus, selectedModules} = useContext(EditorContext)
 
-    const actions: ToolbarActionType[] = [
+    const actions: MenuType[] = [
       {id: 'save', icon: 'save', disabled: true, divide: true},
-      {id: 'undo', icon: 'undo', disabled: !historyStatus.hasPrev},
-      {id: 'redo', icon: 'redo', disabled: !historyStatus.hasNext, divide: true},
-      {id: 'delete', icon: 'trash', disabled: selectedModules.length === 0, divide: true},
+      {id: 'undo', editorActionCode: 'history-undo', icon: 'undo', disabled: !historyStatus.hasPrev},
+      {id: 'redo', editorActionCode: 'history-redo', icon: 'redo', disabled: !historyStatus.hasNext, divide: true},
+      {
+        id: 'delete',
+        editorActionCode: 'module-delete',
+        icon: 'trash',
+        disabled: selectedModules.length === 0,
+        divide: true,
+      },
       // {id: 'add', icon: 'cross', disabled: false, divide: true},
-      {id: 'layerUp', icon: 'layers', disabled: false},
-      {id: 'layerDown', icon: 'layers', disabled: false},
-      {id: 'layerTop', icon: 'layers', disabled: false},
-      {id: 'layerBottom', icon: 'layers', disabled: false, divide: true},
+      {id: 'layerUp', editorActionCode: 'module-layer', editorActionData: 'up', icon: 'layers', disabled: false},
+      {id: 'layerDown', editorActionCode: 'module-layer', editorActionData: 'down', icon: 'layers', disabled: false},
+      {id: 'layerTop', editorActionCode: 'module-layer', editorActionData: 'top', icon: 'layers', disabled: false},
+      {
+        id: 'layerBottom',
+        editorActionCode: 'module-layer',
+        editorActionData: 'bottom',
+        icon: 'layers',
+        disabled: false,
+        divide: true,
+      },
       /*{id: 'group', icon: 'group', disabled: true},
       {id: 'ungroup', icon: 'ungroup', disabled: true, divide: true},
       {id: 'lock', icon: 'lock', disabled: false},
@@ -39,8 +53,8 @@ const Toolbar: React.FC = memo(() => {
     return <div className={'border-b border-gray-200 box-border'}>
       <div className={'h-10 inline-flex pl-4 items-center'}>
         {
-          Object.values(actions).map((action) => {
-            const {id, icon, disabled, divide} = action
+          Object.values(actions).map((item) => {
+            const {id, icon, disabled, divide} = item
             let Icon: ReactNode
 
             switch (id) {
@@ -57,9 +71,10 @@ const Toolbar: React.FC = memo(() => {
                 Icon = <LayerToBottom size={IconSize} className={IconColor}/>
                 break
               default:
-                Icon = <NamedIcon size={IconSize} iconName={icon}/>
+                Icon = <NamedIcon size={IconSize} iconName={icon!}/>
                 break
             }
+
             const {tooltip} = t(id, {returnObjects: true}) as I18nHistoryDataItem
 
             return <Fragment key={id}>
@@ -67,11 +82,7 @@ const Toolbar: React.FC = memo(() => {
                       disabled={disabled}
                       title={tooltip}
                       onClick={() => {
-                        if (id === 'undo' || id === 'redo') {
-                          executeAction('history-' + id as EditorEventType)
-                        } else if (id === 'delete') {
-                          executeAction('selection-' + id as EditorEventType)
-                        }
+                        item.editorActionCode && executeAction(item.editorActionCode)
                       }}
                       className={'relative ml-1 rounded-sm mr-1 flex items-center cursor-pointer justify-center w-6 h-6   hover:bg-gray-200  hover:opacity-100  disabled:hover:bg-transparent disabled:text-gray-200 disabled:cursor-default'}>
                 {Icon}

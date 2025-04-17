@@ -165,6 +165,7 @@ export function initEditor(this: Editor) {
   on('module-copy', () => {
     this.copiedItems = this.batchCopy(this.getSelected, false)
     this.updateCopiedItemsDelta()
+    this.events.onModuleCopied?.(this.copiedItems)
   })
 
   on('module-paste', (position?) => {
@@ -403,7 +404,7 @@ export function initEditor(this: Editor) {
     this.events.onHistoryUpdated?.(this.history)
   })
 
-  on('context-menu', ({idSet, position, copiedItems}) => {
-    this.events.onContextMenu?.(idSet, position, copiedItems)
+  on('context-menu', ({position}) => {
+    this.events.onContextMenu?.(position)
   })
 }

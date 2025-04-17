@@ -10,6 +10,7 @@ interface EditorContextType {
   historyCurrent: HistoryNode['id']
   selectedModules: UID[]
   selectedProps: ModuleProps
+  copiedItems: selectedProps[],
   editorRef: React.RefObject<Editor | null>
   applyHistoryNode: (node: HistoryNode) => void
   // executeAction: <K extends EditorEventType>(type: K, data?: EditorEventData<K>) => void
@@ -23,6 +24,7 @@ const EditorContext = createContext<EditorContextType>({
   historyCurrent: 0,
   selectedModules: [],
   selectedProps: {},
+  copiedItems: [],
   editorRef: {} as React.RefObject<Editor>,
   applyHistoryNode: () => {
 

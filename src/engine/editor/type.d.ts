@@ -1,11 +1,5 @@
 import {ModuleProps} from '../core/modules/modules'
 import History from './history/history.ts'
-import {EditorEventType} from './actions/type'
-
-export type BasicEditorAreaSize = {
-  width: 1000
-  height: 1000
-}
 
 export type ModuleMoveDirection =
   'module-move-up' |
@@ -13,28 +7,7 @@ export type ModuleMoveDirection =
   'module-move-left' |
   'module-move-right' |
   'module-move-shift'
-/*
 
-export type OperationType = Pick<EditorEventType, 'select-all'
-  | 'modify-selection'
-  | 'selection-copy'
-  | 'selection-delete'
-  | 'selection-paste'
-  | 'selection-move'
-  | 'history-redo'
-  | 'history-undo'
-  | 'history-pick'
-  | 'selection-duplicate'
-  // | 'module-delete'
-  | 'selection-clear'
-  | 'module-modify'
-  | 'module-move'
-  | 'module-move-start'
-  | 'module-move-end'> & ModuleMoveDirection
-*/
-
-export type ModifyModule = Partial<ModuleProps>
-// export type ModifyModuleMap = Map<UID, ModifyModule>
 
 export type EditorAction = {
   id: string;
@@ -72,7 +45,8 @@ type SelectionUpdatedHandler = (selected: Set<UID>, selectedProps?: ModuleProps)
 type ViewportUpdatedHandler = (viewportInfo: ViewportData) => void;
 type WorldUpdatedHandler = (worldInfo: WorldInfo) => void;
 type WorldMouseMoveUpdatedHandler = (point: Point) => void;
-type ContextMenuHandler = (idSet: Set<UID>, position: Point, copiedItems: boolean) => void;
+type ContextMenuHandler = (position: Point) => void;
+type ModuleCopiedHandler = (ModuleProps) => void;
 
 export declare type EventHandlers = {
   onInitialized?: InitializedHandler
@@ -83,4 +57,5 @@ export declare type EventHandlers = {
   onWorldUpdated?: WorldUpdatedHandler
   onWorldMouseMove?: WorldMouseMoveUpdatedHandler
   onContextMenu?: ContextMenuHandler
+  onModuleCopied?: ModuleCopiedHandler
 }

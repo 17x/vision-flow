@@ -4,7 +4,7 @@ import {MenuActionRecord, MenuActionType} from '../../../redux/menuSlice.ts'
 import MenuItem from './MenuItem.tsx'
 import MenuData from './MenuData.ts'
 
-const MenuBar: React.FC = memo(({worldPoint}:{worldPoint:Point}) => {
+const MenuBar: React.FC = memo(() => {
   const [open, setOpen] = useState<boolean>(false)
   const [openId, setOpenId] = useState<string | null>(null)
   const {t} = useTranslation()
@@ -21,7 +21,7 @@ const MenuBar: React.FC = memo(({worldPoint}:{worldPoint:Point}) => {
       }
     }
 
-    console.log(MenuData)
+    // console.log(MenuData)
 
     window.addEventListener('click', detectClose)
 
@@ -30,7 +30,7 @@ const MenuBar: React.FC = memo(({worldPoint}:{worldPoint:Point}) => {
     }
   })
 
-  console.log('menu')
+  // console.log('menu')
   return <div className="h-8 text-sm select-none border-gray-200 box-border">
     <div ref={componentRef} className={'pl-2 h-full inline-flex'}>
       {

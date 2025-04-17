@@ -15,7 +15,7 @@ import {FileType} from '../fileContext/FileContext.tsx'
 import EditorContext from './EditorContext.tsx'
 import PropPanel from '../propPanel/PropPanel.tsx'
 import {createMockData} from './MOCK.ts'
-import {ContextMenu, ContextMenuDataType} from '../contextMenu/ContextMenu.tsx'
+import {ContextMenu} from '../contextMenu/ContextMenu.tsx'
 import {EditorEventData, EditorEventType} from '../../engine/editor/actions/type'
 
 const EditorProvider: FC<{ file: FileType }> = ({file}) => {
@@ -28,11 +28,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [selectedProps, setSelectedProps] = useState<ModuleProps>(null)
   const [selectedModules, setSelectedModules] = useState<UID[]>([])
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
-  const [contextMenuData, setContextMenoData] = useState({
-    idSet: new Set(),
-    position: {x: 0, y: 0},
-    copiedItems: false,
-  })
+  const [copiedItems, setCopiedItems] = useState<ModuleProps[]>([])
+  const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const [historyCurrent, setHistoryCurrent] = useState<HistoryNode['id']>(0)
   const [viewport, setViewport] = useState<ViewportInfo>({
     width: 0,
@@ -92,14 +89,12 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           onWorldMouseMove: (point) => {
             setWorldPoint(point)
           },
-          onContextMenu: (idSet, position, copiedItems) => {
-            // console.log(idSet, position)
+          onContextMenu: (position) => {
             setShowContextMenu(true)
-            setContextMenoData({
-              idSet,
-              position,
-              copiedItems,
-            })
+            setContextMenuPosition(position)
+          },
+          onModuleCopied: (items) => {
+            setCopiedItems(items)
           },
         },
       })
@@ -153,6 +148,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     selectedModules,
     selectedProps,
     historyCurrent,
+    copiedItems,
     viewport,
     editorRef,
     applyHistoryNode,
@@ -175,7 +171,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           <StatusBar worldPoint={worldPoint}/>
           {
             showContextMenu &&
-              <ContextMenu data={contextMenuData} onClose={() => {
+              <ContextMenu position={contextMenuPosition} onClose={() => {
                 setShowContextMenu(false)
               }}/>
           }

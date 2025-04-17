@@ -5,47 +5,41 @@ import EditorContext from '../editorContext/EditorContext.tsx'
 import {LuChevronRight} from 'react-icons/lu'
 import {MenuType} from '../header/menu/type'
 
-export interface ContextMenuDataType {
-  idSet: Set<UID>
-  position: { x: number, y: number }
-  copiedItems: boolean
-}
-
 export interface ContextMenuProps {
-  data: ContextMenuDataType
+  position: Point
   // onAction: (action: string) => void
   onClose: () => void
 }
 
-export const ContextMenu: FC<ContextMenuProps> = memo(({data: {idSet, position, copiedItems}, onClose}) => {
+export const ContextMenu: FC<ContextMenuProps> = memo(({position, onClose}) => {
   const {t} = useTranslation()
-
-  const {executeAction} = useContext(EditorContext)
-  const [menuItems, setMenuItems] = useState([])
+  const {selectedModules, copiedItems, executeAction} = useContext(EditorContext)
+  const [menuItems, setMenuItems] = useState<MenuType[]>([])
   const groupClass = 'absolute bg-white shadow-lg rounded-md border border-gray-200 py-1 z-50'
 
   useEffect(() => {
+    const noSelectedModule = selectedModules.length === 0
     const ITEMS: MenuType[] = [
-      {id: 'copy', disabled: idSet.size === 0},
-      {id: 'paste', disabled: !copiedItems},
-      {id: 'delete', disabled: idSet.size === 0},
-      {id: 'duplicate', disabled: idSet.size === 0},
-      // {id: 'group', disabled: idSet.size < 2},
-      // {id: 'ungroup', disabled: idSet.size === 0},
-      // {id: 'lock', disabled: idSet.size === 0},
-      // {id: 'unlock', disabled: idSet.size === 0},
+      {id: 'copy', disabled: noSelectedModule},
+      {id: 'paste', disabled: copiedItems.length === 0},
+      {id: 'delete', disabled: noSelectedModule},
+      {id: 'duplicate', disabled: noSelectedModule},
+      // {id: 'group', disabled: selectedModules.size < 2},
+      // {id: 'ungroup', disabled: noSelectedModule},
+      // {id: 'lock', disabled: noSelectedModule},
+      // {id: 'unlock', disabled: noSelectedModule},
       {
         id: 'layer',
-        disabled: idSet.size === 0,
+        disabled: noSelectedModule,
         children: [
-          {id: 'sendToBack', disabled: idSet.size === 0},
-          {id: 'bringToFront', disabled: idSet.size === 0},
-          {id: 'sendBackward', disabled: idSet.size === 0},
-          {id: 'bringForward', disabled: idSet.size === 0},
+          {id: 'sendToBack', disabled: noSelectedModule},
+          {id: 'bringToFront', disabled: noSelectedModule},
+          {id: 'sendBackward', disabled: noSelectedModule},
+          {id: 'bringForward', disabled: noSelectedModule},
         ],
       },
     ]
-    // console.log(idSet)
+    // console.log(selectedModules)
     setMenuItems(ITEMS)
 
     const remove = () => {
@@ -57,7 +51,7 @@ export const ContextMenu: FC<ContextMenuProps> = memo(({data: {idSet, position, 
     return () => {
       window.removeEventListener('click', remove)
     }
-  }, [idSet, position, copiedItems])
+  }, [selectedModules, position, copiedItems])
 
   // console.log(9)
   const handleContextAction = (action: string) => {
@@ -79,31 +73,49 @@ export const ContextMenu: FC<ContextMenuProps> = memo(({data: {idSet, position, 
     // executeAction()
   }
 
-  const MenuItem: FC<{ item: never, onClick: VoidFunction }> = ({item, onClick}) => {
+  const MenuItem: FC<{ item: MenuType, onMouseUp: VoidFunction }> = ({item, onMouseUp}) => {
     const menuText = t(item.id, {returnObjects: true}) as I18nHistoryDataItem
     const hasChildren = item.children && item.children.length > 0
-    // console.log(item)
-    return <div className={`flex justify-between min-w-30 text-nowrap items-center `}
+
+    return <div className={'min-w-40 relative group'}
                 title={menuText.tooltip}>
       <button type={'button'}
               disabled={item.disabled}
-              onClick={onClick}
-              className={'px-4 py-1.5 block w-full text-left text-sm  hover:bg-gray-100 disabled:text-gray-400 disabled:hover:bg-transparent disabled:cursor-not-allowed'}
-      >{menuText.label}</button>
-      {hasChildren && <LuChevronRight/>}
+              onMouseUp={onMouseUp}
+              className={'flex justify-between px-4 text-nowrap items-center py-1.5 w-full text-left text-sm  hover:bg-gray-100 disabled:text-gray-400 disabled:hover:bg-transparent disabled:cursor-not-allowed'}
+      >{menuText.label}
+        {hasChildren && <LuChevronRight/>}
+      </button>
+
+      {
+        hasChildren &&
+          <div className={groupClass + ' z-60 group-hover:block hidden left-full top-0 border-l-0 rounded-none '}>
+            {
+              item.children!.map((child, childIndex) => {
+                return <MenuItem key={childIndex} item={child} onMouseUp={() => handleContextAction(item.id)}/>
+              })
+            }
+          </div>
+      }
     </div>
   }
 
   return (
     <div className={groupClass}
+         onClick={(e) => {
+           e.preventDefault()
+           e.stopPropagation()
+         }}
          style={{
            top: position.y,
            left: position.x,
          }}>
+
       {
         menuItems.map((item, index) => {
-          return <MenuItem key={index} item={item} onClick={() => {
-            // console.log('item')
+          return <MenuItem key={index} item={item} onMouseUp={() => {
+            handleContextAction(item.id)
+            onClose()
           }}/>
 
           /*const showDivider = index === 2 || index === 4 || index === 7

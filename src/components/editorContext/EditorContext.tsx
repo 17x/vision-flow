@@ -7,7 +7,11 @@ import {EditorEventData, EditorEventType} from '../../engine/editor/actions/type
 interface EditorContextType {
   focused: boolean
   historyArray: HistoryNode[]
-  historyCurrent: HistoryNode['id']
+  historyStatus: {
+    id: number
+    hasPrev: boolean
+    hasNext: boolean
+  },
   selectedModules: UID[]
   selectedProps: ModuleProps
   copiedItems: selectedProps[],
@@ -21,7 +25,11 @@ interface EditorContextType {
 const EditorContext = createContext<EditorContextType>({
   focused: false,
   historyArray: [] as HistoryNode[],
-  historyCurrent: 0,
+  historyStatus: {
+    id: 0,
+    hasPrev: false,
+    hasNext: false,
+  },
   selectedModules: [],
   selectedProps: {},
   copiedItems: [],

@@ -30,7 +30,16 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const [copiedItems, setCopiedItems] = useState<ModuleProps[]>([])
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
-  const [historyCurrent, setHistoryCurrent] = useState<HistoryNode['id']>(0)
+  const [historyStatus, setHistoryStatus] = useState<{
+    id: HistoryNode['id']
+    hasPrev: boolean
+    hasNext: boolean
+  }>({
+    id: 0,
+    hasPrev: false,
+    hasNext: false,
+  })
+  // const [history, setHistoryCurrent] = useState<HistoryNode['id']>(0)
   const [viewport, setViewport] = useState<ViewportInfo>({
     width: 0,
     height: 0,
@@ -68,7 +77,12 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
             setHistoryArray(historyTree!.toArray())
 
             if (historyTree.current) {
-              setHistoryCurrent(historyTree.current.id)
+              setHistoryStatus({
+                id: historyTree.current.id,
+                hasPrev: !!historyTree.current.prev,
+                hasNext: !!historyTree.current.next,
+              })
+              // setHistoryCurrent(historyTree.current.id)
             }
           },
           onModulesUpdated: (moduleMap) => {
@@ -147,7 +161,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     // worldPoint: worldPoint.current,
     selectedModules,
     selectedProps,
-    historyCurrent,
+    historyStatus,
     copiedItems,
     viewport,
     editorRef,

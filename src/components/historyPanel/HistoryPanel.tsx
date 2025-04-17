@@ -4,29 +4,18 @@ import {useTranslation} from 'react-i18next'
 import {I18nHistoryDataItem} from '../../i18n/type'
 
 export const HistoryPanel = memo(() => {
-  const {historyArray, historyCurrent, applyHistoryNode} = useContext(EditorContext)
+  const {historyArray, historyStatus, applyHistoryNode} = useContext(EditorContext)
   const {t} = useTranslation()
   const targetRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (targetRef.current) {
-      // const targetElement = targetRef.current
-
-      /*  const _timer = setTimeout(() => {
-          targetElement.scrollIntoView({
-            // behavior: "smooth",
-            block: "nearest",
-            inline: "nearest"
-          })
-        }, 0)*/
 
       return () => {
-        /* if (_timer) {
-           clearTimeout(_timer)
-         }*/
+
       }
     }
-  }, [historyArray, historyCurrent])
+  }, [historyArray, historyStatus])
 
   return (
     <div className={'p-2'}>
@@ -35,7 +24,7 @@ export const HistoryPanel = memo(() => {
         <div className={'flex flex-col m-2 border border-gray-200 min-h-40 bg-gray-100'}>
           {
             historyArray.map((historyNode, index) => {
-                const isCurr = historyNode.id === historyCurrent
+                const isCurr = historyNode.id === historyStatus.id
                 const prefixI18NKey = 'history.' + historyNode.data.type
                 const {label, tooltip} = t(prefixI18NKey, {returnObjects: true}) as I18nHistoryDataItem
 

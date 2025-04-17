@@ -18,8 +18,8 @@ export interface ToolbarActionType {
 }
 
 const Toolbar: React.FC = memo(() => {
-    const {executeAction, historyArray, historyStatus, selectedModules} = useContext(EditorContext)
-    console.log(historyArray)
+    const {executeAction, historyStatus, selectedModules} = useContext(EditorContext)
+
     const actions: ToolbarActionType[] = [
       {id: 'save', icon: 'save', disabled: true, divide: true},
       {id: 'undo', icon: 'undo', disabled: !historyStatus.hasPrev},
@@ -30,10 +30,10 @@ const Toolbar: React.FC = memo(() => {
       {id: 'layerDown', icon: 'layers', disabled: false},
       {id: 'layerTop', icon: 'layers', disabled: false},
       {id: 'layerBottom', icon: 'layers', disabled: false, divide: true},
-      {id: 'group', icon: 'group', disabled: true},
+      /*{id: 'group', icon: 'group', disabled: true},
       {id: 'ungroup', icon: 'ungroup', disabled: true, divide: true},
       {id: 'lock', icon: 'lock', disabled: false},
-      {id: 'unlock', icon: 'unlock', disabled: true},
+      {id: 'unlock', icon: 'unlock', disabled: true},*/
     ]
 
     return <div className={'border-b border-gray-200 box-border'}>

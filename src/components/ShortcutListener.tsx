@@ -34,6 +34,19 @@ const ShortcutListener: React.FC = () => {
       zoomData.zoomFactor = -0.1
     }
 
+    if (key.toLowerCase() === 'w' && (ctrlKey || metaKey)) {
+      shortcutCode = 'closeFile'
+
+
+
+      window.confirm('000')
+      alert(9)
+      e.preventDefault();
+      e.stopPropagation()
+      return false
+
+    }
+
     if (key === 's' && (ctrlKey || metaKey)) {
       shortcutCode = 'saveFile'
     }

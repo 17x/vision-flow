@@ -33,7 +33,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const [showPrint, setShowPrint] = useState(false)
   const contextRootRef = useRef<HTMLDivElement>(null)
-  const {currentFileId, startCreateFile, saveFileToLocal} = useContext(FileContext)
+  const {currentFileId, startCreateFile, closeFile, saveFileToLocal} = useContext(FileContext)
   const lastSavedHistoryId = useRef(0)
   const currentHistoryId = useRef(0)
   const needSaveLocal = useRef(false)
@@ -126,6 +126,10 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       startCreateFile()
       return
     }
+    if (type === 'closeFile') {
+      closeFile(file.id)
+      return
+    }
 
     if (type === 'saveFile') {
       // console.log('state.needSave', state.needSave)
@@ -145,6 +149,11 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 
   useEffect(() => {
     let editor: Editor
+/*    window.onbeforeunload = (event)=>{
+      // alert(999)
+      event.preventDefault();
+      // return false;
+    }*/
     if (containerRef.current && !editorRef.current) {
       editor = new Editor({
         container: containerRef!.current,

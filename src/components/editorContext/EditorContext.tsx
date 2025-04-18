@@ -12,6 +12,7 @@ interface EditorContextType {
     hasPrev: boolean
     hasNext: boolean
   },
+  needSave: boolean
   selectedModules: UID[]
   selectedProps: ModuleProps
   copiedItems: selectedProps[],
@@ -33,6 +34,7 @@ const EditorContext = createContext<EditorContextType>({
   selectedModules: [],
   selectedProps: {},
   copiedItems: [],
+  needSave: false,
   editorRef: {} as React.RefObject<Editor>,
   applyHistoryNode: () => {
 

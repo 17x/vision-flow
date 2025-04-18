@@ -38,7 +38,6 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     hasPrev: false,
     hasNext: false,
   })
-  // const [history, setHistoryCurrent] = useState<HistoryNode['id']>(0)
   const [viewport, setViewport] = useState<ViewportInfo>({
     width: 0,
     height: 0,
@@ -49,15 +48,17 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     dy: 0,
     status: '',
   })
-  const elementRef = useRef<HTMLDivElement>(null)
+  const contextRootRef = useRef<HTMLDivElement>(null)
   const [focused, setFocused] = useState(true)
-  const {currentFileId, startCreateFile, saveFileToLocal, setFileInitialized} = useContext(FileContext)
+  const [lastSavedHistoryId, setLastSavedHistoryId] = useState(0)
+  const [needSave, setNeedSave] = useState(false)
+  const {currentFileId, startCreateFile, saveFileToLocal} = useContext(FileContext)
 
   useEffect(() => {
     let editor: Editor
-    console.log(file)
-    if (containerRef.current && !file.initialized) {
-
+    // console.log(file)
+    if (containerRef.current && !editorRef.current) {
+      console.log('init', file.id)
       editor = new Editor({
         container: containerRef!.current,
         data: {
@@ -72,13 +73,16 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           onHistoryUpdated: (historyTree) => {
             setHistoryArray(historyTree!.toArray())
 
+            console.log(historyTree.current)
+
             if (historyTree.current) {
               setHistoryStatus({
                 id: historyTree.current.id,
                 hasPrev: !!historyTree.current.prev,
                 hasNext: !!historyTree.current.next,
               })
-              // setHistoryCurrent(historyTree.current.id)
+
+              fileDirtyCheck()
             }
           },
           onModulesUpdated: (moduleMap) => {
@@ -86,6 +90,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
             const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
 
             setSortedModules(arr)
+
+            // fileDirtyCheck()
           },
           onSelectionUpdated: (selected, props) => {
             // console.log('onSelectionUpdated')
@@ -111,10 +117,10 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 
       editorRef.current = editor
 
-      setFileInitialized(file.id)
+      // setFileInitialized(file.id)
     }
 
-    const element = elementRef.current
+    const element = contextRootRef.current
 
     if (element) {
       window.addEventListener('mousedown', checkInside)
@@ -136,8 +142,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }, [file])
 
   const checkInside = (e) => {
-    if (containerRef.current) {
-      setFocused(containerRef!.current?.contains(e.target))
+    if (contextRootRef.current) {
+      setFocused(contextRootRef!.current?.contains(e.target))
     }
   }
 
@@ -162,16 +168,26 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
 
     if (type === 'saveFile') {
-      const editorData: FileType = editorRef.current!.exportToFiles() as FileType
-      editorData.name = file.name
-      saveFileToLocal(editorData)
+      if (needSave) {
+        const editorData: FileType = editorRef.current!.exportToFiles() as FileType
+
+        editorData.name = file.name
+        saveFileToLocal(editorData)
+        setLastSavedHistoryId(historyStatus.id)
+        fileDirtyCheck()
+      }
       return
     }
 
     editorRef.current!.execute(type as K, data)
   }
 
+  const fileDirtyCheck = () => {
+    setNeedSave(historyStatus.id !== lastSavedHistoryId)
+  }
+
   return <EditorContext.Provider value={{
+    needSave,
     focused,
     historyArray,
     // worldPoint: worldPoint.current,
@@ -184,7 +200,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     applyHistoryNode,
     executeAction,
   }}>
-    <div ref={elementRef} data-focused={focused} autoFocus={true} tabIndex={0}
+    <div ref={contextRootRef} data-focused={focused} autoFocus={true} tabIndex={0}
          className={'outline-0 w-full h-full flex flex-col'}>
       {currentFileId === file.id && <ShortcutListener/>}
 

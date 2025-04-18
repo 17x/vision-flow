@@ -89,6 +89,7 @@ const FileProvider: FC = () => {
     if (savedFileMap && savedFileMap[fileId]) {
       delete savedFileMap[fileId]
     }
+
     localStorage.setItem(STORAGE_ID, JSON.stringify(savedFileMap))
     localStorage.removeItem(fileId)
     console.log('deleted')

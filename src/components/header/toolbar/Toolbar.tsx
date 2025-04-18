@@ -10,10 +10,10 @@ const IconSize = 20
 const IconColor = 'text-black'
 
 const Toolbar: React.FC = memo(() => {
-    const {executeAction, historyStatus, selectedModules} = useContext(EditorContext)
+    const {needSave, executeAction, historyStatus, selectedModules} = useContext(EditorContext)
 
     const actions: MenuItemType[] = [
-      {id: 'save', icon: 'save', disabled: true, divide: true},
+      {id: 'save', icon: 'save', disabled: !needSave, divide: true},
       {id: 'undo', editorActionCode: 'history-undo', icon: 'undo', disabled: !historyStatus.hasPrev},
       {id: 'redo', editorActionCode: 'history-redo', icon: 'redo', disabled: !historyStatus.hasNext, divide: true},
       {

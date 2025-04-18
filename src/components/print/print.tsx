@@ -4,10 +4,10 @@ import Editor from '../../engine/editor/editor.ts'
 export const Print: FC<{
   onClose: VoidFunction,
   editorRef: { current: Editor | null }
-}> = memo(({
-             onClose,
-             editorRef,
-           }) => {
+}> = ({
+        onClose,
+        editorRef,
+      }) => {
   const printPreviewCanvas = useRef<HTMLCanvasElement>(null)
   const [dpr, setDpr] = useState(2)
 
@@ -77,4 +77,4 @@ export const Print: FC<{
       </div>
     </div>
   </div>
-})
+}

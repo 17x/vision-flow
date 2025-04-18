@@ -11,7 +11,7 @@ export interface ContextMenuProps {
   onClose: () => void
 }
 
-export const ContextMenu: FC<ContextMenuProps> = memo(({position, onClose}) => {
+export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
   const {t} = useTranslation()
   const {state: {selectedModules, copiedItems, historyStatus}, executeAction} = useContext(EditorContext)
   const [menuItems, setMenuItems] = useState<MenuItemType[]>([])
@@ -133,5 +133,5 @@ export const ContextMenu: FC<ContextMenuProps> = memo(({position, onClose}) => {
       }
     </div>
   )
-})
+}
 

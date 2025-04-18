@@ -16,7 +16,6 @@ export const StatusBar: FC<{ ref: PointRefType | null }> = ({ref}) => {
     return {
       set(point: Point) {
         setWorldPoint(point)
-        // worldPoint.current = point
       },
     }
   }, [])

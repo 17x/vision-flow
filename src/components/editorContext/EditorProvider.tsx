@@ -2,7 +2,7 @@ import {FC, useContext, useEffect, useReducer, useRef, useState} from 'react'
 import Editor from '../../engine/editor/editor.ts'
 import ShortcutListener from '../ShortcutListener.tsx'
 import {ModulePanel} from '../modulePanel/ModulePanel.tsx'
-import {PointRef, StatusBar, StatusBarRef} from '../statusBar/StatusBar.tsx'
+import {PointRef, StatusBar} from '../statusBar/StatusBar.tsx'
 import {HistoryNode} from '../../engine/editor/history/DoublyLinkedList.ts'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 import Header from '../header/Header.tsx'
@@ -33,7 +33,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const [showPrint, setShowPrint] = useState(false)
   const contextRootRef = useRef<HTMLDivElement>(null)
-  const {currentFileId, startCreateFile, saveFileToLocal} = useContext(FileContext)
+  const {startCreateFile, saveFileToLocal} = useContext(FileContext)
   const lastSavedHistoryId = useRef(-1)
   const currentHistoryId = useRef(-1)
 
@@ -86,11 +86,9 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     dispatch({type: 'SET_COPIED_ITEMS', payload: items})
   }
 
-  const checkInside = (e) => {
+  const checkInside = (e: MouseEvent) => {
     if (contextRootRef.current) {
-      // setFocused(contextRootRef!.current?.contains(e.target))
-      // console.log(file.id, contextRootRef!.current?.contains(e.target))
-      dispatch({type: 'SET_FOCUSED', payload: contextRootRef!.current?.contains(e.target)})
+      dispatch({type: 'SET_FOCUSED', payload: contextRootRef!.current?.contains(e.target as Node)})
     }
   }
 

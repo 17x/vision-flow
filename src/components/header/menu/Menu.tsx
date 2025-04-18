@@ -1,9 +1,9 @@
-import React, {memo, useEffect, useMemo, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import MenuItem from './MenuItem.tsx'
 import MenuData from './MenuData.ts'
 
-const MenuBar: React.FC = memo(() => {
+const MenuBar: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [openId, setOpenId] = useState<string | null>(null)
   const {t} = useTranslation()
@@ -64,6 +64,6 @@ const MenuBar: React.FC = memo(() => {
         })
       }</div>
   </div>
-})
+}
 
 export default MenuBar

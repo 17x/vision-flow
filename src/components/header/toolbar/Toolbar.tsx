@@ -69,16 +69,16 @@ const Toolbar: React.FC = () => {
 
           switch (id) {
             case 'layerUp':
-              Icon = <LayerUp size={IconSize} />
+              Icon = <LayerUp size={IconSize}/>
               break
             case 'layerDown':
-              Icon = <LayerDown size={IconSize} />
+              Icon = <LayerDown size={IconSize}/>
               break
             case 'layerTop':
-              Icon = <LayerToTop size={IconSize} />
+              Icon = <LayerToTop size={IconSize}/>
               break
             case 'layerBottom':
-              Icon = <LayerToBottom size={IconSize} />
+              Icon = <LayerToBottom size={IconSize}/>
               break
             default:
               Icon = <NamedIcon size={IconSize} iconName={icon!}/>

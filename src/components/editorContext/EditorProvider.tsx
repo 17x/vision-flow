@@ -33,9 +33,10 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const [showPrint, setShowPrint] = useState(false)
   const contextRootRef = useRef<HTMLDivElement>(null)
-  const {startCreateFile, saveFileToLocal} = useContext(FileContext)
+  const {currentFileId, startCreateFile, saveFileToLocal} = useContext(FileContext)
   const lastSavedHistoryId = useRef(0)
   const currentHistoryId = useRef(0)
+  const needSaveLocal = useRef(false)
 
   const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
     dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})
@@ -46,11 +47,17 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         hasPrev: !!historyTree.current.prev,
         hasNext: !!historyTree.current.next,
       }
+      const newNeedSaveValue = newHistoryStatus.id !== lastSavedHistoryId.current
       // console.log(state.historyStatus)
+
+      // console.log(state.needSave)
       // console.log(newHistoryStatus.id, lastSavedHistoryId.current)
+      // console.log(newHistoryStatus.id !== lastSavedHistoryId.current)
+
       currentHistoryId.current = newHistoryStatus.id
       dispatch({type: 'SET_HISTORY_STATUS', payload: newHistoryStatus})
-      dispatch({type: 'SET_NEED_SAVE', payload: newHistoryStatus.id !== lastSavedHistoryId.current})
+      dispatch({type: 'SET_NEED_SAVE', payload: newNeedSaveValue})
+      needSaveLocal.current = newNeedSaveValue
     }
   }
   // console.log(state)
@@ -121,7 +128,9 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
 
     if (type === 'saveFile') {
-      if (state.needSave) {
+      // console.log('state.needSave', state.needSave)
+      // console.log(lastSavedHistoryId.current, currentHistoryId.current)
+      if (needSaveLocal.current) {
         const editorData: FileType = editorRef.current!.exportToFiles() as FileType
 
         editorData.name = file.name
@@ -136,7 +145,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 
   useEffect(() => {
     let editor: Editor
-    if (containerRef.current) {
+    if (containerRef.current && !editorRef.current) {
       editor = new Editor({
         container: containerRef!.current,
         data: {
@@ -158,7 +167,6 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       editorRef.current = editor
       dispatch({type: 'SET_ID', payload: file.id})
     }
-
     const element = contextRootRef.current
 
     if (element) {
@@ -189,7 +197,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }}>
     <div ref={contextRootRef} data-focused={state.focused} autoFocus={true} tabIndex={0}
          className={'outline-0 w-full h-full flex flex-col'}>
-      <ShortcutListener/>
+      {currentFileId === file.id && <ShortcutListener/>}
 
       <Header/>
 

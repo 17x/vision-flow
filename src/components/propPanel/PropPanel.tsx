@@ -24,11 +24,11 @@ const PropPanel = memo(({props}: PropPanelProps) => {
 export default PropPanel
 
 const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
-  const {executeAction, focused} = useContext(EditorContext)
+  const {executeAction} = useContext(EditorContext)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const keyName = e.target.name as keyof ModuleProps
     let newValue: string | number = e.target.value
-    // console.log(focused)
+
     if ([
       'x',
       'y',

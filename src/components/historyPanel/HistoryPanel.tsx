@@ -1,12 +1,10 @@
-import {memo, useContext, useEffect, useReducer, useRef} from 'react'
+import {useContext, useEffect, useRef} from 'react'
 import EditorContext from '../editorContext/EditorContext.tsx'
 import {useTranslation} from 'react-i18next'
 import {I18nHistoryDataItem} from '../../i18n/type'
-import {EditorReducer, initialEditorState} from '../editorContext/reducer/reducer.ts'
 
-export const HistoryPanel = memo(() => {
+export const HistoryPanel = () => {
   const {state: {historyArray, historyStatus}, applyHistoryNode} = useContext(EditorContext)
-  // const [{historyArray, historyStatus}] = useReducer(EditorReducer, initialEditorState)
   const {t} = useTranslation()
   const targetRef = useRef<HTMLDivElement>(null)
 
@@ -48,4 +46,4 @@ export const HistoryPanel = memo(() => {
       </div>
     </div>
   )
-})
+}

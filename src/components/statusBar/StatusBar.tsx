@@ -1,19 +1,13 @@
 import ZoomSelect from './zoom'
-import {useContext, useEffect} from 'react'
+import {useContext} from 'react'
 import EditorContext from '../editorContext/EditorContext.tsx'
 
-interface StatusBarProps {
-  worldPoint: Point
-  className?: string
-}
-
-export const StatusBar: React.FC<StatusBarProps> = ({className = '', worldPoint}) => {
-
-  const {viewport, executeAction} = useContext(EditorContext)
+export const StatusBar = () => {
+  const {state: {viewport, worldPoint}, executeAction} = useContext(EditorContext)
   if (!viewport) return null
 
   return (
-    <footer className={className + 'w-full h-8 flex justify-between pr-1 items-center border-t border-gray-200'}>
+    <footer className={'w-full h-8 flex justify-between pr-1 items-center border-t border-gray-200'}>
       {
         viewport &&
           <>

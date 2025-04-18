@@ -26,14 +26,15 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [state, dispatch] = useReducer(EditorReducer, initialEditorState)
   const editorRef = useRef<Editor>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const [worldPoint, setWorldPoint] = useState<Point>({x: 0, y: 0})
+  // const [worldPoint, setWorldPoint] = useState<Point>({x: 0, y: 0})
   const [sortedModules, setSortedModules] = useState<ModuleInstance[]>([])
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const [showPrint, setShowPrint] = useState(false)
   const contextRootRef = useRef<HTMLDivElement>(null)
-  const [lastSavedHistoryId, setLastSavedHistoryId] = useState(-1)
   const {currentFileId, startCreateFile, saveFileToLocal} = useContext(FileContext)
+  const lastSavedHistoryId = useRef(-1)
+  const currentHistoryId = useRef(-1)
 
   const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
     dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})
@@ -44,9 +45,11 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         hasPrev: !!historyTree.current.prev,
         hasNext: !!historyTree.current.next,
       }
-
+      // console.log(state.historyStatus)
+      console.log(newHistoryStatus.id, lastSavedHistoryId.current)
+      currentHistoryId.current = newHistoryStatus.id
       dispatch({type: 'SET_HISTORY_STATUS', payload: newHistoryStatus})
-      dispatch({type: 'SET_NEED_SAVE', payload: newHistoryStatus.id !== lastSavedHistoryId})
+      dispatch({type: 'SET_NEED_SAVE', payload: newHistoryStatus.id !== lastSavedHistoryId.current})
     }
   }
   // console.log(state)
@@ -66,7 +69,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }
 
   const onWorldMouseMove: WorldMouseMoveUpdatedHandler = (point) => {
-    setWorldPoint(point)
+    dispatch({type: 'SET_WORLD_POINT', payload: point})
   }
 
   const onContextMenu: ContextMenuHandler = (position) => {
@@ -75,7 +78,6 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }
 
   const onModuleCopied: ModuleCopiedHandler = (items) => {
-    // setCopiedItems(items)
     dispatch({type: 'SET_COPIED_ITEMS', payload: items})
   }
 
@@ -110,14 +112,12 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
 
     if (type === 'saveFile') {
-      console.log(state.historyStatus)
       if (state.needSave) {
         const editorData: FileType = editorRef.current!.exportToFiles() as FileType
 
         editorData.name = file.name
         saveFileToLocal(editorData)
-        setLastSavedHistoryId(state.historyStatus.id)
-        // setNeedSave(false)
+        lastSavedHistoryId.current = currentHistoryId.current
         dispatch({type: 'SET_NEED_SAVE', payload: false})
       }
     }
@@ -128,7 +128,6 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   useEffect(() => {
     let editor: Editor
     if (containerRef.current) {
-      dispatch({type: 'SET_ID', payload: file.id})
       editor = new Editor({
         container: containerRef!.current,
         data: {
@@ -147,8 +146,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           onModuleCopied,
         },
       })
-
       editorRef.current = editor
+      dispatch({type: 'SET_ID', payload: file.id})
     }
 
     const element = contextRootRef.current
@@ -194,18 +193,19 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
                className={'relative overflow-hidden flex w-full h-full'}
           ></div>
 
-          <StatusBar worldPoint={worldPoint}/>
+          <StatusBar/>
 
           {
             showContextMenu &&
-              <ContextMenu position={contextMenuPosition} onClose={() => {
-                setShowContextMenu(false)
-              }}/>
+              <ContextMenu position={contextMenuPosition}
+                           onClose={() => {
+                             setShowContextMenu(false)
+                           }}/>
           }
         </div>
         <div style={{width: 200}} className={'h-full flex-shrink-0 border-l border-gray-200'}>
           <PropPanel props={state.selectedProps!}/>
-          <LayerPanel data={sortedModules} selected={state.selectedModules}/>
+          <LayerPanel data={sortedModules}/>
           <HistoryPanel/>
         </div>
       </main>

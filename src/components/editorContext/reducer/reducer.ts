@@ -11,12 +11,31 @@ export interface EditorStateType {
     hasPrev: boolean
     hasNext: boolean
   },
+  worldPoint: Point,
   needSave: boolean
   selectedModules: UID[]
   selectedProps: ModuleProps | null
   lastSavedHistoryId: number
   copiedItems: ModuleProps[]
   viewport: ViewportInfo | null
+}
+
+export const initialEditorState: EditorStateType = {
+  id: '',
+  focused: false,
+  selectedProps: null,
+  selectedModules: [],
+  viewport: null,
+  lastSavedHistoryId: -1,
+  needSave: false,
+  worldPoint: {x: 0, y: 0},
+  copiedItems: [],
+  historyArray: [],
+  historyStatus: {
+    id: 0,
+    hasPrev: false,
+    hasNext: false,
+  },
 }
 
 type EditorAction =
@@ -29,24 +48,8 @@ type EditorAction =
   | { type: 'SET_SELECTED_PROPS'; payload: ModuleProps | null }
   | { type: 'SET_LAST_SAVED_HISTORY_ID'; payload: number }
   | { type: 'SET_COPIED_ITEMS'; payload: ModuleProps[] }
-  | { type: 'SET_VIEWPORT'; payload: ViewportInfo | null };
-
-export const initialEditorState: EditorStateType = {
-  id: '',
-  focused: false,
-  selectedProps: null,
-  selectedModules: [],
-  viewport: null,
-  lastSavedHistoryId: -1,
-  needSave: false,
-  copiedItems: [],
-  historyArray: [],
-  historyStatus: {
-    id: 0,
-    hasPrev: false,
-    hasNext: false,
-  },
-}
+  | { type: 'SET_VIEWPORT'; payload: ViewportInfo | null }
+  | { type: 'SET_WORLD_POINT'; payload: Point };
 
 export const EditorReducer = (state: EditorStateType, action: EditorAction) => {
   switch (action.type) {
@@ -103,6 +106,11 @@ export const EditorReducer = (state: EditorStateType, action: EditorAction) => {
       return {
         ...state,
         viewport: action.payload,
+      }
+    case 'SET_WORLD_POINT':
+      return {
+        ...state,
+        worldPoint: action.payload,
       }
 
     default:

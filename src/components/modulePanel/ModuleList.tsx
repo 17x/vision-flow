@@ -28,11 +28,11 @@ const modules: { className: string, props: Partial<ModuleProps> }[] = [
 ]
 
 export const ModuleList: React.FC<ModulePanelProps> = () => {
-  const {editorRef, executeAction} = useContext(EditorContext)
+  const {executeAction} = useContext(EditorContext)
 
   useEffect(() => {
-    if (editorRef.current) { }
-  }, [editorRef])
+    // if (editorRef.current) { }
+  }, [])
   return (
     <div className={'flex flex-wrap space-x-2 space-y-2'}>
       {

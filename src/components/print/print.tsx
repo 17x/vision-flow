@@ -1,10 +1,13 @@
 import {FC, memo, useEffect, useRef, useState} from 'react'
 import Editor from '../../engine/editor/editor.ts'
 
-export const Print: FC<{ onClose: VoidFunction, editorRef: { current: Editor | null } }> = memo(({
-                                                                                                   onClose,
-                                                                                                   editorRef,
-                                                                                                 }) => {
+export const Print: FC<{
+  onClose: VoidFunction,
+  editorRef: { current: Editor | null }
+}> = memo(({
+             onClose,
+             editorRef,
+           }) => {
   const printPreviewCanvas = useRef<HTMLCanvasElement>(null)
   const [dpr, setDpr] = useState(2)
 

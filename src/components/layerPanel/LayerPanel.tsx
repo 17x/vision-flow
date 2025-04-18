@@ -1,20 +1,17 @@
 import {memo, useContext, useEffect, useRef, useState} from 'react'
 import EditorContext from '../editorContext/EditorContext.tsx'
-// import {useTranslation} from "react-i18next";
-// import OptimizedDND from "./OptimizedDND.ts";
 
 interface LayerPanelProps {
   data: ModuleInstance[]
-  selected: UID[]
 }
 
 const ITEM_HEIGHT = 28
-export const LayerPanel = memo(({data, selected}: LayerPanelProps) => {
+export const LayerPanel = memo(({data}: LayerPanelProps) => {
     const scrollRef = useRef<HTMLDivElement>(null)
     const targetRef = useRef<HTMLDivElement>(null)
     const [scrollTop, setScrollTop] = useState(0)
     const [indexRange, setIndexRange] = useState([0, 10])
-    const {executeAction} = useContext(EditorContext)
+    const {state: {selectedModules}, executeAction} = useContext(EditorContext)
 
     useEffect(() => {
       /*  const closestOne = selected[selected.length - 1]
@@ -25,7 +22,7 @@ export const LayerPanel = memo(({data, selected}: LayerPanelProps) => {
           scrollRef.current?.scrollTo(0, idx * ITEM_HEIGHT)
           console.log(idx * ITEM_HEIGHT)
         }*/
-    }, [selected])
+    }, [])
 
     const handleScroll = () => {
       if (!scrollRef.current) return
@@ -53,9 +50,9 @@ export const LayerPanel = memo(({data, selected}: LayerPanelProps) => {
 
       if (item) {
         arr.push(
-          <div ref={selected?.includes(item.id) ? targetRef : null}
+          <div ref={selectedModules?.includes(item.id) ? targetRef : null}
                style={{height: ITEM_HEIGHT}}
-               className={selected?.includes(item.id) ? 'bg-gray-400 text-white' : ''}
+               className={selectedModules?.includes(item.id) ? 'bg-gray-400 text-white' : ''}
                onClick={() => {
                  executeAction('selection-modify', {mode: 'replace', idSet: new Set([item.id])})
                }}

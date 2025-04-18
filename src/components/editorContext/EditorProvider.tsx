@@ -81,7 +81,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
                 hasNext: !!historyTree.current.next,
               }
 
-              setHistoryStatus(newHistoryStatus)
+              setHistoryStatus({...newHistoryStatus})
               // console.log(historyTree.current.id)
               fileDirtyCheck(newHistoryStatus.id)
             }
@@ -186,9 +186,9 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const fileDirtyCheck = (id?) => {
 
     console.log(id)
-    /*console.log(
+    console.log(
       {...historyStatus},
-    )*/
+    )
     setNeedSave(historyStatus.id !== lastSavedHistoryId)
   }
 

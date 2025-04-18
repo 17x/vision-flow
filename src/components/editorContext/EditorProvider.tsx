@@ -15,7 +15,7 @@ import {EditorEventData, EditorEventType} from '../../engine/editor/actions/type
 import {Print} from '../print/print.tsx'
 import {
   ContextMenuHandler,
-  HistoryUpdatedHandler,
+  HistoryUpdatedHandler, ModuleCopiedHandler,
   ModulesUpdatedHandler,
   SelectionUpdatedHandler,
   ViewportUpdatedHandler, WorldMouseMoveUpdatedHandler,
@@ -60,7 +60,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   })
   const contextRootRef = useRef<HTMLDivElement>(null)
   const [focused, setFocused] = useState(true)
-  const [lastSavedHistoryId, setLastSavedHistoryId] = useState(0)
+  const [lastSavedHistoryId, setLastSavedHistoryId] = useState(-1)
   const [needSave, setNeedSave] = useState(false)
   const {currentFileId, startCreateFile, saveFileToLocal} = useContext(FileContext)
 
@@ -75,11 +75,9 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         hasPrev: !!historyTree.current.prev,
         hasNext: !!historyTree.current.next,
       }
-      // currentHistoryStatus.current = newHistoryStatus
+
       setHistoryStatus(newHistoryStatus)
-      // console.log(currentHistoryStatus.current.id, lastSavedHistoryId)
       setNeedSave(newHistoryStatus.id !== lastSavedHistoryId)
-      // console.log(needSave)
     }
   }
 
@@ -110,8 +108,50 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     setContextMenuPosition(position)
   }
 
-  const onModuleCopied: ContextMenuHandler = (items) => {
+  const onModuleCopied: ModuleCopiedHandler = (items) => {
     setCopiedItems(items)
+  }
+
+  const checkInside = (e) => {
+    if (contextRootRef.current) {
+      setFocused(contextRootRef!.current?.contains(e.target))
+    }
+  }
+
+  const handleFocus = () => setFocused(true)
+
+  const handleBlur = () => setFocused(false)
+
+  const applyHistoryNode = (node: HistoryNode) => {
+    if (editorRef.current) {
+      editorRef.current.execute('history-pick', node)
+    }
+  }
+
+  const executeAction = <K extends EditorEventType>(type: K, data?: EditorEventData<K>) => {
+    if (type === 'print') {
+      setShowPrint(true)
+      return
+    }
+    if (type === 'newFile') {
+      startCreateFile()
+      return
+    }
+
+    if (type === 'saveFile') {
+      console.log(historyStatus.id, lastSavedHistoryId)
+      console.log(needSave)
+      if (needSave) {
+        const editorData: FileType = editorRef.current!.exportToFiles() as FileType
+
+        editorData.name = file.name
+        saveFileToLocal(editorData)
+        setLastSavedHistoryId(historyStatus.id)
+        setNeedSave(false)
+      }
+    }
+
+    editorRef.current!.execute(type as K, data)
   }
 
   useEffect(() => {
@@ -159,48 +199,6 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       }
     }
   }, [file])
-
-  const checkInside = (e) => {
-    if (contextRootRef.current) {
-      setFocused(contextRootRef!.current?.contains(e.target))
-    }
-  }
-
-  const handleFocus = () => setFocused(true)
-
-  const handleBlur = () => setFocused(false)
-
-  const applyHistoryNode = (node: HistoryNode) => {
-    if (editorRef.current) {
-      editorRef.current.execute('history-pick', node)
-    }
-  }
-
-  const executeAction = <K extends EditorEventType>(type: K, data?: EditorEventData<K>) => {
-    if (type === 'print') {
-      setShowPrint(true)
-      return
-    }
-    if (type === 'newFile') {
-      startCreateFile()
-      return
-    }
-
-    if (type === 'saveFile') {
-      console.log(needSave)
-      if (needSave) {
-        const editorData: FileType = editorRef.current!.exportToFiles() as FileType
-
-        editorData.name = file.name
-        saveFileToLocal(editorData)
-        setLastSavedHistoryId(historyStatus.id)
-        setNeedSave(false)
-      }
-      return
-    }
-
-    editorRef.current!.execute(type as K, data)
-  }
 
   return <EditorContext.Provider value={{
     needSave,

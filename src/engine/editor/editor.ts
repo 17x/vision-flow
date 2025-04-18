@@ -1,4 +1,4 @@
-import {EditorExportFileType, EventHandlers, SnapPointData} from './type'
+import {EditorExportFileType, EventHandlers} from './type'
 import History from './history/history.ts'
 import Action from './actions/actions.ts'
 import {

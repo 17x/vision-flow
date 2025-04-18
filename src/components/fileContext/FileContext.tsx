@@ -25,7 +25,7 @@ interface FileContextType {
 const FileContext = createContext<FileContextType>({
   fileMap: new Map(),
   fileList: [],
-  currentFileId: 'fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb',
+  currentFileId: '',
   creating: false,
   switchFile: () => {
   },

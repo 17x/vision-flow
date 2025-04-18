@@ -55,7 +55,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
   }
 
   return <div
-    className={`fixed top-0 left-0 z-20 w-full h-full flex flex-row items-center justify-center text-sm select-none`}>
+    className={`fixed top-0 left-0 z-300 w-full h-full flex flex-row items-center justify-center text-sm select-none`}>
     <div
       style={{
         backgroundColor: bg,

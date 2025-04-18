@@ -149,11 +149,11 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
 
   useEffect(() => {
     let editor: Editor
-/*    window.onbeforeunload = (event)=>{
-      // alert(999)
-      event.preventDefault();
-      // return false;
-    }*/
+    /*    window.onbeforeunload = (event)=>{
+          // alert(999)
+          event.preventDefault();
+          // return false;
+        }*/
     if (containerRef.current && !editorRef.current) {
       editor = new Editor({
         container: containerRef!.current,

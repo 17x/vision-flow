@@ -213,6 +213,8 @@ export function initEditor(this: Editor) {
   })
 
   on('module-duplicate', () => {
+    if (this.selectedModules.size === 0) return
+
     const temp: ModuleProps[] = this.batchCopy(this.selectedModules, false)
 
     temp.forEach((copiedItem) => {

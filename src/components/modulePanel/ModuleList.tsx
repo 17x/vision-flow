@@ -44,7 +44,7 @@ export const ModuleList: React.FC<ModulePanelProps> = () => {
                  const props = module.props as ModuleProps
                  props.x = getRandomNumber(1000)
                  props.y = getRandomNumber(2000)
-                 props.lineWidth = 10
+                 props.lineWidth = 1
                  props.lineColor = getRandomHexColor()
                  props.fillColor = getRandomHexColor()
 

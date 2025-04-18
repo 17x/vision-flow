@@ -15,7 +15,7 @@ const FileProvider: FC = () => {
   const fileLen = fileMap.current.size
   const showCreateFile = fileLen === 0 || creating
   const STORAGE_ID = 'VISION_FLOW_FILE_MAP'
-  const FILE_ID_PREFIX = 'VISION_FLOW_FILE_'
+  // const FILE_ID_PREFIX = 'VISION_FLOW_FILE_'
 
   useEffect(() => {
     readFileFromLocal()

@@ -27,8 +27,8 @@ import {initEditor} from './initEditor.ts'
 import uid from '../../utilities/Uid.ts'
 import {EditorEventType} from './actions/type'
 import {zoomAtPoint} from './viewport/helper.ts'
-import deduplicateObjectsByKeyValue from '../core/renderer/deduplicate.ts'
-import resetCanvas from './viewport/resetCanvas.tsx'
+// import deduplicateObjectsByKeyValue from '../core/renderer/deduplicate.ts'
+// import resetCanvas from './viewport/resetCanvas.tsx'
 import {RectangleProps} from '../core/modules/shapes/rectangle.ts'
 
 export interface EditorDataProps {
@@ -37,6 +37,7 @@ export interface EditorDataProps {
 }
 
 export interface EditorConfig {
+  moduleIdCounter: number
   dpr: number;
   frame: RectangleProps;
   offset: { x: number, y: number };
@@ -47,7 +48,7 @@ export interface EditorInterface {
   container: HTMLDivElement
   data: EditorDataProps
   events?: EventHandlers;
-  config?: EditorConfig;
+  config: EditorConfig;
 }
 
 class Editor {
@@ -85,9 +86,7 @@ class Editor {
                 container,
                 data,
                 events = {},
-                config = {
-                  dpr: 4,
-                },
+                config,
               }: EditorInterface) {
     this.visibleModuleMap = new Map()
     this.id = data.id || uid()
@@ -98,6 +97,7 @@ class Editor {
     this.history = new History(this)
     this.viewport = createViewport.call(this)
     this.moduleMap = new Map()
+    this.moduleCounter = config.moduleIdCounter
     const modules: ModuleMap = this.batchCreate(data.modules)
     modules.forEach((module) => {
       this.moduleMap.set(module.id, module)
@@ -111,6 +111,7 @@ class Editor {
   }
 
   get createModuleId(): UID {
+    console.log(this.moduleCounter)
     return this.id + '-' + ++this.moduleCounter
   }
 
@@ -346,6 +347,7 @@ class Editor {
     const result: EditorExportFileType = {
       id: this.id,
       config: {
+        moduleIdCounter: this.moduleCounter,
         dpr,
         scale,
         offset,

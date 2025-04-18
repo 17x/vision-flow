@@ -29,6 +29,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
         dpr: 2,
         scale: 0,
         offset: {x: 0, y: 0},
+        moduleIdCounter: 0,
         frame: {
           id: fileId + '-frame',
           width: 1000,

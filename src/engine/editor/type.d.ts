@@ -1,6 +1,7 @@
 import {ModuleProps} from '../core/modules/modules'
 import History from './history/history.ts'
 import {RectangleProps} from '../core/modules/shapes/rectangle.ts'
+import {EditorConfig} from './editor.ts'
 
 export type ModuleMoveDirection =
   'module-move-up' |
@@ -63,10 +64,5 @@ export declare type EventHandlers = {
 interface EditorExportFileType {
   data: ModuleProps[]
   id: UID,
-  config?: {
-    dpr: number
-    scale: number
-    offset: { x: number, y: number }
-    frame: RectangleProps
-  }
+  config: EditorConfig
 }

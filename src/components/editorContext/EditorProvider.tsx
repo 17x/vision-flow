@@ -97,7 +97,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     dispatch({type: 'SET_FOCUSED', payload: true})
   }
   const handleBlur = () => {
-    console.log('blured')
+    console.log('blurred')
     dispatch({type: 'SET_FOCUSED', payload: false})
   }
 
@@ -162,7 +162,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     const element = contextRootRef.current
 
     if (element) {
-      window.addEventListener('mousedown', checkInside)
+      window.addEventListener('mouseup', checkInside)
       element.addEventListener('focus', handleFocus)
       element.addEventListener('blur', handleBlur)
     }

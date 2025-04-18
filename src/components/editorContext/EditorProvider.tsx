@@ -28,9 +28,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [copiedItems, setCopiedItems] = useState<ModuleProps[]>([])
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const [showPrint, setShowPrint] = useState(false)
-  const [saved, setSaved] = useState(false)
   const [historyStatus, setHistoryStatus] = useState<{
-    id: HistoryNode['id']
+    id: number
     hasPrev: boolean
     hasNext: boolean
   }>({
@@ -57,8 +56,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   useEffect(() => {
     let editor: Editor
     // console.log(file)
-    if (containerRef.current && !editorRef.current) {
-      console.log('init', file.id)
+    if (containerRef.current) {
+      // console.log('init', file.id)
       editor = new Editor({
         container: containerRef!.current,
         data: {
@@ -76,13 +75,15 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
             console.log(historyTree.current)
 
             if (historyTree.current) {
-              setHistoryStatus({
+              const newHistoryStatus = {
                 id: historyTree.current.id,
                 hasPrev: !!historyTree.current.prev,
                 hasNext: !!historyTree.current.next,
-              })
+              }
 
-              fileDirtyCheck()
+              setHistoryStatus(newHistoryStatus)
+              // console.log(historyTree.current.id)
+              fileDirtyCheck(newHistoryStatus.id)
             }
           },
           onModulesUpdated: (moduleMap) => {
@@ -182,7 +183,12 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     editorRef.current!.execute(type as K, data)
   }
 
-  const fileDirtyCheck = () => {
+  const fileDirtyCheck = (id?) => {
+
+    console.log(id)
+    /*console.log(
+      {...historyStatus},
+    )*/
     setNeedSave(historyStatus.id !== lastSavedHistoryId)
   }
 

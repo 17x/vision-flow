@@ -111,7 +111,6 @@ class Editor {
   }
 
   get createModuleId(): UID {
-    console.log(this.moduleCounter)
     return this.id + '-' + ++this.moduleCounter
   }
 

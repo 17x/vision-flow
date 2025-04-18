@@ -10,10 +10,16 @@ import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
 import FileContext, {FileType} from '../fileContext/FileContext.tsx'
 import EditorContext from './EditorContext.tsx'
 import PropPanel from '../propPanel/PropPanel.tsx'
-import {createMockData} from './MOCK.ts'
 import {ContextMenu} from '../contextMenu/ContextMenu.tsx'
 import {EditorEventData, EditorEventType} from '../../engine/editor/actions/type'
 import {Print} from '../print/print.tsx'
+import {
+  ContextMenuHandler,
+  HistoryUpdatedHandler,
+  ModulesUpdatedHandler,
+  SelectionUpdatedHandler,
+  ViewportUpdatedHandler, WorldMouseMoveUpdatedHandler,
+} from '../../engine/editor/type'
 
 const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const editorRef = useRef<Editor>(null)
@@ -37,6 +43,11 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     hasPrev: false,
     hasNext: false,
   })
+  /*  const currentHistoryStatus = useRef({
+      id: 0,
+      hasPrev: false,
+      hasNext: false,
+    })*/
   const [viewport, setViewport] = useState<ViewportInfo>({
     width: 0,
     height: 0,
@@ -53,11 +64,59 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [needSave, setNeedSave] = useState(false)
   const {currentFileId, startCreateFile, saveFileToLocal} = useContext(FileContext)
 
+  const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
+    setHistoryArray(historyTree!.toArray())
+
+    // console.log(historyTree.current)
+
+    if (historyTree.current) {
+      const newHistoryStatus = {
+        id: historyTree.current.id,
+        hasPrev: !!historyTree.current.prev,
+        hasNext: !!historyTree.current.next,
+      }
+      // currentHistoryStatus.current = newHistoryStatus
+      setHistoryStatus(newHistoryStatus)
+      // console.log(currentHistoryStatus.current.id, lastSavedHistoryId)
+      setNeedSave(newHistoryStatus.id !== lastSavedHistoryId)
+      // console.log(needSave)
+    }
+  }
+
+  const onModulesUpdated: ModulesUpdatedHandler = (moduleMap) => {
+    // console.log(Array.from(moduleMap.values()))
+    const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
+
+    setSortedModules(arr)
+  }
+
+  const onSelectionUpdated: SelectionUpdatedHandler = (selected, props) => {
+    // console.log('onSelectionUpdated')
+    setSelectedModules(Array.from(selected))
+    setSelectedProps(props)
+    // console.log(selected,props)
+  }
+
+  const onViewportUpdated: ViewportUpdatedHandler = (viewportInfo) => {
+    setViewport(viewportInfo)
+  }
+
+  const onWorldMouseMove: WorldMouseMoveUpdatedHandler = (point) => {
+    setWorldPoint(point)
+  }
+
+  const onContextMenu: ContextMenuHandler = (position) => {
+    setShowContextMenu(true)
+    setContextMenuPosition(position)
+  }
+
+  const onModuleCopied: ContextMenuHandler = (items) => {
+    setCopiedItems(items)
+  }
+
   useEffect(() => {
     let editor: Editor
-    // console.log(file)
     if (containerRef.current) {
-      // console.log('init', file.id)
       editor = new Editor({
         container: containerRef!.current,
         data: {
@@ -66,59 +125,18 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         },
         config: file.config,
         events: {
-          onInitialized: () => {
-            // createMockData(editor)
-          },
-          onHistoryUpdated: (historyTree) => {
-            setHistoryArray(historyTree!.toArray())
-
-            console.log(historyTree.current)
-
-            if (historyTree.current) {
-              const newHistoryStatus = {
-                id: historyTree.current.id,
-                hasPrev: !!historyTree.current.prev,
-                hasNext: !!historyTree.current.next,
-              }
-
-              setHistoryStatus({...newHistoryStatus})
-              // console.log(historyTree.current.id)
-              fileDirtyCheck(newHistoryStatus.id)
-            }
-          },
-          onModulesUpdated: (moduleMap) => {
-            // console.log(Array.from(moduleMap.values()))
-            const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
-
-            setSortedModules(arr)
-
-            // fileDirtyCheck()
-          },
-          onSelectionUpdated: (selected, props) => {
-            // console.log('onSelectionUpdated')
-            setSelectedModules(Array.from(selected))
-            setSelectedProps(props)
-            // console.log(selected,props)
-          },
-          onViewportUpdated: (viewportInfo) => {
-            setViewport(viewportInfo)
-          },
-          onWorldMouseMove: (point) => {
-            setWorldPoint(point)
-          },
-          onContextMenu: (position) => {
-            setShowContextMenu(true)
-            setContextMenuPosition(position)
-          },
-          onModuleCopied: (items) => {
-            setCopiedItems(items)
-          },
+          // onInitialized: () => { },
+          onHistoryUpdated,
+          onModulesUpdated,
+          onSelectionUpdated,
+          onViewportUpdated,
+          onWorldMouseMove,
+          onContextMenu,
+          onModuleCopied,
         },
       })
 
       editorRef.current = editor
-
-      // setFileInitialized(file.id)
     }
 
     const element = contextRootRef.current
@@ -169,27 +187,19 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
 
     if (type === 'saveFile') {
+      console.log(needSave)
       if (needSave) {
         const editorData: FileType = editorRef.current!.exportToFiles() as FileType
 
         editorData.name = file.name
         saveFileToLocal(editorData)
         setLastSavedHistoryId(historyStatus.id)
-        fileDirtyCheck()
+        setNeedSave(false)
       }
       return
     }
 
     editorRef.current!.execute(type as K, data)
-  }
-
-  const fileDirtyCheck = (id?) => {
-
-    console.log(id)
-    console.log(
-      {...historyStatus},
-    )
-    setNeedSave(historyStatus.id !== lastSavedHistoryId)
   }
 
   return <EditorContext.Provider value={{

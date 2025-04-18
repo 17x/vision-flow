@@ -8,8 +8,6 @@ const MenuBar: React.FC = memo(() => {
   const [openId, setOpenId] = useState<string | null>(null)
   const {t} = useTranslation()
   const componentRef = useRef<HTMLDivElement>(null)
-  // const originActions = useSelector((state: RootState) => state.menu.actions)
-  // const actions = useMemo(() => flattenedToNested(originActions), [originActions])
   const actions = MenuData
 
   useEffect(() => {

@@ -16,7 +16,7 @@ interface FileContextType {
   switchFile: (id: UID) => void
   closeFile: (id: UID) => void
   createFile: (v: FileType) => void
-  setFileInitialized: (id:UID) => void
+  setFileInitialized: (id: UID) => void
   handleCreating: (v: boolean) => void
   saveFileToLocal: (v: EditorExportFileType) => void
   startCreateFile: VoidFunction

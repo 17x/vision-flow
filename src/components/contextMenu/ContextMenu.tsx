@@ -28,7 +28,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
       // {id: 'ungroup', disabled: noSelectedModule},
       {id: 'undo', editorActionCode: 'history-undo', disabled: !historyStatus.hasPrev},
       {id: 'redo', editorActionCode: 'history-redo', disabled: !historyStatus.hasNext},
-      {
+     /* {
         id: 'layer',
         disabled: noSelectedModule,
         children: [
@@ -37,7 +37,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
           {id: 'bringToFront', editorActionCode: 'module-layer', editorActionData: 'top', disabled: noSelectedModule},
           {id: 'sendToBack', editorActionCode: 'module-layer', editorActionData: 'bottom', disabled: noSelectedModule},
         ],
-      },
+      },*/
     ]
     // console.log(selectedModules)
     setMenuItems(ITEMS)

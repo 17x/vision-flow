@@ -18,6 +18,8 @@ const FileProvider: FC = () => {
 
   useEffect(() => {
     readFileFromLocal()
+
+
   }, [])
 
   const setFileInitialized = (fileId: UID) => {
@@ -47,6 +49,10 @@ const FileProvider: FC = () => {
   const switchFile = (id: UID) => {
     // console.log(fileList)
     setCurrentFileId(id)
+
+    setTimeout(() => {
+      console.log(document.activeElement)
+    }, 1000)
   }
 
   const closeFile = (deletingId: UID) => {
@@ -54,6 +60,7 @@ const FileProvider: FC = () => {
     let len = fileList.length
 
     if (deletingFileIndex === -1) return
+
     deleteFileFromLocal(deletingId)
     fileMap.current.delete(deletingId)
     updateFileList()
@@ -77,7 +84,8 @@ const FileProvider: FC = () => {
   const createFile = (file: FileType) => {
     fileMap.current.set(file.id, file)
     updateFileList()
-    setCurrentFileId(file.id)
+    switchFile(file.id)
+    // setCurrentFileId(file.id)
   }
 
   const deleteFileFromLocal = (id: UID) => {

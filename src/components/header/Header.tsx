@@ -3,7 +3,7 @@ import Toolbar from './toolbar/Toolbar.tsx'
 
 const Header: React.FC = () => {
   return <header>
-    <MenuBar/>
+    {/*<MenuBar/>*/}
     <Toolbar/>
   </header>
 }

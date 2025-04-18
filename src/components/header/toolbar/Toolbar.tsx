@@ -11,6 +11,7 @@ const IconColor = 'text-black'
 
 const Toolbar: React.FC = () => {
   const {state: {needSave, historyStatus, selectedModules}, executeAction} = useContext(EditorContext)
+  const hasSelectedModules = selectedModules.length > 0
 
   const actions: MenuItemType[] = [
     {id: 'save', action: 'saveFile', icon: 'save', disabled: !needSave, divide: true},
@@ -20,19 +21,37 @@ const Toolbar: React.FC = () => {
       id: 'delete',
       editorActionCode: 'module-delete',
       icon: 'trash',
-      disabled: selectedModules.length === 0,
+      disabled: !hasSelectedModules,
       divide: true,
     },
     // {id: 'add', icon: 'cross', disabled: false, divide: true},
-    {id: 'layerUp', editorActionCode: 'module-layer', editorActionData: 'up', icon: 'layers', disabled: false},
-    {id: 'layerDown', editorActionCode: 'module-layer', editorActionData: 'down', icon: 'layers', disabled: false},
-    {id: 'layerTop', editorActionCode: 'module-layer', editorActionData: 'top', icon: 'layers', disabled: false},
+    {
+      id: 'layerUp',
+      editorActionCode: 'module-layer',
+      editorActionData: 'up',
+      icon: 'layers',
+      disabled: !hasSelectedModules,
+    },
+    {
+      id: 'layerDown',
+      editorActionCode: 'module-layer',
+      editorActionData: 'down',
+      icon: 'layers',
+      disabled: !hasSelectedModules,
+    },
+    {
+      id: 'layerTop',
+      editorActionCode: 'module-layer',
+      editorActionData: 'top',
+      icon: 'layers',
+      disabled: !hasSelectedModules,
+    },
     {
       id: 'layerBottom',
       editorActionCode: 'module-layer',
       editorActionData: 'bottom',
       icon: 'layers',
-      disabled: false,
+      disabled: !hasSelectedModules,
       divide: true,
     },
     /*{id: 'group', icon: 'group', disabled: true},
@@ -50,16 +69,16 @@ const Toolbar: React.FC = () => {
 
           switch (id) {
             case 'layerUp':
-              Icon = <LayerUp size={IconSize} className={IconColor}/>
+              Icon = <LayerUp size={IconSize} />
               break
             case 'layerDown':
-              Icon = <LayerDown size={IconSize} className={IconColor}/>
+              Icon = <LayerDown size={IconSize} />
               break
             case 'layerTop':
-              Icon = <LayerToTop size={IconSize} className={IconColor}/>
+              Icon = <LayerToTop size={IconSize} />
               break
             case 'layerBottom':
-              Icon = <LayerToBottom size={IconSize} className={IconColor}/>
+              Icon = <LayerToBottom size={IconSize} />
               break
             default:
               Icon = <NamedIcon size={IconSize} iconName={icon!}/>

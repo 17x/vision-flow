@@ -16,16 +16,19 @@ const basicProps: BasicProps = {
 
 const ModifyColor = '#9b9a9a'
 
-export const LayerUp: React.FC<IconProps> = ({size = 24, ...props}) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
-       fill="none" {...basicProps} {...props}>
-    <path fill={ModifyColor} d="M12,10.87l-9.06,5.67,9.06,5.67,9.06-5.67-9.06-5.67Z"/>
-    <path fill={'#fff'}
-          d="M9.57,7.84c-2.21,1.38-4.42,2.76-6.64,4.15,3.02,1.89,6.04,3.78,9.06,5.67l9.06-5.67c-2.24-1.4-4.48-2.8-6.72-4.2"/>
-    <path
-      d="M11.96,1.8c.01,2.22.04,6.67.04,6.67M11.96,1.8c-1.87,1.12-3.75,2.25-5.62,3.37M12,1.8c2.09,1.3,3.4,2.13,5.55,3.47"/>
-  </svg>
-)
+export const LayerUp: React.FC<IconProps> = ({size = 24, ...props}) => {
+  console.log(props)
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} stroke="currentColor" viewBox="0 0 24 24"
+         fill="none" {...basicProps} {...props}>
+      <path fill={ModifyColor} d="M12,10.87l-9.06,5.67,9.06,5.67,9.06-5.67-9.06-5.67Z"/>
+      <path fill={'#fff'}
+            d="M9.57,7.84c-2.21,1.38-4.42,2.76-6.64,4.15,3.02,1.89,6.04,3.78,9.06,5.67l9.06-5.67c-2.24-1.4-4.48-2.8-6.72-4.2"/>
+      <path
+        d="M11.96,1.8c.01,2.22.04,6.67.04,6.67M11.96,1.8c-1.87,1.12-3.75,2.25-5.62,3.37M12,1.8c2.09,1.3,3.4,2.13,5.55,3.47"/>
+    </svg>
+  )
+}
 
 export const LayerDown: React.FC<IconProps> = ({size = 24, ...props}) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"

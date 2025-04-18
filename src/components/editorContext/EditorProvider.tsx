@@ -34,8 +34,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [showPrint, setShowPrint] = useState(false)
   const contextRootRef = useRef<HTMLDivElement>(null)
   const {startCreateFile, saveFileToLocal} = useContext(FileContext)
-  const lastSavedHistoryId = useRef(-1)
-  const currentHistoryId = useRef(-1)
+  const lastSavedHistoryId = useRef(0)
+  const currentHistoryId = useRef(0)
 
   const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
     dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})

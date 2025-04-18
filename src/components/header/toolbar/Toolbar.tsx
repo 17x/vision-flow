@@ -13,7 +13,7 @@ const Toolbar: React.FC = memo(() => {
     const {needSave, executeAction, historyStatus, selectedModules} = useContext(EditorContext)
 
     const actions: MenuItemType[] = [
-      {id: 'save', icon: 'save', disabled: !needSave, divide: true},
+      {id: 'save', action: 'saveFile', icon: 'save', disabled: !needSave, divide: true},
       {id: 'undo', editorActionCode: 'history-undo', icon: 'undo', disabled: !historyStatus.hasPrev},
       {id: 'redo', editorActionCode: 'history-redo', icon: 'redo', disabled: !historyStatus.hasNext, divide: true},
       {
@@ -73,7 +73,9 @@ const Toolbar: React.FC = memo(() => {
                       disabled={disabled}
                       title={tooltip}
                       onClick={() => {
-                        item.editorActionCode && executeAction(item.editorActionCode)
+                        if (item.editorActionCode || item.action) {
+                          executeAction(item.editorActionCode || item.action)
+                        }
                       }}
                       className={'relative ml-1 rounded-sm mr-1 flex items-center cursor-pointer justify-center w-6 h-6   hover:bg-gray-200  hover:opacity-100  disabled:hover:bg-transparent disabled:text-gray-200 disabled:cursor-default'}>
                 {Icon}

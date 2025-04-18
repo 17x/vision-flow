@@ -129,10 +129,13 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }
 
   const executeAction = <K extends EditorEventType>(type: K, data?: EditorEventData<K>) => {
+    // console.log(type)
+
     if (type === 'print') {
       setShowPrint(true)
       return
     }
+
     if (type === 'newFile') {
       startCreateFile()
       return

@@ -160,9 +160,9 @@ const FileProvider: FC = () => {
           {
             fileList.map(file => <div key={file.id}
                                       data-file-id={file.id}
-                                      className={'flex top-0 left-0 absolute outline-0 w-full h-full flex-col'}
+                                      className={'flex top-0 bg-white left-0 absolute outline-0 w-full h-full flex-col'}
                                       style={{
-                                        zIndex: file.id === currentFileId ? 20 : 10,
+                                        zIndex: file.id === currentFileId ? 200 : 100,
                                       }}>
               <EditorProvider file={file}/>
             </div>)

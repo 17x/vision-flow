@@ -76,7 +76,7 @@ export const LayerPanel = memo(({data, selected}: LayerPanelProps) => {
         <div ref={scrollRef}
              onScroll={handleScroll}
              className={'relative scrollbar-custom overflow-x-hidden overflow-y-auto p-2 border h-30 border-gray-200 select-none'}>
-          <div className={'absolute w-full top-0 left-0'} style={{
+          <div className={'absolute z-10 w-full top-0 left-0'} style={{
             height: data.length * ITEM_HEIGHT,
           }}></div>
           <div className={'w-full sticky top-0 left-0'}>{arr}</div>

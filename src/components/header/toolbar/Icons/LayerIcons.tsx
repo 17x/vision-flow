@@ -17,7 +17,6 @@ const basicProps: BasicProps = {
 const ModifyColor = '#9b9a9a'
 
 export const LayerUp: React.FC<IconProps> = ({size = 24, ...props}) => {
-  console.log(props)
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} stroke="currentColor" viewBox="0 0 24 24"
          fill="none" {...basicProps} {...props}>

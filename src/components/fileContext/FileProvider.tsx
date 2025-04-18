@@ -15,7 +15,6 @@ const FileProvider: FC = () => {
   const fileLen = fileMap.current.size
   const showCreateFile = fileLen === 0 || creating
   const STORAGE_ID = 'VISION_FLOW_FILE_MAP'
-  // const FILE_ID_PREFIX = 'VISION_FLOW_FILE_'
 
   useEffect(() => {
     readFileFromLocal()
@@ -111,7 +110,7 @@ const FileProvider: FC = () => {
     if (!savedFileMap) {
       savedFileMap = {}
     }
-    console.log(file)
+    // console.log(file)
     savedFileMap[file.id] = fileId
     localStorage.setItem(STORAGE_ID, JSON.stringify(savedFileMap))
     localStorage.setItem(fileId, JSON.stringify(file))

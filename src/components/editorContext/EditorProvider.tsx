@@ -43,11 +43,6 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     hasPrev: false,
     hasNext: false,
   })
-  /*  const currentHistoryStatus = useRef({
-      id: 0,
-      hasPrev: false,
-      hasNext: false,
-    })*/
   const [viewport, setViewport] = useState<ViewportInfo>({
     width: 0,
     height: 0,
@@ -61,12 +56,11 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const contextRootRef = useRef<HTMLDivElement>(null)
   const [focused, setFocused] = useState(true)
   const [lastSavedHistoryId, setLastSavedHistoryId] = useState(-1)
-  const [needSave, setNeedSave] = useState(false)
+  const [needSave, setNeedSave] = useState(true)
   const {currentFileId, startCreateFile, saveFileToLocal} = useContext(FileContext)
 
   const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
     setHistoryArray(historyTree!.toArray())
-
     // console.log(historyTree.current)
 
     if (historyTree.current) {
@@ -75,8 +69,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         hasPrev: !!historyTree.current.prev,
         hasNext: !!historyTree.current.next,
       }
-
-      setHistoryStatus(newHistoryStatus)
+      console.log(lastSavedHistoryId, historyStatus)
+      setHistoryStatus({...newHistoryStatus})
       setNeedSave(newHistoryStatus.id !== lastSavedHistoryId)
     }
   }
@@ -142,11 +136,10 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
 
     if (type === 'saveFile') {
-      console.log(historyStatus.id, lastSavedHistoryId)
-      console.log(needSave)
       if (needSave) {
         const editorData: FileType = editorRef.current!.exportToFiles() as FileType
 
+        console.log(historyStatus)
         editorData.name = file.name
         saveFileToLocal(editorData)
         setLastSavedHistoryId(historyStatus.id)
@@ -201,7 +194,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         editor.destroy()
       }
     }
-  }, [file])
+  }, [])
 
   return <EditorContext.Provider value={{
     needSave,
@@ -241,8 +234,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         </div>
         <div style={{width: 200}} className={'h-full flex-shrink-0 border-l border-gray-200'}>
           <PropPanel props={selectedProps}/>
-          <LayerPanel data={sortedModules}
-                      selected={selectedModules}/>
+          <LayerPanel data={sortedModules} selected={selectedModules}/>
           <HistoryPanel/>
         </div>
       </main>

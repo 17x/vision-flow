@@ -21,10 +21,32 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
     }
 
     setError('')
-
+    const fileId = uid()
     const newFile: FileType = {
-      id: uid(),
+      id: fileId,
       name: filename,
+      config: {
+        dpr: 2,
+        scale: 0,
+        offset: {x: 0, y: 0},
+        frame: {
+          id: fileId + '-frame',
+          width: 1000,
+          height: 1414.142857,
+          type: 'rectangle',
+          enableLine: true,
+          lineColor: '#000000',
+          lineWidth: 1,
+          opacity: 100,
+          shadow: false,
+          rotation: 0,
+          layer: -1,
+          fillColor: '#fff',
+          enableFill: true,
+          x: 500,
+          y: 707.0714285,
+        },
+      },
       data: [],
     }
     createFile(newFile)

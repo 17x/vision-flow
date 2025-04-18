@@ -51,23 +51,20 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   })
   const elementRef = useRef<HTMLDivElement>(null)
   const [focused, setFocused] = useState(true)
-  const {currentFileId, startCreateFile, saveFileToLocal} = useContext(FileContext)
+  const {currentFileId, startCreateFile, saveFileToLocal, setFileInitialized} = useContext(FileContext)
 
   useEffect(() => {
     let editor: Editor
-    if (containerRef.current) {
-      // const newUID = file.id
-      // console.log(file)
+    console.log(file)
+    if (containerRef.current && !file.initialized) {
+
       editor = new Editor({
         container: containerRef!.current,
         data: {
           id: file.id,
           modules: file.data,
         },
-        config: {
-          dpr: 2,
-          // dpr: 10,
-        },
+        config: file.config,
         events: {
           onInitialized: () => {
             // createMockData(editor)
@@ -113,6 +110,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       })
 
       editorRef.current = editor
+
+      setFileInitialized(file.id)
     }
 
     const element = elementRef.current

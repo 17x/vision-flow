@@ -2,7 +2,7 @@ import {FC, useEffect, useRef, useState} from 'react'
 import CreateFile from '../CreateFile.tsx'
 import FileContext, {FileMap, FileType} from './FileContext.tsx'
 import EditorProvider from '../editorContext/EditorProvider.tsx'
-import MOCK_FILE_MAP from '../../mock.ts'
+// import MOCK_FILE_MAP from '../../mock.ts'
 import Files from '../files/Files.tsx'
 import LanguageSwitcher from '../language/languageSwitcher.tsx'
 import {EditorExportFileType} from '../../engine/editor/type'
@@ -18,18 +18,21 @@ const FileProvider: FC = () => {
   const FILE_ID_PREFIX = 'VISION_FLOW_FILE_'
 
   useEffect(() => {
-    /*  if (MOCK_FILE_MAP.size > 0) {
-        fileMap.current = MOCK_FILE_MAP
-        updateFileList()
-
-        setCurrentFileId(listFileMap()[0].id)
-      }*/
-
     readFileFromLocal()
   }, [])
 
+  const setFileInitialized = (fileId: UID) => {
+    fileMap.current.forEach(file => {
+      if (file.id === fileId) {
+        file.initialized = true
+      }
+    })
+
+    updateFileList()
+  }
+
   const updateFileList = (): FileType[] => {
-    const arr = listFileMap()
+    const arr = Array.from(fileMap.current.values())
 
     setFileList(arr)
 
@@ -38,10 +41,9 @@ const FileProvider: FC = () => {
         switchFile(arr[0].id)
       }
     }
+
     return arr
   }
-
-  const listFileMap = () => Array.from(fileMap.current.values())
 
   const switchFile = (id: UID) => {
     // console.log(fileList)
@@ -53,7 +55,7 @@ const FileProvider: FC = () => {
     let len = fileList.length
 
     if (deletingFileIndex === -1) return
-
+    deleteFileFromLocal(deletingId)
     fileMap.current.delete(deletingId)
     updateFileList()
     fileList.splice(deletingFileIndex, 1)
@@ -79,6 +81,19 @@ const FileProvider: FC = () => {
     setCurrentFileId(file.id)
   }
 
+  const deleteFileFromLocal = (id: UID) => {
+    let item = localStorage.getItem(STORAGE_ID)
+    let savedFileMap = JSON.parse(item!)
+    const fileId = id
+
+    if (savedFileMap && savedFileMap[fileId]) {
+      delete savedFileMap[fileId]
+    }
+    localStorage.setItem(STORAGE_ID, JSON.stringify(savedFileMap))
+    localStorage.removeItem(fileId)
+    console.log('deleted')
+  }
+
   const startCreateFile = () => {
     setCreating(true)
   }
@@ -90,7 +105,7 @@ const FileProvider: FC = () => {
   const saveFileToLocal = (file: EditorExportFileType) => {
     let item = localStorage.getItem(STORAGE_ID)
     let savedFileMap = JSON.parse(item!)
-    const fileId = FILE_ID_PREFIX + file.id
+    const fileId = file.id
 
     if (!savedFileMap) {
       savedFileMap = {}
@@ -112,7 +127,7 @@ const FileProvider: FC = () => {
         const fileRawData = localStorage.getItem(fileStorageKey as string)
         const fileData = JSON.parse(fileRawData!)
 
-      console.log(fileData)
+        console.log(fileData)
         fileMap.current.set(fileData.id, fileData)
       })
     }
@@ -127,6 +142,7 @@ const FileProvider: FC = () => {
       creating,
       currentFileId,
       switchFile,
+      setFileInitialized,
       closeFile,
       createFile,
       startCreateFile,
@@ -139,12 +155,13 @@ const FileProvider: FC = () => {
           <LanguageSwitcher/>
         </div>
 
-        <div className={'flex-1 overflow-hidden min-h-[600px]'}>
+        <div className={'flex-1 overflow-hidden min-h-[600px] relative'}>
           {
             fileList.map(file => <div key={file.id}
-                                      className={'outline-0 w-full h-full flex flex-col'}
+                                      data-file-id={file.id}
+                                      className={'flex top-0 left-0 absolute outline-0 w-full h-full flex-col'}
                                       style={{
-                                        display: file.id === currentFileId ? 'flex' : 'none',
+                                        zIndex: file.id === currentFileId ? 20 : 10,
                                       }}>
               <EditorProvider file={file}/>
             </div>)

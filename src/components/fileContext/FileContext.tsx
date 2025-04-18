@@ -3,6 +3,7 @@ import {EditorExportFileType} from '../../engine/editor/type'
 
 export interface FileType extends EditorExportFileType {
   name: string
+  initialized?: boolean
 }
 
 export type FileMap = Map<string, FileType>;
@@ -15,6 +16,7 @@ interface FileContextType {
   switchFile: (id: UID) => void
   closeFile: (id: UID) => void
   createFile: (v: FileType) => void
+  setFileInitialized: (id:UID) => void
   handleCreating: (v: boolean) => void
   saveFileToLocal: (v: EditorExportFileType) => void
   startCreateFile: VoidFunction
@@ -42,6 +44,8 @@ const FileContext = createContext<FileContextType>({
   createFile: () => {
   },
   handleCreating: () => {
+  },
+  setFileInitialized: () => {
   },
   startCreateFile: () => {
   },

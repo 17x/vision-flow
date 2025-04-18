@@ -13,6 +13,7 @@ import handleKeyUp from './eventHandlers/keyUp.ts'
 import handleWheel from './eventHandlers/wheel.ts'
 import handlePointerMove from './eventHandlers/pointerMove.ts'
 import handleContextMenu from './eventHandlers/contextMenu.ts'
+import Rectangle from '../../core/modules/shapes/rectangle.ts'
 
 export function createViewport(this: Editor): Viewport {
   const {
@@ -80,7 +81,7 @@ export function createViewport(this: Editor): Viewport {
     spaceKeyDown: false,
     zooming: false,
     dpr: this.config.dpr,
-    frame: createFrame('A4', this.id),
+    frame: new Rectangle({...this.config.frame}),
     offset: {x: 0, y: 0},
     viewportRect,
     worldRect,

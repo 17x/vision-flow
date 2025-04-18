@@ -29,6 +29,7 @@ import {EditorEventType} from './actions/type'
 import {zoomAtPoint} from './viewport/helper.ts'
 import deduplicateObjectsByKeyValue from '../core/renderer/deduplicate.ts'
 import resetCanvas from './viewport/resetCanvas.tsx'
+import {RectangleProps} from '../core/modules/shapes/rectangle.ts'
 
 export interface EditorDataProps {
   id: UID;
@@ -37,6 +38,9 @@ export interface EditorDataProps {
 
 export interface EditorConfig {
   dpr: number;
+  frame: RectangleProps;
+  offset: { x: number, y: number };
+  scale: number
 }
 
 export interface EditorInterface {
@@ -95,7 +99,6 @@ class Editor {
     this.viewport = createViewport.call(this)
     this.moduleMap = new Map()
     const modules: ModuleMap = this.batchCreate(data.modules)
-
     modules.forEach((module) => {
       this.moduleMap.set(module.id, module)
     })

@@ -24,7 +24,10 @@ export function initEditor(this: Editor) {
     if (!this.initialized) {
       this.initialized = true
       dispatch('world-zoom', 'fit')
+      dispatch('module-updated')
       this.events.onInitialized?.()
+      this.events.onHistoryUpdated?.(this.history)
+      this.events.onModulesUpdated?.(this.moduleMap)
     } else {
       dispatch('world-updated')
     }

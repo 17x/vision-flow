@@ -1,16 +1,19 @@
 import {LayerDown, LayerToBottom, LayerToTop, LayerUp} from './Icons/LayerIcons.tsx'
-import {Fragment, memo, ReactNode, useContext} from 'react'
+import {Fragment, memo, ReactNode, useContext, useReducer, useState} from 'react'
 import EditorContext from '../../editorContext/EditorContext.tsx'
 import {NamedIcon} from '../../lib/icon/icon.tsx'
 import {t} from 'i18next'
 import {I18nHistoryDataItem} from '../../../i18n/type'
 import {MenuItemType} from '../menu/type'
+import {EditorReducer, initialEditorState} from '../../editorContext/reducer/reducer.ts'
 
 const IconSize = 20
 const IconColor = 'text-black'
 
 const Toolbar: React.FC = memo(() => {
-    const {needSave, executeAction, historyStatus, selectedModules} = useContext(EditorContext)
+    const {executeAction} = useContext(EditorContext)
+    const [{needSave, historyStatus, selectedModules}] = useReducer(EditorReducer, initialEditorState)
+    // const {needSave, historyStatus, selectedModules} = state
 
     const actions: MenuItemType[] = [
       {id: 'save', action: 'saveFile', icon: 'save', disabled: !needSave, divide: true},

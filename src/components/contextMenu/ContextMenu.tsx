@@ -13,7 +13,7 @@ export interface ContextMenuProps {
 
 export const ContextMenu: FC<ContextMenuProps> = memo(({position, onClose}) => {
   const {t} = useTranslation()
-  const {selectedModules, copiedItems, historyStatus, executeAction} = useContext(EditorContext)
+  const {state: {selectedModules, copiedItems, historyStatus}, executeAction} = useContext(EditorContext)
   const [menuItems, setMenuItems] = useState<MenuItemType[]>([])
   const groupClass = 'absolute bg-white shadow-lg rounded-md border border-gray-200 py-1 z-50'
 

@@ -8,6 +8,7 @@ interface StatusBarProps {
 }
 
 export const StatusBar: React.FC<StatusBarProps> = ({className = '', worldPoint}) => {
+
   const {viewport, executeAction} = useContext(EditorContext)
   if (!viewport) return null
 

@@ -127,7 +127,7 @@ const FileProvider: FC = () => {
         const fileRawData = localStorage.getItem(fileStorageKey as string)
         const fileData = JSON.parse(fileRawData!)
 
-        console.log(fileData)
+        // console.log(fileData)
         fileMap.current.set(fileData.id, fileData)
       })
     }

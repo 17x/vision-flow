@@ -1,4 +1,4 @@
-import {FC, useContext, useEffect, useRef, useState} from 'react'
+import {FC, useContext, useEffect, useReducer, useRef, useState} from 'react'
 import Editor from '../../engine/editor/editor.ts'
 import ShortcutListener from '../ShortcutListener.tsx'
 import {ModulePanel} from '../modulePanel/ModulePanel.tsx'
@@ -20,48 +20,23 @@ import {
   SelectionUpdatedHandler,
   ViewportUpdatedHandler, WorldMouseMoveUpdatedHandler,
 } from '../../engine/editor/type'
+import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
 
 const EditorProvider: FC<{ file: FileType }> = ({file}) => {
+  const [state, dispatch] = useReducer(EditorReducer, initialEditorState)
   const editorRef = useRef<Editor>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const [historyArray, setHistoryArray] = useState<HistoryNode[]>([])
   const [worldPoint, setWorldPoint] = useState<Point>({x: 0, y: 0})
-  // const worldPoint = useRef<Point>({x: 0, y: 0})
   const [sortedModules, setSortedModules] = useState<ModuleInstance[]>([])
-  const [selectedProps, setSelectedProps] = useState<ModuleProps>(null)
-  const [selectedModules, setSelectedModules] = useState<UID[]>([])
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
-  const [copiedItems, setCopiedItems] = useState<ModuleProps[]>([])
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const [showPrint, setShowPrint] = useState(false)
-  const [historyStatus, setHistoryStatus] = useState<{
-    id: number
-    hasPrev: boolean
-    hasNext: boolean
-  }>({
-    id: 0,
-    hasPrev: false,
-    hasNext: false,
-  })
-  const [viewport, setViewport] = useState<ViewportInfo>({
-    width: 0,
-    height: 0,
-    offsetX: 0,
-    offsetY: 0,
-    scale: 1,
-    dx: 0,
-    dy: 0,
-    status: '',
-  })
   const contextRootRef = useRef<HTMLDivElement>(null)
-  const [focused, setFocused] = useState(true)
   const [lastSavedHistoryId, setLastSavedHistoryId] = useState(-1)
-  const [needSave, setNeedSave] = useState(true)
   const {currentFileId, startCreateFile, saveFileToLocal} = useContext(FileContext)
 
   const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
-    setHistoryArray(historyTree!.toArray())
-    // console.log(historyTree.current)
+    dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})
 
     if (historyTree.current) {
       const newHistoryStatus = {
@@ -69,28 +44,25 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         hasPrev: !!historyTree.current.prev,
         hasNext: !!historyTree.current.next,
       }
-      console.log(lastSavedHistoryId, historyStatus)
-      setHistoryStatus({...newHistoryStatus})
-      setNeedSave(newHistoryStatus.id !== lastSavedHistoryId)
+
+      dispatch({type: 'SET_HISTORY_STATUS', payload: newHistoryStatus})
+      dispatch({type: 'SET_NEED_SAVE', payload: newHistoryStatus.id !== lastSavedHistoryId})
     }
   }
-
+  // console.log(state)
   const onModulesUpdated: ModulesUpdatedHandler = (moduleMap) => {
-    // console.log(Array.from(moduleMap.values()))
     const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
 
     setSortedModules(arr)
   }
 
   const onSelectionUpdated: SelectionUpdatedHandler = (selected, props) => {
-    // console.log('onSelectionUpdated')
-    setSelectedModules(Array.from(selected))
-    setSelectedProps(props)
-    // console.log(selected,props)
+    dispatch({type: 'SET_SELECTED_MODULES', payload: Array.from(selected)})
+    dispatch({type: 'SET_SELECTED_PROPS', payload: props})
   }
 
   const onViewportUpdated: ViewportUpdatedHandler = (viewportInfo) => {
-    setViewport(viewportInfo)
+    dispatch({type: 'SET_VIEWPORT', payload: viewportInfo})
   }
 
   const onWorldMouseMove: WorldMouseMoveUpdatedHandler = (point) => {
@@ -103,18 +75,20 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }
 
   const onModuleCopied: ModuleCopiedHandler = (items) => {
-    setCopiedItems(items)
+    // setCopiedItems(items)
+    dispatch({type: 'SET_COPIED_ITEMS', payload: items})
   }
 
   const checkInside = (e) => {
     if (contextRootRef.current) {
-      setFocused(contextRootRef!.current?.contains(e.target))
+      // setFocused(contextRootRef!.current?.contains(e.target))
+      // console.log(file.id, contextRootRef!.current?.contains(e.target))
+      dispatch({type: 'SET_FOCUSED', payload: contextRootRef!.current?.contains(e.target)})
     }
   }
 
-  const handleFocus = () => setFocused(true)
-
-  const handleBlur = () => setFocused(false)
+  const handleFocus = () => dispatch({type: 'SET_FOCUSED', payload: true})
+  const handleBlur = () => dispatch({type: 'SET_FOCUSED', payload: false})
 
   const applyHistoryNode = (node: HistoryNode) => {
     if (editorRef.current) {
@@ -136,14 +110,15 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
 
     if (type === 'saveFile') {
-      if (needSave) {
+      console.log(state.historyStatus)
+      if (state.needSave) {
         const editorData: FileType = editorRef.current!.exportToFiles() as FileType
 
-        console.log(historyStatus)
         editorData.name = file.name
         saveFileToLocal(editorData)
-        setLastSavedHistoryId(historyStatus.id)
-        setNeedSave(false)
+        setLastSavedHistoryId(state.historyStatus.id)
+        // setNeedSave(false)
+        dispatch({type: 'SET_NEED_SAVE', payload: false})
       }
     }
 
@@ -153,6 +128,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   useEffect(() => {
     let editor: Editor
     if (containerRef.current) {
+      dispatch({type: 'SET_ID', payload: file.id})
       editor = new Editor({
         container: containerRef!.current,
         data: {
@@ -197,22 +173,15 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }, [])
 
   return <EditorContext.Provider value={{
-    needSave,
-    focused,
-    historyArray,
-    // worldPoint: worldPoint.current,
-    selectedModules,
-    selectedProps,
-    historyStatus,
-    copiedItems,
-    viewport,
+    state,
+    // dispatch,
     editorRef,
     applyHistoryNode,
     executeAction,
   }}>
-    <div ref={contextRootRef} data-focused={focused} autoFocus={true} tabIndex={0}
+    <div ref={contextRootRef} data-focused={state.focused} autoFocus={true} tabIndex={0}
          className={'outline-0 w-full h-full flex flex-col'}>
-      {currentFileId === file.id && <ShortcutListener/>}
+      <ShortcutListener/>
 
       <Header/>
 
@@ -224,7 +193,9 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
                editor-container={'true'}
                className={'relative overflow-hidden flex w-full h-full'}
           ></div>
+
           <StatusBar worldPoint={worldPoint}/>
+
           {
             showContextMenu &&
               <ContextMenu position={contextMenuPosition} onClose={() => {
@@ -233,8 +204,8 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           }
         </div>
         <div style={{width: 200}} className={'h-full flex-shrink-0 border-l border-gray-200'}>
-          <PropPanel props={selectedProps}/>
-          <LayerPanel data={sortedModules} selected={selectedModules}/>
+          <PropPanel props={state.selectedProps!}/>
+          <LayerPanel data={sortedModules} selected={state.selectedModules}/>
           <HistoryPanel/>
         </div>
       </main>

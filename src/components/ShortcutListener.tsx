@@ -1,10 +1,10 @@
-import React, {memo, useContext, useEffect} from 'react'
+import React, {memo, useContext, useEffect, useReducer} from 'react'
 import {ModuleMoveDirection} from '../engine/editor/type'
 import EditorContext from './editorContext/EditorContext.tsx'
 import {EditorEventMap, EditorEventType} from '../engine/editor/actions/type'
 
-const ShortcutListener: React.FC = () => {
-    const {executeAction, focused} = useContext(EditorContext)
+const ShortcutListener: React.FC = memo(() => {
+    const {state: {focused}, executeAction} = useContext(EditorContext)
 
     const handleKeyPress = (e: KeyboardEvent) => {
       if (!focused) return
@@ -113,6 +113,6 @@ const ShortcutListener: React.FC = () => {
     }, [focused])
 
     return null
-  }
-
+  },
+)
 export default ShortcutListener

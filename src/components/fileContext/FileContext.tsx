@@ -23,17 +23,7 @@ interface FileContextType {
 }
 
 const FileContext = createContext<FileContextType>({
-  fileMap: new Map([
-    [
-      'fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb',
-      {
-        'id': 'fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb',
-        'name': 'Untitled 1',
-        'config': {},
-        'data': {},
-      },
-    ],
-  ]),
+  fileMap: new Map(),
   fileList: [],
   currentFileId: 'fbbeddd8-0996-4ebb-8c1e-9d1ea5312ebb',
   creating: false,

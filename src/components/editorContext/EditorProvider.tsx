@@ -2,7 +2,7 @@ import {FC, useContext, useEffect, useReducer, useRef, useState} from 'react'
 import Editor from '../../engine/editor/editor.ts'
 import ShortcutListener from '../ShortcutListener.tsx'
 import {ModulePanel} from '../modulePanel/ModulePanel.tsx'
-import {StatusBar} from '../statusBar/StatusBar.tsx'
+import {PointRef, StatusBar, StatusBarRef} from '../statusBar/StatusBar.tsx'
 import {HistoryNode} from '../../engine/editor/history/DoublyLinkedList.ts'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 import Header from '../header/Header.tsx'
@@ -26,6 +26,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [state, dispatch] = useReducer(EditorReducer, initialEditorState)
   const editorRef = useRef<Editor>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const worldPointRef = useRef<PointRef | null>(null)
   // const [worldPoint, setWorldPoint] = useState<Point>({x: 0, y: 0})
   const [sortedModules, setSortedModules] = useState<ModuleInstance[]>([])
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
@@ -46,7 +47,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         hasNext: !!historyTree.current.next,
       }
       // console.log(state.historyStatus)
-      console.log(newHistoryStatus.id, lastSavedHistoryId.current)
+      // console.log(newHistoryStatus.id, lastSavedHistoryId.current)
       currentHistoryId.current = newHistoryStatus.id
       dispatch({type: 'SET_HISTORY_STATUS', payload: newHistoryStatus})
       dispatch({type: 'SET_NEED_SAVE', payload: newHistoryStatus.id !== lastSavedHistoryId.current})
@@ -69,7 +70,11 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }
 
   const onWorldMouseMove: WorldMouseMoveUpdatedHandler = (point) => {
-    dispatch({type: 'SET_WORLD_POINT', payload: point})
+    // dispatch({type: 'SET_WORLD_POINT', payload: point})
+    // worldPoint.current = point
+    if (worldPointRef.current) {
+      worldPointRef.current.set(point)
+    }
   }
 
   const onContextMenu: ContextMenuHandler = (position) => {
@@ -89,8 +94,14 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
     }
   }
 
-  const handleFocus = () => dispatch({type: 'SET_FOCUSED', payload: true})
-  const handleBlur = () => dispatch({type: 'SET_FOCUSED', payload: false})
+  const handleFocus = () => {
+    console.log('focus')
+    dispatch({type: 'SET_FOCUSED', payload: true})
+  }
+  const handleBlur = () => {
+    console.log('blured')
+    dispatch({type: 'SET_FOCUSED', payload: false})
+  }
 
   const applyHistoryNode = (node: HistoryNode) => {
     if (editorRef.current) {
@@ -193,7 +204,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
                className={'relative overflow-hidden flex w-full h-full'}
           ></div>
 
-          <StatusBar/>
+          <StatusBar ref={worldPointRef}/>
 
           {
             showContextMenu &&

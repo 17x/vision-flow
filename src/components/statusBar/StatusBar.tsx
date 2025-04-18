@@ -1,9 +1,26 @@
 import ZoomSelect from './zoom'
-import {useContext} from 'react'
+import {FC, Ref, useContext, useImperativeHandle, useState} from 'react'
 import EditorContext from '../editorContext/EditorContext.tsx'
 
-export const StatusBar = () => {
-  const {state: {viewport, worldPoint}, executeAction} = useContext(EditorContext)
+export interface PointRef {
+  set: (point: Point) => void;
+}
+
+type PointRefType = Ref<PointRef>
+
+export const StatusBar: FC<{ ref: PointRefType | null }> = ({ref}) => {
+  const {state: {viewport}, executeAction} = useContext(EditorContext)
+  const [worldPoint, setWorldPoint] = useState({x: 0, y: 0})
+
+  useImperativeHandle(ref, () => {
+    return {
+      set(point: Point) {
+        setWorldPoint(point)
+        // worldPoint.current = point
+      },
+    }
+  }, [])
+
   if (!viewport) return null
 
   return (

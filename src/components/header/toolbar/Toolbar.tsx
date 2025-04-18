@@ -40,7 +40,7 @@ const Toolbar: React.FC = memo(() => {
       {id: 'lock', icon: 'lock', disabled: false},
       {id: 'unlock', icon: 'unlock', disabled: true},*/
     ]
-
+    console.log(9)
     return <div className={'border-b border-gray-200 box-border'}>
       <div className={'h-10 inline-flex pl-4 items-center'}>
         {

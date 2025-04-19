@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "fource build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "fresh-link": "npm unlink @lite-u/editor && npm link @lite-u/editor"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.10",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@types/node": "^22.14.1",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react-swc": "^3.5.0",

@@ -1,6 +1,3 @@
-import {HistoryNode} from '../../../engine/editor/history/DoublyLinkedList.ts'
-
-// import {ViewportInfo} from '../../../engine/editor/type'
 
 export interface EditorStateType {
   id: UID

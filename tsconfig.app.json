@@ -22,12 +22,28 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "baseUrl": ".",
+//    "types": [],
+    "paths": {
+//      "@lite/editor/*": ["../@lite/editor/src/*"]
+
+      // Alias for your plugin if needed
+      /*"@lite-u/editor/": [
+        "node_modules/@lite-u/editor"
+      ]*/
+
+      //      "@lite-u/editor": ["node_modules/@lite-u/editor"],
+//            "@lite-u/editor": ["node_modules/@lite-u/editor/dist"]
+    }
   },
   "include": [
-    "src"
+    "src",
+//    "node_modules/@lite-u/editor/dist/**"
+    //    "../@lite-u/editor/src/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules/**",
+//    "!node_modules/@lite-u/editor/dist/**"
   ]
 }

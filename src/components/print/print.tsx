@@ -1,5 +1,4 @@
 import {FC, memo, useEffect, useRef, useState} from 'react'
-import Editor from '../../engine/editor/editor.ts'
 
 export const Print: FC<{
   onClose: VoidFunction,

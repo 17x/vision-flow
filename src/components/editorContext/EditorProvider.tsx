@@ -1,9 +1,7 @@
 import {FC, useContext, useEffect, useReducer, useRef, useState} from 'react'
-import Editor from '../../engine/editor/editor.ts'
 import ShortcutListener from '../ShortcutListener.tsx'
 import {ModulePanel} from '../modulePanel/ModulePanel.tsx'
 import {PointRef, StatusBar} from '../statusBar/StatusBar.tsx'
-import {HistoryNode} from '../../engine/editor/history/DoublyLinkedList.ts'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 import Header from '../header/Header.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
@@ -11,16 +9,9 @@ import FileContext, {FileType} from '../fileContext/FileContext.tsx'
 import EditorContext from './EditorContext.tsx'
 import PropPanel from '../propPanel/PropPanel.tsx'
 import {ContextMenu} from '../contextMenu/ContextMenu.tsx'
-import {EditorEventData, EditorEventType} from '../../engine/editor/actions/type'
 import {Print} from '../print/print.tsx'
-import {
-  ContextMenuHandler,
-  HistoryUpdatedHandler, ModuleCopiedHandler,
-  ModulesUpdatedHandler,
-  SelectionUpdatedHandler,
-  ViewportUpdatedHandler, WorldMouseMoveUpdatedHandler,
-} from '../../engine/editor/type'
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
+import {Editor, ModuleInstance} from '@lite-u/editor'
 
 const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [state, dispatch] = useReducer(EditorReducer, initialEditorState)

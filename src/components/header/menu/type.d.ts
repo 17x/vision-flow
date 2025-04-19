@@ -1,4 +1,3 @@
-import {EditorEventType} from '../../../engine/editor/actions/type'
 
 export interface MenuItemType {
   id: string

@@ -5,7 +5,6 @@ import EditorProvider from '../editorContext/EditorProvider.tsx'
 // import MOCK_FILE_MAP from '../../mock.ts'
 import Files from '../files/Files.tsx'
 import LanguageSwitcher from '../language/languageSwitcher.tsx'
-import {EditorExportFileType} from '../../engine/editor/type'
 
 const FileProvider: FC = () => {
   const fileMap = useRef<FileMap>(new Map())
@@ -18,7 +17,6 @@ const FileProvider: FC = () => {
 
   useEffect(() => {
     readFileFromLocal()
-
 
   }, [])
 
@@ -49,10 +47,6 @@ const FileProvider: FC = () => {
   const switchFile = (id: UID) => {
     // console.log(fileList)
     setCurrentFileId(id)
-
-    setTimeout(() => {
-      console.log(document.activeElement)
-    }, 1000)
   }
 
   const closeFile = (deletingId: UID) => {

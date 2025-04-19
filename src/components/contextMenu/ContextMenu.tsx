@@ -1,4 +1,4 @@
-import {FC, memo, useContext, useEffect, useState} from 'react'
+import {FC, useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {I18nHistoryDataItem} from '../../i18n/type'
 import EditorContext from '../editorContext/EditorContext.tsx'
@@ -28,16 +28,16 @@ export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
       // {id: 'ungroup', disabled: noSelectedModule},
       {id: 'undo', editorActionCode: 'history-undo', disabled: !historyStatus.hasPrev},
       {id: 'redo', editorActionCode: 'history-redo', disabled: !historyStatus.hasNext},
-     /* {
-        id: 'layer',
-        disabled: noSelectedModule,
-        children: [
-          {id: 'bringForward', editorActionCode: 'module-layer', editorActionData: 'up', disabled: noSelectedModule},
-          {id: 'sendBackward', editorActionCode: 'module-layer', editorActionData: 'down', disabled: noSelectedModule},
-          {id: 'bringToFront', editorActionCode: 'module-layer', editorActionData: 'top', disabled: noSelectedModule},
-          {id: 'sendToBack', editorActionCode: 'module-layer', editorActionData: 'bottom', disabled: noSelectedModule},
-        ],
-      },*/
+      /* {
+         id: 'layer',
+         disabled: noSelectedModule,
+         children: [
+           {id: 'bringForward', editorActionCode: 'module-layer', editorActionData: 'up', disabled: noSelectedModule},
+           {id: 'sendBackward', editorActionCode: 'module-layer', editorActionData: 'down', disabled: noSelectedModule},
+           {id: 'bringToFront', editorActionCode: 'module-layer', editorActionData: 'top', disabled: noSelectedModule},
+           {id: 'sendToBack', editorActionCode: 'module-layer', editorActionData: 'bottom', disabled: noSelectedModule},
+         ],
+       },*/
     ]
     // console.log(selectedModules)
     setMenuItems(ITEMS)

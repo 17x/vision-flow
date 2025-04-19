@@ -1,5 +1,5 @@
 import {createContext} from 'react'
-import {EditorExportFileType} from '../../engine/editor/type'
+import {EditorExportFileType} from '@lite/editor/type'
 
 export interface FileType extends EditorExportFileType {
   name: string

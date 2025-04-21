@@ -5,7 +5,6 @@ import {
   generateBoundingRectFromTwoPoints,
   throttle,
 } from '../../core/utils.ts'
-import {createFrame} from './helper.ts'
 import handleMouseDown from './eventHandlers/mouseDown.ts'
 import handleMouseUp from './eventHandlers/mouseUp.ts'
 import handleKeyDown from './eventHandlers/keyDown.ts'
@@ -32,6 +31,7 @@ export function createViewport(this: Editor): Viewport {
   const eventsController = new AbortController()
   const resizeObserver = new ResizeObserver(
     throttle(() => {
+      console.log('resize')
       this.action.dispatch('world-resized')
     }, 200),
   )

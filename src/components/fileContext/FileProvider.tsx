@@ -50,9 +50,9 @@ const FileProvider: FC = () => {
     // console.log(fileList)
     setCurrentFileId(id)
 
-    setTimeout(() => {
+    /*setTimeout(() => {
       console.log(document.activeElement)
-    }, 1000)
+    }, 1000)*/
   }
 
   const closeFile = (deletingId: UID) => {

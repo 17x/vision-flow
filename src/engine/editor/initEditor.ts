@@ -1,12 +1,12 @@
 import resetCanvas from './viewport/resetCanvas.tsx'
-import {HistoryModuleChangeItem, HistoryModuleChangeProps, ModuleModifyData, SelectionModifyData} from './actions/type'
+import {HistoryModuleChangeItem, ModuleModifyData, SelectionModifyData} from './actions/type'
 import Editor from './editor.ts'
 import {redo} from './history/redo.ts'
 import {undo} from './history/undo.ts'
 import {pick} from './history/pick.ts'
 import {HistoryOperation} from './history/type'
 import {updateSelectionCanvasRenderData} from './selection/helper.ts'
-import zoom from '../../components/statusBar/zoom'
+// import zoom from '../../components/statusBar/zoom'
 import {fitRectToViewport} from './viewport/helper.ts'
 
 export function initEditor(this: Editor) {

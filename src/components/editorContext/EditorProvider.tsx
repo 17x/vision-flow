@@ -15,10 +15,12 @@ import {EditorEventData, EditorEventType} from '../../engine/editor/actions/type
 import {Print} from '../print/print.tsx'
 import {
   ContextMenuHandler,
-  HistoryUpdatedHandler, ModuleCopiedHandler,
+  HistoryUpdatedHandler,
+  ModuleCopiedHandler,
   ModulesUpdatedHandler,
   SelectionUpdatedHandler,
-  ViewportUpdatedHandler, WorldMouseMoveUpdatedHandler,
+  ViewportUpdatedHandler,
+  WorldMouseMoveUpdatedHandler,
 } from '../../engine/editor/type'
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
 
@@ -154,6 +156,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
           event.preventDefault();
           // return false;
         }*/
+
     if (containerRef.current && !editorRef.current) {
       editor = new Editor({
         container: containerRef!.current,
@@ -163,7 +166,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         },
         config: file.config,
         events: {
-          // onInitialized: () => { },
+          onInitialized: () => { },
           onHistoryUpdated,
           onModulesUpdated,
           onSelectionUpdated,

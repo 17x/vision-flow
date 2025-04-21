@@ -20,8 +20,6 @@ export const StatusBar: FC<{ ref: PointRefType | null }> = ({ref}) => {
     }
   }, [])
 
-  if (!viewport) return null
-
   return (
     <footer className={'w-full h-8 flex justify-between pr-1 items-center border-t border-gray-200'}>
       {

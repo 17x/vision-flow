@@ -117,7 +117,7 @@ class Editor {
     return batchCreate.call(this, moduleDataList)
   }
 
-  batchAdd(modules: ModuleMap, callback): ModuleMap {
+  batchAdd(modules: ModuleMap, callback?): ModuleMap {
     return batchAdd.call(this, modules, callback)
   }
 

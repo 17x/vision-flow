@@ -1,10 +1,11 @@
 import {FC, FormEvent, useContext, useRef, useState} from 'react'
 import uid from '../../utilities/Uid.ts'
 import FileContext, {FileType} from '../fileContext/FileContext.tsx'
-import {Input} from '@lite-u/ui'
+import {Input, Modal} from '@lite-u/ui'
 
 const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', onBgClick}) => {
   const formRef = useRef<HTMLFormElement>(null)
+
   const {createFile, handleCreating} = useContext(FileContext)
   const [error, setError] = useState('')
   const validateFileName = (str: string) => {
@@ -54,20 +55,13 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
     handleCreating(false)
   }
 
-  return <div
-    className={`fixed top-0 left-0 z-300 w-full h-full flex flex-row items-center justify-center text-sm select-none`}>
-    <div
-      style={{
-        backgroundColor: bg,
-      }}
-      onClick={() => onBgClick && onBgClick()}
-      className={'absolute top-0 left-0 w-full h-full flex flex-row items-center justify-center text-sm select-none'}>
-    </div>
-
+  return <Modal onBackdropClick={() => onBgClick && onBgClick()}>
+    <div>998</div>
     <div>
       Page preset
       <Input type={'number'}/>
     </div>
+
     <form
       ref={formRef}
       className={'relative w-100 min-h-30 z-20 p-4 bg-white rounded-xl shadow-2xl'}
@@ -85,7 +79,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
         </button>
       </label>
     </form>
-  </div>
+  </Modal>
 }
 
 export default CreateFile

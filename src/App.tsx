@@ -1,9 +1,12 @@
 import './components/comp.css'
-import "./i18n/config.ts"
-import FileProvider from "./components/fileContext/FileProvider.tsx"
+import './i18n/config.ts'
+import FileProvider from './components/fileContext/FileProvider.tsx'
+import ThemeProvider from '@lite-u/ui/theme'
 
 function App() {
-  return <FileProvider/>
+  return <ThemeProvider>
+    <FileProvider/>
+  </ThemeProvider>
 }
 
 export default App

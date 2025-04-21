@@ -24,6 +24,25 @@ const modules: { className: string, props: Partial<ModuleProps> }[] = [
       r1: 100,
       r2: 100,
     },
+  }, {
+    className: 'w-10 h-10',
+    props: {
+      type: 'text',
+      x: 200,
+      y: 200,
+      width: 100,
+      height: 50,
+    },
+  }, {
+    className: 'w-10 h-10',
+    props: {
+      type: 'image',
+      x: 200,
+      y: 200,
+      width: 100,
+      height: 50,
+      src: '',
+    },
   },
 ]
 
@@ -42,28 +61,52 @@ export const ModuleList: React.FC<ModulePanelProps> = () => {
 
                onClick={() => {
                  const props = module.props as ModuleProps
-                 props.x = getRandomNumber(1000)
-                 props.y = getRandomNumber(2000)
-                 props.lineWidth = 1
-                 props.lineColor = getRandomHexColor()
-                 props.fillColor = getRandomHexColor()
 
                  if (props.type === 'rectangle') {
+                   props.x = getRandomNumber(1000)
+                   props.y = getRandomNumber(2000)
+                   props.lineWidth = 1
+                   props.lineColor = getRandomHexColor()
+                   props.fillColor = getRandomHexColor()
                    props.width = getRandomNumber(200)
                    props.height = getRandomNumber(200)
                  }
 
                  if (props.type === 'ellipse') {
+                   props.x = getRandomNumber(1000)
+                   props.y = getRandomNumber(2000)
+                   props.lineWidth = 1
+                   props.lineColor = getRandomHexColor()
+                   props.fillColor = getRandomHexColor()
                    props.r1 = getRandomNumber(200)
                    props.r1 = getRandomNumber(200)
+                 }
+
+                 if (props.type === 'text') {
+                   props.x = 200
+                   props.y = 200
+                   props.lineWidth = 1
+                   props.lineColor = 'transparent'
+                   props.fillColor = 'transparent'
+                   props.textColor = 'blue'
+                   props.content = 'Hello Text'
+                 }
+
+                 if (props.type === 'image') {
+                   props.x = 200
+                   props.y = 200
+                   props.lineWidth = 1
+                   props.lineColor = 'transparent'
+                   props.fillColor = 'transparent'
+                   props.textColor = 'blue'
+                   props.src = 'https://cdn.pixabay.com/photo/2018/08/04/11/30/draw-3583548_1280.png'
                  }
 
                  executeAction('module-add', [props])
                }}
           >
-            <div style={{
-              border: '1px solid #dfdfdf',
-            }} className={module.className}></div>
+            <div
+              className={'flex items-center justify-center border text-xs ' + module.className}>{module.props.type}</div>
           </div>
         ))
       }

@@ -1,25 +1,13 @@
 import {EditorExportFileType, EventHandlers} from './type'
 import History from './history/history.ts'
 import Action from './actions/actions.ts'
-import {
-  generateBoundingRectFromTwoPoints,
-  rectsOverlap,
-} from '../core/utils.ts'
-import {
-  batchAdd,
-  batchCopy,
-  batchCreate,
-  batchDelete,
-  batchModify,
-  batchMove,
-} from './modules/moduleModify.ts'
+import {generateBoundingRectFromTwoPoints, rectsOverlap} from '../core/utils.ts'
+import {batchAdd, batchCopy, batchCreate, batchDelete, batchModify, batchMove} from './modules/moduleModify.ts'
 import {OperationHandlers, ResizeHandler, SelectionActionMode} from './selection/type'
-import {
-  modifySelected,
-} from './selection/helper.ts'
+import {modifySelected} from './selection/helper.ts'
 import {updateScrollBars} from './viewport/domManipulations.ts'
 import selectionRender from './viewport/selectionRender.ts'
-import {worldToScreen, screenToWorld} from '../lib/lib.ts'
+import {screenToWorld, worldToScreen} from '../lib/lib.ts'
 import {Viewport, ViewportManipulationType} from './viewport/type'
 import {createViewport} from './viewport/createViewport.ts'
 import {destroyViewport} from './viewport/destroyViewport.ts'
@@ -30,6 +18,8 @@ import {zoomAtPoint} from './viewport/helper.ts'
 // import deduplicateObjectsByKeyValue from '../core/renderer/deduplicate.ts'
 // import resetCanvas from './viewport/resetCanvas.tsx'
 import {RectangleProps} from '../core/modules/shapes/rectangle.ts'
+import AssetsMaganer from './AssetsMaganer/AssetsMaganer.ts'
+import ElementImage from '../core/modules/shapes/image.ts'
 
 export interface EditorDataProps {
   id: UID;
@@ -66,7 +56,7 @@ class Editor {
   readonly selectedModules: Set<UID> = new Set()
   readonly visibleSelected: Set<UID> = new Set()
   readonly operationHandlers: OperationHandlers[] = []
-
+  assetsManager: AssetsMaganer
   // resizeHandleSize: number = 10
   copiedItems: ModuleProps[] = []
   hoveredModule: UID | null = null
@@ -98,6 +88,7 @@ class Editor {
     this.viewport = createViewport.call(this)
     this.moduleMap = new Map()
     this.moduleCounter = config.moduleIdCounter
+    this.assetsManager = new AssetsMaganer()
     const modules: ModuleMap = this.batchCreate(data.modules)
     modules.forEach((module) => {
       this.moduleMap.set(module.id, module)
@@ -118,8 +109,8 @@ class Editor {
     return batchCreate.call(this, moduleDataList)
   }
 
-  batchAdd(modules: ModuleMap): ModuleMap {
-    return batchAdd.call(this, modules)
+  batchAdd(modules: ModuleMap, callback): ModuleMap {
+    return batchAdd.call(this, modules, callback)
   }
 
   batchCopy(
@@ -174,7 +165,7 @@ class Editor {
         return rectsOverlap(boundingRect, this.viewport.worldRect)
       })
       .sort((a, b) => a.layer - b.layer)
-
+    // console.log(this.moduleMap)
     sortedModules.forEach(module => {
       this.visibleModuleMap.set(module.id, module)
     })
@@ -319,7 +310,17 @@ class Editor {
       // deduplicateObjectsByKeyValue
 
       this.visibleModuleMap.forEach((module) => {
-          module.render(ctx)
+          if (module.type === 'image') {
+            const {src} = module as ElementImage
+
+            const obj = this.assetsManager.getAssetsObj(src)
+            if (obj && obj.loaded) {
+              module.render(ctx, obj.imageRef)
+            }
+          } else {
+            module.render(ctx)
+
+          }
         },
       )
     }

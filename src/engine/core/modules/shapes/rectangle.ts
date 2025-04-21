@@ -12,9 +12,9 @@ export interface RectangleProps extends ShapeProps {
 
 class Rectangle extends Shape {
   // readonly type = 'rectangle'
-  private width: number
-  private height: number
-  private radius: number
+  width: number
+  height: number
+  radius: number
 
   constructor({
                 width,
@@ -22,7 +22,8 @@ class Rectangle extends Shape {
                 radius = 0,
                 ...rest
               }: Omit<RectangleProps, 'type'>) {
-    super({type: 'rectangle', ...rest})
+    // rest = {type :'text',...textProps }
+    super({...rest})
     this.width = width!
     this.height = height!
     this.radius = radius!
@@ -159,6 +160,7 @@ class Rectangle extends Shape {
 
   public getDetails<T extends boolean>(includeIdentifiers: T = true as T): T extends true ? RectangleProps : Omit<RectangleProps, 'id' & 'layer'> {
     return {
+      type: 'rectangle',
       width: this.width,
       height: this.height,
       ...super.getDetails(includeIdentifiers),

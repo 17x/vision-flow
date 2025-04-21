@@ -2,6 +2,9 @@ import Editor from '../editor'
 import deepClone from '../../../utilities/deepClone.ts'
 import Rectangle from '../../core/modules/shapes/rectangle.ts'
 import Ellipse, {EllipseProps} from '../../core/modules/shapes/ellipse.ts'
+import ElementText, {TextProps} from '../../core/modules/shapes/text.ts'
+import ElementImage, {ImageProps} from '../../core/modules/shapes/image.ts'
+import {AssetsObj} from '../AssetsMaganer/AssetsMaganer.ts'
 
 export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): ModuleMap {
   const clonedData = deepClone(moduleDataList) as ModuleProps[]
@@ -29,6 +32,15 @@ export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): Module
     if (data.type === 'ellipse') {
       return new Ellipse(data as EllipseProps)
     }
+
+    if (data.type === 'text') {
+      // console.log(data)
+      return new ElementText(data as TextProps)
+    }
+
+    if (data.type === 'image') {
+      return new ElementImage(data as ImageProps)
+    }
   }
 
   clonedData.forEach(data => {
@@ -40,12 +52,28 @@ export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): Module
   return newMap
 }
 
-export function batchAdd(this: Editor, modules: ModuleMap): ModuleMap {
+export function batchAdd(this: Editor, modules: ModuleMap, callback?: VoidFunction): ModuleMap {
   modules.forEach(mod => {
     this.moduleMap.set(mod.id, mod)
   })
-
+//       this.assetsManager.add('image', data.src)
   // this.events.onModulesUpdated?.(this.moduleMap)
+  if (callback) {
+    const pArr = []
+    modules.forEach(mod => {
+      if (mod.type === 'image') {
+        const {src} = mod as ElementImage
+
+        if (src && !this.assetsManager.getAssetsObj(src)) {
+          pArr.push(this.assetsManager.add('image', src))
+        }
+      }
+    })
+
+    Promise.all(pArr).then((objs: AssetsObj[]) => objs).finally((objs) => {
+      callback(objs)
+    })
+  }
 
   return modules
 }

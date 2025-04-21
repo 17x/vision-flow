@@ -1,6 +1,7 @@
 import Rectangle, {RectangleProps} from './shapes/rectangle.ts'
 import Ellipse, {EllipseProps} from './shapes/ellipse.ts'
 import {ShapeProps} from './shapes/shape.ts'
+import {ImageProps} from './shapes/image.ts'
 
 declare global {
   type ModuleTypeMap = {
@@ -11,7 +12,7 @@ declare global {
     'rectangle': RectangleProps
     'ellipse': EllipseProps
   }
-  type ModuleProps = RectangleProps | EllipseProps
+  type ModuleProps = RectangleProps | EllipseProps | TextProps | ImageProps
   // type ModulePropsType<T extends keyof ModulePropsMap> = ModulePropsMap[T]
   type PropsWithoutIdentifiers<T extends keyof ModulePropsMap> = Omit<ModulePropsMap[T], 'id' & 'layer'>
   type ModuleNames = keyof ModuleTypeMap

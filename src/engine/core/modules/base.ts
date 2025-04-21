@@ -4,7 +4,7 @@ import {RotateHandler} from '../../editor/selection/type'
 export interface BasicModuleProps {
   id: UID
   layer: number
-  type: keyof ModuleTypeMap
+  // type: keyof ModuleTypeMap
   enableLine?: boolean
   lineColor: HexColor
   lineWidth: number

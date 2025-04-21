@@ -290,7 +290,9 @@ export function initEditor(this: Editor) {
     const newModules = this.batchAdd(this.batchCreate(data))
     const savedSelected = new Set(newModules.keys())
 
-    this.batchAdd(newModules)
+    this.batchAdd(newModules,()=>{
+      console.log(9)
+    })
     this.replaceSelected(savedSelected)
 
     const moduleProps = [...newModules.values()].map((mod) => mod.getDetails())
@@ -361,6 +363,7 @@ export function initEditor(this: Editor) {
       this.viewport.mainCTX,
       this.viewport.scale,
       this.viewport.offset,
+      this.viewport.dpr
     )
 
     this.renderModules()
@@ -371,6 +374,7 @@ export function initEditor(this: Editor) {
       this.viewport.selectionCTX,
       this.viewport.scale,
       this.viewport.offset,
+      this.viewport.dpr
     )
     this.renderSelections()
   })

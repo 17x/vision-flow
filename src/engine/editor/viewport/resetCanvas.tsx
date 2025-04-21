@@ -7,7 +7,7 @@ export type TransformType = [
   verticalTranslation: number
 ]
 
-const resetCanvas = (ctx: CanvasRenderingContext2D, scale: number, offset: { x: number, y: number },
+const resetCanvas = (ctx: CanvasRenderingContext2D, scale: number, offset: { x: number, y: number }, dpr: number,
 ) => {
   const transform: TransformType = [
     scale, 0, 0, scale, offset.x, offset.y,
@@ -16,8 +16,8 @@ const resetCanvas = (ctx: CanvasRenderingContext2D, scale: number, offset: { x: 
   ctx.clearRect(
     0,
     0,
-    ctx.canvas.width * 2,
-    ctx.canvas.height * 2,
+    ctx.canvas.width * dpr,
+    ctx.canvas.height * dpr,
   )
 
   ctx.setTransform(...transform)

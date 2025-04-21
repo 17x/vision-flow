@@ -2,6 +2,7 @@ import i18n from "i18next"
 import {initReactI18next} from "react-i18next"
 import enMenu from './en/menu.json'
 import enHistory from './en/history.json'
+import enFile from './en/file.json'
 import cnMenu from './cn/menu.json'
 import cnHistory from './cn/history.json'
 import jpMenu from './jp/menu.json'
@@ -12,6 +13,7 @@ const resources = {
     translation: {
       ...enMenu,
       ...enHistory,
+      ...enFile
     }
   },
   cn: {

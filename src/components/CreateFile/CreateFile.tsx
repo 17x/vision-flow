@@ -1,12 +1,19 @@
 import {FC, FormEvent, useContext, useRef, useState} from 'react'
 import uid from '../../utilities/Uid.ts'
 import FileContext, {FileType} from '../fileContext/FileContext.tsx'
-import {Input, Modal} from '@lite-u/ui'
+import {Button, Input, Modal} from '@lite-u/ui'
+import {PAGE_PRESETS} from './pagePresets.ts'
+import {useTranslation} from 'react-i18next'
 
-const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', onBgClick}) => {
+const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#00000066', onBgClick}) => {
   const formRef = useRef<HTMLFormElement>(null)
-
+  const {t} = useTranslation()
   const {createFile, handleCreating} = useContext(FileContext)
+  const [currentPageSet, setCurrentPageSet] = useState({
+    unit: 'mm',
+    width: 210,
+    height: 297,
+  })
   const [error, setError] = useState('')
   const validateFileName = (str: string) => {
     return /^[a-zA-Z0-9-_ ]+$/.test(str)
@@ -55,14 +62,45 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
     handleCreating(false)
   }
 
-  return <Modal onBackdropClick={() => onBgClick && onBgClick()}>
-    <div>998</div>
-    <div>
-      Page preset
-      <Input type={'number'}/>
+  return <Modal backdropBg={bg} onBackdropClick={() => onBgClick && onBgClick()}>
+    <div className={'w-[90%] h-[90%] bg-white overflow-hidden flex flex-col border'}>
+      <div className={'text-center h-20 flex justify-center items-center'}>{t('file.CreateTitle')}</div>
+      <div className={'h-full flex flex-row p-4'}>
+        <div className={'bg-white p-4'}>
+          <div className={'overflow-auto flex-auto flex flex-wrap space-x-2 space-y-2'}>
+            {
+              PAGE_PRESETS.map((item, index) => {
+                return <div key={index}
+                            className={'border border-gray-200 w-30 h-30 cursor-pointer hover:border-gray-600'}
+                            onClick={() => {
+
+                            }}>
+                  {item.name}
+                </div>
+              })
+            }
+          </div>
+        </div>
+        <div className={'w-[300px] h-full flex flex-col justify-between'}>
+          <div>
+            <span>width:</span> <Input value={currentPageSet.width} type={'number'}/>
+            <span>unit:</span> <Input value={currentPageSet.unit} type={'text'}/>
+          </div>
+          <div>
+            <span>height:</span> <Input value={currentPageSet.height} type={'number'}/>
+          </div>
+          <Button type={'button'} size={'sm'}>
+            hello
+          </Button>
+          <button type="submit"
+                  className="mt-2 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300">
+            Create File
+          </button>
+        </div>
+      </div>
     </div>
 
-    <form
+    {/*<form
       ref={formRef}
       className={'relative w-100 min-h-30 z-20 p-4 bg-white rounded-xl shadow-2xl'}
       onSubmit={handleSubmit}>
@@ -78,7 +116,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
           Create File
         </button>
       </label>
-    </form>
+    </form>*/}
   </Modal>
 }
 

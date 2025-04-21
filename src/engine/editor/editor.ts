@@ -94,6 +94,10 @@ class Editor {
       this.moduleMap.set(module.id, module)
     })
 
+    if (this.moduleMap.size > 0) {
+
+    }
+
     this.init()
   }
 

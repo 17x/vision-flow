@@ -287,12 +287,15 @@ export function initEditor(this: Editor) {
   })
 
   on('module-add', (data) => {
-    const newModules = this.batchAdd(this.batchCreate(data))
+    const newModules = this.batchAdd(this.batchCreate(data),()=>{
+      console.log(9)
+      dispatch('render-modules')
+    })
     const savedSelected = new Set(newModules.keys())
 
-    this.batchAdd(newModules,()=>{
-      console.log(9)
-    })
+  /*  this.batchAdd(newModules,()=>{
+      dispatch('render-modules')
+    })*/
     this.replaceSelected(savedSelected)
 
     const moduleProps = [...newModules.values()].map((mod) => mod.getDetails())

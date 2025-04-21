@@ -90,15 +90,19 @@ class Editor {
     this.moduleCounter = config.moduleIdCounter
     this.assetsManager = new AssetsMaganer()
     const modules: ModuleMap = this.batchCreate(data.modules)
-    modules.forEach((module) => {
-      this.moduleMap.set(module.id, module)
-    })
+    /*
 
-    if (this.moduleMap.size > 0) {
+        modules.forEach((module) => {
+          this.moduleMap.set(module.id, module)
+        })
 
-    }
+        if (this.moduleMap.size > 0) {
+
+        }
+    */
 
     this.init()
+    this.action.dispatch('module-add', data.modules)
   }
 
   private init() {

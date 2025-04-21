@@ -1,5 +1,6 @@
 import Editor from '../../editor.ts'
 import {ResizeDirection} from '../../selection/type'
+
 export function detectHoveredModule(this: Editor) {
   const {viewport} = this
   const worldPoint = this.getWorldPointByViewportPoint(
@@ -10,7 +11,7 @@ export function detectHoveredModule(this: Editor) {
   let moduleId: UID | null = null
   let hitOn = null
   const arr = [...this.operationHandlers]
-
+  // console.log(worldPoint)
   for (let i = arr.length - 1; i >= 0; i--) {
     if (arr[i].module.hitTest(worldPoint)) {
       hitOn = arr[i]
@@ -20,6 +21,7 @@ export function detectHoveredModule(this: Editor) {
 
   if (hitOn) {
     this.action.dispatch('module-hover-enter', hitOn.id)
+    // console.log(hitOn)
     return hitOn
   }
 
@@ -29,7 +31,6 @@ export function detectHoveredModule(this: Editor) {
     const module = arr2[i]
     const hitTest = module.hitTest(worldPoint)
     if (hitTest) {
-      // console.log(hitTest)
       moduleId = module.id
       break
     }

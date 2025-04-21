@@ -161,6 +161,7 @@ class Rectangle extends Shape {
   public getDetails<T extends boolean>(includeIdentifiers: T = true as T): T extends true ? RectangleProps : Omit<RectangleProps, 'id' & 'layer'> {
     return {
       type: 'rectangle',
+      radius: this.radius,
       width: this.width,
       height: this.height,
       ...super.getDetails(includeIdentifiers),

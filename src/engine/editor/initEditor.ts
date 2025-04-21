@@ -131,6 +131,8 @@ export function initEditor(this: Editor) {
       this.history.add(historyData)
       this.events.onHistoryUpdated?.(this.history)
     }
+
+    this.events.onModulesUpdated?.(this.moduleMap)
   })
 
   on('selection-updated', () => {
@@ -287,15 +289,15 @@ export function initEditor(this: Editor) {
   })
 
   on('module-add', (data) => {
-    const newModules = this.batchAdd(this.batchCreate(data),()=>{
+    const newModules = this.batchAdd(this.batchCreate(data), () => {
       console.log(9)
       dispatch('render-modules')
     })
     const savedSelected = new Set(newModules.keys())
 
-  /*  this.batchAdd(newModules,()=>{
-      dispatch('render-modules')
-    })*/
+    /*  this.batchAdd(newModules,()=>{
+        dispatch('render-modules')
+      })*/
     this.replaceSelected(savedSelected)
 
     const moduleProps = [...newModules.values()].map((mod) => mod.getDetails())
@@ -366,7 +368,7 @@ export function initEditor(this: Editor) {
       this.viewport.mainCTX,
       this.viewport.scale,
       this.viewport.offset,
-      this.viewport.dpr
+      this.viewport.dpr,
     )
 
     this.renderModules()
@@ -377,7 +379,7 @@ export function initEditor(this: Editor) {
       this.viewport.selectionCTX,
       this.viewport.scale,
       this.viewport.offset,
-      this.viewport.dpr
+      this.viewport.dpr,
     )
     this.renderSelections()
   })

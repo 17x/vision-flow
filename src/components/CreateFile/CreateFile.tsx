@@ -1,6 +1,7 @@
 import {FC, FormEvent, useContext, useRef, useState} from 'react'
-import uid from '../utilities/Uid.ts'
-import FileContext, {FileType} from './fileContext/FileContext.tsx'
+import uid from '../../utilities/Uid.ts'
+import FileContext, {FileType} from '../fileContext/FileContext.tsx'
+import {Input} from '@lite-u/ui'
 
 const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', onBgClick}) => {
   const formRef = useRef<HTMLFormElement>(null)
@@ -34,7 +35,6 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
           id: fileId + '-frame',
           width: 1000,
           height: 1414.142857,
-          type: 'rectangle',
           enableLine: true,
           lineColor: '#000000',
           lineWidth: 1,
@@ -64,6 +64,10 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#fff', 
       className={'absolute top-0 left-0 w-full h-full flex flex-row items-center justify-center text-sm select-none'}>
     </div>
 
+    <div>
+      Page preset
+      <Input type={'number'}/>
+    </div>
     <form
       ref={formRef}
       className={'relative w-100 min-h-30 z-20 p-4 bg-white rounded-xl shadow-2xl'}

@@ -1,5 +1,5 @@
 import {FC, useEffect, useRef, useState} from 'react'
-import CreateFile from '../CreateFile.tsx'
+import CreateFile from '../CreateFile/CreateFile.tsx'
 import FileContext, {FileMap, FileType} from './FileContext.tsx'
 import EditorProvider from '../editorContext/EditorProvider.tsx'
 // import MOCK_FILE_MAP from '../../mock.ts'

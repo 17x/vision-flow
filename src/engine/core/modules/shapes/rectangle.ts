@@ -30,37 +30,38 @@ class Rectangle extends Shape {
   }
 
   public hitTest(point: Point, borderPadding = 5): 'inside' | 'border' | null {
-    const {x: cx, y: cy, width, height, rotation = 0} = this
+    const {x: cx, y: cy, width, height, rotation = 0} = this;
+    const rad = rotation * (Math.PI / 180);
+    const cos = Math.cos(-rad);
+    const sin = Math.sin(-rad);
 
-    const cos = Math.cos(-rotation)
-    const sin = Math.sin(-rotation)
+    const dx = point.x - cx;
+    const dy = point.y - cy;
 
-    const dx = point.x - cx
-    const dy = point.y - cy
+    // Rotate the point into the rectangle's local coordinate system
+    const localX = dx * cos - dy * sin;
+    const localY = dx * sin + dy * cos;
 
-    // Rotate the point into the rectangle's local space
-    const localX = dx * cos + dy * sin
-    const localY = -dx * sin + dy * cos
+    const halfWidth = width / 2;
+    const halfHeight = height / 2;
 
-    const halfWidth = width / 2
-    const halfHeight = height / 2
-
-    const withinX = localX >= -halfWidth && localX <= halfWidth
-    const withinY = localY >= -halfHeight && localY <= halfHeight
+    const withinX = localX >= -halfWidth && localX <= halfWidth;
+    const withinY = localY >= -halfHeight && localY <= halfHeight;
+    // console.log('hit')
 
     if (withinX && withinY) {
-      const nearLeft = Math.abs(localX + halfWidth) <= borderPadding
-      const nearRight = Math.abs(localX - halfWidth) <= borderPadding
-      const nearTop = Math.abs(localY + halfHeight) <= borderPadding
-      const nearBottom = Math.abs(localY - halfHeight) <= borderPadding
+      const nearLeft = Math.abs(localX + halfWidth) <= borderPadding;
+      const nearRight = Math.abs(localX - halfWidth) <= borderPadding;
+      const nearTop = Math.abs(localY + halfHeight) <= borderPadding;
+      const nearBottom = Math.abs(localY - halfHeight) <= borderPadding;
 
       if (nearLeft || nearRight || nearTop || nearBottom) {
-        return 'border'
+        return 'border';
       }
-      return 'inside'
+      return 'inside';
     }
 
-    return null
+    return null;
   }
 
   static applyResizeTransform = ({

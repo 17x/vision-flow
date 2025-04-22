@@ -1,6 +1,7 @@
 import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import tailwindcss from '@tailwindcss/vite'
+import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig(({mode}) => {
@@ -13,6 +14,7 @@ export default defineConfig(({mode}) => {
     resolve: {
       preserveSymlinks: true,
       alias: {
+        react: path.resolve(__dirname, './node_modules/react'),
         // /esm/icons/index.mjs only exports the icons statically, so no separate chunks are created
         // '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
       },

@@ -1,7 +1,7 @@
 import {FC, FormEvent, useContext, useRef, useState} from 'react'
 import uid from '../../utilities/Uid.ts'
 import FileContext, {FileType} from '../fileContext/FileContext.tsx'
-import {Button, Input, Modal, Panel} from '@lite-u/ui'
+import {Button, Col, Input, Modal, Row, Select, SelectItem} from '@lite-u/ui'
 import {PAGE_PRESETS} from './pagePresets.ts'
 import {useTranslation} from 'react-i18next'
 
@@ -18,8 +18,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     e.stopPropagation()
-    // const filename = formRef.current?.filename.value.trim()
-    // console.log(currentPageSet.name)
+
     if (!validateFileName(currentPageSet.name)) {
       setError('File name can only including number space and alpha')
       return
@@ -57,85 +56,84 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
       },
       data: [],
     }
+
     createFile(newFile)
     handleCreating(false)
   }
-  console.log(currentPageSet)
+
+  console.log(currentPageSet.name)
 
   return <Modal backdropBg={bg} onBackdropClick={() => onBgClick && onBgClick()}>
     <div className={'w-[90%] h-[90%] bg-white flex flex-col p-4'}>
-      <div className={'shadow-md rounded-sm shadow-gray-600 w-full h-full overflow-hidden  text-sm'}>
-        <Panel title={t('file.CreateTitle')}>
-          <div className={'h-full flex flex-row p-4'}>
-            <div className={'bg-white p-4'}>
-              <div className={'overflow-auto flex-auto flex flex-wrap space-x-2 space-y-2'}>
-                {
-                  PAGE_PRESETS.map((item, index) => {
-                    return <div key={index}
-                                className={'border flex text-center items-center justify-center border-gray-200 w-30 h-30 cursor-pointer hover:border-gray-600'}
-                                onClick={() => {
-                                  console.log(item)
-                                  setCurrentPageSet({
-                                    ...item,
-                                    name: 'Untitled-' + item.name,
-                                  })
-                                }}>
-                      <span>{item.name}</span>
-                    </div>
-                  })
-                }
-              </div>
+      <Col fw fh className={'shadow-md rounded-sm shadow-gray-600 overflow-hidden  text-sm'}>
+        <Row around>{t('file.CreateTitle')}</Row>
+        <Row fh className={'p-4'}>
+          <div className={'bg-white p-4'}>
+            <div className={'overflow-auto flex-auto flex flex-wrap space-x-2 space-y-2'}>
+              {
+                PAGE_PRESETS.map((item, index) => {
+                  return <div key={index}
+                              className={'border flex text-center items-center justify-center border-gray-200 w-30 h-30 cursor-pointer hover:border-gray-600'}
+                              onClick={() => {
+                                console.log(item)
+                                setCurrentPageSet({
+                                  ...item,
+                                  name: 'Untitled-' + item.name,
+                                })
+                              }}>
+                    <span>{item.name}</span>
+                  </div>
+                })
+              }
             </div>
-            <form ref={formRef}
-                  className={'w-[300px] relative flex flex-col justify-between min-h-30 z-20 p-4 bg-white rounded-xl shadow-2xl'}
-                  onSubmit={handleSubmit}>
-              <div>
-                <Input label={'File Name'} name={'filename'} placeholder="Enter file name" autoFocus
-                       value={currentPageSet.name}
-                       type={'number'}/>
-                {/* <input type="text" autoFocus id="filename" name="filename"
+          </div>
+          <form ref={formRef}
+                className={'w-[300px] relative flex flex-col justify-between min-h-30 z-20 p-4'}
+                onSubmit={handleSubmit}>
+            <div>
+              <Input label={'File Name'}
+                     name={'filename'}
+                     placeholder="Enter file name"
+                     autoFocus
+                     onChange={()=>{
+                       console.log('currentPageSet.name')
+                     }}
+                     value={currentPageSet.name}
+                     type={'text'}/>
+              {/* <input type="text" autoFocus id="filename" name="filename"
                    placeholder="Enter file name"
                    className="w-full bg-gray-100 border border-gray-300 text-gray-700 py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"/>*/}
-                <div>
-                  <Input label={'width'} autoFocus defaultValue={currentPageSet.width} type={'number'}/>
-                  <Input label={'unit'} autoFocus defaultValue={currentPageSet.unit} type={'number'}/>
+              <div>
+                <Input label={'width'} value={currentPageSet.width} type={'number'}/>
+                unit
+                <Select>
+                 <SelectItem value={'px'}>unit</SelectItem>
+                 <SelectItem value={'mm'}>unit</SelectItem>
+                 <SelectItem value={'cm'}>unit</SelectItem>
+                </Select>
+                <Input label={'unit'} value={currentPageSet.unit} type={'text'}/>
 
-                  <div>
-                    <Input label={'height'} autoFocus defaultValue={currentPageSet.height} type={'number'}/>
-                  </div>
+                <div>
+                  <Input label={'height'} value={currentPageSet.height} type={'number'}/>
                 </div>
               </div>
-              <Button type={'submit'} size={'sm'}> Create File </Button>
-              {/*<button type="submit"
+            </div>
+            <Button primary type={'submit'}>Create File</Button>
+            {/*<button type="submit"
                   className="mt-2 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300">
             Create File
           </button>*/}
-            </form>
-          </div>
-        </Panel>
+          </form>
+        </Row>
+
+
+        {/*<Panel title={t('file.CreateTitle')}>
+        </Panel>*/}
         {/*<div
           className={'text-center h-8 flex justify-center items-center bg-gray-400 text-white'}>{t('file.CreateTitle')}</div>*/}
 
-      </div>
+      </Col>
     </div>
-
-    {/*<form
-      ref={formRef}
-      className={'relative w-100 min-h-30 z-20 p-4 bg-white rounded-xl shadow-2xl'}
-      onSubmit={handleSubmit}>
-      <h1 className={'text-xl text-center'}>New File</h1>
-
-      <label htmlFor="filename" className="block text-gray-700 font-medium mb-2">File Name</label>
-      <input type="text" autoFocus id="filename" name="filename" placeholder="Enter file name"
-             className="w-full bg-gray-100 border border-gray-300 text-gray-700 py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"/>
-      {error && <div className={'text-red-500 my-2'}>{error}</div>}
-      <label className={'justify-center'}>
-        <button type="submit"
-                className="mt-2 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300">
-          Create File
-        </button>
-      </label>
-    </form>*/}
   </Modal>
 }
 

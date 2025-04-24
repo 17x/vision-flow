@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "reinstall dev": "npm run refresh ui from git && vite",
-    "refresh": "npm uninstall @lite-u/ui && npm i git+https://github.com/lite-u/ui.git#main",
-    "relink": "npm uninstall @lite-u/ui && npm link @lite-u/ui",
+    "reinstall dev": "npm run refresh && vite",
+    "refresh": "npm i git+https://github.com/lite-u/ui.git#main",
+    "relink": "npm link @lite-u/ui",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "fource build": "vite build",
@@ -14,10 +14,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@lite-u/ui": "github:lite-u/ui#main",
+    "@lite-u/ui": "git://github.com/lite-u/ui.git#main",
     "@tailwindcss/vite": "^4.0.10",
-    "from": "^0.1.7",
-    "git": "^0.1.5",
     "i18next": "^24.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

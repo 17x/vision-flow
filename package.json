@@ -14,7 +14,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@lite-u/ui": "git://github.com/lite-u/ui.git#main",
+    "@lite-u/ui": "github:lite-u/ui#main",
     "@tailwindcss/vite": "^4.0.10",
     "i18next": "^24.2.3",
     "react": "^19.0.0",

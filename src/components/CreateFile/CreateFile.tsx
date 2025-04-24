@@ -95,7 +95,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
                      name={'filename'}
                      placeholder="Enter file name"
                      autoFocus
-                     onChange={()=>{
+                     onChange={() => {
                        console.log('currentPageSet.name')
                      }}
                      value={currentPageSet.name}
@@ -105,13 +105,12 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
                    className="w-full bg-gray-100 border border-gray-300 text-gray-700 py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"/>*/}
               <div>
                 <Input label={'width'} value={currentPageSet.width} type={'number'}/>
-                unit
-                <Select>
-                 <SelectItem value={'px'}>unit</SelectItem>
-                 <SelectItem value={'mm'}>unit</SelectItem>
-                 <SelectItem value={'cm'}>unit</SelectItem>
+
+                <Select label={'unit'}>
+                  <SelectItem value={'px'}>unit</SelectItem>
+                  <SelectItem value={'mm'}>unit</SelectItem>
+                  <SelectItem value={'cm'}>unit</SelectItem>
                 </Select>
-                <Input label={'unit'} value={currentPageSet.unit} type={'text'}/>
 
                 <div>
                   <Input label={'height'} value={currentPageSet.height} type={'number'}/>

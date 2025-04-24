@@ -1,7 +1,7 @@
 import {FC, FormEvent, useContext, useRef, useState} from 'react'
 import uid from '../../utilities/Uid.ts'
 import FileContext, {FileType} from '../fileContext/FileContext.tsx'
-import {Button, Col, Con, Input, Modal, Panel, Row, Select, SelectItem, Title} from '@lite-u/ui'
+import {Button, Col, Con, Input, Modal, P, Panel, Row, Select, SelectItem, Title} from '@lite-u/ui'
 import {PAGE_PRESETS} from './pagePresets.ts'
 import {useTranslation} from 'react-i18next'
 
@@ -116,40 +116,48 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
           </Con>
 
           <Con w={'30%'} p={10}>
-            <Title h2>Presets</Title>
-            <form ref={formRef}
-                  className={'w-[300px] relative min-h-30 z-20 p-4'}
-                  onSubmit={handleSubmit}>
-              <Col fh between>
-                <div>
-                  <Input label={'File Name'}
-                         name={'filename'}
-                         placeholder="Enter file name"
-                         value={currentPageSet.name}
-                         type={'text'}/>
+            <Col fh stretch>
+              <Title h2>Presets</Title>
+              <form ref={formRef}
+                    className={'h-full relative min-h-30 z-20'}
+                    onSubmit={handleSubmit}>
+                <Col fh between center>
+                  <Con>
+                    <P>File Name</P>
+                    <Input name={'filename'}
+                           placeholder="Enter file name"
+                           value={currentPageSet.name}
+                           type={'text'}/>
 
-                  <div>
-                    <Input label={'width'} value={currentPageSet.width} type={'number'}/>
+                    <P>Page Width</P>
+                    <Input name={'width'}
+                           placeholder="enter page width"
+                           value={currentPageSet.width}
+                           type={'number'}/>
 
+                    <P>Page Height</P>
+                    <Input name={'height'}
+                           placeholder="enter page height"
+                           value={currentPageSet.height}
+                           type={'number'}/>
+
+                    <P>Unit</P>
                     <Select label={'unit'}>
                       <SelectItem value={'px'}>unit</SelectItem>
                       <SelectItem value={'mm'}>unit</SelectItem>
                       <SelectItem value={'cm'}>unit</SelectItem>
                     </Select>
 
-                    <div>
-                      <Input label={'height'} value={currentPageSet.height} type={'number'}/>
-                    </div>
-                  </div>
-                </div>
+                  </Con>
 
-                <Button primary type={'submit'}>Create File</Button>
-                {/*<button type="submit"
+                  <Button primary type={'submit'}>Create File</Button>
+                  {/*<button type="submit"
                   className="mt-2 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300">
             Create File
           </button>*/}
-              </Col>
-            </form>
+                </Col>
+              </form>
+            </Col>
           </Con>
         </Row>
 

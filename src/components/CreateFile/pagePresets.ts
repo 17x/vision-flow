@@ -46,7 +46,7 @@ export const PAGE_PRESETS: PagePreset[] = [
     height: 17,
   },
   {
-    name: 'iPhone 14 Pro Screen',
+    name: 'iPhone 14 Pro',
     unit: Unit.PX,
     width: 1179,
     height: 2556,

@@ -1,7 +1,7 @@
 import {FC, FormEvent, useContext, useRef, useState} from 'react'
 import uid from '../../utilities/Uid.ts'
 import FileContext, {FileType} from '../fileContext/FileContext.tsx'
-import {Button, Col, Con, Input, Modal, P, Panel, Row, Select, SelectItem, Title} from '@lite-u/ui'
+import {Button, Col, Con, Input, MenuItem, Modal, P, Panel, Row, Select, SelectItem, Title} from '@lite-u/ui'
 import {PAGE_PRESETS} from './pagePresets.ts'
 import {useTranslation} from 'react-i18next'
 
@@ -61,6 +61,14 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
     handleCreating(false)
   }
 
+  const handleChange = (key, value) => {
+    setCurrentPageSet(prevState => {
+      return {
+        ...prevState,
+        [key]: value,
+      }
+    })
+  }
   // console.log(currentPageSet.name)
 
   return <Modal backdropBg={bg} onBackdropClick={() => onBgClick && onBgClick()}>
@@ -81,9 +89,10 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
                               className={'border overflow-hidden flex text-center   border-gray-200  cursor-pointer hover:border-gray-600'}
                               onClick={() => {
                                 setCurrentPageSet((prev) => {
+                                  console.log(item)
                                   return {
                                     ...item,
-                                    name: prev.name,
+                                    // name: prev.name,
                                   }
                                 })
                               }}>
@@ -123,38 +132,42 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
                     onSubmit={handleSubmit}>
                 <Col fh between center>
                   <Con>
-                    <P>File Name</P>
+                    <P style={{marginTop: 10}}>File Name</P>
                     <Input name={'filename'}
-                           placeholder="Enter file name"
                            value={currentPageSet.name}
+                           onChange={(e) => {
+                             handleChange('name', e.target.value)
+                           }}
                            type={'text'}/>
 
-                    <P>Page Width</P>
+                    <P style={{marginTop: 10}}>Page Width</P>
                     <Input name={'width'}
                            placeholder="enter page width"
                            value={currentPageSet.width}
+                           onChange={(e) => {
+                             handleChange('width', e.target.value)
+                           }}
                            type={'number'}/>
 
-                    <P>Page Height</P>
+                    <P style={{marginTop: 10}}>Page Height</P>
                     <Input name={'height'}
                            placeholder="enter page height"
                            value={currentPageSet.height}
+                           onChange={(e) => {
+                             handleChange('height', e.target.value)
+                           }}
                            type={'number'}/>
 
-                    <P>Unit</P>
-                    <Select label={'unit'}>
-                      <SelectItem value={'px'}>unit</SelectItem>
-                      <SelectItem value={'mm'}>unit</SelectItem>
-                      <SelectItem value={'cm'}>unit</SelectItem>
+                    <P style={{marginTop: 10}}>Unit</P>
+                    <Select defaultValue={currentPageSet.unit}>
+                      <SelectItem value={'px'}><MenuItem>px</MenuItem></SelectItem>
+                      <SelectItem value={'mm'}><MenuItem>mm</MenuItem></SelectItem>
+                      <SelectItem value={'cm'}><MenuItem>cm</MenuItem></SelectItem>
                     </Select>
 
                   </Con>
 
                   <Button primary type={'submit'}>Create File</Button>
-                  {/*<button type="submit"
-                  className="mt-2 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300">
-            Create File
-          </button>*/}
                 </Col>
               </form>
             </Col>

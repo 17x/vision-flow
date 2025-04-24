@@ -1,7 +1,7 @@
 import {FC, FormEvent, useContext, useRef, useState} from 'react'
 import uid from '../../utilities/Uid.ts'
 import FileContext, {FileType} from '../fileContext/FileContext.tsx'
-import {Button, Col, Con, Input, Modal, P, Panel, Row, Select, SelectItem, Title} from '@lite-u/ui'
+import {Button, Col, Con, Input, Modal, Panel, Row, Select, SelectItem, Title} from '@lite-u/ui'
 import {PAGE_PRESETS} from './pagePresets.ts'
 import {useTranslation} from 'react-i18next'
 
@@ -67,6 +67,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
     <Col w={'90%'} h={'90%'} className={'shadow-md rounded-sm shadow-gray-600 overflow-hidden  text-sm'}>
       <Panel title={t('file.CreateTitle')}>
         <Row stretch center fh className={'p-4'}>
+
           <Con p={4} bg={'white'}>
             <Title h2>Templates</Title>
             <Row className={'overflow-auto flex-auto flex-wrap space-x-2 space-y-2'}>
@@ -114,41 +115,42 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
             </Row>
           </Con>
 
-          <form ref={formRef}
-                className={'w-[300px] relative min-h-30 z-20 p-4'}
-                onSubmit={handleSubmit}>
-            <Col fh between>
-              <div>
-                <Input label={'File Name'}
-                       name={'filename'}
-                       placeholder="Enter file name"
-                       value={currentPageSet.name}
-                       type={'text'}/>
-                {/* <input type="text" autoFocus id="filename" name="filename"
-                   placeholder="Enter file name"
-                   className="w-full bg-gray-100 border border-gray-300 text-gray-700 py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"/>*/}
+          <Con w={'30%'} p={10}>
+            <Title h2>Presets</Title>
+            <form ref={formRef}
+                  className={'w-[300px] relative min-h-30 z-20 p-4'}
+                  onSubmit={handleSubmit}>
+              <Col fh between>
                 <div>
-                  <Input label={'width'} value={currentPageSet.width} type={'number'}/>
-
-                  <Select label={'unit'}>
-                    <SelectItem value={'px'}>unit</SelectItem>
-                    <SelectItem value={'mm'}>unit</SelectItem>
-                    <SelectItem value={'cm'}>unit</SelectItem>
-                  </Select>
+                  <Input label={'File Name'}
+                         name={'filename'}
+                         placeholder="Enter file name"
+                         value={currentPageSet.name}
+                         type={'text'}/>
 
                   <div>
-                    <Input label={'height'} value={currentPageSet.height} type={'number'}/>
+                    <Input label={'width'} value={currentPageSet.width} type={'number'}/>
+
+                    <Select label={'unit'}>
+                      <SelectItem value={'px'}>unit</SelectItem>
+                      <SelectItem value={'mm'}>unit</SelectItem>
+                      <SelectItem value={'cm'}>unit</SelectItem>
+                    </Select>
+
+                    <div>
+                      <Input label={'height'} value={currentPageSet.height} type={'number'}/>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <Button primary type={'submit'}>Create File</Button>
-              {/*<button type="submit"
+                <Button primary type={'submit'}>Create File</Button>
+                {/*<button type="submit"
                   className="mt-2 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300">
             Create File
           </button>*/}
-            </Col>
-          </form>
+              </Col>
+            </form>
+          </Con>
         </Row>
 
       </Panel>

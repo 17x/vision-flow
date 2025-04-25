@@ -9,8 +9,6 @@ import WorkspaceProvider from '../workspace/WorkspaceProvider.tsx'
 
 const FileProvider: FC = () => {
   const {fileMap} = useFile()
-  // console.log(F1)
-  // const fileMap = useRef<Map<string, VisionFileType>>(new Map())
   const [fileList, setFileList] = useState<VisionFileType[]>([])
   const [creating, setCreating] = useState<boolean>(false)
   const [focusedFileId, setFocusedFileId] = useState<UID>('')
@@ -21,9 +19,8 @@ const FileProvider: FC = () => {
   console.log(fileMap)
 
   useEffect(() => {
-    // readFileFromLocal()
     updateFileList()
-  }, [])
+  }, [fileMap])
 
   const updateFileList = (): [] => {
     const arr = Array.from(fileMap.values())

@@ -11,7 +11,6 @@ import {VISION_VERSION} from '../../constants'
 const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#00000066', onBgClick}) => {
   const formRef = useRef<HTMLFormElement>(null)
   const {t} = useTranslation()
-  // const {}
   const {createFile, handleCreating} = useFile()
   const [currentPageSet, setCurrentPageSet] = useState({...PAGE_PRESETS[0]})
   const [dpi, setDpi] = useState(72)
@@ -70,9 +69,6 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
     const newWidth = Number((convertUnit(width, unit, newUnit)).toFixed(2))
     const newHeight = Number((convertUnit(height, unit, newUnit)).toFixed(2))
 
-    console.log(newUnit)
-    // console.log(unit,newUnit,newWidth, newHeight)
-
     setCurrentPageSet({
       name,
       width: newWidth,
@@ -80,7 +76,6 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
       unit: newUnit,
     })
   }
-  // console.log(currentPageSet.name)
 
   return <Modal backdropBg={bg} style={{
     zIndex: 1000,

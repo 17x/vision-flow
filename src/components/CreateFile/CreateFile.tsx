@@ -23,7 +23,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
     e.stopPropagation()
 
     if (!validateFileName(currentPageSet.name)) {
-      setError('File name can only including number space and alpha')
+      setError('File names may only contain alphabetic characters, numbers, and spaces.')
       return
     }
 
@@ -158,7 +158,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
                              handleChange('name', e.target.value)
                            }}
                            type={'text'}/>
-
+                    <P style={{color:'red'}}>{error}</P>
                     <P style={{marginTop: 10}}>Page Width</P>
                     <Input name={'width'}
                            placeholder="enter page width"

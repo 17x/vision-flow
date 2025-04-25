@@ -1,10 +1,4 @@
 import {createContext, useContext} from 'react'
-import {EditorExportFileType} from '@editor/editor/type'
-
-export interface FileType extends EditorExportFileType {
-  name: string
-  initialized?: boolean
-}
 
 type Element = ModuleInstance
 
@@ -34,18 +28,16 @@ export interface VisionFileType {
   workspace: VisionWorkspace[];
 }
 
-export type FileMap = Map<string, FileType>;
-
 interface FileContextType {
-  fileMap: FileMap
-  fileList: FileType[]
+  fileMap: Map<UID, VisionFileType>
+  fileList: VisionFileType[]
   creating: boolean
   focusedFileId: string | undefined
   focusOnFile: (id: UID) => void
   closeFile: (id: UID) => void
-  createFile: (v: FileType) => void
+  createFile: (v: VisionFileType) => void
   handleCreating: (v: boolean) => void
-  saveFileToLocal: (v: EditorExportFileType) => void
+  saveFileToLocal: (v: never) => void
   startCreateFile: VoidFunction
 }
 
@@ -73,7 +65,7 @@ const dFile = {
 }
 
 const FileContext = createContext<FileContextType>({
-  fileMap: new Map([['19455cb7-8406-4512-98f4-61d5e1d840ec', dFile]]),
+  fileMap: new Map([[dFile.id, dFile]]),
   fileList: [dFile],
   focusedFileId: '',
   creating: false,

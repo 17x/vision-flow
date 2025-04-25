@@ -1,5 +1,5 @@
 import {FC, useEffect, useState} from 'react'
-import CreateFile from '../CreateFile/CreateFile.tsx'
+import CreateFile from '../createFile/CreateFile.tsx'
 import FileContext, {useFile, VisionFileType} from './FileContext.tsx'
 // import MOCK_FILE_MAP from '../../mock.ts'
 import Files from '../files/Files.tsx'
@@ -16,13 +16,11 @@ const FileProvider: FC = () => {
   const showCreateFile = fileLen === 0 || creating
   const STORAGE_ID = 'VISION_FLOW_FILE_MAP'
 
-  console.log(fileMap)
-
   useEffect(() => {
     updateFileList()
   }, [fileMap])
 
-  const updateFileList = (): [] => {
+  const updateFileList = () => {
     const arr = Array.from(fileMap.values())
 
     setFileList(arr)
@@ -33,7 +31,7 @@ const FileProvider: FC = () => {
       }
     }
 
-    return arr
+    // return arr
   }
 
   const focusOnFile = (id: UID) => {
@@ -109,29 +107,12 @@ const FileProvider: FC = () => {
     savedFileMap[file.id] = fileId
     localStorage.setItem(STORAGE_ID, JSON.stringify(savedFileMap))
     localStorage.setItem(fileId, JSON.stringify(file))
-    console.log('saved')
-  }
-
-  const readFileFromLocal = () => {
-    let item = localStorage.getItem(STORAGE_ID)
-    let savedFileMap = JSON.parse(item!)
-
-    if (savedFileMap) {
-      // console.log(savedFileMap)
-      Object.values(savedFileMap).forEach((fileStorageKey) => {
-        const fileRawData = localStorage.getItem(fileStorageKey as string)
-        const fileData = JSON.parse(fileRawData!)
-
-        // console.log(fileData)
-        fileMap.set(fileData.id, fileData)
-      })
-    }
-
-    updateFileList()
+    // console.log('saved')
   }
 
   return (
     <FileContext.Provider value={{
+      fileMap,
       fileList,
       creating,
       focusedFileId,

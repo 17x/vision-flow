@@ -1,18 +1,20 @@
 import {FC, useEffect, useRef, useState} from 'react'
-// import EditorProvider from '../editorContext/EditorProvider.tsx'
 import {VisionFileType, VisionWorkspace} from '../fileContext/FileContext.tsx'
 import WorkspaceContext from './WorkspaceContext.tsx'
 import {Col, Row} from '@lite-u/ui'
+import EditorProvider from '../editorContext/EditorProvider.tsx'
 
 const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
   // const [workspaceList, setWorkspaceList] = useState<VisionWorkspace[]>([])
   const workspaceRef = useRef(new Map())
   const [creating, setCreating] = useState<boolean>(false)
   const [focusedId, setFocusedId] = useState<UID>('')
-  // const STORAGE_ID = 'VISION_FLOW_FILE_MAP'
+  // const {focusedFileId} = useFile()
+  const [workspace, setWorkspace] = useState<VisionWorkspace[]>([])
 
   useEffect(() => {
-    console.log(file)
+    // console.log(file.workspace)
+    setWorkspace(file.workspace)
   }, [])
 
   const focusOnWorkspace = (id: UID) => {
@@ -75,7 +77,20 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
     }}>
       <Col>
         {/*<EditorProvider data={file}/>*/}
-        <Row></Row>
+        <Row>
+          {
+            workspace.map((ws, index) => {
+              return <EditorProvider data={ws} key={index}/>
+            })
+          }
+        </Row>
+        <Row>
+          {
+            workspace.map((ws, index) => {
+              return <span key={index}>{ws.name}</span>
+            })
+          }
+        </Row>
       </Col>
     </WorkspaceContext.Provider>
   )

@@ -1,8 +1,8 @@
 import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
 import Shape, {ShapeProps} from './shape.ts'
-import {SnapPointData} from '../../../editor/type'
+import {SnapPointData} from '../../../engine/type'
 import Rectangle from './rectangle.ts'
-import {ResizeHandleName} from '../../../editor/selection/type'
+import {ResizeHandleName} from '../../../engine/selection/type'
 import {getResizeTransform} from '../../../lib/lib.ts'
 
 export interface EllipseProps extends ShapeProps {

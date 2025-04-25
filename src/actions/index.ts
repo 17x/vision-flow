@@ -1,4 +1,4 @@
-import {EditorAction} from "../engine/editor/type"
+import {EditorAction} from "../editor/engine/type"
 
 const editorActions: EditorAction[] = [
   {

@@ -1,7 +1,7 @@
 import {
   ResizeHandleName,
   ResizeTransform,
-} from '../editor/selection/type'
+} from '../engine/selection/type'
 import {Point} from '@editor/type.ts'
 
 interface DrawCrossLineProps {

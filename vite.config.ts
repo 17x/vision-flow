@@ -15,7 +15,7 @@ export default defineConfig(({mode}) => {
       preserveSymlinks: true,
       alias: {
         react: path.resolve(__dirname, './node_modules/react'),
-        '@editor': path.resolve(__dirname, 'src/engine'),
+        '@editor': path.resolve(__dirname, 'src/editor'),
 
         // '@editor': path.resolve(__dirname, '../src/engine'),
         // '@editor': './src/engine',

@@ -1,8 +1,8 @@
 import Shape, {ShapeProps} from './shape.ts'
 import {generateBoundingRectFromRotatedRect} from '../../utils.ts'
-import {SnapPointData} from '../../../editor/type'
+import {SnapPointData} from '../../../engine/type'
 import {getResizeTransform} from '../../../lib/lib.ts'
-import {ResizeHandleName} from '../../../editor/selection/type'
+import {ResizeHandleName} from '../../../engine/selection/type'
 
 export interface RectangleProps extends ShapeProps {
   width: number

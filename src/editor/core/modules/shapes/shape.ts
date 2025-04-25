@@ -1,6 +1,6 @@
 import Base, {BasicModuleProps} from '../base.ts'
 import {HANDLER_OFFSETS} from '../handleBasics.ts'
-import {OperationHandlers} from '../../../editor/selection/type'
+import {OperationHandlers} from '../../../engine/selection/type'
 import {rotatePoint} from '../../../lib/lib.ts'
 import Rectangle, {RectangleProps} from './rectangle.ts'
 

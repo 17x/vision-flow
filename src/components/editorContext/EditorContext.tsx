@@ -1,8 +1,8 @@
 import React, {createContext} from 'react'
-import Editor from '../../engine/editor/editor.ts'
-import {HistoryNode} from '../../engine/editor/history/DoublyLinkedList.ts'
+import Editor from '../../editor/engine/editor.ts'
+import {HistoryNode} from '../../editor/engine/history/DoublyLinkedList.ts'
 // import {ViewportInfo} from '../../engine/editor/type'
-import {EditorEventData, EditorEventType} from '../../engine/editor/actions/type'
+import {EditorEventData, EditorEventType} from '../../editor/engine/actions/type'
 import {EditorStateType, initialEditorState} from './reducer/reducer.ts'
 
 interface EditorContextType {

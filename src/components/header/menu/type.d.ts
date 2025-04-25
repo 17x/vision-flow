@@ -1,4 +1,4 @@
-import {EditorEventType} from '../../../engine/editor/actions/type'
+import {EditorEventType} from '../../../editor/engine/actions/type'
 
 export interface MenuItemType {
   id: string

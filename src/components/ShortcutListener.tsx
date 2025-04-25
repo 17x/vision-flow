@@ -1,7 +1,7 @@
 import React, {memo, useContext, useEffect, useReducer} from 'react'
-import {ModuleMoveDirection} from '../engine/editor/type'
+import {ModuleMoveDirection} from '../editor/engine/type'
 import EditorContext from './editorContext/EditorContext.tsx'
-import {EditorEventMap, EditorEventType} from '../engine/editor/actions/type'
+import {EditorEventMap, EditorEventType} from '../editor/engine/actions/type'
 
 const ShortcutListener: React.FC = () => {
   const {state: {focused}, executeAction} = useContext(EditorContext)

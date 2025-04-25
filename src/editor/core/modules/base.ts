@@ -1,5 +1,5 @@
-import Editor from '../../editor/editor.ts'
-import {RotateHandler} from '../../editor/selection/type'
+import Editor from '../../engine/editor.ts'
+import {RotateHandler} from '../../engine/selection/type'
 
 export interface BasicModuleProps {
   id: UID

@@ -6,6 +6,34 @@ export interface FileType extends EditorExportFileType {
   initialized?: boolean
 }
 
+type Element = ModuleInstance
+
+export interface VisionSheet {
+  name: string
+  data: Element[]
+  config?: {}
+}
+
+export interface VisionFilePageSet {
+  unit: string
+  width: number
+  height: number
+  dpi: number
+}
+
+export interface VisionFileType {
+  id: string;
+  name: string;
+  version: string;
+  createdAt: number;
+  updatedAt: number;
+  config: {
+    page: {};
+    editor?: {}
+  };
+  sheets: VisionSheet[];
+}
+
 export type FileMap = Map<string, FileType>;
 
 interface FileContextType {

@@ -1,11 +1,12 @@
 import {FC, FormEvent, useContext, useRef, useState} from 'react'
 import uid from '../../utilities/Uid.ts'
-import FileContext, {FileType} from '../fileContext/FileContext.tsx'
+import FileContext, {VisionFileType} from '../fileContext/FileContext.tsx'
 import {Button, Col, Con, Input, MenuItem, Modal, P, Panel, Row, Select, SelectItem, Title} from '@lite-u/ui'
 import {PAGE_PRESETS} from './pagePresets.ts'
 import {useTranslation} from 'react-i18next'
 import {Unit} from '@editor/type.ts'
 import convertUnit from '@editor/lib/converter.ts'
+import {VISION_VERSION} from '../../constants'
 
 const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#00000066', onBgClick}) => {
   const formRef = useRef<HTMLFormElement>(null)
@@ -29,14 +30,14 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
 
     setError('')
     const fileId = uid()
-    const newFile: FileType = {
+
+    const newFile: VisionFileType = {
       id: fileId,
       name: currentPageSet.name,
+      version: VISION_VERSION,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
       config: {
-        // dpr: 2,
-        // moduleIdCounter: 0,
-        // scale: 0,
-        // offset: {x: 0, y: 0},
         page: {
           ...currentPageSet,
         },
@@ -44,6 +45,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
       sheets: [
         {
           name: 'sheet 1',
+          data: [],
         },
       ],
     }
@@ -88,6 +90,9 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
             <Row className={'overflow-auto flex-auto flex-wrap space-x-2 space-y-2'}>
               {
                 PAGE_PRESETS.map((item, index) => {
+                  const size = 100
+                  const scale = size / Math.max(item.width, item.height)
+
                   return <Col key={index}
                               jc
                               center
@@ -96,34 +101,29 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
                               className={'border overflow-hidden flex text-center   border-gray-200  cursor-pointer hover:border-gray-600'}
                               onClick={() => {
                                 setCurrentPageSet((prev) => {
-                                  console.log(item)
                                   return {
                                     ...item,
-                                    // name: prev.name,
                                   }
                                 })
                               }}>
                     <Col center jc>
-                      <Con w={100} h={100} style={{
-                        // objectFit:'contain'
+                      <Con w={size} h={size} style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 20,
                       }}>
-                        {/*<canvas
-                          width={item.width}
-                          height={item.height}
-                          style={{
-                            background: 'blue',
-                            // aspectRatio: item.width / item.height,
-                            // width: item.width,
-                            // height: item.height,
-                            // width: '100%',
-                            // height: '100%',
-                            maxWidth: '100%',
-                            maxHeight: '100%',
-                            display:'inline-block',
-                            objectFit: 'contain',
-                          }}></canvas>*/}
+                        <svg style={{
+                          width: '100%',
+                          height: '100%',
+                        }} viewBox={`0 0 ${item.width} ${item.height}`}>
+                          <rect width={item.width}
+                                height={item.height}
+                                stroke-width={1 / scale}
+                                fill={'#ffd6d6'}/>
+                        </svg>
                       </Con>
-                      <span>{item.name}</span>
+                      <Con p={2} h={30}>{item.name}</Con>
                     </Col>
                   </Col>
                 })
@@ -168,8 +168,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
                     <P style={{marginTop: 10}}>Unit</P>
                     <Select defaultValue={currentPageSet.unit}
                             onChange={(v) => {
-                              console.log(currentPageSet.unit)
-                              handleNewUnit(v)
+                              handleNewUnit(v as Unit)
                             }}>
                       <SelectItem value={'px'}><MenuItem>px</MenuItem></SelectItem>
                       <SelectItem value={'mm'}><MenuItem>mm</MenuItem></SelectItem>

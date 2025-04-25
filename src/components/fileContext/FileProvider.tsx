@@ -5,7 +5,7 @@ import EditorProvider from '../editorContext/EditorProvider.tsx'
 // import MOCK_FILE_MAP from '../../mock.ts'
 import Files from '../files/Files.tsx'
 import LanguageSwitcher from '../language/languageSwitcher.tsx'
-import {EditorExportFileType} from '../../editor/engine/type'
+import {EditorExportFileType} from '@editor/engine/type'
 
 const FileProvider: FC = () => {
   const fileMap = useRef<FileMap>(new Map())

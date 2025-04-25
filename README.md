@@ -2,17 +2,17 @@
 
 Try it 
 ```bash
-git clone https://github.com/17x/vision-flow.git --depth=1
+git clone https://github.com/17x/vision.git --depth=1
 ```
 
 ```bash
-cd vision-flow
+cd vision
 npm install && npm run dev
 ```
 
 
 ### See it
-https://lucasischow.github.io/demos/vision-flow/
+https://lucasischow.github.io/demos/vision/
 
 ### Ongoing ......
 

@@ -35,29 +35,17 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
       config: {
         // dpr: 2,
         // moduleIdCounter: 0,
-        scale: 0,
-        offset: {x: 0, y: 0},
+        // scale: 0,
+        // offset: {x: 0, y: 0},
         page: {
           ...currentPageSet,
         },
-        /*frame: {
-          id: fileId + '-frame',
-          width: 1000,
-          height: 1414.142857,
-          enableLine: true,
-          lineColor: '#000000',
-          lineWidth: 1,
-          opacity: 100,
-          shadow: false,
-          rotation: 0,
-          layer: -1,
-          fillColor: '#fff',
-          enableFill: true,
-          x: 500,
-          y: 707.0714285,
-        },*/
       },
-      data: [],
+      sheets: [
+        {
+          name: 'sheet 1',
+        },
+      ],
     }
 
     createFile(newFile)
@@ -158,7 +146,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
                              handleChange('name', e.target.value)
                            }}
                            type={'text'}/>
-                    <P style={{color:'red'}}>{error}</P>
+                    <P style={{color: 'red'}}>{error}</P>
                     <P style={{marginTop: 10}}>Page Width</P>
                     <Input name={'width'}
                            placeholder="enter page width"

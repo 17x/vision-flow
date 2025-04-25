@@ -1,4 +1,4 @@
-import {EditorExportFileType, EventHandlers} from './type'
+import {EditorConfig, EditorExportFileType, EditorInterface, EventHandlers} from './type'
 import History from './history/history.ts'
 import Action from './actions/actions.ts'
 import {generateBoundingRectFromTwoPoints, rectsOverlap} from '../core/utils.ts'
@@ -15,31 +15,9 @@ import {initEditor} from './initEditor.ts'
 import uid from '../../utilities/Uid.ts'
 import {EditorEventType} from './actions/type'
 import {zoomAtPoint} from './viewport/helper.ts'
-// import deduplicateObjectsByKeyValue from '../core/renderer/deduplicate.ts'
-// import resetCanvas from './viewport/resetCanvas.tsx'
-import {RectangleProps} from '../core/modules/shapes/rectangle.ts'
 import AssetsMaganer from './AssetsMaganer/AssetsMaganer.ts'
 import ElementImage from '../core/modules/shapes/image.ts'
-
-export interface EditorDataProps {
-  id: UID;
-  modules: ModuleProps[];
-}
-
-export interface EditorConfig {
-  moduleIdCounter: number
-  dpr: number;
-  frame: RectangleProps;
-  offset: { x: number, y: number };
-  scale: number
-}
-
-export interface EditorInterface {
-  container: HTMLDivElement
-  data: EditorDataProps
-  events?: EventHandlers;
-  config: EditorConfig;
-}
+import {BoundingRect, Point} from '@editor/type.ts'
 
 class Editor {
   readonly id: UID

@@ -39,15 +39,15 @@ export interface SnapPointData extends Point {
   type: string
 }
 
-type InitializedHandler = () => void;
-type HistoryUpdatedHandler = (history: History) => void;
-type ModulesUpdatedHandler = (moduleMap: ModuleMap) => void;
-type SelectionUpdatedHandler = (selected: Set<UID>, selectedProps?: ModuleProps) => void;
-type ViewportUpdatedHandler = (viewportInfo: ViewportData) => void;
-type WorldUpdatedHandler = (worldInfo: WorldInfo) => void;
-type WorldMouseMoveUpdatedHandler = (point: Point) => void;
-type ContextMenuHandler = (position: Point) => void;
-type ModuleCopiedHandler = (ModuleProps) => void;
+export type InitializedHandler = () => void;
+export type HistoryUpdatedHandler = (history: History) => void;
+export type ModulesUpdatedHandler = (moduleMap: ModuleMap) => void;
+export type SelectionUpdatedHandler = (selected: Set<UID>, selectedProps?: ModuleProps) => void;
+export type ViewportUpdatedHandler = (viewportInfo: ViewportData) => void;
+export type WorldUpdatedHandler = (worldInfo: WorldInfo) => void;
+export type WorldMouseMoveUpdatedHandler = (point: Point) => void;
+export type ContextMenuHandler = (position: Point) => void;
+export type ModuleCopiedHandler = (ModuleProps) => void;
 
 export declare type EventHandlers = {
   onInitialized?: InitializedHandler
@@ -61,8 +61,29 @@ export declare type EventHandlers = {
   onModuleCopied?: ModuleCopiedHandler
 }
 
-interface EditorExportFileType {
+export interface EditorExportFileType {
   data: ModuleProps[]
   id: UID,
   config: EditorConfig
+}
+
+
+export interface EditorDataProps {
+  id: UID;
+  modules: ModuleProps[];
+}
+
+export interface EditorConfig {
+  moduleIdCounter: number
+  dpr: number;
+  frame: RectangleProps;
+  offset: { x: number, y: number };
+  scale: number
+}
+
+export interface EditorInterface {
+  container: HTMLDivElement
+  data: EditorDataProps
+  events?: EventHandlers;
+  config: EditorConfig;
 }

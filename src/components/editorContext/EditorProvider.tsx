@@ -3,15 +3,15 @@ import Editor from '../../editor/engine/editor.ts'
 import ShortcutListener from '../ShortcutListener.tsx'
 import {ModulePanel} from '../modulePanel/ModulePanel.tsx'
 import {PointRef, StatusBar} from '../statusBar/StatusBar.tsx'
-import {HistoryNode} from '../../editor/engine/history/DoublyLinkedList.ts'
+import {HistoryNode} from '@editor/engine/history/DoublyLinkedList.ts'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 import Header from '../header/Header.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
-import FileContext, {FileType} from '../fileContext/FileContext.tsx'
+import FileContext, {FileType, VisionWorkspace} from '../fileContext/FileContext.tsx'
 import EditorContext from './EditorContext.tsx'
 import PropPanel from '../propPanel/PropPanel.tsx'
 import {ContextMenu} from '../contextMenu/ContextMenu.tsx'
-import {EditorEventData, EditorEventType} from '../../editor/engine/actions/type'
+import {EditorEventData, EditorEventType} from '@editor/engine/actions/type'
 import {Print} from '../print/print.tsx'
 import {
   ContextMenuHandler,
@@ -21,10 +21,10 @@ import {
   SelectionUpdatedHandler,
   ViewportUpdatedHandler,
   WorldMouseMoveUpdatedHandler,
-} from '../../editor/engine/type'
+} from '@editor/engine/type'
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
 
-const EditorProvider: FC<{ file: FileType }> = ({file}) => {
+const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
   const [state, dispatch] = useReducer(EditorReducer, initialEditorState)
   const editorRef = useRef<Editor>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -35,7 +35,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const [showPrint, setShowPrint] = useState(false)
   const contextRootRef = useRef<HTMLDivElement>(null)
-  const {currentFileId, startCreateFile, closeFile, saveFileToLocal} = useContext(FileContext)
+  const {focusedFileId, startCreateFile, closeFile, saveFileToLocal} = useContext(FileContext)
   const lastSavedHistoryId = useRef(0)
   const currentHistoryId = useRef(0)
   const needSaveLocal = useRef(false)
@@ -129,7 +129,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       return
     }
     if (type === 'closeFile') {
-      closeFile(file.id)
+      closeFile(data.id)
       return
     }
 
@@ -139,7 +139,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       if (needSaveLocal.current) {
         const editorData: FileType = editorRef.current!.exportToFiles() as FileType
 
-        editorData.name = file.name
+        editorData.name = data.name
         saveFileToLocal(editorData)
         lastSavedHistoryId.current = currentHistoryId.current
         dispatch({type: 'SET_NEED_SAVE', payload: false})
@@ -161,10 +161,10 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
       editor = new Editor({
         container: containerRef!.current,
         data: {
-          id: file.id,
-          modules: file.data,
+          id: data.id,
+          modules: data.data,
         },
-        config: file.config,
+        config: data.config,
         events: {
           onInitialized: () => { },
           onHistoryUpdated,
@@ -177,7 +177,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
         },
       })
       editorRef.current = editor
-      dispatch({type: 'SET_ID', payload: file.id})
+      dispatch({type: 'SET_ID', payload: data.id})
     }
     const element = contextRootRef.current
 
@@ -209,7 +209,7 @@ const EditorProvider: FC<{ file: FileType }> = ({file}) => {
   }}>
     <div ref={contextRootRef} data-focused={state.focused} autoFocus={true} tabIndex={0}
          className={'outline-0 w-full h-full flex flex-col'}>
-      {currentFileId === file.id && <ShortcutListener/>}
+      {focusedFileId === data.id && <ShortcutListener/>}
 
       <Header/>
 

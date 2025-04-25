@@ -1,54 +1,43 @@
 import {FC, useEffect, useRef, useState} from 'react'
 import CreateFile from '../CreateFile/CreateFile.tsx'
-import FileContext, {FileMap, FileType} from './FileContext.tsx'
-import EditorProvider from '../editorContext/EditorProvider.tsx'
+import FileContext, {VisionFileType} from './FileContext.tsx'
 // import MOCK_FILE_MAP from '../../mock.ts'
 import Files from '../files/Files.tsx'
 import LanguageSwitcher from '../language/languageSwitcher.tsx'
 import {EditorExportFileType} from '@editor/engine/type'
+import WorkspaceProvider from '../workspace/WorkspaceProvider.tsx'
 
 const FileProvider: FC = () => {
-  const fileMap = useRef<FileMap>(new Map())
+  const fileMap = useRef<Map<string, VisionFileType>>(new Map())
+  const [fileList, setFileList] = useState<VisionFileType[]>([])
   const [creating, setCreating] = useState<boolean>(false)
-  const [currentFileId, setCurrentFileId] = useState<UID>('')
-  const [fileList, setFileList] = useState<FileType[]>([])
+  const [focusedFileId, setFocusedFileId] = useState<UID>('')
   const fileLen = fileMap.current.size
   const showCreateFile = fileLen === 0 || creating
   const STORAGE_ID = 'VISION_FLOW_FILE_MAP'
 
   useEffect(() => {
-    readFileFromLocal()
-
+    // readFileFromLocal()
 
   }, [])
 
-  const setFileInitialized = (fileId: UID) => {
-    fileMap.current.forEach(file => {
-      if (file.id === fileId) {
-        file.initialized = true
-      }
-    })
-
-    updateFileList()
-  }
-
-  const updateFileList = (): FileType[] => {
+  const updateFileList = (): [] => {
     const arr = Array.from(fileMap.current.values())
 
     setFileList(arr)
 
-    if (!currentFileId) {
+    if (!focusedFileId) {
       if (arr[0]) {
-        switchFile(arr[0].id)
+        focusOnFile(arr[0].id)
       }
     }
 
     return arr
   }
 
-  const switchFile = (id: UID) => {
+  const focusOnFile = (id: UID) => {
     // console.log(fileList)
-    setCurrentFileId(id)
+    setFocusedFileId(id)
 
     /*setTimeout(() => {
       console.log(document.activeElement)
@@ -67,7 +56,7 @@ const FileProvider: FC = () => {
     fileList.splice(deletingFileIndex, 1)
     len--
 
-    if (currentFileId === deletingId && len > 0) {
+    if (focusedFileId === deletingId && len > 0) {
       let newOpenFileIndex: number = deletingFileIndex + 1
 
       if (deletingFileIndex === 0) {
@@ -77,14 +66,14 @@ const FileProvider: FC = () => {
         newOpenFileIndex = len - 1
       }
 
-      setCurrentFileId(fileList[newOpenFileIndex].id)
+      setFocusedFileId(fileList[newOpenFileIndex].id)
     }
   }
 
-  const createFile = (file: FileType) => {
+  const createFile = (file: VisionFileType) => {
     fileMap.current.set(file.id, file)
     updateFileList()
-    switchFile(file.id)
+    focusOnFile(file.id)
     // setCurrentFileId(file.id)
   }
 
@@ -148,9 +137,8 @@ const FileProvider: FC = () => {
       fileMap: fileMap.current,
       fileList,
       creating,
-      currentFileId,
-      switchFile,
-      setFileInitialized,
+      focusedFileId,
+      focusOnFile,
       closeFile,
       createFile,
       startCreateFile,
@@ -169,9 +157,9 @@ const FileProvider: FC = () => {
                                       data-file-id={file.id}
                                       className={'flex top-0 bg-white left-0 absolute outline-0 w-full h-full flex-col'}
                                       style={{
-                                        zIndex: file.id === currentFileId ? 200 : 100,
+                                        zIndex: file.id === focusedFileId ? 200 : 100,
                                       }}>
-              <EditorProvider file={file}/>
+              <WorkspaceProvider file={file}/>
             </div>)
           }
         </div>

@@ -1,6 +1,6 @@
-import {FC, FormEvent, useContext, useRef, useState} from 'react'
+import {FC, FormEvent, useRef, useState} from 'react'
 import uid from '../../utilities/Uid.ts'
-import FileContext, {VisionFileType} from '../fileContext/FileContext.tsx'
+import {useFile, VisionFileType} from '../fileContext/FileContext.tsx'
 import {Button, Col, Con, Input, MenuItem, Modal, P, Panel, Row, Select, SelectItem, Title} from '@lite-u/ui'
 import {PAGE_PRESETS} from './pagePresets.ts'
 import {useTranslation} from 'react-i18next'
@@ -11,7 +11,8 @@ import {VISION_VERSION} from '../../constants'
 const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#00000066', onBgClick}) => {
   const formRef = useRef<HTMLFormElement>(null)
   const {t} = useTranslation()
-  const {createFile, handleCreating} = useContext(FileContext)
+  // const {}
+  const {createFile, handleCreating} = useFile()
   const [currentPageSet, setCurrentPageSet] = useState({...PAGE_PRESETS[0]})
   const [dpi, setDpi] = useState(72)
   const [error, setError] = useState('')
@@ -39,10 +40,11 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
       updatedAt: Date.now(),
       config: {
         page: {
+          dpi,
           ...currentPageSet,
         },
       },
-      sheets: [
+      workspace: [
         {
           name: 'sheet 1',
           data: [],
@@ -80,7 +82,9 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
   }
   // console.log(currentPageSet.name)
 
-  return <Modal backdropBg={bg} onBackdropClick={() => onBgClick && onBgClick()}>
+  return <Modal backdropBg={bg} style={{
+    zIndex: 1000,
+  }} onBackdropClick={() => onBgClick && onBgClick()}>
     <Col w={'90%'} h={'90%'} className={'shadow-md rounded-sm shadow-gray-600 overflow-hidden  text-sm'}>
       <Panel title={t('file.CreateTitle')}>
         <Row stretch center fh className={'p-4'}>
@@ -115,7 +119,8 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
                         }} viewBox={`0 0 ${item.width} ${item.height}`}>
                           <rect width={item.width}
                                 height={item.height}
-                                stroke-width={1 / scale}
+                                strokeWidth={1 / scale}
+                                stroke={'black'}
                                 fill={'#ffd6d6'}/>
                         </svg>
                       </Con>

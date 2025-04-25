@@ -2,6 +2,7 @@ import {
   ResizeHandleName,
   ResizeTransform,
 } from '../editor/selection/type'
+import {Point} from '@editor/type.ts'
 
 interface DrawCrossLineProps {
   ctx: CanvasRenderingContext2D;

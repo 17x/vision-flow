@@ -1,9 +1,4 @@
-enum Unit {
-  MM = 'mm',
-  INCHES = 'inches',
-  PX = 'px',
-  CM = 'cm'
-}
+import {Unit} from '@editor/type.ts'
 
 export interface PagePreset {
   name: string

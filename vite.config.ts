@@ -15,6 +15,11 @@ export default defineConfig(({mode}) => {
       preserveSymlinks: true,
       alias: {
         react: path.resolve(__dirname, './node_modules/react'),
+        '@editor': path.resolve(__dirname, 'src/engine'),
+
+        // '@editor': path.resolve(__dirname, '../src/engine'),
+        // '@editor': './src/engine',
+
         // /esm/icons/index.mjs only exports the icons statically, so no separate chunks are created
         // '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
       },

@@ -1,6 +1,5 @@
 import {ModuleProps} from '../core/modules/modules'
 import History from './history/history.ts'
-import {RectangleProps} from '../core/modules/shapes/rectangle.ts'
 import {EditorConfig} from './editor.ts'
 
 export type ModuleMoveDirection =
@@ -67,18 +66,19 @@ export interface EditorExportFileType {
   config: EditorConfig
 }
 
-
 export interface EditorDataProps {
   id: UID;
   modules: ModuleProps[];
 }
 
 export interface EditorConfig {
-  moduleIdCounter: number
   dpr: number;
-  frame: RectangleProps;
-  offset: { x: number, y: number };
-  scale: number
+  page: {
+    name: string
+    unit: string
+    width: number
+    height: number
+  }
 }
 
 export interface EditorInterface {

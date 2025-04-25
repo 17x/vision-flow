@@ -7,7 +7,7 @@ import {HistoryNode} from '@editor/engine/history/DoublyLinkedList.ts'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 import Header from '../header/Header.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
-import FileContext, {FileType, VisionWorkspace} from '../fileContext/FileContext.tsx'
+import FileContext, {FileType, useFile, VisionWorkspace} from '../fileContext/FileContext.tsx'
 import EditorContext from './EditorContext.tsx'
 import PropPanel from '../propPanel/PropPanel.tsx'
 import {ContextMenu} from '../contextMenu/ContextMenu.tsx'
@@ -41,7 +41,7 @@ const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
   const currentHistoryId = useRef(0)
   const needSaveLocal = useRef(false)
   const {dpr} = useUI()
-
+  console.log(data)
   const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
     dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})
 

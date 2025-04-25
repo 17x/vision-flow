@@ -1,8 +1,15 @@
 import {createContext, useContext} from 'react'
 import {VisionWorkspace} from '../fileContext/FileContext.tsx'
+import {Unit} from '@editor/type.ts'
 
 interface WorkspaceContextType {
   workspaceList: VisionWorkspace[]
+  pageConfig: {
+    dpi: number
+    width: number,
+    height: number,
+    unit: Unit,
+  }
   creating: boolean
   focused: UID
   focusOn: (id: UID) => void
@@ -14,6 +21,12 @@ interface WorkspaceContextType {
 
 const WorkspaceContext = createContext<WorkspaceContextType>({
   workspaceList: [],
+  pageConfig: {
+    dpi: 2,
+    width: 1,
+    height: 1,
+    unit: Unit.PX,
+  },
   creating: false,
   focused: '',
   focusOn: () => {},

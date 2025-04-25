@@ -5,6 +5,7 @@ import Ellipse, {EllipseProps} from '../../core/modules/shapes/ellipse.ts'
 import ElementText, {TextProps} from '../../core/modules/shapes/text.ts'
 import ElementImage, {ImageProps} from '../../core/modules/shapes/image.ts'
 import {AssetsObj} from '../AssetsMaganer/AssetsMaganer.ts'
+import nid from '@editor/lib/nid.ts'
 
 export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): ModuleMap {
   const clonedData = deepClone(moduleDataList) as ModuleProps[]
@@ -13,7 +14,7 @@ export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): Module
 
   const create = (data: ModuleProps) => {
     if (!data.id) {
-      data.id = this.createModuleId
+      data.id = nid()
     }
 
     if (isNaN(data.layer)) {

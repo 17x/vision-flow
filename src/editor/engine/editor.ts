@@ -22,7 +22,7 @@ import {BoundingRect, Point} from '@editor/type.ts'
 class Editor {
   readonly id: UID
   config: EditorConfig
-  private moduleCounter = 0
+  // private moduleCounter = 0
   readonly moduleMap: ModuleMap
   // private readonly snapPoints: SnapPointData[] = []
   private readonly visibleModuleMap: ModuleMap
@@ -65,30 +65,14 @@ class Editor {
     this.history = new History(this)
     this.viewport = createViewport.call(this)
     this.moduleMap = new Map()
-    this.moduleCounter = config.moduleIdCounter
+    // this.moduleCounter = config.moduleIdCounter
     this.assetsManager = new AssetsMaganer()
-    // const modules: ModuleMap = this.batchCreate(data.modules)
-    /*
-
-        modules.forEach((module) => {
-          this.moduleMap.set(module.id, module)
-        })
-
-        if (this.moduleMap.size > 0) {
-
-        }
-    */
-
     this.init()
     this.action.dispatch('module-add', data.modules)
   }
 
   private init() {
     initEditor.call(this)
-  }
-
-  get createModuleId(): UID {
-    return this.id + '-' + ++this.moduleCounter
   }
 
   batchCreate(moduleDataList: ModuleProps[]): ModuleMap {

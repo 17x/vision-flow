@@ -128,6 +128,7 @@ const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
       startCreateFile()
       return
     }
+
     if (type === 'closeFile') {
       closeFile(data.id)
       return

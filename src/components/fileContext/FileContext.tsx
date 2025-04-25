@@ -44,15 +44,37 @@ interface FileContextType {
   focusOnFile: (id: UID) => void
   closeFile: (id: UID) => void
   createFile: (v: FileType) => void
-  setFileInitialized: (id: UID) => void
   handleCreating: (v: boolean) => void
   saveFileToLocal: (v: EditorExportFileType) => void
   startCreateFile: VoidFunction
 }
 
+const dFile = {
+  'id': '19455cb7-8406-4512-98f4-61d5e1d840ec',
+  'name': 'A4',
+  'version': '0.0.2',
+  'createdAt': 1745561608440,
+  'updatedAt': 1745561608440,
+  'config': {
+    'page': {
+      'dpi': 72,
+      'name': 'A4',
+      'unit': 'mm',
+      'width': 210,
+      'height': 297,
+    },
+  },
+  'workspace': [
+    {
+      'name': 'workspace-1',
+      'data': [],
+    },
+  ],
+}
+
 const FileContext = createContext<FileContextType>({
-  fileMap: new Map(),
-  fileList: [],
+  fileMap: new Map([['19455cb7-8406-4512-98f4-61d5e1d840ec', dFile]]),
+  fileList: [dFile],
   focusedFileId: '',
   creating: false,
   focusOnFile: () => {
@@ -62,8 +84,6 @@ const FileContext = createContext<FileContextType>({
   createFile: () => {
   },
   handleCreating: () => {
-  },
-  setFileInitialized: () => {
   },
   startCreateFile: () => {
   },

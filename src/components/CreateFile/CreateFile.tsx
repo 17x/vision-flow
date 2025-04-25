@@ -46,7 +46,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
       },
       workspace: [
         {
-          name: 'sheet 1',
+          name: 'workspace-1',
           data: [],
         },
       ],

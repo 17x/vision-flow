@@ -1,6 +1,6 @@
-import {FC, useEffect, useRef, useState} from 'react'
+import {FC, useEffect, useState} from 'react'
 import CreateFile from '../CreateFile/CreateFile.tsx'
-import FileContext, {VisionFileType} from './FileContext.tsx'
+import FileContext, {useFile, VisionFileType} from './FileContext.tsx'
 // import MOCK_FILE_MAP from '../../mock.ts'
 import Files from '../files/Files.tsx'
 import LanguageSwitcher from '../language/languageSwitcher.tsx'
@@ -8,21 +8,25 @@ import {EditorExportFileType} from '@editor/engine/type'
 import WorkspaceProvider from '../workspace/WorkspaceProvider.tsx'
 
 const FileProvider: FC = () => {
-  const fileMap = useRef<Map<string, VisionFileType>>(new Map())
+  const {fileMap} = useFile()
+  // console.log(F1)
+  // const fileMap = useRef<Map<string, VisionFileType>>(new Map())
   const [fileList, setFileList] = useState<VisionFileType[]>([])
   const [creating, setCreating] = useState<boolean>(false)
   const [focusedFileId, setFocusedFileId] = useState<UID>('')
-  const fileLen = fileMap.current.size
+  const fileLen = fileMap.size
   const showCreateFile = fileLen === 0 || creating
   const STORAGE_ID = 'VISION_FLOW_FILE_MAP'
 
+  console.log(fileMap)
+
   useEffect(() => {
     // readFileFromLocal()
-
+    updateFileList()
   }, [])
 
   const updateFileList = (): [] => {
-    const arr = Array.from(fileMap.current.values())
+    const arr = Array.from(fileMap.values())
 
     setFileList(arr)
 
@@ -39,9 +43,6 @@ const FileProvider: FC = () => {
     // console.log(fileList)
     setFocusedFileId(id)
 
-    /*setTimeout(() => {
-      console.log(document.activeElement)
-    }, 1000)*/
   }
 
   const closeFile = (deletingId: UID) => {
@@ -51,7 +52,7 @@ const FileProvider: FC = () => {
     if (deletingFileIndex === -1) return
 
     deleteFileFromLocal(deletingId)
-    fileMap.current.delete(deletingId)
+    fileMap.delete(deletingId)
     updateFileList()
     fileList.splice(deletingFileIndex, 1)
     len--
@@ -71,7 +72,7 @@ const FileProvider: FC = () => {
   }
 
   const createFile = (file: VisionFileType) => {
-    fileMap.current.set(file.id, file)
+    fileMap.set(file.id, file)
     updateFileList()
     focusOnFile(file.id)
     // setCurrentFileId(file.id)
@@ -125,7 +126,7 @@ const FileProvider: FC = () => {
         const fileData = JSON.parse(fileRawData!)
 
         // console.log(fileData)
-        fileMap.current.set(fileData.id, fileData)
+        fileMap.set(fileData.id, fileData)
       })
     }
 
@@ -134,7 +135,6 @@ const FileProvider: FC = () => {
 
   return (
     <FileContext.Provider value={{
-      fileMap: fileMap.current,
       fileList,
       creating,
       focusedFileId,

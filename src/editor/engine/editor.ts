@@ -89,7 +89,7 @@ class Editor {
     this.moduleMap = new Map()
     this.moduleCounter = config.moduleIdCounter
     this.assetsManager = new AssetsMaganer()
-    const modules: ModuleMap = this.batchCreate(data.modules)
+    // const modules: ModuleMap = this.batchCreate(data.modules)
     /*
 
         modules.forEach((module) => {

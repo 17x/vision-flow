@@ -23,6 +23,7 @@ import {
   WorldMouseMoveUpdatedHandler,
 } from '@editor/engine/type'
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
+import {useUI} from '../UIContext/UIContext.tsx'
 
 const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
   const [state, dispatch] = useReducer(EditorReducer, initialEditorState)
@@ -39,6 +40,7 @@ const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
   const lastSavedHistoryId = useRef(0)
   const currentHistoryId = useRef(0)
   const needSaveLocal = useRef(false)
+  const {dpr} = useUI()
 
   const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
     dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})
@@ -159,6 +161,7 @@ const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
         }*/
 
     if (containerRef.current && !editorRef.current) {
+      console.log(data.config)
       editor = new Editor({
         container: containerRef!.current,
         data: {

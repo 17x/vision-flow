@@ -54,7 +54,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
     handleCreating(false)
   }
 
-  const handleChange = (key, value) => {
+  const handleChange = (key: string, value: number | string) => {
     setCurrentPageSet(prevState => {
       return {
         ...prevState,
@@ -100,11 +100,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
                               h={120}
                               className={'border overflow-hidden flex text-center   border-gray-200  cursor-pointer hover:border-gray-600'}
                               onClick={() => {
-                                setCurrentPageSet((prev) => {
-                                  return {
-                                    ...item,
-                                  }
-                                })
+                                setCurrentPageSet({...item})
                               }}>
                     <Col center jc>
                       <Con w={size} h={size} style={{

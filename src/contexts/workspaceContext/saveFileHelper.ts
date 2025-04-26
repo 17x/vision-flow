@@ -22,7 +22,10 @@ const saveFileHelper = (file, workspaces: VisionWorkspace[]) => {
 
   zip.file('file.json', JSON.stringify(fileJson))
 
-  zip.generateAsync({type: 'blob'})
+  zip.generateAsync({
+      type: 'blob', compression: 'DEFLATE',
+    },
+  )
     .then(function (content) {
       console.log(content)
 

@@ -1,5 +1,5 @@
 import {memo, useContext, useEffect, useState} from 'react'
-import EditorContext from '../editorContext/EditorContext.tsx'
+import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
 import {ProtectedInput} from './protectedInput.tsx'
 
 // import EditorContext from '../editorContext/EditorContext.tsx'

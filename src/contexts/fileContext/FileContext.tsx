@@ -1,11 +1,14 @@
 import {createContext, useContext} from 'react'
+import {AssetsObj} from '@editor/engine/assetsManager/AssetsManager.ts'
 
-type Element = ModuleInstance
+type ElementProps = ModuleProps
 
 export interface VisionWorkspace {
+  id: string
   name: string
-  data: Element[]
+  elements: ElementProps[]
   config?: {}
+  assets?: AssetsObj[]
 }
 
 export interface VisionFilePageSet {
@@ -58,8 +61,9 @@ const dFile = {
   },
   'workspace': [
     {
+      'id': 'ile9lt',
       'name': 'workspace-1',
-      'data': [],
+      'elements': [],
     },
   ],
 }

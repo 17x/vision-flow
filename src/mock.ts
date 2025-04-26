@@ -1,6 +1,6 @@
 /* eslint-disable */
 import uid from "./utilities/Uid.ts"
-import {FileMap, FileType} from "./components/fileContext/FileContext.tsx"
+import {FileMap, FileType} from "./contexts/fileContext/FileContext.tsx"
 
 const CreateModules = (fileId: UID) => {
   const moduleList = []

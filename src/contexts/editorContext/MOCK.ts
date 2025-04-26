@@ -1,6 +1,6 @@
 // eslint disabled
-import Editor from '../../editor/engine/editor.ts'
-import {CircleRenderProps} from '../../editor/core/renderer/type'
+import Editor from '@editor/engine/editor.ts'
+import {CircleRenderProps} from '@editor/core/renderer/type'
 
 const createBaseDataByType = <T extends ModuleNames>(type: T = 'rectangle' as T, x: number = 300, y: number = 300): PropsWithoutIdentifiers<T> => {
   if (type === 'ellipse') {

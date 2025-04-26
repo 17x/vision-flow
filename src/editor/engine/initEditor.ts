@@ -49,6 +49,7 @@ export function initEditor(this: Editor) {
 
   on('world-zoom', (arg) => {
     if (arg === 'fit') {
+      console.log(this.config.page)
       const {frame, viewportRect} = this.viewport
       const frameRect = frame.getBoundingRect()
       const {scale, offsetX, offsetY} = fitRectToViewport(frameRect, viewportRect, 0.02)

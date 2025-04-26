@@ -1,7 +1,7 @@
 import React, {memo, useContext, useEffect, useReducer} from 'react'
 import {ModuleMoveDirection} from '../editor/engine/type'
-import EditorContext from './editorContext/EditorContext.tsx'
-import {EditorEventMap, EditorEventType} from '../editor/engine/actions/type'
+import EditorContext from '../contexts/editorContext/EditorContext.tsx'
+import {VisionEventMap, VisionEventType} from '../editor/engine/actions/type'
 
 const ShortcutListener: React.FC = () => {
   const {state: {focused}, executeAction} = useContext(EditorContext)
@@ -9,7 +9,7 @@ const ShortcutListener: React.FC = () => {
   const handleKeyPress = (e: KeyboardEvent) => {
     if (!focused) return
 
-    let shortcutCode: EditorEventType | null = null
+    let shortcutCode: VisionEventType | null = null
     const {key, ctrlKey, metaKey, shiftKey} = e
     const arrowKeys: { [key: string]: ModuleMoveDirection } = {
       ArrowUp: 'module-move-up',
@@ -20,7 +20,7 @@ const ShortcutListener: React.FC = () => {
     const moveDirection = arrowKeys[key]
     const moveDelta = {x: 0, y: 0}
     const MODULE_MOVE_STEP = 5
-    const zoomData: EditorEventMap['world-zoom'] = {
+    const zoomData: VisionEventMap['world-zoom'] = {
       zoomBy: true,
       zoomFactor: 0.1,
     }

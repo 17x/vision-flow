@@ -9,8 +9,8 @@ export interface SelectionModifyData {
   idSet: Set<UID>;
 }
 
-export type EditorEventType = keyof EditorEventMap;
-export type EditorEventData<T extends EditorEventType> = EditorEventMap[T];
+export type VisionEventType = keyof VisionEventMap;
+export type VisionEventData<T extends VisionEventType> = VisionEventMap[T];
 
 export type ModuleMoveData = {
   idSet?: Set<UID>;
@@ -43,7 +43,7 @@ export interface ModuleModifyData {
   props: Partial<ModuleProps>
 }
 
-export type EditorEventMap = {
+export type VisionEventMap = {
   // 'editor-initialized': never;
   'world-resized': null;
   'world-mouse-down': never;
@@ -89,7 +89,7 @@ export type EditorEventMap = {
   };
 }
 
-const forwardEventDependencyMap: Record<EditorEventType, EditorEventType[]> = {
+const forwardEventDependencyMap: Record<VisionEventType, VisionEventType[]> = {
   'world-resized': ['world-updated'],
   // 'editor-initialized': ['world-updated'],
   'world-updated': ['visible-module-updated'],

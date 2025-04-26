@@ -1,4 +1,4 @@
-import {EditorConfig, EditorExportFileType, EditorInterface, EventHandlers} from './type'
+import {EditorConfig, EditorExportFileType, EventHandlers} from './type'
 import History from './history/history.ts'
 import Action from './actions/actions.ts'
 import {generateBoundingRectFromTwoPoints, rectsOverlap} from '../core/utils.ts'
@@ -12,15 +12,17 @@ import {Viewport, ViewportManipulationType} from './viewport/type'
 import {createViewport} from './viewport/createViewport.ts'
 import {destroyViewport} from './viewport/destroyViewport.ts'
 import {initEditor} from './initEditor.ts'
-import uid from '../../utilities/Uid.ts'
-import {EditorEventType} from './actions/type'
+import {VisionEventType} from './actions/type'
 import {zoomAtPoint} from './viewport/helper.ts'
-import AssetsMaganer from './AssetsMaganer/AssetsMaganer.ts'
+import AssetsManager from '@editor/engine/assetsManager/AssetsManager.ts'
 import ElementImage from '../core/modules/shapes/image.ts'
 import {BoundingRect, Point} from '@editor/type.ts'
+import nid from '@editor/lib/nid.ts'
+import {ModuleProps} from '@editor/core/modules/modules'
 
 class Editor {
-  readonly id: UID
+  id = nid()
+  // readonly id: UID
   config: EditorConfig
   // private moduleCounter = 0
   readonly moduleMap: ModuleMap
@@ -34,7 +36,7 @@ class Editor {
   readonly selectedModules: Set<UID> = new Set()
   readonly visibleSelected: Set<UID> = new Set()
   readonly operationHandlers: OperationHandlers[] = []
-  assetsManager: AssetsMaganer
+  assetsManager: AssetsManager
   // resizeHandleSize: number = 10
   copiedItems: ModuleProps[] = []
   hoveredModule: UID | null = null
@@ -52,12 +54,16 @@ class Editor {
 
   constructor({
                 container,
-                data,
+                elements,
                 events = {},
                 config,
-              }: EditorInterface) {
+              }: {
+    container: HTMLDivElement
+    elements: ModuleProps[]
+    events?: EventHandlers;
+    config: EditorConfig;
+  }) {
     this.visibleModuleMap = new Map()
-    this.id = data.id || uid()
     this.config = config
     this.events = events
     this.action = new Action()
@@ -66,9 +72,9 @@ class Editor {
     this.viewport = createViewport.call(this)
     this.moduleMap = new Map()
     // this.moduleCounter = config.moduleIdCounter
-    this.assetsManager = new AssetsMaganer()
+    this.assetsManager = new AssetsManager()
     this.init()
-    this.action.dispatch('module-add', data.modules)
+    this.action.dispatch('module-add', elements)
   }
 
   private init() {
@@ -262,7 +268,8 @@ class Editor {
     return null
   }
 
-  public execute(type: EditorEventType, data: unknown = null) {
+  public execute(type: VisionEventType, data: unknown = null) {
+    console.log('Editor', type)
     // @ts-ignore
     this.action.execute(type, data)
   }
@@ -284,8 +291,9 @@ class Editor {
             const {src} = module as ElementImage
 
             const obj = this.assetsManager.getAssetsObj(src)
-            if (obj && obj.loaded) {
-              module.render(ctx, obj.imageRef)
+              console.log(this.assetsManager,src);
+            if (obj) {
+              (module as ElementImage).render(ctx, obj.imageRef)
             }
           } else {
             module.render(ctx)
@@ -315,19 +323,53 @@ class Editor {
     const {dpr, scale, offset, frame} = this.viewport
 
     const result: EditorExportFileType = {
-      id: this.id,
+      // id: this.id,
       config: {
-        moduleIdCounter: this.moduleCounter,
+        // moduleIdCounter: this.moduleCounter,
         dpr,
         scale,
         offset,
         frame: frame.getDetails(),
       },
       data: [],
+      assets: [],
     }
 
     this.moduleMap.forEach((module) => {
       result.data.push(module.getDetails())
+    })
+
+    return result
+  }
+
+  public export(): { elements: ModuleProps[], assets: never[], config: { offset: { x: number, y: number } } } {
+    const {scale, offset} = this.viewport
+    const assetSet = new Set<string>()
+    const result: EditorExportFileType = {
+      elements: [],
+      config: {
+        scale,
+        offset,
+      },
+      assets: [],
+    }
+
+    this.moduleMap.forEach((module) => {
+      if (module.type === 'image') {
+        const {src} = module as ElementImage
+        if (!src) return
+
+        const r = this.assetsManager.getAssetsObj(src)
+
+        if (r) {
+          if (!assetSet.has(src)) {
+            assetSet.add(src)
+            result.assets.push(r)
+          }
+        }
+      }
+
+      result.elements.push(module.getDetails())
     })
 
     return result

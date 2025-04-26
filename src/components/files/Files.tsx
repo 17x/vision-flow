@@ -1,5 +1,5 @@
 import {useContext} from "react"
-import FileContext from "../fileContext/FileContext.tsx"
+import FileContext from "../../contexts/fileContext/FileContext.tsx"
 import {LuPlus} from "react-icons/lu"
 
 const Files: React.FC = () => {

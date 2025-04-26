@@ -1,8 +1,8 @@
 import React, {createContext} from 'react'
-import Editor from '../../editor/engine/editor.ts'
-import {HistoryNode} from '../../editor/engine/history/DoublyLinkedList.ts'
+import Editor from '@editor/engine/editor.ts'
+import {HistoryNode} from '@editor/engine/history/DoublyLinkedList.ts'
 // import {ViewportInfo} from '../../engine/editor/type'
-import {EditorEventData, EditorEventType} from '../../editor/engine/actions/type'
+import {VisionEventData, VisionEventType} from '@editor/engine/actions/type'
 import {EditorStateType, initialEditorState} from './reducer/reducer.ts'
 
 interface EditorContextType {
@@ -21,7 +21,7 @@ interface EditorContextType {
   editorRef: React.RefObject<Editor | null>
   applyHistoryNode: (node: HistoryNode) => void
   // executeAction: <K extends EditorEventType>(type: K, data?: EditorEventData<K>) => void
-  executeAction: <K extends EditorEventType>(type: K, data?: EditorEventData<K>) => void
+  executeAction: <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => void
   // viewport: ViewportInfo
 }
 

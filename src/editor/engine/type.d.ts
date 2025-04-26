@@ -66,15 +66,11 @@ export interface EditorExportFileType {
   config: EditorConfig
 }
 
-export interface EditorDataProps {
-  id: UID;
-  modules: ModuleProps[];
-}
 
 export interface EditorConfig {
   dpr: number;
   page: {
-    name: string
+    // name: string
     unit: string
     width: number
     height: number
@@ -83,7 +79,7 @@ export interface EditorConfig {
 
 export interface EditorInterface {
   container: HTMLDivElement
-  data: EditorDataProps
+  elements: ModuleProps[]
   events?: EventHandlers;
   config: EditorConfig;
 }

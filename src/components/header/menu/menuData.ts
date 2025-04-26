@@ -27,12 +27,15 @@ export const editMenu: MenuItemType = {
   id: 'edit',
   disabled: false,
   children: [
-    {id: 'undo', disabled: false},
-    {id: 'redo', disabled: false},
+    {id: 'undo', editorActionCode: 'history-undo', disabled: false},
+    {id: 'redo', editorActionCode: 'history-redo', disabled: false},
     {id: 'cut', disabled: false},
     {id: 'copy', disabled: false},
     {id: 'paste', disabled: false},
-    {id: 'delete', disabled: false},
+    {
+      id: 'delete', editorActionCode: 'module-delete',
+      disabled: false,
+    },
     {id: 'duplicate', disabled: false},
     {id: 'selectAll', disabled: false},
     {id: 'findReplace', disabled: false},

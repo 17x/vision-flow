@@ -1,9 +1,9 @@
-import {EditorEventType} from '../../../editor/engine/actions/type'
+import {VisionEventType} from '../../../editor/engine/actions/type'
 
 export interface MenuItemType {
   id: string
-  action?: EditorEventType,
-  editorActionCode?: EditorEventType,
+  action?: VisionEventType,
+  editorActionCode?: VisionEventType,
   editorActionData?: 'up' | 'down' | 'top' | 'bottom',
   disabled: boolean
   icon?: string

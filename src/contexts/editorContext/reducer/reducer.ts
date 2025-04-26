@@ -1,4 +1,4 @@
-import {HistoryNode} from '../../../editor/engine/history/DoublyLinkedList.ts'
+import {HistoryNode} from '@editor/engine/history/DoublyLinkedList.ts'
 
 // import {ViewportInfo} from '../../../engine/editor/type'
 

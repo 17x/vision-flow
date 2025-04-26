@@ -4,7 +4,7 @@ import Rectangle from '../../core/modules/shapes/rectangle.ts'
 import Ellipse, {EllipseProps} from '../../core/modules/shapes/ellipse.ts'
 import ElementText, {TextProps} from '../../core/modules/shapes/text.ts'
 import ElementImage, {ImageProps} from '../../core/modules/shapes/image.ts'
-import {AssetsObj} from '../AssetsMaganer/AssetsMaganer.ts'
+import {AssetsObj} from '@editor/engine/assetsManager/AssetsManager.ts'
 import nid from '@editor/lib/nid.ts'
 
 export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): ModuleMap {
@@ -14,7 +14,14 @@ export function batchCreate(this: Editor, moduleDataList: ModuleProps[]): Module
 
   const create = (data: ModuleProps) => {
     if (!data.id) {
-      data.id = nid()
+      let id = nid()
+
+      // ensure short id no repeat
+      if (this.moduleMap.has(id)) {
+        id = nid()
+      }
+
+      data.id = id
     }
 
     if (isNaN(data.layer)) {

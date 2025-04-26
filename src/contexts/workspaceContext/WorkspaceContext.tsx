@@ -14,6 +14,8 @@ interface WorkspaceContextType {
   focused: UID
   focusOn: (id: UID) => void
   close: (id: UID) => void
+  executeAction: () => void
+  saveFile: () => void
   create: (v: UID, data?: VisionWorkspace) => void
   handleCreating: (v: boolean) => void
   startCreateFile: VoidFunction
@@ -29,10 +31,12 @@ const WorkspaceContext = createContext<WorkspaceContextType>({
   },
   creating: false,
   focused: '',
+  saveFile: () => {},
   focusOn: () => {},
   close: () => {},
   create: () => {},
   handleCreating: () => {},
+  executeAction:()=>{},
   startCreateFile: () => {
   },
 })

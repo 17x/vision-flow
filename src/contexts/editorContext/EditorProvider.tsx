@@ -1,20 +1,20 @@
-import {FC, useContext, useEffect, useReducer, useRef, useState} from 'react'
-import Editor from '../../editor/engine/editor.ts'
-import ShortcutListener from '../ShortcutListener.tsx'
-import {ModulePanel} from '../modulePanel/ModulePanel.tsx'
-import {PointRef, StatusBar} from '../statusBar/StatusBar.tsx'
+import {FC, useContext, useEffect, useImperativeHandle, useReducer, useRef, useState} from 'react'
+import Editor from '@editor/engine/editor.ts'
+import ShortcutListener from '../../components/ShortcutListener.tsx'
+import {ModulePanel} from '../../components/modulePanel/ModulePanel.tsx'
+import {PointRef, StatusBar} from '../../components/statusBar/StatusBar.tsx'
 import {HistoryNode} from '@editor/engine/history/DoublyLinkedList.ts'
-import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
-import Header from '../header/Header.tsx'
-import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
-import FileContext, {FileType, useFile, VisionWorkspace} from '../fileContext/FileContext.tsx'
+import {LayerPanel} from '../../components/layerPanel/LayerPanel.tsx'
+import Header from '../../components/header/Header.tsx'
+import {HistoryPanel} from '../../components/historyPanel/HistoryPanel.tsx'
+import FileContext, {VisionWorkspace} from '../fileContext/FileContext.tsx'
 import EditorContext from './EditorContext.tsx'
-import PropPanel from '../propPanel/PropPanel.tsx'
-import {ContextMenu} from '../contextMenu/ContextMenu.tsx'
-import {EditorEventData, EditorEventType} from '@editor/engine/actions/type'
-import {Print} from '../print/print.tsx'
+import PropPanel from '../../components/propPanel/PropPanel.tsx'
+import {ContextMenu} from '../../components/contextMenu/ContextMenu.tsx'
+import {VisionEventData, VisionEventType} from '@editor/engine/actions/type'
 import {
   ContextMenuHandler,
+  EditorConfig,
   HistoryUpdatedHandler,
   ModuleCopiedHandler,
   ModulesUpdatedHandler,
@@ -24,8 +24,14 @@ import {
 } from '@editor/engine/type'
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
 import {useUI} from '../UIContext/UIContext.tsx'
+import {Col} from '@lite-u/ui'
 
-const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
+const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: EditorConfig['page'] }> = ({
+                                                                                                            ref,
+                                                                                                            workspace,
+                                                                                                            fileId,
+                                                                                                            page,
+                                                                                                          }) => {
   const [state, dispatch] = useReducer(EditorReducer, initialEditorState)
   const editorRef = useRef<Editor>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -34,14 +40,17 @@ const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
   const [sortedModules, setSortedModules] = useState<ModuleInstance[]>([])
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
-  const [showPrint, setShowPrint] = useState(false)
   const contextRootRef = useRef<HTMLDivElement>(null)
   const {focusedFileId, startCreateFile, closeFile, saveFileToLocal} = useContext(FileContext)
   const lastSavedHistoryId = useRef(0)
   const currentHistoryId = useRef(0)
   const needSaveLocal = useRef(false)
   const {dpr} = useUI()
-  console.log(data)
+
+  useImperativeHandle(ref, () => {
+    return editorRef.current
+  }, [editorRef.current])
+
   const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
     dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})
 
@@ -118,13 +127,8 @@ const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
     }
   }
 
-  const executeAction = <K extends EditorEventType>(type: K, data?: EditorEventData<K>) => {
+  const executeAction = <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => {
     // console.log(type)
-
-    if (type === 'print') {
-      setShowPrint(true)
-      return
-    }
 
     if (type === 'newFile') {
       startCreateFile()
@@ -139,14 +143,16 @@ const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
     if (type === 'saveFile') {
       // console.log('state.needSave', state.needSave)
       // console.log(lastSavedHistoryId.current, currentHistoryId.current)
-      if (needSaveLocal.current) {
-        const editorData: FileType = editorRef.current!.exportToFiles() as FileType
+      /*   if (needSaveLocal.current) {
+           const editorData = editorRef.current!.export()
 
-        editorData.name = data.name
-        saveFileToLocal(editorData)
-        lastSavedHistoryId.current = currentHistoryId.current
-        dispatch({type: 'SET_NEED_SAVE', payload: false})
-      }
+           console.log(editorData)
+           editorData.name = data.name
+           saveFileToLocal(editorData)
+           lastSavedHistoryId.current = currentHistoryId.current
+           dispatch({type: 'SET_NEED_SAVE', payload: false})
+         }*/
+
     }
 
     editorRef.current!.execute(type as K, data)
@@ -159,16 +165,16 @@ const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
           event.preventDefault();
           // return false;
         }*/
-
+    // console.log(workspace)
     if (containerRef.current && !editorRef.current) {
-      console.log(data.config)
+
       editor = new Editor({
         container: containerRef!.current,
-        data: {
-          id: data.id,
-          modules: data.data,
+        elements: workspace.elements,
+        config: {
+          dpr,
+          page,
         },
-        config: data.config,
         events: {
           onInitialized: () => { },
           onHistoryUpdated,
@@ -181,7 +187,7 @@ const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
         },
       })
       editorRef.current = editor
-      dispatch({type: 'SET_ID', payload: data.id})
+      dispatch({type: 'SET_ID', payload: workspace.id})
     }
     const element = contextRootRef.current
 
@@ -204,6 +210,7 @@ const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
     }
   }, [])
 
+
   return <EditorContext.Provider value={{
     state,
     // dispatch,
@@ -211,9 +218,9 @@ const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
     applyHistoryNode,
     executeAction,
   }}>
-    <div ref={contextRootRef} data-focused={state.focused} autoFocus={true} tabIndex={0}
-         className={'outline-0 w-full h-full flex flex-col'}>
-      {focusedFileId === data.id && <ShortcutListener/>}
+    <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true} tabIndex={0}
+         className={'outline-0'}>
+      {focusedFileId === workspace.id && <ShortcutListener/>}
 
       <Header/>
 
@@ -242,11 +249,7 @@ const EditorProvider: FC<{ data: VisionWorkspace }> = ({data}) => {
           <HistoryPanel/>
         </div>
       </main>
-
-      {showPrint && <Print editorRef={editorRef} onClose={() => {
-        setShowPrint(false)
-      }}/>}
-    </div>
+    </Col>
 
   </EditorContext.Provider>
 }

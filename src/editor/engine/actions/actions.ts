@@ -1,34 +1,34 @@
 // import Editor from '../editor.ts'
-import {EditorEventData, EditorEventType} from './type'
+import {VisionEventData, VisionEventType} from './type'
 
-export type EventsCallback<K extends EditorEventType> = EditorEventData<K> extends never ? () => void : (data: EditorEventData<K>) => void;
+export type EventsCallback<K extends VisionEventType> = VisionEventData<K> extends never ? () => void : (data: VisionEventData<K>) => void;
 
 class Action {
   private readonly eventsMap: Map<
-    EditorEventType,
-    (EditorEventData<EditorEventType> extends never ? () => void : (data: EditorEventData<EditorEventType>) => void)[]
+    VisionEventType,
+    (VisionEventData<VisionEventType> extends never ? () => void : (data: VisionEventData<VisionEventType>) => void)[]
   > = new Map()
 
   constructor() {}
 
   // subscribe
-  public on<K extends EditorEventType>(
+  public on<K extends VisionEventType>(
     eventName: K,
     callback: EventsCallback<K>,
   ) {
     if (this.eventsMap.has(eventName)) {
       this.eventsMap
         .get(eventName)!
-        .push(callback as EventsCallback<EditorEventType>)
+        .push(callback as EventsCallback<VisionEventType>)
     } else {
       this.eventsMap.set(eventName, [
-        callback as EventsCallback<EditorEventType>,
+        callback as EventsCallback<VisionEventType>,
       ])
     }
   }
 
   // unsubscribe
-  public off<K extends EditorEventType>(
+  public off<K extends VisionEventType>(
     eventName: K,
     callback: EventsCallback<K>,
   ) {
@@ -46,21 +46,21 @@ class Action {
     }
   }
 
-  public dispatch<K extends EditorEventType>(
+  public dispatch<K extends VisionEventType>(
     type: K,
-    data?: EditorEventData<K>,
+    data?: VisionEventData<K>,
   ) {
-    console.info('action: ', type)
+    // console.info('action: ', type)
     // console.info('action: ', type)
 
     if (this.eventsMap.has(type)) {
       this.eventsMap.get(type)!.forEach((cb) => {
-        cb(data as EditorEventData<K>)
+        cb(data as VisionEventData<K>)
       })
     }
   }
 
-  public execute<K extends EditorEventType>(type: K, data: EditorEventData<K>) {
+  public execute<K extends VisionEventType>(type: K, data: VisionEventData<K>) {
     this.dispatch(type, data)
 
     // console.log(type,data)

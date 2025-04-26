@@ -1,6 +1,6 @@
 import ZoomSelect from './zoom'
 import {FC, Ref, useContext, useImperativeHandle, useState} from 'react'
-import EditorContext from '../editorContext/EditorContext.tsx'
+import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
 
 export interface PointRef {
   set: (point: Point) => void;

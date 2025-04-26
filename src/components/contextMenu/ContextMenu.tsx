@@ -1,7 +1,7 @@
 import {FC, memo, useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {I18nHistoryDataItem} from '../../i18n/type'
-import EditorContext from '../editorContext/EditorContext.tsx'
+import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
 import {LuChevronRight} from 'react-icons/lu'
 import {MenuItemType} from '../header/menu/type'
 

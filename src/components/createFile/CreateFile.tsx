@@ -1,12 +1,13 @@
 import {FC, FormEvent, useRef, useState} from 'react'
 import uid from '../../utilities/Uid.ts'
-import {useFile, VisionFileType} from '../fileContext/FileContext.tsx'
+import {useFile, VisionFileType} from '../../contexts/fileContext/FileContext.tsx'
 import {Button, Col, Con, Input, MenuItem, Modal, P, Panel, Row, Select, SelectItem, Title} from '@lite-u/ui'
 import {PAGE_PRESETS} from './pagePresets.ts'
 import {useTranslation} from 'react-i18next'
 import {Unit} from '@editor/type.ts'
 import convertUnit from '@editor/lib/converter.ts'
 import {VISION_VERSION} from '../../constants'
+import nid from '@editor/lib/nid.ts'
 
 const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#00000066', onBgClick}) => {
   const formRef = useRef<HTMLFormElement>(null)
@@ -45,8 +46,9 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
       },
       workspace: [
         {
+          id: nid(),
           name: 'workspace-1',
-          data: [],
+          elements: [],
         },
       ],
     }

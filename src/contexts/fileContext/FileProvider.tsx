@@ -1,11 +1,11 @@
 import {FC, useEffect, useState} from 'react'
-import CreateFile from '../createFile/CreateFile.tsx'
+import CreateFile from '../../components/createFile/CreateFile.tsx'
 import FileContext, {useFile, VisionFileType} from './FileContext.tsx'
 // import MOCK_FILE_MAP from '../../mock.ts'
-import Files from '../files/Files.tsx'
-import LanguageSwitcher from '../language/languageSwitcher.tsx'
+import Files from '../../components/files/Files.tsx'
+import LanguageSwitcher from '../../components/language/languageSwitcher.tsx'
 import {EditorExportFileType} from '@editor/engine/type'
-import WorkspaceProvider from '../workspace/WorkspaceProvider.tsx'
+import WorkspaceProvider from '../workspaceContext/WorkspaceProvider.tsx'
 
 const FileProvider: FC = () => {
   const {fileMap} = useFile()

@@ -1,5 +1,5 @@
 import {FC, ReactNode} from 'react'
-import UIContext, {useUI} from './UIContext'
+import UIContext, {useUI} from './UIContext.tsx'
 
 const UIProvider: FC<{ children: ReactNode }> = ({children}) => {
   const {dpr} = useUI()

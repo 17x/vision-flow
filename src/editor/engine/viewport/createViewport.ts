@@ -1,10 +1,7 @@
 import {initViewportDom, InitViewportDomReturn} from './domManipulations.ts'
 import Editor from '../editor.ts'
 import {Viewport} from './type'
-import {
-  generateBoundingRectFromTwoPoints,
-  throttle,
-} from '../../core/utils.ts'
+import {generateBoundingRectFromTwoPoints, throttle} from '../../core/utils.ts'
 import handleMouseDown from './eventHandlers/mouseDown.ts'
 import handleMouseUp from './eventHandlers/mouseUp.ts'
 import handleKeyDown from './eventHandlers/keyDown.ts'
@@ -13,6 +10,9 @@ import handleWheel from './eventHandlers/wheel.ts'
 import handlePointerMove from './eventHandlers/pointerMove.ts'
 import handleContextMenu from './eventHandlers/contextMenu.ts'
 import Rectangle from '../../core/modules/shapes/rectangle.ts'
+import nid from '@editor/lib/nid.ts'
+import handleDragOver from '@editor/engine/viewport/eventHandlers/dragOver.ts'
+import handleDrop from '@editor/engine/viewport/eventHandlers/drop.ts'
 
 export function createViewport(this: Editor): Viewport {
   const {
@@ -68,6 +68,22 @@ export function createViewport(this: Editor): Viewport {
   wrapper.addEventListener('contextmenu', handleContextMenu.bind(this), {
     signal,
   })
+  wrapper.addEventListener('dragover', handleDragOver.bind(this), {signal})
+  wrapper.addEventListener('drop', handleDrop.bind(this), {signal})
+
+  const frame = new Rectangle({
+    id: nid() + '-frame',
+    x: this.config.page.width / 2,
+    y: this.config.page.height / 2,
+    width: this.config.page.width,
+    height: this.config.page.height,
+    fillColor: '#fff',
+    enableLine: false,
+    lineWidth: 0,
+    lineColor: '#000',
+    layer: -1,
+    opacity: 100,
+  })
 
   return {
     drawCrossLine: false,
@@ -81,7 +97,7 @@ export function createViewport(this: Editor): Viewport {
     spaceKeyDown: false,
     zooming: false,
     dpr: this.config.dpr,
-    frame: new Rectangle({...this.config.frame}),
+    frame,
     offset: {x: 0, y: 0},
     viewportRect,
     worldRect,

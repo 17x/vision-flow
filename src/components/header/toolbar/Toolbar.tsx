@@ -1,19 +1,21 @@
 import {LayerDown, LayerToBottom, LayerToTop, LayerUp} from './Icons/LayerIcons.tsx'
-import {Fragment, memo, ReactNode, useContext, useReducer, useState} from 'react'
-import EditorContext from '../../editorContext/EditorContext.tsx'
+import {Fragment, ReactNode, useContext} from 'react'
+import EditorContext from '../../../contexts/editorContext/EditorContext.tsx'
 import {NamedIcon} from '../../lib/icon/icon.tsx'
 import {t} from 'i18next'
 import {I18nHistoryDataItem} from '../../../i18n/type'
-import {MenuItemType} from '../menu/type'
+// import {MenuItemType} from '../menu/type'
+import {useWorkspace} from '../../../contexts/workspaceContext/WorkspaceContext.tsx'
 
 const IconSize = 20
 const IconColor = 'text-black'
 
 const Toolbar: React.FC = () => {
+  const {saveFile} = useWorkspace()
   const {state: {needSave, historyStatus, selectedModules}, executeAction} = useContext(EditorContext)
   const hasSelectedModules = selectedModules.length > 0
 
-  const actions: MenuItemType[] = [
+  const actions = [
     {id: 'save', action: 'saveFile', icon: 'save', disabled: !needSave, divide: true},
     {id: 'undo', editorActionCode: 'history-undo', icon: 'undo', disabled: !historyStatus.hasPrev},
     {id: 'redo', editorActionCode: 'history-redo', icon: 'redo', disabled: !historyStatus.hasNext, divide: true},
@@ -92,6 +94,10 @@ const Toolbar: React.FC = () => {
                     disabled={disabled}
                     title={tooltip}
                     onClick={() => {
+                      if (item.action === 'saveFile') {
+                        saveFile()
+                        return
+                      }
                       if (item.editorActionCode || item.action) {
                         executeAction(item.editorActionCode || item.action)
                       }

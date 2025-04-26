@@ -79,8 +79,8 @@ class ElementText extends Rectangle {
       // radius,
     } = this
     let {content, alignment, textColor, x, y, width, height, rotation, opacity} = this
-    x = Math.round(x)
-    y = Math.round(y)
+    // x = Math.round(x)
+    // y = Math.round(y)
     // width = Math.round(width)
     // height = Math.round(height)
     // console.log(x, y, width, height)

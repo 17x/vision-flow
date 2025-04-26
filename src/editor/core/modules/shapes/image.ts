@@ -32,7 +32,7 @@ class ElementImage extends Rectangle {
     return super.getOperators(resizeConfig, rotateConfig, this.getRect(), this.getDetails(true))
   }
 
-  render(ctx: CanvasRenderingContext2D, asset): void {
+  render(ctx: CanvasRenderingContext2D, img:HTMLImageElement): void {
     const {
       // content,
       // alignment,
@@ -41,9 +41,9 @@ class ElementImage extends Rectangle {
       // height,
       // radius,
     } = this
-    let {src, x, y, width, height, rotation, opacity} = this
-    x = Math.round(x)
-    y = Math.round(y)
+    let {/*src, */x, y, width, height, rotation, opacity} = this
+    // x = Math.round(x)
+    // y = Math.round(y)
     // width = Math.round(width)
     // height = Math.round(height)
     // console.log(x, y, width, height)
@@ -69,7 +69,7 @@ class ElementImage extends Rectangle {
     // Fill if enabled
     if (opacity > 0) {
       // console.log(asset)
-      ctx.drawImage(asset, -width / 2, -height / 2, width, height)
+      ctx.drawImage(img, -width / 2, -height / 2, width, height)
       // ctx.drawImage()
       // ctx.closePath()
     }

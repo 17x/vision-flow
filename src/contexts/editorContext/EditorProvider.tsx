@@ -1,7 +1,6 @@
 import {FC, useContext, useEffect, useImperativeHandle, useReducer, useRef, useState} from 'react'
 import Editor from '@editor/engine/editor.ts'
 import ShortcutListener from '../../components/ShortcutListener.tsx'
-import {ModulePanel} from '../../components/modulePanel/ModulePanel.tsx'
 import {PointRef, StatusBar} from '../../components/statusBar/StatusBar.tsx'
 import {HistoryNode} from '@editor/engine/history/DoublyLinkedList.ts'
 import {LayerPanel} from '../../components/layerPanel/LayerPanel.tsx'
@@ -27,6 +26,7 @@ import {useUI} from '../UIContext/UIContext.tsx'
 import {Col, Con, Drop, useNotification} from '@lite-u/ui'
 import readImageHelper from './readImageHelper.ts'
 import {useTranslation} from 'react-i18next'
+import ElementCreators from '../../components/ElementCreators/ElementCreators.tsx'
 
 const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: EditorConfig['page'] }> = ({
                                                                                                             ref,
@@ -231,8 +231,8 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
       <Header/>
 
       <main className={'flex flex-row overflow-hidden h-full'}>
-        <ModulePanel/>
-
+        {/*<ModulePanel/>*/}
+        <ElementCreators/>
         <div className={'flex flex-col w-full h-full overflow-hidden relative'}>
           <Drop accepts={['image/*']}
                 style={{position: 'relative'}}

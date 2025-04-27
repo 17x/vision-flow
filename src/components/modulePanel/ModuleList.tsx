@@ -63,8 +63,8 @@ export const ModuleList: React.FC<ModulePanelProps> = () => {
                  const props = module.props as ModuleProps
 
                  if (props.type === 'rectangle') {
-                   props.x = getRandomNumber(1000)
-                   props.y = getRandomNumber(2000)
+                   props.x = getRandomNumber(100)
+                   props.y = getRandomNumber(200)
                    props.lineWidth = 1
                    props.lineColor = getRandomHexColor()
                    props.fillColor = getRandomHexColor()
@@ -73,8 +73,8 @@ export const ModuleList: React.FC<ModulePanelProps> = () => {
                  }
 
                  if (props.type === 'ellipse') {
-                   props.x = getRandomNumber(1000)
-                   props.y = getRandomNumber(2000)
+                   props.x = getRandomNumber(100)
+                   props.y = getRandomNumber(200)
                    props.lineWidth = 1
                    props.lineColor = getRandomHexColor()
                    props.fillColor = getRandomHexColor()

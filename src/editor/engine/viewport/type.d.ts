@@ -41,7 +41,7 @@ export interface Viewport {
   * A rect that based on world coordinate, x=0, y=0
   * Its size can be modified
   * */
-  frame: Rectangle
+  // frame: Rectangle
   /*
   * mouseDownPoint
   * relative position to wrapper's top-left

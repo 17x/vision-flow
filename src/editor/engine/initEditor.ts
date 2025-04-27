@@ -50,10 +50,15 @@ export function initEditor(this: Editor) {
 
   on('world-zoom', (arg) => {
     if (arg === 'fit') {
-      console.log(this.config.page)
-      const {frame, viewportRect} = this.viewport
-      const frameRect = frame.getBoundingRect()
-      const {scale, offsetX, offsetY} = fitRectToViewport(frameRect, viewportRect, 0.02)
+      const {width, height} = this.config.page
+      const {viewportRect} = this.viewport
+      const pageRect = {
+        x: 0,
+        y: 0,
+        width,
+        height,
+      }
+      const {scale, offsetX, offsetY} = fitRectToViewport(pageRect, viewportRect, 0.02)
 
       this.viewport.scale = scale
       this.viewport.offset.x = offsetX

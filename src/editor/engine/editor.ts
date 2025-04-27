@@ -336,29 +336,6 @@ class Editor {
     })
   }
 
-  public exportToFiles(): EditorExportFileType {
-    const {dpr, scale, offset, frame} = this.viewport
-
-    const result: EditorExportFileType = {
-      // id: this.id,
-      config: {
-        // moduleIdCounter: this.moduleCounter,
-        dpr,
-        scale,
-        offset,
-        frame: frame.getDetails(),
-      },
-      data: [],
-      assets: [],
-    }
-
-    this.moduleMap.forEach((module) => {
-      result.data.push(module.getDetails())
-    })
-
-    return result
-  }
-
   public export(): { elements: ModuleProps[], assets: never[], config: { offset: { x: number, y: number } } } {
     const {scale, offset} = this.viewport
     const assetSet = new Set<string>()

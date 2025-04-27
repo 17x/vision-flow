@@ -20,13 +20,13 @@ export const Print: FC<{
       // console.log(editorRef.current)
       return
     }
-    const {frame} = editorRef.current!.viewport
-    const rect = frame.getBoundingRect()
+    // const {frame} = editorRef.current!.viewport
+    // const rect = frame.getBoundingRect()
     const destCanvas = printPreviewCanvas.current
     const destCtx = destCanvas!.getContext('2d')
 
-    destCanvas!.width = rect.width * dpr
-    destCanvas!.height = rect.height * dpr
+    // destCanvas!.width = rect.width * dpr
+    // destCanvas!.height = rect.height * dpr
 
     destCtx!.setTransform(dpr, 0, 0, dpr, 0, 0)
     editorRef.current.printOut(destCtx)

@@ -21,6 +21,7 @@ export const HistoryPanel = () => {
   return (
     <Con fh ovh p={10}>
       <Panel title={'History'}
+             xs
              className={'overflow-hidden h-full'}
              boxStyle={{
                overflow: 'hidden',

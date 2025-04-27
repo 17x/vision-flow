@@ -314,6 +314,8 @@ export function initEditor(this: Editor) {
   })
 
   on('module-add', (data) => {
+    if (!data || data.length === 0) return
+
     const newModules = this.batchAdd(this.batchCreate(data), () => {
       console.log(9)
       dispatch('render-modules')

@@ -32,7 +32,7 @@ class ElementImage extends Rectangle {
     return super.getOperators(resizeConfig, rotateConfig, this.getRect(), this.getDetails(true))
   }
 
-  render(ctx: CanvasRenderingContext2D, img:HTMLImageElement): void {
+  render(ctx: CanvasRenderingContext2D, img: HTMLImageElement): void {
     const {
       // content,
       // alignment,
@@ -69,7 +69,6 @@ class ElementImage extends Rectangle {
     // Fill if enabled
     if (opacity > 0) {
       // console.log(asset)
-      console.log(img)
       ctx.drawImage(img, -width / 2, -height / 2, width, height)
       // ctx.drawImage()
       // ctx.closePath()

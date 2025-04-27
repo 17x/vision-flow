@@ -33,7 +33,7 @@ const modules: { className: string, props: Partial<ModuleProps> }[] = [
       width: 100,
       height: 50,
     },
-  }, {
+  }, /*{
     className: 'w-10 h-10',
     props: {
       type: 'image',
@@ -43,7 +43,7 @@ const modules: { className: string, props: Partial<ModuleProps> }[] = [
       height: 50,
       src: '',
     },
-  },
+  },*/
 ]
 
 export const ModuleList: React.FC<ModulePanelProps> = () => {
@@ -92,15 +92,15 @@ export const ModuleList: React.FC<ModulePanelProps> = () => {
                    props.content = 'Hello Text'
                  }
 
-                 if (props.type === 'image') {
-                   props.x = 200
-                   props.y = 200
-                   props.lineWidth = 1
-                   props.lineColor = 'transparent'
-                   props.fillColor = 'transparent'
-                   props.textColor = 'blue'
-                   props.src = 'https://cdn.pixabay.com/photo/2018/08/04/11/30/draw-3583548_1280.png'
-                 }
+                 /*     if (props.type === 'image') {
+                        props.x = 200
+                        props.y = 200
+                        props.lineWidth = 1
+                        props.lineColor = 'transparent'
+                        props.fillColor = 'transparent'
+                        props.textColor = 'blue'
+                        props.src = 'https://cdn.pixabay.com/photo/2018/08/04/11/30/draw-3583548_1280.png'
+                      }*/
 
                  executeAction('module-add', [props])
                }}

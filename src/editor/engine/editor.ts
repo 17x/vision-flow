@@ -345,7 +345,7 @@ class Editor {
   public export(): { elements: ModuleProps[], assets: never[], config: { offset: { x: number, y: number } } } {
     const {scale, offset} = this.viewport
     const assetSet = new Set<string>()
-    const result: EditorExportFileType = {
+    const result = {
       elements: [],
       config: {
         scale,
@@ -366,6 +366,7 @@ class Editor {
             assetSet.add(src)
             result.assets.push(r)
           }
+          console.log(result.assets)
         }
       }
 

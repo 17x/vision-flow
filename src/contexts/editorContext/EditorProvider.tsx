@@ -210,7 +210,6 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
     }
   }, [])
 
-
   return <EditorContext.Provider value={{
     state,
     // dispatch,

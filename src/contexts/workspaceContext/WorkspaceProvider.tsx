@@ -1,16 +1,17 @@
 import {FC, useEffect, useRef, useState} from 'react'
 import {VisionFileType, VisionWorkspace} from '../fileContext/FileContext.tsx'
-import WorkspaceContext, {useWorkspace} from './WorkspaceContext.tsx'
-import {Con} from '@lite-u/ui'
+import WorkspaceContext from './WorkspaceContext.tsx'
+import {Con, Drop} from '@lite-u/ui'
 import EditorProvider from '../editorContext/EditorProvider.tsx'
 import {VisionEventData, VisionEventType} from '@editor/engine/actions/type'
 import {Print} from '../../components/print/print.tsx'
 import Editor from '@editor/engine/editor.ts'
 import saveFileHelper from './saveFileHelper.ts'
+import readFileHelper from './readFileHelper.ts'
 // import {useUI} from '../UIContext/UIContext.tsx'
 
 const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
-  const {workspaceList, pageConfig} = useWorkspace()
+  // const {workspaceList, pageConfig} = useWorkspace()
   const workspaceRef = useRef(new Map())
   const [creating, setCreating] = useState<boolean>(false)
   const [focusedId, setFocusedId] = useState<UID>('')
@@ -19,6 +20,9 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
   // const {dpr} = useUI()
   const [currentWS, setCurrentWS] = useState<string>(file.workspace[0].id)
   const [showPrint, setShowPrint] = useState(false)
+  const [showDropNotice, setShowDropNotice] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const dragCounter = useRef(0)
 
   useEffect(() => {
     setWorkspace(file.workspace)
@@ -132,22 +136,46 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
     startCreateFile,
     handleCreating,
   }}>
-    <Con fw fh onDragOver={(e) => {
-      e.preventDefault()
-      e.stopPropagation()
-    }}>
-      {
-        workspace.map((ws, index) => {
-          return <EditorProvider ref={(ref) => {
-            editorMapRef.current.set(ws.id, ref)
-          }} workspace={ws} fileId={file.id} page={file.config.page} key={index}/>
-        })
-      }
+    <Con fw fh>
+      <Drop
+        // accepts={['application/vz']}
+        onDragIsOver={(v) => {
+          console.log(v)
+          if (v) {
+            setShowDropNotice(true)
+          }
+        }}
+        onDragIsLeave={() => {
+          setShowDropNotice(false)
+        }}
+        onDrop={(e) => {
+          setShowDropNotice(false)
+          readFileHelper(e.dataTransfer.files[0])
+          // console.log(e.dataTransfer.items[0].getAsFile())
+        }}>
+        {
+          workspace.map((ws, index) => {
+            return <EditorProvider ref={(ref) => {
+              editorMapRef.current.set(ws.id, ref)
+            }} workspace={ws} fileId={file.id} page={file.config.page} key={index}/>
+          })
+        }
+      </Drop>
     </Con>
 
     {showPrint && <Print editorRef={editorRef} onClose={() => {
       setShowPrint(false)
     }}/>}
+
+    {
+      showDropNotice && <Con fw fh style={{
+        border: '5px solid #ff0000',
+        pointerEvents: 'none',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+      }}></Con>
+    }
   </WorkspaceContext.Provider>
 }
 

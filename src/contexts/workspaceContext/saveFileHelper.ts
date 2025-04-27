@@ -10,7 +10,12 @@ const saveFileHelper = (file, workspaces: VisionWorkspace[]) => {
       ...ws,
       assets: ws.assets!.map(asset => {
         assetsFolder!.file(asset.id, asset.file)
-        return asset.id
+
+        return {
+          id: asset.id,
+          name: asset.name,
+          type: asset.type,
+        }
       }),
     }
   })
@@ -23,7 +28,9 @@ const saveFileHelper = (file, workspaces: VisionWorkspace[]) => {
   zip.file('file.json', JSON.stringify(fileJson))
 
   zip.generateAsync({
-      type: 'blob', compression: 'DEFLATE',
+      type: 'blob',
+      compression: 'DEFLATE',
+      // mimeType: 'application/zip',
     },
   )
     .then(function (content) {
@@ -32,7 +39,7 @@ const saveFileHelper = (file, workspaces: VisionWorkspace[]) => {
       const a = document.createElement('a')
       const url = URL.createObjectURL(content)
       a.href = url
-      a.download = file.name + '.zip'
+      a.download = file.name + '.vz'
       a.click()
       URL.revokeObjectURL(url)
     })

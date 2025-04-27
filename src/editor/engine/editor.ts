@@ -54,7 +54,7 @@ class Editor {
   constructor({
                 container,
                 elements,
-                assets=[],
+                assets = [],
                 events = {},
                 config,
               }: {
@@ -281,8 +281,6 @@ class Editor {
     const animate = () => {
       const {frame, mainCTX: ctx} = this.viewport
 
-      frame.render(ctx)
-
       // deduplicateObjectsByKeyValue()
       // console.log(this.visibleModuleMap.size)
       // deduplicateObjectsByKeyValue
@@ -292,7 +290,7 @@ class Editor {
             const {src} = module as ElementImage
 
             const obj = this.assetsManager.getAssetsObj(src)
-              console.log(this.assetsManager,src);
+            console.log(this.assetsManager, src)
             if (obj) {
               (module as ElementImage).render(ctx, obj.imageRef)
             }
@@ -302,6 +300,8 @@ class Editor {
           }
         },
       )
+
+      frame.render(ctx)
     }
 
     requestAnimationFrame(animate)

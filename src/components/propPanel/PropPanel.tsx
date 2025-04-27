@@ -1,8 +1,7 @@
-import {memo, useContext, useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
 import {ProtectedInput} from './protectedInput.tsx'
-
-// import EditorContext from '../editorContext/EditorContext.tsx'
+import {Con, Panel} from '@lite-u/ui'
 
 interface PropPanelProps {props?: ModuleProps}
 
@@ -12,12 +11,19 @@ const PropPanel = ({props}: PropPanelProps) => {
   useEffect(() => {
     setLocalProps(props)
   }, [props])
-  return <div className={'p-2'}>
-    <h1 className={'bg-gray-400 text-white px-2'}><span>Properties</span></h1>
-    <div className={'scrollbar-custom overflow-x-hidden overflow-y-auto p-2 border h-30 border-gray-200 select-none'}>
+
+  return <Panel title={'Properties'}
+                xs
+                p={10}
+                ovh
+                fh
+                boxStyle={{
+                  overflow: 'hidden',
+                }}>
+    <Con p={10} fh className={'scrollbar-custom overflow-x-hidden overflow-y-auto  border  border-gray-200 select-none'}>
       {localProps && <ShapePropsPanel props={localProps}/>}
-    </div>
-  </div>
+    </Con>
+  </Panel>
 }
 
 export default PropPanel

@@ -22,14 +22,15 @@ export const HistoryPanel = () => {
     <Con fh ovh p={10}>
       <Panel title={'History'}
              xs
-             className={'overflow-hidden h-full'}
+             ovh
+             fh
              boxStyle={{
                overflow: 'hidden',
              }}>
         <Con fh ovh p={8}>
-          <Con fh className={'border border-gray-200 overflow-x-hidden scrollbar-custom overflow-y-auto'}>
-            <Flex col p={10} className={'  min-h-40 bg-gray-100'} style={{
-              boxShadow: 'inset 0 0 3px 1px #000',
+          <Con fh className={'border border-gray-400 overflow-x-hidden scrollbar-custom overflow-y-auto'}>
+            <Flex col fh p={10} className={'  min-h-40 bg-gray-100'} style={{
+              // boxShadow: 'inset 0 0 3px 1px #000',
             }}>
               {
                 historyArray.map((historyNode, index) => {

@@ -1,5 +1,6 @@
-import {memo, useContext, useEffect, useRef, useState} from 'react'
+import {useContext, useEffect, useRef, useState} from 'react'
 import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
+import {Panel} from '@lite-u/ui'
 
 interface LayerPanelProps {
   data: ModuleInstance[]
@@ -67,17 +68,24 @@ export const LayerPanel = ({data}: LayerPanelProps) => {
 
   return (
     <div className={'p-2'}>
-      <h1 className={'bg-gray-400 text-white px-2'}><span>Layer</span></h1>
-      <div className={'p-2 relative overflow-hidden'}>
-        <div ref={scrollRef}
-             onScroll={handleScroll}
-             className={'relative scrollbar-custom overflow-x-hidden overflow-y-auto p-2 border h-30 border-gray-200 select-none'}>
-          <div className={'absolute z-10 w-full top-0 left-0'} style={{
-            height: data.length * ITEM_HEIGHT,
-          }}></div>
-          <div className={'z-20 w-full sticky top-0 left-0'}>{arr}</div>
+      <Panel title={'Layer'}
+             xs
+             ovh
+             fh
+             boxStyle={{
+               overflow: 'hidden',
+             }}>
+        <div className={'p-2 relative overflow-hidden'}>
+          <div ref={scrollRef}
+               onScroll={handleScroll}
+               className={'relative scrollbar-custom overflow-x-hidden overflow-y-auto p-2 border h-30 border-gray-200 select-none'}>
+            <div className={'absolute z-10 w-full top-0 left-0'} style={{
+              height: data.length * ITEM_HEIGHT,
+            }}></div>
+            <div className={'z-20 w-full sticky top-0 left-0'}>{arr}</div>
+          </div>
         </div>
-      </div>
+      </Panel>
     </div>
   )
 }

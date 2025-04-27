@@ -37,6 +37,7 @@ interface FileContextType {
   creating: boolean
   focusedFileId: string | undefined
   focusOnFile: (id: UID) => void
+  openFile: (file: VisionFileType) => void
   closeFile: (id: UID) => void
   createFile: (v: VisionFileType) => void
   handleCreating: (v: boolean) => void
@@ -74,6 +75,8 @@ const FileContext = createContext<FileContextType>({
   focusedFileId: '',
   creating: false,
   focusOnFile: () => {
+  },
+  openFile: () => {
   },
   closeFile: () => {
   },

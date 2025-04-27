@@ -6,6 +6,7 @@ import Files from '../../components/files/Files.tsx'
 import LanguageSwitcher from '../../components/language/languageSwitcher.tsx'
 import {EditorExportFileType} from '@editor/engine/type'
 import WorkspaceProvider from '../workspaceContext/WorkspaceProvider.tsx'
+import {useNotification} from '@lite-u/ui'
 
 const FileProvider: FC = () => {
   const {fileMap} = useFile()
@@ -15,10 +16,20 @@ const FileProvider: FC = () => {
   const fileLen = fileMap.size
   const showCreateFile = fileLen === 0 || creating
   const STORAGE_ID = 'VISION_FLOW_FILE_MAP'
-
+  const {add} = useNotification()
   useEffect(() => {
     updateFileList()
   }, [fileMap])
+
+  const openFile = (file: VisionFileType) => {
+    if (fileMap.get(file.id)) {
+      add()
+      console.log('The file has been opened already')
+    } else {
+      fileMap.set(file.id, file)
+      updateFileList()
+    }
+  }
 
   const updateFileList = () => {
     const arr = Array.from(fileMap.values())
@@ -46,7 +57,7 @@ const FileProvider: FC = () => {
 
     if (deletingFileIndex === -1) return
 
-    deleteFileFromLocal(deletingId)
+    // deleteFileFromLocal(deletingId)
     fileMap.delete(deletingId)
     updateFileList()
     fileList.splice(deletingFileIndex, 1)
@@ -102,6 +113,7 @@ const FileProvider: FC = () => {
       creating,
       focusedFileId,
       focusOnFile,
+      openFile,
       closeFile,
       createFile,
       startCreateFile,

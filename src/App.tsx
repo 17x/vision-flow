@@ -2,14 +2,14 @@ import './components/comp.css'
 import './i18n/config.ts'
 import FileProvider from './contexts/fileContext/FileProvider.tsx'
 import UIProvider from './contexts/UIContext/UIProvider.tsx'
-import ThemeProvider from '@lite-u/ui/theme'
+import LiteUIProvider from '@lite-u/ui/LiteUIProvider'
 
 function App() {
-  return <ThemeProvider>
+  return <LiteUIProvider>
     <UIProvider>
       <FileProvider/>
     </UIProvider>
-  </ThemeProvider>
+  </LiteUIProvider>
 }
 
 export default App

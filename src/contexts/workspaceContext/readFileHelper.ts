@@ -14,6 +14,19 @@ const readFileHelper = (file: File): Promise<VisionFileType> => {
           const fileName = asset.name
           const fileBlob = await loadedFile.files[fileKey].async('blob')
 
+          if (asset.type === 'image') {
+            const imageRef = new Image()
+
+            imageRef.onload = async () => {
+              asset.imageRef = imageRef
+            }
+
+            imageRef.onerror = () => {
+              throw new Error(`${asset.name} failed to load image`)
+            }
+
+            imageRef.src = URL.createObjectURL(fileBlob)
+          }
           asset.file = new File([fileBlob], fileName)
 
           return true

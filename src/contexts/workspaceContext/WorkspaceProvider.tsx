@@ -1,5 +1,5 @@
 import {FC, useEffect, useRef, useState} from 'react'
-import {VisionFileType, VisionWorkspace} from '../fileContext/FileContext.tsx'
+import {useFile, VisionFileType, VisionWorkspace} from '../fileContext/FileContext.tsx'
 import WorkspaceContext from './WorkspaceContext.tsx'
 import {Con, Drop} from '@lite-u/ui'
 import EditorProvider from '../editorContext/EditorProvider.tsx'
@@ -12,6 +12,7 @@ import readFileHelper from './readFileHelper.ts'
 
 const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
   // const {workspaceList, pageConfig} = useWorkspace()
+  const {openFile} = useFile()
   const workspaceRef = useRef(new Map())
   const [creating, setCreating] = useState<boolean>(false)
   const [focusedId, setFocusedId] = useState<UID>('')
@@ -147,7 +148,8 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
           setShowDropNotice(false)
           setReadingFile(true)
           readFileHelper(e.dataTransfer.files[0]).then(newFile => {
-            console.log(newFile)
+            // console.log(newFile)
+            openFile(newFile)
           }).catch(e => {
 
           })

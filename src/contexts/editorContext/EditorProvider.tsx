@@ -24,7 +24,9 @@ import {
 } from '@editor/engine/type'
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
 import {useUI} from '../UIContext/UIContext.tsx'
-import {Col, Con, Drop} from '@lite-u/ui'
+import {Col, Con, Drop, useNotification} from '@lite-u/ui'
+import readImageHelper from './readImageHelper.ts'
+import {useTranslation} from 'react-i18next'
 
 const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: EditorConfig['page'] }> = ({
                                                                                                             ref,
@@ -48,6 +50,8 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
   const [showDropNotice, setShowDropNotice] = useState(false)
   const [dropNoticeColor, setDropNoticeColor] = useState('green')
   const {dpr} = useUI()
+  const {add} = useNotification()
+  const {t} = useTranslation()
 
   useImperativeHandle(ref, () => {
     return editorRef.current
@@ -240,6 +244,12 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
                 }}
                 onDrop={(e) => {
                   setShowDropNotice(false)
+
+                  readImageHelper(e.dataTransfer.files[0]).then(newAsset => {
+                    executeAction('drop-image', {position: {x: e.clientX, y: e.clientY}, assets: [newAsset]})
+                  }).catch(() => {
+                    add(t('misc.imageResolveFailed'), 'info')
+                  })
                   /*      // setReadingFile(true)
                         readFileHelper(e.dataTransfer.files[0]).then(newFile => {
                           // openFile(newFile)

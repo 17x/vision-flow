@@ -70,8 +70,10 @@ const dFile = {
 }
 
 const FileContext = createContext<FileContextType>({
-  fileMap: new Map([[dFile.id, dFile]]),
-  fileList: [dFile],
+  // fileMap: new Map([[dFile.id, dFile]]),
+  // fileList: [dFile],
+  fileMap: new Map(),
+  fileList: [],
   focusedFileId: '',
   creating: false,
   focusOnFile: () => {

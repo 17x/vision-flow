@@ -23,7 +23,7 @@ class AssetsManager {
     this.assetsMap.set(asset.id, asset)
   }
 
-  static async resolve(file: File): Promise<AssetsObj> {
+/*  static async resolve(file: File): Promise<AssetsObj> {
     return new Promise<AssetsObj>(async (resolve, reject) => {
 
       if (!file) {
@@ -45,7 +45,7 @@ class AssetsManager {
       })
 
     })
-  }
+  }*/
 
   destroy() {
     this.assetsMap.forEach((asset) => {
@@ -57,20 +57,5 @@ class AssetsManager {
   }
 }
 
-async function waitImageSize(file: File) {
-  return new Promise<any>((resolve, reject) => {
-    const imageRef = new Image()
-
-    imageRef.onload = () => {
-      resolve(imageRef)
-    }
-
-    imageRef.onerror = () => {
-      reject('Load image size error')
-    }
-
-    imageRef.src = URL.createObjectURL(file)
-  })
-}
 
 export default AssetsManager

@@ -18,7 +18,6 @@ import AssetsManager from '@editor/engine/assetsManager/AssetsManager.ts'
 import ElementImage from '../core/modules/shapes/image.ts'
 import {BoundingRect, Point} from '@editor/type.ts'
 import nid from '@editor/lib/nid.ts'
-import {ModuleProps} from '@editor/core/modules/modules'
 
 class Editor {
   id = nid()

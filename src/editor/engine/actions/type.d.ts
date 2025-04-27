@@ -3,6 +3,8 @@ import {HistoryNode} from '../history/DoublyLinkedList.ts'
 // import {ModuleMoveDirection} from '../type'
 import {HistoryOperation} from '../history/type'
 import {ModulePropsWithoutIdentifiers} from '../../core/modules/modules'
+import {AssetsObj} from '@editor/engine/assetsManager/AssetsManager.ts'
+import {Point} from '@editor/type.ts'
 
 export interface SelectionModifyData {
   mode: SelectionActionMode;
@@ -62,6 +64,7 @@ export type VisionEventMap = {
   'selection-modify': SelectionModifyData;
   'selection-clear': never;
   'selection-all': never;
+  'drop-image': { position: Point, assets: AssetsObj[] };
   'module-updated': HistoryOperation;
   'module-copy': never;
   'module-add': ModulePropsWithoutIdentifiers[];

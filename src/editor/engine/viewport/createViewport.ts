@@ -68,8 +68,8 @@ export function createViewport(this: Editor): Viewport {
   wrapper.addEventListener('contextmenu', handleContextMenu.bind(this), {
     signal,
   })
-  wrapper.addEventListener('dragover', handleDragOver.bind(this), {signal})
-  wrapper.addEventListener('drop', handleDrop.bind(this), {signal})
+  // wrapper.addEventListener('dragover', handleDragOver.bind(this), {signal})
+  // wrapper.addEventListener('drop', handleDrop.bind(this), {signal})
 
   const frame = new Rectangle({
     id: nid() + '-frame',

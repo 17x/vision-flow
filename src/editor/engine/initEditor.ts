@@ -153,6 +153,30 @@ export function initEditor(this: Editor) {
     this.events.onWorldMouseMove?.(p as Point)
   })
 
+  on('drop-image', ({position, assets}) => {
+    // console.log(data)
+    const ox = position.x - this.viewport.rect!.x
+    const oy = position.y - this.viewport.rect!.y
+    const worldPoint = this.getWorldPointByViewportPoint(ox, oy)
+    const modulePropsList = assets.map(asset => {
+      const {width, height} = asset.imageRef!
+
+      this.assetsManager.add(asset)
+
+      return {
+        type: 'image',
+        enableLine: false,
+        src: asset.id,
+        x: worldPoint.x,
+        y: worldPoint.y,
+        width,
+        height,
+      }
+    })
+
+    dispatch('module-add', modulePropsList)
+  })
+
   on('module-delete', () => {
     const savedSelected = this.getSelected
     const backup = this.batchDelete(savedSelected)

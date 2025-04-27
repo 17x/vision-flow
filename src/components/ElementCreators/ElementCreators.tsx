@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
-import {Button, Col} from '@lite-u/ui'
+import {Button, Flex} from '@lite-u/ui'
 
 interface ElementCreators {
   className?: string;
@@ -44,13 +44,12 @@ const ElementCreators: React.FC<ElementCreators> = ({className = ''}) => {
     }
   }, [handleMouseMove, handleMouseUp])
 
-  return <Col w={50}>
+  return <Flex col w={50}>
     <Button>rectangle</Button>
     <Button>circle</Button>
     <Button>text</Button>
     <Button>Pen</Button>
-    {/*<Button>image</Button>*/}
-  </Col>
+  </Flex>
 }
 
 export default ElementCreators

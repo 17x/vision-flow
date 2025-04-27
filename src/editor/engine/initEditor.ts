@@ -8,6 +8,7 @@ import {HistoryOperation} from './history/type'
 import {updateSelectionCanvasRenderData} from './selection/helper.ts'
 // import zoom from '../../components/statusBar/zoom'
 import {fitRectToViewport} from './viewport/helper.ts'
+import {Point} from '@editor/type.ts'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this

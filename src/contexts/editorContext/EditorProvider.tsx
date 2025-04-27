@@ -23,7 +23,7 @@ import {
 } from '@editor/engine/type'
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
 import {useUI} from '../UIContext/UIContext.tsx'
-import {Col, Con, Drop, useNotification} from '@lite-u/ui'
+import {Con, Drop, Flex, useNotification} from '@lite-u/ui'
 import readImageHelper from './readImageHelper.ts'
 import {useTranslation} from 'react-i18next'
 import ElementCreators from '../../components/ElementCreators/ElementCreators.tsx'
@@ -224,8 +224,9 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
     applyHistoryNode,
     executeAction,
   }}>
-    <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true} tabIndex={0}
-         className={'outline-0'}>
+    <Flex col fw fh alignItems={'stretch'} ref={contextRootRef} data-focused={state.focused} autoFocus={true}
+          tabIndex={0}
+          className={'outline-0'}>
       {focusedFileId === workspace.id && <ShortcutListener/>}
 
       <Header/>
@@ -286,13 +287,13 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
                            }}/>
           }
         </div>
-        <div style={{width: 200}} className={'h-full flex-shrink-0 border-l border-gray-200'}>
+        <Flex col w={260} alignItems={'stretch'} className={'h-full border-l border-gray-200'}>
           <PropPanel props={state.selectedProps!}/>
           <LayerPanel data={sortedModules}/>
           <HistoryPanel/>
-        </div>
+        </Flex>
       </main>
-    </Col>
+    </Flex>
 
   </EditorContext.Provider>
 }

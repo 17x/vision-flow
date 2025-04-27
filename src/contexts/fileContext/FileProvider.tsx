@@ -70,21 +70,6 @@ const FileProvider: FC = () => {
     fileMap.set(file.id, file)
     updateFileList()
     focusOnFile(file.id)
-    // setCurrentFileId(file.id)
-  }
-
-  const deleteFileFromLocal = (id: UID) => {
-    let item = localStorage.getItem(STORAGE_ID)
-    let savedFileMap = JSON.parse(item!)
-    const fileId = id
-
-    if (savedFileMap && savedFileMap[fileId]) {
-      delete savedFileMap[fileId]
-    }
-
-    localStorage.setItem(STORAGE_ID, JSON.stringify(savedFileMap))
-    localStorage.removeItem(fileId)
-    console.log('deleted')
   }
 
   const startCreateFile = () => {
@@ -103,7 +88,7 @@ const FileProvider: FC = () => {
     if (!savedFileMap) {
       savedFileMap = {}
     }
-    // console.log(file)
+
     savedFileMap[file.id] = fileId
     localStorage.setItem(STORAGE_ID, JSON.stringify(savedFileMap))
     localStorage.setItem(fileId, JSON.stringify(file))

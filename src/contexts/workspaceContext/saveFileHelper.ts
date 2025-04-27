@@ -1,7 +1,7 @@
 import JSZip from 'jszip'
-import {VisionWorkspace} from '../fileContext/FileContext.tsx'
+import {VisionFileType, VisionWorkspace} from '../fileContext/FileContext.tsx'
 
-const saveFileHelper = (file, workspaces: VisionWorkspace[]) => {
+const saveFileHelper = (file: VisionFileType, workspaces: VisionWorkspace[]) => {
   const zip = new JSZip()
   const assetsFolder = zip!.folder('assets')
 

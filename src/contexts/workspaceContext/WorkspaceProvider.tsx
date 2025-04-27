@@ -21,8 +21,7 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
   const [currentWS, setCurrentWS] = useState<string>(file.workspace[0].id)
   const [showPrint, setShowPrint] = useState(false)
   const [showDropNotice, setShowDropNotice] = useState(false)
-  const [isDragging, setIsDragging] = useState(false)
-  const dragCounter = useRef(0)
+  const [readingFile, setReadingFile] = useState(false)
 
   useEffect(() => {
     setWorkspace(file.workspace)
@@ -78,9 +77,7 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
   }
 
   const saveFile = () => {
-    console.log(9)
-    // const e = editorMapRef.current.get(currentWS)
-    const workspaceList = []
+    const workspaceList: VisionWorkspace[] = []
 
     workspace.map(WS => {
       const e = editorMapRef.current.get(WS.id)
@@ -91,7 +88,7 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
         ...data,
       })
     })
-    console.log(file)
+
     saveFileHelper(file, workspaceList)
   }
 
@@ -138,9 +135,7 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
   }}>
     <Con fw fh>
       <Drop
-        // accepts={['application/vz']}
         onDragIsOver={(v) => {
-          console.log(v)
           if (v) {
             setShowDropNotice(true)
           }
@@ -150,8 +145,12 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
         }}
         onDrop={(e) => {
           setShowDropNotice(false)
-          readFileHelper(e.dataTransfer.files[0])
-          // console.log(e.dataTransfer.items[0].getAsFile())
+          setReadingFile(true)
+          readFileHelper(e.dataTransfer.files[0]).then(newFile => {
+            console.log(newFile)
+          }).catch(e => {
+
+          })
         }}>
         {
           workspace.map((ws, index) => {

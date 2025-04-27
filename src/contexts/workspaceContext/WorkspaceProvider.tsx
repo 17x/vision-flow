@@ -1,13 +1,14 @@
 import {FC, useEffect, useRef, useState} from 'react'
 import {useFile, VisionFileType, VisionWorkspace} from '../fileContext/FileContext.tsx'
 import WorkspaceContext from './WorkspaceContext.tsx'
-import {Con, Drop} from '@lite-u/ui'
+import {Con, Drop, useNotification} from '@lite-u/ui'
 import EditorProvider from '../editorContext/EditorProvider.tsx'
 import {VisionEventData, VisionEventType} from '@editor/engine/actions/type'
 import {Print} from '../../components/print/print.tsx'
 import Editor from '@editor/engine/editor.ts'
 import saveFileHelper from './saveFileHelper.ts'
 import readFileHelper from './readFileHelper.ts'
+import {useTranslation} from 'react-i18next'
 // import {useUI} from '../UIContext/UIContext.tsx'
 
 const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
@@ -22,7 +23,10 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
   const [currentWS, setCurrentWS] = useState<string>(file.workspace[0].id)
   const [showPrint, setShowPrint] = useState(false)
   const [showDropNotice, setShowDropNotice] = useState(false)
+  const [dropNoticeColor, setDropNoticeColor] = useState('green')
   const [readingFile, setReadingFile] = useState(false)
+  const {add} = useNotification()
+  const {t} = useTranslation()
 
   useEffect(() => {
     setWorkspace(file.workspace)
@@ -136,10 +140,10 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
   }}>
     <Con fw fh>
       <Drop
+        accepts={['application/zip']}
         onDragIsOver={(v) => {
-          if (v) {
-            setShowDropNotice(true)
-          }
+          setDropNoticeColor(v ? 'green' : 'red')
+          setShowDropNotice(true)
         }}
         onDragIsLeave={() => {
           setShowDropNotice(false)
@@ -151,7 +155,7 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
             // console.log(newFile)
             openFile(newFile)
           }).catch(e => {
-
+            add(t('misc.fileResolveFailed'), 'info')
           })
         }}>
         {
@@ -170,7 +174,8 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
 
     {
       showDropNotice && <Con fw fh style={{
-        border: '5px solid #ff0000',
+        border: '5px solid',
+        borderColor: dropNoticeColor,
         pointerEvents: 'none',
         position: 'absolute',
         top: 0,

@@ -30,7 +30,7 @@ const saveFileHelper = (file: VisionFileType, workspaces: VisionWorkspace[]) => 
   zip.generateAsync({
       type: 'blob',
       compression: 'DEFLATE',
-      // mimeType: 'application/zip',
+      mimeType: 'application/zip',
     },
   )
     .then(function (content) {
@@ -39,7 +39,7 @@ const saveFileHelper = (file: VisionFileType, workspaces: VisionWorkspace[]) => 
       const a = document.createElement('a')
       const url = URL.createObjectURL(content)
       a.href = url
-      a.download = file.name + '.vz'
+      a.download = file.name + '.zip'
       a.click()
       URL.revokeObjectURL(url)
     })

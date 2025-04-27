@@ -1,4 +1,6 @@
 {
   "misc": {
+    "fileResolveFailed": "file resolve failed",
+    "fileOpenRepeat": "The file has been opened already"
   }
 }

@@ -7,6 +7,7 @@ import LanguageSwitcher from '../../components/language/languageSwitcher.tsx'
 import {EditorExportFileType} from '@editor/engine/type'
 import WorkspaceProvider from '../workspaceContext/WorkspaceProvider.tsx'
 import {useNotification} from '@lite-u/ui'
+import {useTranslation} from 'react-i18next'
 
 const FileProvider: FC = () => {
   const {fileMap} = useFile()
@@ -17,14 +18,15 @@ const FileProvider: FC = () => {
   const showCreateFile = fileLen === 0 || creating
   const STORAGE_ID = 'VISION_FLOW_FILE_MAP'
   const {add} = useNotification()
+  const {t} = useTranslation()
+
   useEffect(() => {
     updateFileList()
   }, [fileMap])
 
   const openFile = (file: VisionFileType) => {
     if (fileMap.get(file.id)) {
-      add()
-      console.log('The file has been opened already')
+      add(t('misc.fileOpenRepeat'), 'info')
     } else {
       fileMap.set(file.id, file)
       updateFileList()
@@ -41,8 +43,6 @@ const FileProvider: FC = () => {
         focusOnFile(arr[0].id)
       }
     }
-
-    // return arr
   }
 
   const focusOnFile = (id: UID) => {

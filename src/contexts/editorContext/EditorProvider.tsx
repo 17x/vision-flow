@@ -171,12 +171,13 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
           event.preventDefault();
           // return false;
         }*/
-    // console.log(workspace)
+    console.log(workspace)
     if (containerRef.current && !editorRef.current) {
 
       editor = new Editor({
         container: containerRef!.current,
         elements: workspace.elements,
+        assets: workspace.assets,
         config: {
           dpr,
           page,
@@ -246,6 +247,7 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
                   setShowDropNotice(false)
 
                   readImageHelper(e.dataTransfer.files[0]).then(newAsset => {
+                    console.log(newAsset)
                     executeAction('drop-image', {position: {x: e.clientX, y: e.clientY}, assets: [newAsset]})
                   }).catch(() => {
                     add(t('misc.imageResolveFailed'), 'info')

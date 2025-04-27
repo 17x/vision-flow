@@ -1,5 +1,6 @@
 import JSZip from 'jszip'
 import {VisionFileType} from '../fileContext/FileContext.tsx'
+import {waitImageSize} from '../editorContext/readImageHelper.ts'
 
 const readFileHelper = (file: File): Promise<VisionFileType> => {
   return new Promise(async (resolve, reject) => {
@@ -8,32 +9,24 @@ const readFileHelper = (file: File): Promise<VisionFileType> => {
       const loadedFile = await newZip.loadAsync(file)
       const fileJson: VisionFileType = JSON.parse(await loadedFile.files['file.json'].async('text'))
 
-      fileJson.workspace.map(async ws => {
+      const promises = fileJson.workspace.map(async ws => {
         const promises = ws.assets!.map(async asset => {
           const fileKey = 'assets/' + asset.id
           const fileName = asset.name
-          const fileBlob = await loadedFile.files[fileKey].async('blob')
+          let assetBlob = await loadedFile.files[fileKey].async('blob')
+          let file = new File([assetBlob], fileName, {type: asset.mimeType})
 
           if (asset.type === 'image') {
-            const imageRef = new Image()
-
-            imageRef.onload = async () => {
-              asset.imageRef = imageRef
-            }
-
-            imageRef.onerror = () => {
-              throw new Error(`${asset.name} failed to load image`)
-            }
-
-            imageRef.src = URL.createObjectURL(fileBlob)
+            asset.imageRef = await waitImageSize(file)
           }
-          asset.file = new File([fileBlob], fileName)
 
-          return true
+          asset.file = file
         })
 
-        return Promise.all(promises)
+        await Promise.all(promises)
       })
+
+      await Promise.all(promises)
 
       resolve(fileJson)
     } catch (e) {

@@ -46,7 +46,7 @@ interface FileContextType {
 }
 
 const dFile = {
-  'id': '19455cb7-8406-4512-98f4-61d5e1d840ec',
+  'id': '29455cb7-8406-4512-98f4-61d5e1d840ec',
   'name': 'A4',
   'version': '0.0.2',
   'createdAt': 1745561608440,
@@ -70,10 +70,10 @@ const dFile = {
 }
 
 const FileContext = createContext<FileContextType>({
-  // fileMap: new Map([[dFile.id, dFile]]),
-  // fileList: [dFile],
-  fileMap: new Map(),
-  fileList: [],
+  fileMap: new Map([[dFile.id, dFile]]),
+  fileList: [dFile],
+  // fileMap: new Map(),
+  // fileList: [],
   focusedFileId: '',
   creating: false,
   focusOnFile: () => {

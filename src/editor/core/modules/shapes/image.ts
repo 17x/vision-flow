@@ -69,6 +69,7 @@ class ElementImage extends Rectangle {
     // Fill if enabled
     if (opacity > 0) {
       // console.log(asset)
+      console.log(img)
       ctx.drawImage(img, -width / 2, -height / 2, width, height)
       // ctx.drawImage()
       // ctx.closePath()

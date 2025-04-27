@@ -1,8 +1,10 @@
-import nid from '@editor/lib/nid.ts'
-
 export interface AssetsObj {
   id: string
-  type: 'image' | 'svg' | 'font'
+  /**
+   * Or something else
+   */
+  type: 'image'
+  mimeType: string
   file: File
   name: string
   imageRef?: HTMLImageElement
@@ -23,29 +25,29 @@ class AssetsManager {
     this.assetsMap.set(asset.id, asset)
   }
 
-/*  static async resolve(file: File): Promise<AssetsObj> {
-    return new Promise<AssetsObj>(async (resolve, reject) => {
+  /*  static async resolve(file: File): Promise<AssetsObj> {
+      return new Promise<AssetsObj>(async (resolve, reject) => {
 
-      if (!file) {
-        reject('File error')
-      }
+        if (!file) {
+          reject('File error')
+        }
 
-      if (!file!.type.startsWith('image/')) {
-        reject('File format error')
-      }
+        if (!file!.type.startsWith('image/')) {
+          reject('File format error')
+        }
 
-      const imageRef = await waitImageSize(file)
+        const imageRef = await waitImageSize(file)
 
-      resolve({
-        id: nid(),
-        type: 'image',
-        file,
-        imageRef,
-        name: file.name,
+        resolve({
+          id: nid(),
+          type: 'image',
+          file,
+          imageRef,
+          name: file.name,
+        })
+
       })
-
-    })
-  }*/
+    }*/
 
   destroy() {
     this.assetsMap.forEach((asset) => {
@@ -56,6 +58,5 @@ class AssetsManager {
     })
   }
 }
-
 
 export default AssetsManager

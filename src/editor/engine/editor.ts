@@ -14,7 +14,7 @@ import {destroyViewport} from './viewport/destroyViewport.ts'
 import {initEditor} from './initEditor.ts'
 import {VisionEventType} from './actions/type'
 import {zoomAtPoint} from './viewport/helper.ts'
-import AssetsManager from '@editor/engine/assetsManager/AssetsManager.ts'
+import AssetsManager, {AssetsObj} from '@editor/engine/assetsManager/AssetsManager.ts'
 import ElementImage from '../core/modules/shapes/image.ts'
 import {BoundingRect, Point} from '@editor/type.ts'
 import nid from '@editor/lib/nid.ts'
@@ -54,10 +54,12 @@ class Editor {
   constructor({
                 container,
                 elements,
+                assets=[],
                 events = {},
                 config,
               }: {
     container: HTMLDivElement
+    assets: AssetsObj[]
     elements: ModuleProps[]
     events?: EventHandlers;
     config: EditorConfig;
@@ -71,7 +73,7 @@ class Editor {
     this.viewport = createViewport.call(this)
     this.moduleMap = new Map()
     // this.moduleCounter = config.moduleIdCounter
-    this.assetsManager = new AssetsManager()
+    this.assetsManager = new AssetsManager(assets)
     this.init()
     this.action.dispatch('module-add', elements)
   }

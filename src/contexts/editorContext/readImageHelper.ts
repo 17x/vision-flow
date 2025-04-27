@@ -4,10 +4,13 @@ import {AssetsObj} from '@editor/engine/assetsManager/AssetsManager.ts'
 const readImageHelper = (file: File): Promise<AssetsObj> => {
   return new Promise<AssetsObj>(async (resolve, reject) => {
     try {
+      let mimeType = file.type
+
       resolve({
         id: nid(),
         type: 'image',
         file,
+        mimeType,
         imageRef: await waitImageSize(file),
         name: file.name,
       })
@@ -17,7 +20,7 @@ const readImageHelper = (file: File): Promise<AssetsObj> => {
   })
 }
 
-async function waitImageSize(file: File) {
+export async function waitImageSize(file: File) {
   return new Promise<any>((resolve, reject) => {
     const imageRef = new Image()
 

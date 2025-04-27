@@ -11,8 +11,8 @@ import handlePointerMove from './eventHandlers/pointerMove.ts'
 import handleContextMenu from './eventHandlers/contextMenu.ts'
 import Rectangle from '../../core/modules/shapes/rectangle.ts'
 import nid from '@editor/lib/nid.ts'
-import handleDragOver from '@editor/engine/viewport/eventHandlers/dragOver.ts'
-import handleDrop from '@editor/engine/viewport/eventHandlers/drop.ts'
+// import handleDragOver from '@editor/engine/viewport/eventHandlers/dragOver.ts'
+// import handleDrop from '@editor/engine/viewport/eventHandlers/drop.ts'
 
 export function createViewport(this: Editor): Viewport {
   const {

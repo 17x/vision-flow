@@ -15,6 +15,7 @@ const saveFileHelper = (file: VisionFileType, workspaces: VisionWorkspace[]) => 
           id: asset.id,
           name: asset.name,
           type: asset.type,
+          mimeType: asset.mimeType,
         }
       }),
     }

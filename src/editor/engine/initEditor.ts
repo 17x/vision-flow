@@ -448,4 +448,8 @@ export function initEditor(this: Editor) {
   on('context-menu', ({position}) => {
     this.events.onContextMenu?.(position)
   })
+
+  on('switch-tool', (toolName) => {
+
+  })
 }

@@ -85,6 +85,7 @@ export type VisionEventMap = {
   'history-redo': never;
   'history-undo': never;
   'history-pick': HistoryNode;
+  'switch-tool': never;
   'context-menu': {
     idSet: Set<UID>;
     position: Position;

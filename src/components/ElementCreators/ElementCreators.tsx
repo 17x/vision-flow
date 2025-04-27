@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
-import {Col} from '@lite-u/ui'
+import {Button, Col} from '@lite-u/ui'
 
 interface ElementCreators {
   className?: string;
@@ -9,6 +9,7 @@ const ElementCreators: React.FC<ElementCreators> = ({className = ''}) => {
   const [width, setWidth] = useState<number>(300)
   const isDragging = useRef(false)
   const panelRef = useRef<HTMLDivElement>(null)
+  const [currentTool, setCurrentTool] = useState('rectangle')
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
@@ -44,7 +45,11 @@ const ElementCreators: React.FC<ElementCreators> = ({className = ''}) => {
   }, [handleMouseMove, handleMouseUp])
 
   return <Col w={50}>
-
+    <Button>rectangle</Button>
+    <Button>circle</Button>
+    <Button>text</Button>
+    <Button>Pen</Button>
+    {/*<Button>image</Button>*/}
   </Col>
 }
 

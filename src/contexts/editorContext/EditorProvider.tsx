@@ -24,7 +24,7 @@ import {
 } from '@editor/engine/type'
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
 import {useUI} from '../UIContext/UIContext.tsx'
-import {Col} from '@lite-u/ui'
+import {Col, Con, Drop} from '@lite-u/ui'
 
 const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: EditorConfig['page'] }> = ({
                                                                                                             ref,
@@ -45,6 +45,8 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
   const lastSavedHistoryId = useRef(0)
   const currentHistoryId = useRef(0)
   const needSaveLocal = useRef(false)
+  const [showDropNotice, setShowDropNotice] = useState(false)
+  const [dropNoticeColor, setDropNoticeColor] = useState('green')
   const {dpr} = useUI()
 
   useImperativeHandle(ref, () => {
@@ -227,10 +229,40 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
         <ModulePanel/>
 
         <div className={'flex flex-col w-full h-full overflow-hidden relative'}>
-          <div ref={containerRef}
-               editor-container={'true'}
-               className={'relative overflow-hidden flex w-full h-full'}
-          ></div>
+          <Drop accepts={['image/*']}
+                style={{position: 'relative'}}
+                onDragIsOver={(v) => {
+                  setDropNoticeColor(v ? 'green' : 'red')
+                  setShowDropNotice(true)
+                }}
+                onDragIsLeave={() => {
+                  setShowDropNotice(false)
+                }}
+                onDrop={(e) => {
+                  setShowDropNotice(false)
+                  /*      // setReadingFile(true)
+                        readFileHelper(e.dataTransfer.files[0]).then(newFile => {
+                          // openFile(newFile)
+                        }).catch(() => {
+                          // add(t('misc.fileResolveFailed'), 'info')
+                        })*/
+                }}>
+            <div ref={containerRef}
+                 editor-container={'true'}
+                 className={'relative overflow-hidden flex w-full h-full'}
+            ></div>
+
+            {
+              showDropNotice && <Con fw fh style={{
+                border: '5px solid',
+                borderColor: dropNoticeColor,
+                pointerEvents: 'none',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+              }}></Con>
+            }
+          </Drop>
 
           <StatusBar ref={worldPointRef}/>
 

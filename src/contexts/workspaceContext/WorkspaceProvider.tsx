@@ -152,9 +152,8 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
           setShowDropNotice(false)
           setReadingFile(true)
           readFileHelper(e.dataTransfer.files[0]).then(newFile => {
-            // console.log(newFile)
             openFile(newFile)
-          }).catch(e => {
+          }).catch(() => {
             add(t('misc.fileResolveFailed'), 'info')
           })
         }}>

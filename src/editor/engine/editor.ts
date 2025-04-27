@@ -18,6 +18,7 @@ import AssetsManager, {AssetsObj} from '@editor/engine/assetsManager/AssetsManag
 import ElementImage from '../core/modules/shapes/image.ts'
 import {BoundingRect, Point} from '@editor/type.ts'
 import nid from '@editor/lib/nid.ts'
+import Rectangle from '@editor/core/modules/shapes/rectangle.ts'
 
 class Editor {
   id = nid()
@@ -279,29 +280,44 @@ class Editor {
   renderModules() {
     // console.log('renderModules')
     const animate = () => {
-      const {frame, mainCTX: ctx} = this.viewport
+      const {scale, dpr, mainCTX: ctx} = this.viewport
+      const frameBorder = {
+        id: nid() + '-frame',
+        x: this.config.page.width / 2,
+        y: this.config.page.height / 2,
+        width: this.config.page.width,
+        height: this.config.page.height,
+        fillColor: 'transparent',
+        enableLine: true,
+        lineWidth: 1 / scale * dpr,
+        lineColor: '#000',
+        layer: -1,
+        opacity: 100,
+      }
 
+      const frameFill = {...frameBorder, fillColor: '#fff', enableLine: false}
       // deduplicateObjectsByKeyValue()
       // console.log(this.visibleModuleMap.size)
       // deduplicateObjectsByKeyValue
 
+      new Rectangle(frameFill).render(ctx)
+
       this.visibleModuleMap.forEach((module) => {
-          if (module.type === 'image') {
-            const {src} = module as ElementImage
+        if (module.type === 'image') {
+          const {src} = module as ElementImage
 
-            const obj = this.assetsManager.getAssetsObj(src)
-            console.log(this.assetsManager, src)
-            if (obj) {
-              (module as ElementImage).render(ctx, obj.imageRef)
-            }
-          } else {
-            module.render(ctx)
-
+          const obj = this.assetsManager.getAssetsObj(src)
+          console.log(this.assetsManager, src)
+          if (obj) {
+            (module as ElementImage).render(ctx, obj.imageRef)
           }
-        },
-      )
+        } else {
+          module.render(ctx)
 
-      frame.render(ctx)
+        }
+      })
+
+      new Rectangle(frameBorder).render(ctx)
     }
 
     requestAnimationFrame(animate)

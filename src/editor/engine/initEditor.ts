@@ -9,6 +9,7 @@ import {updateSelectionCanvasRenderData} from './selection/helper.ts'
 // import zoom from '../../components/statusBar/zoom'
 import {fitRectToViewport} from './viewport/helper.ts'
 import {Point} from '@editor/type.ts'
+import selector from '@editor/engine/tools/selector/selector.ts'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
@@ -16,14 +17,19 @@ export function initEditor(this: Editor) {
   const on = action.on.bind(action)
 
   container.appendChild(viewport.wrapper)
-
   viewport.resizeObserver.observe(container)
+
+  this.toolMap.set('selector', selector)
+  this.toolMap.set('rectangle', selector)
+  this.toolMap.set('text', selector)
+  this.toolMap.set('ellipse', selector)
 
   on('world-resized', () => {
     this.updateViewport()
 
     if (!this.initialized) {
       this.initialized = true
+      dispatch('switch-tool', 'selector')
       dispatch('world-zoom', 'fit')
       dispatch('module-updated')
       this.events.onInitialized?.()
@@ -456,6 +462,6 @@ export function initEditor(this: Editor) {
   })
 
   on('switch-tool', (toolName) => {
-
+    console.log(toolName)
   })
 }

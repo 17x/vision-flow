@@ -1,4 +1,4 @@
-import {EditorConfig, EditorExportFileType, EventHandlers} from './type'
+import {EditorConfig, EventHandlers} from './type'
 import History from './history/history.ts'
 import Action from './actions/actions.ts'
 import {generateBoundingRectFromTwoPoints, rectsOverlap} from '../core/utils.ts'
@@ -19,6 +19,8 @@ import ElementImage from '../core/modules/shapes/image.ts'
 import {BoundingRect, Point} from '@editor/type.ts'
 import nid from '@editor/lib/nid.ts'
 import Rectangle from '@editor/core/modules/shapes/rectangle.ts'
+import {Tool} from '@editor/engine/tools/tool.ts'
+import selector from '@editor/engine/tools/selector/selector.ts'
 
 class Editor {
   id = nid()
@@ -48,6 +50,7 @@ class Editor {
   _rotatingOperator: OperationHandlers | null = null
   selectedShadow: Set<UID> = new Set()
   manipulationStatus: ViewportManipulationType = 'static'
+  toolMap: Map<string, Tool> = new Map()
   CopyDeltaX = 50
   CopyDeltaY = 100
   initialized: boolean = false
@@ -75,12 +78,10 @@ class Editor {
     this.moduleMap = new Map()
     // this.moduleCounter = config.moduleIdCounter
     this.assetsManager = new AssetsManager(assets)
-    this.init()
-    this.action.dispatch('module-add', elements)
-  }
 
-  private init() {
     initEditor.call(this)
+
+    this.action.dispatch('module-add', elements)
   }
 
   batchCreate(moduleDataList: ModuleProps[]): ModuleMap {

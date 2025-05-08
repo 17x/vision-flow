@@ -462,6 +462,6 @@ export function initEditor(this: Editor) {
   })
 
   on('switch-tool', (toolName) => {
-    console.log(toolName)
+    this.currentToolName = toolName
   })
 }

@@ -20,7 +20,6 @@ import {BoundingRect, Point} from '@editor/type.ts'
 import nid from '@editor/lib/nid.ts'
 import Rectangle from '@editor/core/modules/shapes/rectangle.ts'
 import {Tool} from '@editor/engine/tools/tool.ts'
-import selector from '@editor/engine/tools/selector/selector.ts'
 
 class Editor {
   id = nid()
@@ -54,6 +53,7 @@ class Editor {
   CopyDeltaX = 50
   CopyDeltaY = 100
   initialized: boolean = false
+  currentToolName: string = 'selector'
 
   constructor({
                 container,

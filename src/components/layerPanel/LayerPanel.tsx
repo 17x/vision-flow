@@ -68,11 +68,9 @@ export const LayerPanel = ({data}: LayerPanelProps) => {
 
   return (
     <div className={'p-2'}>
-      <Panel title={'Layer'}
+      <Panel head={'Layer'}
              xs
-             ovh
-             fh
-             boxStyle={{
+             contentStyle={{
                overflow: 'hidden',
              }}>
         <div className={'p-2 relative overflow-hidden'}>

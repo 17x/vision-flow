@@ -20,11 +20,8 @@ export const HistoryPanel = () => {
 
   return (
     <Con fh ovh p={10}>
-      <Panel title={'History'}
-             xs
-             ovh
-             fh
-             boxStyle={{
+      <Panel xs head={'History'}
+             contentStyle={{
                overflow: 'hidden',
              }}>
         <Con fh ovh p={8}>

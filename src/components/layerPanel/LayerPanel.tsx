@@ -73,7 +73,7 @@ export const LayerPanel = ({data}: LayerPanelProps) => {
              contentStyle={{
                overflow: 'hidden',
              }}>
-        <div className={'p-2 relative overflow-hidden'}>
+        <Con rela ovh>
           <div ref={scrollRef}
                onScroll={handleScroll}
                className={'relative scrollbar-custom overflow-x-hidden overflow-y-auto p-2 border h-30 border-gray-200 select-none'}>
@@ -82,7 +82,7 @@ export const LayerPanel = ({data}: LayerPanelProps) => {
             }}></div>
             <div className={'z-20 w-full sticky top-0 left-0'}>{arr}</div>
           </div>
-        </div>
+        </Con>
       </Panel>
     </Con>
   )

@@ -21,6 +21,9 @@ export const HistoryPanel = () => {
   return (
     <Con fh ovh p={10}>
       <Panel xs head={'History'}
+             headStyle={{
+               backgroundColor: '#1f4273',
+             }}
              contentStyle={{
                overflow: 'hidden',
              }}>

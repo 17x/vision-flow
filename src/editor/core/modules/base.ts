@@ -12,7 +12,7 @@ export interface BasicModuleProps {
   shadow?: boolean
   rotation?: number
 }
-
+// type RequiredBaseProps = Required<BasicModuleProps,''>
 class Base {
   readonly id: UID
   readonly type: string

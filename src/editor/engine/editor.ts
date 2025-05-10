@@ -193,6 +193,10 @@ class Editor {
     }
   }
 
+  public createElement(props) {
+
+  }
+
   public get getVisibleModuleMap(): ModuleMap {
     return new Map(this.visibleModuleMap)
   }

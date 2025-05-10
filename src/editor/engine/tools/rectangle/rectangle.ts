@@ -1,219 +1,76 @@
 import Editor from '@editor/engine/editor.ts'
-import {generateBoundingRectFromTwoPoints} from '@editor/core/utils.ts'
-import {areSetsEqual, getSymmetricDifference} from '@editor/lib/lib.ts'
 import {updateCursor, updateSelectionBox} from '@editor/engine/viewport/domManipulations.ts'
 import Base from '@editor/core/modules/base.ts'
 import {Tool} from '@editor/engine/tools/tool.ts'
-import {
-  applyResize,
-  detectHoveredModule,
-  getResizeCursor,
-  getRotateAngle,
-} from '@editor/engine/viewport/eventHandlers/funcs.ts'
-import {BoundingRect} from '@editor/type.ts'
+import {applyResize} from '@editor/engine/viewport/eventHandlers/funcs.ts'
 import {ModuleModifyData} from '@editor/engine/actions/type'
+import nid from '@editor/lib/nid.ts'
+import {ResizeHandler} from '@editor/engine/selection/type'
 
-const selection: Tool = {
+const rectangle: Tool = {
   start(this: Editor, e: MouseEvent) {
     const {shiftKey, metaKey, ctrlKey} = e
     const modifyKey = ctrlKey || metaKey || shiftKey
-
+    // console.log(this.viewport.mouseMovePoint)
+    const {x, y} = this.viewport.mouseMovePoint
+    const {x: cx, y: cy} = this.getWorldPointByViewportPoint(x, y)
+    const width = 2
+    const height = 2
     // this._resizingOperator = operator
+    const id = 'rectangle-' + nid()
+    const rectProps: ModuleProps = {
+      type: 'rectangle',
+      id,
+      layer: 0,
+      lineColor: '#000',
+      fillColor: '#fff',
+      lineWidth: 1,
+      opacity: 100,
+      x: cx - width / 2,
+      y: cy - height / 2,
+      width,
+      height,
+    }
 
+    const created = this.batchAdd(this.batchCreate([rectProps]))
+    console.log(created)
+    // this.action.dispatch('module-add', [rectProps])
+    // const mod = this.moduleMap.get(id)
+    // console.log(mod)
+    // mod.getOperators()
+    // console.log([...this.operationHandlers])
+    const arr = [...this.operationHandlers] as ResizeHandler[]
+
+    for (let i = arr.length - 1; i >= 0; i--) {
+      const {id: OId, type, name} = arr[i]
+      if (OId === id && type === 'resize' && name === 'br') {
+        this._resizingOperator = arr[i]
+        break
+      }
+    }
+
+    // const newRect = this.batchAdd(this.batchCreate([rectProps]))
+    // this.batchAdd(newRect)
+    // console.log(newRect)
     this.manipulationStatus = 'resizing'
     this.action.dispatch('selection-clear')
-
-    const hoveredModule = this.hoveredModule
-
-    // console.log(hoveredModule)
-    // Click on blank area and not doing multi-selection
-    if (!hoveredModule) {
-      // Determine clear selected modules
-      if (!modifyKey) {
-        this.action.dispatch('selection-clear')
-      }
-      this.selectedShadow = this.getSelected
-      // console.warn(this.selectedShadow)
-      return (this.manipulationStatus = 'selecting')
-    }
-
-    // this.manipulationStatus = 'dragging'
-    const realSelected = this.getSelected
-
-    // this.draggingModules = new Set(this.selectedModules)
-
   },
   move(this: Editor, e: PointerEvent) {
-    const {
-      action,
-      draggingModules,
-      viewport,
-      selectedShadow,
-      _selectingModules,
-    } = this
+    const {altKey, shiftKey} = e
+    const {viewport} = this
 
-    switch (this.manipulationStatus) {
-      case 'selecting': {
-        viewport.wrapper.setPointerCapture(e.pointerId)
-        const rect = generateBoundingRectFromTwoPoints(
-          viewport.mouseDownPoint,
-          viewport.mouseMovePoint,
-        )
-        const pointA = this.getWorldPointByViewportPoint(rect.x, rect.y)
-        const pointB = this.getWorldPointByViewportPoint(
-          rect.right,
-          rect.bottom,
-        )
-        const virtualSelectionRect: BoundingRect =
-          generateBoundingRectFromTwoPoints(pointA, pointB)
-        const _selecting: Set<UID> = new Set()
-        const modifyKey = e.ctrlKey || e.metaKey || e.shiftKey
+    console.log(this._resizingOperator)
+    if (!this._resizingOperator) return
 
-        this.moduleMap.forEach((module) => {
-          if (module.isInsideRect(virtualSelectionRect)) {
-            _selecting.add(module.id)
-          }
-        })
+    viewport.wrapper.setPointerCapture(e.pointerId)
 
-        const selectingChanged = !areSetsEqual(_selectingModules, _selecting)
+    const r = applyResize.call(this, altKey, shiftKey)
 
-        updateSelectionBox(viewport.selectionBox, rect)
+    this.action.dispatch('module-modifying', {
+      type: 'resize',
+      data: r,
+    })
 
-        /**
-         * Simple logic
-         * If with modifyKey
-         *    original-selected Symmetric Difference selecting
-         * else
-         *    original-selected merge selecting
-         */
-        if (!selectingChanged) return
-
-        this._selectingModules = _selecting
-
-        const SD = getSymmetricDifference(selectedShadow, _selecting)
-
-        if (modifyKey) {
-          action.dispatch('selection-modify', {
-            mode: 'replace',
-            idSet: SD,
-          })
-        } else {
-          if (_selecting.size === 0 && selectedShadow.size === 0) {
-            return action.dispatch('selection-clear')
-          }
-          const newSet = new Set([...selectedShadow, ..._selecting])
-
-          action.dispatch('selection-modify', {
-            mode: 'replace',
-            idSet: newSet,
-          })
-        }
-      }
-        break
-
-      case 'panning':
-        viewport.wrapper.setPointerCapture(e.pointerId)
-        updateCursor.call(this, 'grabbing')
-        action.dispatch('world-shift',
-          {
-            x: e.movementX,
-            y: e.movementY,
-          })
-
-        break
-
-      case 'dragging': {
-        viewport.wrapper.setPointerCapture(e.pointerId)
-        const x = (e.movementX * viewport.dpr) / viewport.scale
-        const y = (e.movementY * viewport.dpr) / viewport.scale
-
-        // force update
-        this.action.dispatch('module-modifying', {
-          type: 'move',
-          data: {x, y},
-        })
-      }
-        break
-
-      case 'resizing': {
-        viewport.wrapper.setPointerCapture(e.pointerId)
-        const {altKey, shiftKey} = e
-        // const {x, y} = this._rotatingOperator!.moduleOrigin
-        // const centerPoint = this.getViewPointByWorldPoint(x, y)
-        // const cursorDirection = getResizeDirection(centerPoint, viewport.mouseMovePoint)
-
-        const r = applyResize.call(this, altKey, shiftKey)
-        // console.log(r)
-        this.action.dispatch('module-modifying', {
-          type: 'resize',
-          data: r,
-        })
-      }
-        break
-
-      case 'rotating': {
-        viewport.wrapper.setPointerCapture(e.pointerId)
-        const {shiftKey} = e
-        const {x, y} = this._rotatingOperator!.moduleOrigin
-        const centerPoint = this.getViewPointByWorldPoint(x, y)
-        const rotation = Base.applyRotating.call(this, shiftKey)
-        const cursorAngle = getRotateAngle(centerPoint, viewport.mouseMovePoint)
-
-        updateCursor.call(this, 'rotate', viewport.mouseMovePoint, cursorAngle)
-
-        this.action.dispatch('module-modifying', {
-          type: 'rotate',
-          data: {rotation},
-        })
-      }
-        break
-
-      case 'waiting': {
-        console.log('mousedown')
-        const MOVE_THROTTLE = 1
-        const moved =
-          Math.abs(viewport.mouseMovePoint.x - viewport.mouseDownPoint.x) >
-          MOVE_THROTTLE ||
-          Math.abs(viewport.mouseMovePoint.y - viewport.mouseDownPoint.y) >
-          MOVE_THROTTLE
-
-        if (moved) {
-          if (draggingModules.size > 0) {
-            this.manipulationStatus = 'dragging'
-          } else {
-            this.manipulationStatus = 'selecting'
-          }
-        }
-      }
-        break
-
-      case 'static': {
-        const r = detectHoveredModule.call(this)
-        const {viewport} = this
-
-        if (r) {
-          if (r.type === 'rotate') {
-            const centerPoint = this.getViewPointByWorldPoint(r.moduleOrigin.x, r.moduleOrigin.y)
-            const angle = getRotateAngle(centerPoint, viewport.mouseMovePoint)
-
-            updateCursor.call(this, 'rotate', viewport.mouseMovePoint, angle)
-          } else if (r.type === 'resize') {
-            const {x, y} = r.moduleOrigin
-            const centerPoint = this.getViewPointByWorldPoint(x, y)
-            const cursorDirection = getResizeCursor(viewport.mouseMovePoint, centerPoint)
-
-            updateCursor.call(this, 'resize', cursorDirection)
-          }
-        } else {
-          updateCursor.call(this, 'default')
-        }
-
-        viewport.wrapper.releasePointerCapture(e.pointerId)
-        viewport.drawCrossLine = viewport.drawCrossLineDefault
-      }
-
-        break
-    }
   },
   finish(this: Editor, e: MouseEvent) {
     const leftMouseClick = e.button === 0
@@ -365,4 +222,4 @@ const selection: Tool = {
   },
 }
 
-export default selection
+export default rectangle

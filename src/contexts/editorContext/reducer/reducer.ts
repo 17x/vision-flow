@@ -34,7 +34,7 @@ export const initialEditorState: EditorStateType = {
   worldPoint: {x: 0, y: 0},
   copiedItems: [],
   historyArray: [],
-  currentTool: 'selector',
+  currentTool: 'rectangle',
   historyStatus: {
     id: 0,
     hasPrev: false,

@@ -193,7 +193,9 @@ const EditorProvider: FC<{
           page,
         },
         events: {
-          onInitialized: () => { },
+          onInitialized: () => {
+            editor.execute('switch-tool', state.currentTool)
+          },
           onHistoryUpdated,
           onModulesUpdated,
           onSelectionUpdated,

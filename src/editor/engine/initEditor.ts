@@ -10,6 +10,7 @@ import {updateSelectionCanvasRenderData} from './selection/helper.ts'
 import {fitRectToViewport} from './viewport/helper.ts'
 import {Point} from '@editor/type.ts'
 import selector from '@editor/engine/tools/selector/selector.ts'
+import rectangle from '@editor/engine/tools/rectangle/rectangle.ts'
 
 export function initEditor(this: Editor) {
   const {container, viewport, action} = this
@@ -20,16 +21,16 @@ export function initEditor(this: Editor) {
   viewport.resizeObserver.observe(container)
 
   this.toolMap.set('selector', selector)
-  this.toolMap.set('rectangle', selector)
-  this.toolMap.set('text', selector)
-  this.toolMap.set('ellipse', selector)
+  this.toolMap.set('rectangle', rectangle)
+  // this.toolMap.set('text', selector)
+  // this.toolMap.set('ellipse', selector)
 
   on('world-resized', () => {
     this.updateViewport()
 
     if (!this.initialized) {
       this.initialized = true
-      dispatch('switch-tool', 'selector')
+      // dispatch('switch-tool', 'selector')
       dispatch('world-zoom', 'fit')
       dispatch('module-updated')
       this.events.onInitialized?.()

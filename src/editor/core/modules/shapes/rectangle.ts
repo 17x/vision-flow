@@ -9,7 +9,7 @@ export interface RectangleProps extends ShapeProps {
   height: number
   radius?: number
 }
-
+export type RequiredRectangleProps = Required<RectangleProps>
 class Rectangle extends Shape {
   // readonly type = 'rectangle'
   width: number

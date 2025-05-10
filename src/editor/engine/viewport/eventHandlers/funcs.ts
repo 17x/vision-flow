@@ -12,6 +12,7 @@ export function detectHoveredModule(this: Editor) {
   let hitOn = null
   const arr = [...this.operationHandlers]
   // console.log(worldPoint)
+
   for (let i = arr.length - 1; i >= 0; i--) {
     if (arr[i].module.hitTest(worldPoint)) {
       hitOn = arr[i]

@@ -1,7 +1,11 @@
 import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import tailwindcss from '@tailwindcss/vite'
-import path from 'path'
+import * as path from 'path'
+import {fileURLToPath} from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // https://vite.dev/config/
 export default defineConfig(({mode}) => {
@@ -15,7 +19,7 @@ export default defineConfig(({mode}) => {
       preserveSymlinks: true,
       alias: {
         react: path.resolve(__dirname, './node_modules/react'),
-        '@editor': path.resolve(__dirname, 'src/editor'),
+        '@editor': path.resolve(__dirname, '../@lite-u/editor'),
 
         // '@editor': path.resolve(__dirname, '../src/engine'),
         // '@editor': './src/engine',

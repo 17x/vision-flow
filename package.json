@@ -14,7 +14,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@lite-u/ui": "^0.1.22",
+    "@lite-u/ui": "^0.1.23",
     "@tailwindcss/vite": "^4.0.10",
     "i18next": "^24.2.3",
     "jszip": "^3.10.1",
@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@types/node": "^22.15.17",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react-swc": "^3.5.0",

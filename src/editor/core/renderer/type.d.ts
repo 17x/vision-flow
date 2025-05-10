@@ -1,1 +1,0 @@
-export type RenderPropsList = RectangleRenderProps | TextRenderProps | CircleRenderProps

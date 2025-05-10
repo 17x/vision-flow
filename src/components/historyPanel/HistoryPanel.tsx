@@ -24,7 +24,7 @@ export const HistoryPanel = () => {
              contentStyle={{
                overflow: 'hidden',
              }}>
-        <Con fh ovh p={8}>
+        <Con fh ovh>
           <Con fh className={'border border-gray-400 overflow-x-hidden scrollbar-custom overflow-y-auto'}>
             <Flex col fh p={10} className={'  min-h-40 bg-gray-100'} style={{
               // boxShadow: 'inset 0 0 3px 1px #000',

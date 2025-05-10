@@ -193,7 +193,7 @@ class Editor {
     }
   }
 
-  public createElement(props) {
+  public createElement(props):ModuleInstance {
 
   }
 

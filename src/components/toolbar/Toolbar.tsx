@@ -51,6 +51,7 @@ const Toolbar: React.FC<{ tool: ToolName }> = ({tool}) => {
               borderRadius: 3,
               backgroundColor: active ? '#aaa' : 'white',
               fontSize: 16,
+              outline: 'none',
             }}
                         onClick={() => {
                           executeAction('switch-tool', toolName)

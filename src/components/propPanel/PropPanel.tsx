@@ -12,14 +12,17 @@ const PropPanel = ({props}: PropPanelProps) => {
     setLocalProps(props)
   }, [props])
 
-  return <Panel xs head={'Properties'}
-                contentStyle={{
-                  overflow: 'hidden',
-                }}>
-    <Con p={10} fh className={'scrollbar-custom overflow-x-hidden overflow-y-auto  border  border-gray-200 select-none'}>
-      {localProps && <ShapePropsPanel props={localProps}/>}
-    </Con>
-  </Panel>
+  return <Con p={10} h={400}>
+    <Panel xs head={'Properties'}
+           contentStyle={{
+             overflow: 'hidden',
+           }}>
+      <Con p={10} fh
+           className={'scrollbar-custom overflow-x-hidden overflow-y-auto  border  border-gray-200 select-none'}>
+        {localProps && <ShapePropsPanel props={localProps}/>}
+      </Con>
+    </Panel>
+  </Con>
 }
 
 export default PropPanel

@@ -1,6 +1,6 @@
 import {useContext, useEffect, useRef, useState} from 'react'
 import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
-import {Panel} from '@lite-u/ui'
+import {Con, Panel} from '@lite-u/ui'
 
 interface LayerPanelProps {
   data: ModuleInstance[]
@@ -67,7 +67,7 @@ export const LayerPanel = ({data}: LayerPanelProps) => {
   }
 
   return (
-    <div className={'p-2'}>
+    <Con p={10}>
       <Panel head={'Layer'}
              xs
              contentStyle={{
@@ -84,6 +84,6 @@ export const LayerPanel = ({data}: LayerPanelProps) => {
           </div>
         </div>
       </Panel>
-    </div>
+    </Con>
   )
 }

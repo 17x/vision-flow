@@ -5,6 +5,7 @@ import {HistoryOperation} from '../history/type'
 import {ModulePropsWithoutIdentifiers} from '../../core/modules/modules'
 import {AssetsObj} from '@editor/engine/assetsManager/AssetsManager.ts'
 import {Point} from '@editor/type.ts'
+import {ToolName} from '@editor/engine/tools/tool.ts'
 
 export interface SelectionModifyData {
   mode: SelectionActionMode;
@@ -85,7 +86,7 @@ export type VisionEventMap = {
   'history-redo': never;
   'history-undo': never;
   'history-pick': HistoryNode;
-  'switch-tool': 'selector' | 'rectangle' | 'text' | 'ellipse';
+  'switch-tool': ToolName;
   'context-menu': {
     idSet: Set<UID>;
     position: Position;

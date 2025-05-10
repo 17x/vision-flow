@@ -1,6 +1,7 @@
 import {ModuleProps} from '../core/modules/modules'
 import History from './history/history.ts'
 import {EditorConfig} from './editor.ts'
+import {ToolName} from '@editor/engine/tools/tool.ts'
 
 export type ModuleMoveDirection =
   'module-move-up' |
@@ -47,6 +48,7 @@ export type WorldUpdatedHandler = (worldInfo: WorldInfo) => void;
 export type WorldMouseMoveUpdatedHandler = (point: Point) => void;
 export type ContextMenuHandler = (position: Point) => void;
 export type ModuleCopiedHandler = (ModuleProps) => void;
+export type SwitchToolHandler = (toolName: ToolName) => void;
 
 export declare type EventHandlers = {
   onInitialized?: InitializedHandler
@@ -58,6 +60,7 @@ export declare type EventHandlers = {
   onWorldMouseMove?: WorldMouseMoveUpdatedHandler
   onContextMenu?: ContextMenuHandler
   onModuleCopied?: ModuleCopiedHandler
+  onSwitchTool?: SwitchToolHandler
 }
 
 export interface EditorExportFileType {
@@ -65,7 +68,6 @@ export interface EditorExportFileType {
   id: UID,
   config: EditorConfig
 }
-
 
 export interface EditorConfig {
   dpr: number;
@@ -83,3 +85,5 @@ export interface EditorInterface {
   events?: EventHandlers;
   config: EditorConfig;
 }
+
+export type {ToolName} from '@editor/engine/tools/tool.ts'

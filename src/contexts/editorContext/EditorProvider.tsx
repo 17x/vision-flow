@@ -1,4 +1,4 @@
-import {FC, useContext, useEffect, useImperativeHandle, useReducer, useRef, useState} from 'react'
+import {FC, RefObject, useContext, useEffect, useImperativeHandle, useReducer, useRef, useState} from 'react'
 import Editor from '@editor/engine/editor.ts'
 import ShortcutListener from '../../components/ShortcutListener.tsx'
 import {PointRef, StatusBar} from '../../components/statusBar/StatusBar.tsx'
@@ -18,6 +18,7 @@ import {
   ModuleCopiedHandler,
   ModulesUpdatedHandler,
   SelectionUpdatedHandler,
+  SwitchToolHandler,
   ViewportUpdatedHandler,
   WorldMouseMoveUpdatedHandler,
 } from '@editor/engine/type'
@@ -26,14 +27,19 @@ import {useUI} from '../UIContext/UIContext.tsx'
 import {Con, Drop, Flex, useNotification} from '@lite-u/ui'
 import readImageHelper from './readImageHelper.ts'
 import {useTranslation} from 'react-i18next'
-import ElementCreators from '../../components/ElementCreators/ElementCreators.tsx'
+import Toolbar from '../../components/toolbar/Toolbar.tsx'
 
-const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: EditorConfig['page'] }> = ({
-                                                                                                            ref,
-                                                                                                            workspace,
-                                                                                                            fileId,
-                                                                                                            page,
-                                                                                                          }) => {
+const EditorProvider: FC<{
+  ref: RefObject<Editor>,
+  workspace: VisionWorkspace,
+  fileId: UID,
+  page: EditorConfig['page']
+}> = ({
+        ref,
+        workspace,
+        fileId,
+        page,
+      }) => {
   const [state, dispatch] = useReducer(EditorReducer, initialEditorState)
   const editorRef = useRef<Editor>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -118,6 +124,10 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
     }
   }
 
+  const onSwitchTool: SwitchToolHandler = (toolName) => {
+    dispatch({type: 'SET_CURRENT_TOOL', payload: toolName})
+  }
+
   const handleFocus = () => {
     console.log('focus')
     dispatch({type: 'SET_FOCUSED', payload: true})
@@ -171,7 +181,7 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
           event.preventDefault();
           // return false;
         }*/
-    console.log(workspace)
+    // console.log(workspace)
     if (containerRef.current && !editorRef.current) {
 
       editor = new Editor({
@@ -191,6 +201,7 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
           onWorldMouseMove,
           onContextMenu,
           onModuleCopied,
+          onSwitchTool,
         },
       })
       editorRef.current = editor
@@ -233,7 +244,7 @@ const EditorProvider: FC<{ ref, workspace: VisionWorkspace, fileId: UID, page: E
 
       <main className={'flex flex-row overflow-hidden h-full'}>
         {/*<ModulePanel/>*/}
-        <ElementCreators/>
+        <Toolbar tool={state.currentTool}/>
         <div className={'flex flex-col w-full h-full overflow-hidden relative'}>
           <Drop accepts={['image/*']}
                 style={{position: 'relative'}}

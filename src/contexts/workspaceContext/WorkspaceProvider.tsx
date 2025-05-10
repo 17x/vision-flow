@@ -98,7 +98,7 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
   }
 
   const executeAction = <K extends (VisionEventType & WorkspaceAction)>(type: K, data?: VisionEventData<K>) => {
-    console.log(type)
+    // console.log(type)
 
     if (type === 'print') {
       setShowPrint(true)
@@ -121,8 +121,8 @@ const WorkspaceProvider: FC<{ file: VisionFileType }> = ({file}) => {
     const currentWSEditor = editorMapRef.current.get(currentWS)
 
     if (currentWSEditor) {
-      console.log(currentWS, editorMapRef)
-      console.log(currentWSEditor)
+      // console.log(currentWS, editorMapRef)
+      // console.log(currentWSEditor)
       // console.log(editorMapRef.current.get(currentWS).current)
       currentWSEditor.execute(type as K, data)
     }

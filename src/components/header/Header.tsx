@@ -1,10 +1,10 @@
 import MenuBar from './menu/Menu.tsx'
-import Toolbar from './toolbar/Toolbar.tsx'
+import ShortcutBar from './shortcutBar/ShortcutBar.tsx'
 
 const Header: React.FC = () => {
   return <header>
     <MenuBar/>
-    <Toolbar/>
+    <ShortcutBar/>
   </header>
 }
 export default Header

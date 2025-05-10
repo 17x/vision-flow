@@ -1,4 +1,6 @@
 import {HistoryNode} from '@editor/engine/history/DoublyLinkedList.ts'
+import {ToolName} from '@editor/engine/type'
+import {Point} from '@editor/type.ts'
 
 // import {ViewportInfo} from '../../../engine/editor/type'
 
@@ -15,6 +17,7 @@ export interface EditorStateType {
   needSave: boolean
   selectedModules: UID[]
   selectedProps: ModuleProps | null
+  currentTool: ToolName
   lastSavedHistoryId: number
   copiedItems: ModuleProps[]
   viewport: ViewportInfo | null
@@ -31,6 +34,7 @@ export const initialEditorState: EditorStateType = {
   worldPoint: {x: 0, y: 0},
   copiedItems: [],
   historyArray: [],
+  currentTool: 'selector',
   historyStatus: {
     id: 0,
     hasPrev: false,
@@ -49,7 +53,8 @@ type EditorAction =
   | { type: 'SET_LAST_SAVED_HISTORY_ID'; payload: number }
   | { type: 'SET_COPIED_ITEMS'; payload: ModuleProps[] }
   | { type: 'SET_VIEWPORT'; payload: ViewportInfo | null }
-  | { type: 'SET_WORLD_POINT'; payload: Point };
+  | { type: 'SET_WORLD_POINT'; payload: Point }
+  | { type: 'SET_CURRENT_TOOL'; payload: ToolName };
 
 export const EditorReducer = (state: EditorStateType, action: EditorAction) => {
   switch (action.type) {
@@ -111,6 +116,12 @@ export const EditorReducer = (state: EditorStateType, action: EditorAction) => {
       return {
         ...state,
         worldPoint: action.payload,
+      }
+
+    case 'SET_CURRENT_TOOL':
+      return {
+        ...state,
+        currentTool: action.payload,
       }
 
     default:

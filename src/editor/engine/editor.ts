@@ -272,7 +272,7 @@ class Editor {
   }
 
   public execute(type: VisionEventType, data: unknown = null) {
-    console.log('Editor', type)
+    // console.log('Editor', type)
     // @ts-ignore
     this.action.execute(type, data)
   }

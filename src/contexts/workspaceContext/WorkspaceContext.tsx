@@ -1,6 +1,7 @@
 import {createContext, useContext} from 'react'
 import {VisionWorkspace} from '../fileContext/FileContext.tsx'
 import {Unit} from '@editor/type.ts'
+import {VisionEventData, VisionEventType} from '@editor/engine/actions/type'
 
 interface WorkspaceContextType {
   workspaceList: VisionWorkspace[]
@@ -14,7 +15,7 @@ interface WorkspaceContextType {
   focused: UID
   focusOn: (id: UID) => void
   close: (id: UID) => void
-  executeAction: () => void
+  executeAction: <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => void
   saveFile: () => void
   create: (v: UID, data?: VisionWorkspace) => void
   handleCreating: (v: boolean) => void

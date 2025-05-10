@@ -10,7 +10,7 @@ import {useWorkspace} from '../../../contexts/workspaceContext/WorkspaceContext.
 const IconSize = 20
 const IconColor = 'text-black'
 
-const Toolbar: React.FC = () => {
+const ShortcutBar: React.FC = () => {
   const {saveFile} = useWorkspace()
   const {state: {needSave, historyStatus, selectedModules}, executeAction} = useContext(EditorContext)
   const hasSelectedModules = selectedModules.length > 0
@@ -112,4 +112,4 @@ const Toolbar: React.FC = () => {
     </div>
   </div>
 }
-export default Toolbar
+export default ShortcutBar

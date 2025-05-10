@@ -2,7 +2,7 @@ import {useContext, useEffect, useRef} from 'react'
 import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
 import {useTranslation} from 'react-i18next'
 import {I18nHistoryDataItem} from '../../i18n/type'
-import {Con, Flex, Panel} from '@lite-u/ui'
+import {Col, Con, MenuItem, Panel} from '@lite-u/ui'
 
 export const HistoryPanel = () => {
   const {state: {historyArray, historyStatus}, applyHistoryNode} = useContext(EditorContext)
@@ -26,7 +26,7 @@ export const HistoryPanel = () => {
              }}>
         <Con fh ovh>
           <Con fh className={'border border-gray-400 overflow-x-hidden scrollbar-custom overflow-y-auto'}>
-            <Flex col fh p={10} className={'  min-h-40 bg-gray-100'} style={{
+            <Col fh p={10} minH={40} className={'bg-gray-100'} style={{
               // boxShadow: 'inset 0 0 3px 1px #000',
             }}>
               {
@@ -35,21 +35,23 @@ export const HistoryPanel = () => {
                     const prefixI18NKey = 'history.' + historyNode.data.type
                     const {label, tooltip} = t(prefixI18NKey, {returnObjects: true}) as I18nHistoryDataItem
 
-                    return <Con key={index}
-                                title={tooltip}
-                                ref={isCurr ? targetRef : null}
-                                onClick={() => {
-                                  if (isCurr) return
-                                  // console.log(historyNode.id)
-                                  applyHistoryNode(historyNode)
-                                }}
-                                className={` px-2 py-1 cursor-pointer text-xs hover:bg-gray-400 hover:text-white ${isCurr ? 'bg-gray-400 text-white' : ''}`}>
-                      <span>{label}</span>
-                    </Con>
+                    return <MenuItem xs
+                                     ref={isCurr ? targetRef : null}
+                                     title={tooltip}
+                                     key={index}
+                                     onClick={() => {
+                                       if (isCurr) return
+                                       // console.log(historyNode.id)
+                                       applyHistoryNode(historyNode)
+                                     }}
+                                     style={{
+                                       width: '100%',
+                                       backgroundColor: isCurr ? 'gray' : 'white',
+                                     }}>{label}</MenuItem>
                   },
                 )
               }
-            </Flex>
+            </Col>
           </Con></Con>
       </Panel>
     </Con>

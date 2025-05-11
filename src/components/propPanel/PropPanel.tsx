@@ -42,7 +42,7 @@ const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
       newValue = Number(newValue)
     }
 
-    executeAction('module-modify', [{
+    executeAction('element-modify', [{
       id: props.id,
       props: {
         [keyName]: newValue,

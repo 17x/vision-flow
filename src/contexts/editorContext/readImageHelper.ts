@@ -1,8 +1,8 @@
-import nid from '@editor/lib/nid.ts'
-import {AssetsObj} from '@editor/engine/assetsManager/AssetsManager.ts'
+import {nid} from '@editor'
+import {VisionEditorAssetType} from '@editor/types'
 
-const readImageHelper = (file: File): Promise<AssetsObj> => {
-  return new Promise<AssetsObj>(async (resolve, reject) => {
+const readImageHelper = (file: File): Promise<VisionEditorAssetType> => {
+  return new Promise<VisionEditorAssetType>(async (resolve, reject) => {
     try {
       let mimeType = file.type
 

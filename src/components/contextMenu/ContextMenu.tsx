@@ -20,10 +20,10 @@ export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
   useEffect(() => {
     const noSelectedModule = selectedModules.length === 0
     const ITEMS: MenuItemType[] = [
-      {id: 'copy', editorActionCode: 'module-copy', disabled: noSelectedModule},
-      {id: 'paste', editorActionCode: 'module-paste', disabled: copiedItems.length === 0},
-      {id: 'duplicate', editorActionCode: 'module-duplicate', disabled: noSelectedModule},
-      {id: 'delete', editorActionCode: 'module-delete', disabled: noSelectedModule, divide: true},
+      {id: 'copy', editorActionCode: 'element-copy', disabled: noSelectedModule},
+      {id: 'paste', editorActionCode: 'element-paste', disabled: copiedItems.length === 0},
+      {id: 'duplicate', editorActionCode: 'element-duplicate', disabled: noSelectedModule},
+      {id: 'delete', editorActionCode: 'element-delete', disabled: noSelectedModule, divide: true},
       // {id: 'group', disabled: selectedModules.size < 2},
       // {id: 'ungroup', disabled: noSelectedModule},
       {id: 'undo', editorActionCode: 'history-undo', disabled: !historyStatus.hasPrev},
@@ -57,8 +57,8 @@ export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
   const handleContextAction = (item: MenuItemType) => {
     const {editorActionCode} = item
 
-    if (editorActionCode === 'module-paste') {
-      executeAction('module-paste', position)
+    if (editorActionCode === 'element-paste') {
+      executeAction('element-paste', position)
     } else {
       executeAction(editorActionCode!)
     }

@@ -1,5 +1,5 @@
 import {FC, RefObject, useContext, useEffect, useImperativeHandle, useReducer, useRef, useState} from 'react'
-import Editor from '@editor/engine/editor.ts'
+import {Editor} from '@editor'
 import ShortcutListener from '../../components/ShortcutListener.tsx'
 import {PointRef, StatusBar} from '../../components/statusBar/StatusBar.tsx'
 import {HistoryNode} from '@editor/engine/history/DoublyLinkedList.ts'

@@ -1,7 +1,7 @@
 import React, {useContext} from 'react'
 import {Col, Con, IconButton, Tooltip} from '@lite-u/ui'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
-import {ToolName} from '@editor/engine/tools/tool.ts'
+import {ToolName} from '@lite-u/editor/types'
 import {LuCircle, LuMousePointer2, LuPenTool, LuRectangleHorizontal} from 'react-icons/lu'
 
 const toolList = [

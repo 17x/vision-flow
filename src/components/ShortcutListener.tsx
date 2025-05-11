@@ -12,10 +12,10 @@ const ShortcutListener: React.FC = () => {
     let shortcutCode: VisionEventType | null = null
     const {key, ctrlKey, metaKey, shiftKey} = e
     const arrowKeys: { [key: string]: ModuleMoveDirection } = {
-      ArrowUp: 'module-move-up',
-      ArrowDown: 'module-move-down',
-      ArrowLeft: 'module-move-left',
-      ArrowRight: 'module-move-right',
+      ArrowUp: 'element-move-up',
+      ArrowDown: 'element-move-down',
+      ArrowLeft: 'element-move-left',
+      ArrowRight: 'element-move-right',
     }
     const moveDirection = arrowKeys[key]
     const moveDelta = {x: 0, y: 0}
@@ -56,19 +56,19 @@ const ShortcutListener: React.FC = () => {
     }
 
     if (key === 'c' && (ctrlKey || metaKey) && !shiftKey) {
-      shortcutCode = 'module-copy'
+      shortcutCode = 'element-copy'
     }
 
     if (key === 'v' && (ctrlKey || metaKey)) {
-      shortcutCode = 'module-paste'
+      shortcutCode = 'element-paste'
     }
 
     if (key === 'd' && (ctrlKey || metaKey)) {
-      shortcutCode = 'module-duplicate'
+      shortcutCode = 'element-duplicate'
     }
 
     if (key === 'Delete' || key === 'Backspace') {
-      shortcutCode = 'module-delete'
+      shortcutCode = 'element-delete'
     }
 
     if (key === 'Escape') {
@@ -85,19 +85,19 @@ const ShortcutListener: React.FC = () => {
 
     if (moveDirection) {
       // shortcutCode = arrowKeys[key]
-      shortcutCode = 'module-move'
+      shortcutCode = 'element-move'
 
       switch (moveDirection) {
-        case 'module-move-down':
+        case 'element-move-down':
           moveDelta.y = MODULE_MOVE_STEP
           break
-        case 'module-move-up':
+        case 'element-move-up':
           moveDelta.y = -MODULE_MOVE_STEP
           break
-        case 'module-move-left':
+        case 'element-move-left':
           moveDelta.x = -MODULE_MOVE_STEP
           break
-        case 'module-move-right':
+        case 'element-move-right':
           moveDelta.x = MODULE_MOVE_STEP
           break
       }

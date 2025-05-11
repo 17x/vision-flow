@@ -57,7 +57,7 @@ export const LayerPanel = ({data}: LayerPanelProps) => {
              onClick={() => {
                executeAction('selection-modify', {mode: 'replace', idSet: new Set([item.id])})
              }}
-             id={`layer-module-${item.id}`}
+             id={`layer-element-${item.id}`}
              key={item.id}>
           {/*{item.id.match(/\d+$/)[0]}*/}
           {item.type}

@@ -8,6 +8,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // https://vite.dev/config/
+// @ts-ignore
 export default defineConfig(({mode}) => {
   return {
     base: './',
@@ -16,7 +17,7 @@ export default defineConfig(({mode}) => {
     ],
     optimizeDeps: ['@lite-u/ui'],
     resolve: {
-      preserveSymlinks: true,
+      // preserveSymlinks: true,
       alias: {
         react: path.resolve(__dirname, './node_modules/react'),
         '@editor': path.resolve(__dirname, '../@lite-u/editor'),
@@ -41,6 +42,11 @@ export default defineConfig(({mode}) => {
             }
           },
         },
+      },
+    },
+    server: {
+      fs: {
+        allow: ['..'],
       },
     },
   }

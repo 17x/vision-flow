@@ -96,5 +96,5 @@ export const createMockData = (editor: Editor) => {
   }
   modulesData.push(createBaseDataByType('ellipse', 300, 700))
 
-  editor.action.dispatch('module-add', modulesData)
+  editor.action.dispatch('element-add', modulesData)
 }

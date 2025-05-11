@@ -1,7 +1,7 @@
 import {createContext, useContext} from 'react'
 import {VisionWorkspace} from '../fileContext/FileContext.tsx'
-import {Unit} from '@editor/type.ts'
-import {VisionEventData, VisionEventType} from '@editor/engine/actions/type'
+import {UID, UnitType, VisionEventData, VisionEventType} from '@editor/types'
+import {Unit} from '@editor'
 
 interface WorkspaceContextType {
   workspaceList: VisionWorkspace[]
@@ -9,7 +9,7 @@ interface WorkspaceContextType {
     dpi: number
     width: number,
     height: number,
-    unit: Unit,
+    unit: UnitType,
   }
   creating: boolean
   focused: UID
@@ -37,7 +37,7 @@ const WorkspaceContext = createContext<WorkspaceContextType>({
   close: () => {},
   create: () => {},
   handleCreating: () => {},
-  executeAction:()=>{},
+  executeAction: () => {},
   startCreateFile: () => {
   },
 })

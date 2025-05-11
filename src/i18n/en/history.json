@@ -6,43 +6,43 @@
     },
     "history-add": {
       "label": "Add",
-      "tooltip": "Add modules to the file"
+      "tooltip": "Add elements to the file"
     },
     "history-delete": {
       "label": "Delete",
-      "tooltip": "Delete modules from the file"
+      "tooltip": "Delete elements from the file"
     },
     "history-paste": {
       "label": "Paste",
-      "tooltip": "Paste modules into the file"
+      "tooltip": "Paste elements into the file"
     },
     "history-duplicate": {
       "label": "Duplicate",
-      "tooltip": "Duplicate selected modules"
+      "tooltip": "Duplicate selected elements"
     },
     "history-modify": {
       "label": "Modify",
-      "tooltip": "Modify the properties of modules"
+      "tooltip": "Modify the properties of elements"
     },
     "history-move": {
       "label": "Move",
-      "tooltip": "Move modules"
+      "tooltip": "Move elements"
     },
     "history-reorder": {
       "label": "Reorder",
-      "tooltip": "Reorder modules"
+      "tooltip": "Reorder elements"
     },
     "history-select": {
       "label": "Select",
-      "tooltip": "Select modules"
+      "tooltip": "Select elements"
     },
     "history-group": {
       "label": "Group",
-      "tooltip": "Group modules"
+      "tooltip": "Group elements"
     },
     "history-ungroup": {
       "label": "Ungroup",
-      "tooltip": "Ungroup modules"
+      "tooltip": "Ungroup elements"
     },
     "history-composite": {
       "label": "Composite",

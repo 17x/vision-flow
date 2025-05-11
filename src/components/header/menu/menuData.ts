@@ -33,7 +33,7 @@ export const editMenu: MenuItemType = {
     {id: 'copy', disabled: false},
     {id: 'paste', disabled: false},
     {
-      id: 'delete', editorActionCode: 'module-delete',
+      id: 'delete', editorActionCode: 'element-delete',
       disabled: false,
     },
     {id: 'duplicate', disabled: false},

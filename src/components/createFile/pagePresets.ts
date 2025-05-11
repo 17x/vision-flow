@@ -1,8 +1,9 @@
-import {Unit} from '@editor/type.ts'
+import {Unit,nid} from '@lite-u/editor'
+import {UnitType} from '@lite-u/editor/types'
 
 export interface PagePreset {
   name: string
-  unit: Unit
+  unit: UnitType
   width: number
   height: number
   icon?: string

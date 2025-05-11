@@ -102,7 +102,7 @@ export const ModuleList: React.FC<ModulePanelProps> = () => {
                         props.src = 'https://cdn.pixabay.com/photo/2018/08/04/11/30/draw-3583548_1280.png'
                       }*/
 
-                 executeAction('module-add', [props])
+                 executeAction('element-add', [props])
                }}
           >
             <div

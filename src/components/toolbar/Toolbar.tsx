@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import {Col, Con, IconButton, Tooltip} from '@lite-u/ui'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {ToolName} from '@lite-u/editor/types'
-import {LuCircle, LuMousePointer2, LuPenTool, LuRectangleHorizontal} from 'react-icons/lu'
+import {LuCircle, LuHand, LuMousePointer2, LuPenTool, LuRectangleHorizontal} from 'react-icons/lu'
 
 const toolList = [
   {
@@ -30,6 +30,11 @@ const toolList = [
     icon: <LuPenTool/>,
     toolName: 'Pen',
   },
+  {
+    name: 'Hand',
+    icon: <LuHand/>,
+    toolName: 'Hand',
+  },
 ]
 
 const Toolbar: React.FC<{ tool: ToolName }> = ({tool}) => {
@@ -38,7 +43,9 @@ const Toolbar: React.FC<{ tool: ToolName }> = ({tool}) => {
 
   console.log(tool)
 
-  return <Col center w={50}>
+  return <Col center w={50} style={{
+    borderRight: '1px solid #e4e4e4',
+  }}>
     {
       toolList.map(({toolName, name, icon}) => {
         const active = toolName === tool

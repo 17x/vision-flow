@@ -1,9 +1,3 @@
-import {HistoryNode} from '@editor/engine/history/DoublyLinkedList.ts'
-import {ToolName} from '@editor/engine/type'
-import {Point} from '@editor/type.ts'
-
-// import {ViewportInfo} from '../../../engine/editor/type'
-
 export interface EditorStateType {
   id: UID
   focused: boolean
@@ -34,7 +28,7 @@ export const initialEditorState: EditorStateType = {
   worldPoint: {x: 0, y: 0},
   copiedItems: [],
   historyArray: [],
-  currentTool: 'rectangle',
+  currentTool: 'selector',
   historyStatus: {
     id: 0,
     hasPrev: false,

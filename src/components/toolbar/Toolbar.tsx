@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext, useEffect} from 'react'
 import {Col, Con, IconButton, Tooltip} from '@lite-u/ui'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {ToolName} from '@lite-u/editor/types'
@@ -39,9 +39,6 @@ const toolList = [
 
 const Toolbar: React.FC<{ tool: ToolName }> = ({tool}) => {
   const {executeAction} = useContext(WorkspaceContext)
-  // const [{currentTool}] = useReducer(EditorReducer, initialEditorState)
-
-  console.log(tool)
 
   return <Col center w={50} style={{
     borderRight: '1px solid #e4e4e4',
@@ -50,14 +47,14 @@ const Toolbar: React.FC<{ tool: ToolName }> = ({tool}) => {
       toolList.map(({toolName, name, icon}) => {
         const active = toolName === tool
         return <Tooltip placement={'r'} title={name} key={name}>
-          <Con p={2} w={40} h={40} fz={16}>
+          <Con p={2} w={40} h={40}>
             <IconButton xs style={{
               width: '100%',
               height: '100%',
               color: active ? 'white' : 'black',
               borderRadius: 3,
               backgroundColor: active ? '#aaa' : 'white',
-              fontSize: 16,
+              fontSize: 18,
               outline: 'none',
             }}
                         onClick={() => {

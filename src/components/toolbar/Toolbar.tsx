@@ -1,14 +1,21 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useContext} from 'react'
 import {Col, Con, IconButton, Tooltip} from '@lite-u/ui'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {ToolName} from '@lite-u/editor/types'
-import {LuCircle, LuHand, LuMousePointer2, LuPenTool, LuRectangleHorizontal} from 'react-icons/lu'
+import {LuCircle, LuHand,  LuPenTool, LuRectangleHorizontal} from 'react-icons/lu'
+import { FaMousePointer } from "react-icons/fa";
+import {TbLine} from 'react-icons/tb'
 
 const toolList = [
   {
     name: 'Selector',
-    icon: <LuMousePointer2/>,
+    icon: <FaMousePointer/>,
     toolName: 'selector',
+  },
+  {
+    name: 'Line',
+    icon: <TbLine/>,
+    toolName: 'line',
   },
   {
     name: 'Rectangle',
@@ -18,7 +25,7 @@ const toolList = [
   {
     name: 'Circle',
     icon: <LuCircle/>,
-    toolName: 'circle',
+    toolName: 'ellipse',
   },
   {
     name: 'Text',
@@ -33,7 +40,7 @@ const toolList = [
   {
     name: 'Hand',
     icon: <LuHand/>,
-    toolName: 'Hand',
+    toolName: 'panning',
   },
 ]
 

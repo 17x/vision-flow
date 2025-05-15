@@ -28,7 +28,8 @@ export const initialEditorState: EditorStateType = {
   worldPoint: {x: 0, y: 0},
   copiedItems: [],
   historyArray: [],
-  currentTool: 'selector',
+  // currentTool: 'selector',
+  currentTool: 'ellipse',
   historyStatus: {
     id: 0,
     hasPrev: false,

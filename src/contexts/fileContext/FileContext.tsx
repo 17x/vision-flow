@@ -1,7 +1,6 @@
 import {createContext, useContext} from 'react'
-import {AssetsObj} from '@editor/engine/assetsManager/AssetsManager.ts'
-
-type ElementProps = ModuleProps
+// import {AssetsObj} from '@lite-u/editor/types'
+import {ElementProps} from '@lite-u/editor/types'
 
 export interface VisionWorkspace {
   id: string
@@ -64,7 +63,10 @@ const dFile = {
     {
       'id': 'ile9lt',
       'name': 'workspace-1',
-      'elements': [],
+      'elements': [{
+        id: 'hello',
+
+      }],
     },
   ],
 }

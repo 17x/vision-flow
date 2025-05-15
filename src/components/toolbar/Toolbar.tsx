@@ -13,9 +13,9 @@ const toolList = [
     toolName: 'selector',
   },
   {
-    name: 'Line',
+    name: 'Line Segment',
     icon: <TbLine/>,
-    toolName: 'line',
+    toolName: 'lineSegment',
   },
   {
     name: 'Rectangle',

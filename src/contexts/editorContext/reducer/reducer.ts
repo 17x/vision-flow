@@ -29,7 +29,9 @@ export const initialEditorState: EditorStateType = {
   copiedItems: [],
   historyArray: [],
   // currentTool: 'rectangle',
-  currentTool: 'ellipse',
+  // currentTool: 'ellipse',
+  // currentTool: 'text',
+  currentTool: 'lineSegment',
   historyStatus: {
     id: 0,
     hasPrev: false,

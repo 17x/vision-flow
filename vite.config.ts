@@ -14,8 +14,17 @@ export default defineConfig(({mode}) => {
     base: './',
     plugins: [
       react(), tailwindcss(),
+      {
+        name: 'remove-sourcemaps',
+        transform(code) {
+          return {
+            code,
+            map: { mappings: '' }
+          }
+        }
+      }
     ],
-    optimizeDeps: ['@lite-u/ui'],
+    optimizeDeps: ['@lite-u/ui','@lite-u/editor'],
     resolve: {
       // preserveSymlinks: true,
       alias: {

@@ -3,13 +3,12 @@ import {Col, Con, IconButton, Tooltip} from '@lite-u/ui'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {ToolName} from '@lite-u/editor/types'
 import {LuCircle, LuHand, LuPencilLine, LuRectangleHorizontal} from 'react-icons/lu'
-import {FaMousePointer} from 'react-icons/fa'
-import {lineSeg} from '../../assets/svg/icons.tsx'
+import {lineSeg, mousePointer} from '../../assets/svg/icons.tsx'
 
 const toolList = [
   {
     name: 'Selector',
-    icon: <FaMousePointer/>,
+    icon: mousePointer(),
     toolName: 'selector',
   },
   {

@@ -30,9 +30,11 @@ export default defineConfig(({mode}) => {
       },
     },
     esbuild: {
-      pure: mode === 'production' ? ['console.log'] : [],
+      pure: false,
+      // pure: mode === 'production' ? ['console.log'] : [],
     },
     build: {
+      // minify:'esbuild',
       rollupOptions: {
         output: {
           manualChunks(id) {

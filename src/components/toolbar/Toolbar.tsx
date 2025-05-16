@@ -2,9 +2,9 @@ import React, {useContext} from 'react'
 import {Col, Con, IconButton, Tooltip} from '@lite-u/ui'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {ToolName} from '@lite-u/editor/types'
-import {LuCircle, LuHand,  LuPenTool, LuRectangleHorizontal} from 'react-icons/lu'
-import { FaMousePointer } from "react-icons/fa";
-import {TbLine} from 'react-icons/tb'
+import {LuCircle, LuHand, LuPencilLine, LuRectangleHorizontal} from 'react-icons/lu'
+import {FaMousePointer} from 'react-icons/fa'
+import {lineSeg} from '../../assets/svg/icons.tsx'
 
 const toolList = [
   {
@@ -14,7 +14,7 @@ const toolList = [
   },
   {
     name: 'Line Segment',
-    icon: <TbLine/>,
+    icon: lineSeg(),
     toolName: 'lineSegment',
   },
   {
@@ -33,9 +33,9 @@ const toolList = [
     toolName: 'text',
   },
   {
-    name: 'Pen',
-    icon: <LuPenTool/>,
-    toolName: 'Pen',
+    name: 'Pencil',
+    icon: <LuPencilLine/>,
+    toolName: 'pencil',
   },
   {
     name: 'Hand',

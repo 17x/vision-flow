@@ -1,6 +1,5 @@
 import {RefObject, useContext, useEffect, useState} from 'react'
 import Zoom from '../lib/zoom/zoom.ts'
-import throttle from '../utilities/throttle.ts'
 import ZOOM_LEVELS from '../constants/zoomLevels.ts'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
@@ -31,6 +30,7 @@ function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, execu
 
   useEffect(() => {
     setLocalScale(currentScale)
+
     if (!ref.current) return
 
     const zoomPlugin = new Zoom({

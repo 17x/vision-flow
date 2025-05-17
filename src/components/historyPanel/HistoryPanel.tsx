@@ -47,7 +47,8 @@ export const HistoryPanel: FC<{
                                      onClick={() => {
                                        if (isCurr) return
                                        // console.log(historyNode.id)
-                                       applyHistoryNode(historyNode)
+                                       pickHistory(historyNode)
+                                       // applyHistoryNode(historyNode)
                                      }}
                                      style={{
                                        width: '100%',

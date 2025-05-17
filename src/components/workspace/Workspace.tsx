@@ -94,7 +94,12 @@ const Workspace: FC<{
         <Col fh stretch flex={'none'} w={260} style={{borderLeft: '1px solid #dfdfdf'}}>
           <PropPanel props={state.selectedProps!}/>
           <LayerPanel data={[]}/>
-          <HistoryPanel/>
+          <HistoryPanel pickHistory={(node) => {
+            if (editorRef.current) {
+              console.log(9)
+              editorRef.current.execute('history-pick', node)
+            }
+          }}/>
         </Col>
       </Row>
     </Col>

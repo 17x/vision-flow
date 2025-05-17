@@ -66,18 +66,20 @@ function useEditor(ref: RefObject<HTMLDivElement | null>, workspace, page) {
           dispatch({type: 'SET_SELECTED_MODULES', payload: Array.from(selected)})
           dispatch({type: 'SET_SELECTED_PROPS', payload: props})
         },
-        onViewportUpdated: (viewportInfo) => {
+/*        onViewportUpdated: (viewportInfo) => {
           dispatch({type: 'SET_VIEWPORT', payload: viewportInfo})
-        },
+        },*/
         onWorldMouseMove: (point) => {
           // dispatch({type: 'SET_WORLD_POINT', payload: point})
           // worldPoint.current = point
-          if (worldPointRef.current) {
+         /* if (worldPointRef.current) {
             worldPointRef.current.set(point)
-          }
+          }*/
         },
         onContextMenu: (position) => {
           setShowContextMenu(true)
+          // dispatch({type: 'SET_SHOW_CONTEXT_MENU', payload: viewportInfo})
+
           setContextMenuPosition(position)
         },
         onModuleCopied: (items) => {

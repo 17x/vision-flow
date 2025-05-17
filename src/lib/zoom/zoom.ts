@@ -34,7 +34,7 @@ class Zoom {
   protected onScroll: ZoomOptions['onScroll']
   protected mouseScrollModifier: 'alt' | 'ctrl' | 'shift' | 'meta'
   _timer: number | undefined
-  DELAY = 200
+  DELAY = 400
   ACTION_THRESHOLD = 3
   EVENT_BUFFER: WheelEvent[] = []
   // zoomLock for touchpad zoom
@@ -73,7 +73,7 @@ class Zoom {
     // let touchpad = false
     // let mouse = false
     // console.log('event ',event)
-    console.log(deltaX, deltaY)
+    // console.log(deltaX, deltaY)
     event.preventDefault()
     event.stopPropagation()
 
@@ -84,12 +84,13 @@ class Zoom {
     }
 
     if (this.zoomLock) {
+      clearTimeout(this._timer)
       // EVENT_BUFFER.length = 0
     } else {
       // EVENT_BUFFER.push(event)
     }
 
-    if (Math.abs(deltaY) > 4) {
+    if (Zoom.isNegativeZero(deltaX) && Zoom.isFloat(deltaY) && Math.abs(deltaY) <= 4) {
       this.zoomLock = true
     }
 
@@ -143,6 +144,11 @@ class Zoom {
     } else if (scrolling) {
       this.onScroll && this.onScroll(translateX, translateY, event)
     }
+
+    this._timer = window.setTimeout(() => {
+      this.zoomLock = false
+      this._timer = null!
+    }, this.DELAY)
   }
 
   static isUInt(v: number) { return !Zoom.isFloat(v) }
@@ -152,6 +158,8 @@ class Zoom {
   static isFloat(v: number) { return Math.abs(v) % 1 !== 0 }
 
   destroy() {
+    clearTimeout(this._timer)
+    this._timer = null!
     this.dom = null!
     this.mouse = null!
     this.touchpad = null!

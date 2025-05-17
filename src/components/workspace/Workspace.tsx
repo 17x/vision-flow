@@ -14,6 +14,7 @@ import useEditor from '../../hooks/useEditor.tsx'
 import useZoom from '../../hooks/useZoom.tsx'
 import AppContext, {VisionWorkspace} from '../../contexts/appContext/AppContext.tsx'
 import {Editor} from '@lite-u/editor'
+import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 
 const Workspace: FC<{
   ref: RefObject<Editor>,
@@ -27,6 +28,7 @@ const Workspace: FC<{
         page,
       }) => {
   const {focusedFileId, startCreateFile, closeFile} = useContext(AppContext)
+  const {state, dispatch} = useContext(WorkspaceContext)
 
   const contextRootRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)

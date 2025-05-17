@@ -80,7 +80,6 @@ export const WorkspaceReducer = (state: WorkSpaceStateType, action: WorkspaceAct
         focused: action.payload,
       }
     case 'SET_HISTORY_ARRAY':
-      console.log(state)
       return {
         ...state,
         historyArray: action.payload,

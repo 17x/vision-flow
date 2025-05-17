@@ -91,15 +91,15 @@ class Zoom {
      *    x: UInt
      *    y: UInt
      *  zoom
-     *    x === -0
+     *    x equal to -0
      *    y: Float
      * 2. mouse scroll
      *    2.1 vertical scroll
-     *      x === -0
+     *      x equal to -0
      *      y: Float, abs(value) > 4, and increasing
      *    2.2 horizontal scroll
      *      x: UInt, increasing and abs(v) > 40
-     *      y === -0
+     *      y equal to -0
      */
     if (this.gestureLock) {
       zoomIn = deltaY <= 0

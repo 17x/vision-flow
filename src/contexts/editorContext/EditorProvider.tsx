@@ -249,7 +249,6 @@ const EditorProvider: FC<{
                   setShowDropNotice(false)
 
                   readImageHelper(e.dataTransfer.files[0]).then(newAsset => {
-                    console.log(newAsset)
                     executeAction('drop-image', {position: {x: e.clientX, y: e.clientY}, assets: [newAsset]})
                   }).catch(() => {
                     add(t('misc.imageResolveFailed'), 'info')

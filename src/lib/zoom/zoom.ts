@@ -1,8 +1,8 @@
 export interface ZoomOptions {
   dom: HTMLElement
-  mouse: true,
-  touchpad: true,
-  mouseScrollModifier: 'alt' | 'ctrl'
+  mouse?: true,
+  touchpad?: true,
+  mouseScrollModifier?: 'alt' | 'ctrl'
 }
 
 class Zoom {
@@ -10,7 +10,7 @@ class Zoom {
   protected mouse: boolean
   protected touchpad: boolean
   protected eventsController: AbortController
-  protected mouseScrollModifier: 'alt' | 'ctrl'
+  protected mouseScrollModifier: 'alt' | 'ctrl' | 'shift' | 'meta'
 
   constructor({
                 dom,
@@ -30,8 +30,8 @@ class Zoom {
     })
   }
 
-  handleWheel() {
-
+  handleWheel(event: WheelEvent) {
+    console.log('handleWheel', event)
   }
 
   destroy() {

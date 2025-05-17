@@ -28,6 +28,7 @@ import {Con, Drop, Flex, useNotification} from '@lite-u/ui'
 import readImageHelper from './readImageHelper.ts'
 import {useTranslation} from 'react-i18next'
 import Toolbar from '../../components/toolbar/Toolbar.tsx'
+import Zoom from '../../lib/zoom/zoom.ts'
 
 const EditorProvider: FC<{
   ref: RefObject<Editor>,
@@ -58,7 +59,7 @@ const EditorProvider: FC<{
   const {dpr} = useUI()
   const {add} = useNotification()
   const {t} = useTranslation()
-
+  const zoomPluginRef = useRef<Zoom | null>(null)
   useImperativeHandle(ref, () => {
     return editorRef.current
   }, [editorRef.current])
@@ -183,7 +184,7 @@ const EditorProvider: FC<{
         }*/
     // console.log(workspace)
     if (containerRef.current && !editorRef.current) {
-
+      zoomPluginRef.current = new Zoom({dom: containerRef.current})
       editor = new Editor({
         container: containerRef!.current,
         elements: workspace.elements,
@@ -208,6 +209,7 @@ const EditorProvider: FC<{
       })
       editorRef.current = editor
       dispatch({type: 'SET_ID', payload: workspace.id})
+
     }
     const element = contextRootRef.current
 
@@ -226,6 +228,9 @@ const EditorProvider: FC<{
 
       if (editor) {
         editor.destroy()
+      }
+      if (zoomPluginRef.current) {
+        zoomPluginRef.current.destroy()
       }
     }
   }, [])

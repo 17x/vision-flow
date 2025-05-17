@@ -1,3 +1,5 @@
+import {log} from 'node:util'
+
 export interface ZoomOptions {
   dom: HTMLElement
   mouse?: true,
@@ -36,6 +38,7 @@ class Zoom {
     this.eventsController = new AbortController()
     this.mouseScrollModifier = mouseScrollModifier
     this.onZoom = onZoom
+    this.onScroll = onScroll
     this.dom.addEventListener('wheel', this.handleWheel.bind(this), {
       signal: this.eventsController.signal,
       passive: false,
@@ -45,11 +48,9 @@ class Zoom {
   handleWheel(event: WheelEvent) {
     const {EVENT_BUFFER, mouseScrollModifier: modifier} = this
     const {deltaX, deltaY, altKey, ctrlKey, shiftKey} = event
-    let zoomFactor = .1
     let translateX = 0
     let translateY = 0
     let zoomIn = false
-    // let zoomOut = false
     let scrolling = false
     let _zooming = false
 
@@ -60,8 +61,6 @@ class Zoom {
       _zooming = (modifier === 'alt' && altKey) ||
         (modifier === 'ctrl' && ctrlKey) ||
         (modifier === 'shift' && shiftKey)
-    } else {
-      return
     }
 
     if (this._timer) {
@@ -80,11 +79,10 @@ class Zoom {
       const allYAreFloat = EVENT_BUFFER.every((e) => Zoom.isFloat(e.deltaY))
       const absBiggerThan4 = EVENT_BUFFER.every((e) => Math.abs(e.deltaY) > 4)
 
-      // console.log('detect zooming')
-
       if (allXAreMinusZero && allYAreFloat && !absBiggerThan4) {
         this.gestureLock = true
         this.trackpad = true
+        console.log('trackpad')
       }
     }
 
@@ -110,6 +108,7 @@ class Zoom {
       zoomIn = deltaY <= 0
       _zooming = true
     } else if (Math.abs(deltaX) >= 40 && Zoom.isNegativeZero(deltaY)) {
+      console.log('Mouse horizontal scrolling')
       // Mouse horizontal scrolling
       if (_zooming) {
         zoomIn = deltaX < 0
@@ -134,7 +133,6 @@ class Zoom {
         zoomIn = max < 0
       } else {
         // console.log('panning')
-        // panning = true
         translateX = -deltaX
         translateY = -deltaY
       }
@@ -143,6 +141,7 @@ class Zoom {
     if (_zooming) {
       this.onZoom && this.onZoom(zoomIn, event)
     } else if (scrolling) {
+      console.log('scrolling')
       this.onScroll && this.onScroll(translateX, translateY, event)
     }
     /*

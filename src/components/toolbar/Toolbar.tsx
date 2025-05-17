@@ -51,7 +51,7 @@ const toolList = [
 const Toolbar: React.FC<{ tool: ToolName }> = ({tool}) => {
   const {executeAction} = useContext(WorkspaceContext)
 
-  return <Col center w={50} style={{
+  return <Col fh center flex={0} w={50} style={{
     borderRight: '1px solid #e4e4e4',
   }}>
     {

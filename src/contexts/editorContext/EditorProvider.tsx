@@ -13,11 +13,12 @@ import {ContextMenu} from '../../components/contextMenu/ContextMenu.tsx'
 import {VisionEventData, VisionEventType} from '@lite-u/editor/main/actions/type'
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
 import {useUI} from '../UIContext/UIContext.tsx'
-import {Con, Drop, Flex, useNotification} from '@lite-u/ui'
+import {Col, Con, Drop, Row, useNotification} from '@lite-u/ui'
 import readImageHelper from './readImageHelper.ts'
 import {useTranslation} from 'react-i18next'
 import Toolbar from '../../components/toolbar/Toolbar.tsx'
 import Zoom from '../../lib/zoom/zoom.ts'
+import ZOOM_LEVELS from '../../constants/zoomLevels.ts'
 
 const EditorProvider: FC<{
   ref: RefObject<Editor>,
@@ -113,6 +114,9 @@ const EditorProvider: FC<{
         dom: containerRef.current,
         onZoom: (zoomIn) => {
           console.log('zoomIn:', zoomIn)
+          for (let i = ZOOM_LEVELS.length - 1; i >= 0; i--) {
+            console.log(worldScale)
+          }
         },
         onScroll: (x, y) => {
           executeAction('world-shift', {x, y})
@@ -222,16 +226,16 @@ const EditorProvider: FC<{
     applyHistoryNode,
     executeAction,
   }}>
-    <Flex col fw fh alignItems={'stretch'} ref={contextRootRef} data-focused={state.focused} autoFocus={true}
-          tabIndex={0}
-          className={'outline-0'}>
+    <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}
+         tabIndex={0}
+         className={'outline-0'}>
       {focusedFileId === workspace.id && <ShortcutListener/>}
 
       <Header/>
 
-      <main className={'flex flex-row overflow-hidden h-full'}>
+      <Row ovh fh>
         <Toolbar tool={state.currentTool}/>
-        <div className={'flex flex-col w-full h-full overflow-hidden relative'}>
+        <Col fw fh ovh rela flex={1}>
           <Drop accepts={['image/*']}
                 style={{position: 'relative'}}
                 onDragIsOver={(v) => {
@@ -279,14 +283,14 @@ const EditorProvider: FC<{
                              setShowContextMenu(false)
                            }}/>
           }
-        </div>
-        <Flex col w={260} alignItems={'stretch'} className={'h-full border-l border-gray-200'}>
+        </Col>
+        <Col fh stretch flex={'none'} w={260} style={{borderLeft: '1px solid #dfdfdf'}}>
           <PropPanel props={state.selectedProps!}/>
           <LayerPanel data={sortedModules}/>
           <HistoryPanel/>
-        </Flex>
-      </main>
-    </Flex>
+        </Col>
+      </Row>
+    </Col>
 
   </EditorContext.Provider>
 }

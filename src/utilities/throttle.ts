@@ -1,13 +1,17 @@
-function throttle<T extends (...args: unknown[]) => void>(func: T, delay: number): (...args: Parameters<T>) => void {
+function throttle<T extends (...args: any[]) => any>(
+  func: T,
+  delay: number,
+): (...args: Parameters<T>) => ReturnType<T> {
   let lastCall = 0
   let timeoutId: ReturnType<typeof setTimeout> | undefined
+  let lastResult: ReturnType<T>
 
-  return (...args: Parameters<T>): void => {
+  return (...args: Parameters<T>): ReturnType<T> => {
     const now = Date.now()
 
     const invoke = () => {
       lastCall = now
-      func(...args)
+      lastResult = func(...args)
     }
 
     if (now - lastCall >= delay) {
@@ -18,6 +22,8 @@ function throttle<T extends (...args: unknown[]) => void>(func: T, delay: number
       }
       timeoutId = setTimeout(invoke, delay - (now - lastCall))
     }
+
+    return lastResult
   }
 }
 

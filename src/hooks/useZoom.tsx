@@ -16,7 +16,7 @@ function useZoom(
 
     const zoomPlugin = new Zoom({
       dom: ref.current,
-      onZoom: throttle((zoomIn, event) => {
+      onZoom: throttle((zoomIn: boolean, event: { x: number, y: number }) => {
         onZoom && onZoom(zoomIn, {
           x: event.x,
           y: event.y,

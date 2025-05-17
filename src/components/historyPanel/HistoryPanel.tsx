@@ -4,8 +4,10 @@ import {useTranslation} from 'react-i18next'
 import {I18nHistoryDataItem} from '../../i18n/type'
 import {Col, Con, MenuItem, Panel} from '@lite-u/ui'
 
-export const HistoryPanel = () => {
-  const {state: {historyArray, historyStatus}, applyHistoryNode} = useContext(WorkspaceContext)
+export const HistoryPanel: FC<{
+  pickHistory: () => void
+}> = ({pickHistory}) => {
+  const {state: {historyArray, historyStatus}} = useContext(WorkspaceContext)
   const {t} = useTranslation()
   const targetRef = useRef<HTMLDivElement>(null)
 

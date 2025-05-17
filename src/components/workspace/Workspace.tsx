@@ -29,11 +29,11 @@ const Workspace: FC<{
       }) => {
   const {focusedFileId, startCreateFile, closeFile} = useContext(AppContext)
   const {state, dispatch} = useContext(WorkspaceContext)
-
   const contextRootRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const worldPointRef = useRef<PointRef | null>(null)
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
+  const editorRef = useEditor(containerRef, workspace, page)
 
   const applyHistoryNode = (node: HistoryNode) => {
     if (editorRef.current) {
@@ -60,7 +60,6 @@ const Workspace: FC<{
     // editorRef.current!.execute(type as K, data)
   }
 
-  useEditor(containerRef, workspace, page)
   useZoom(containerRef)
 
   return <WorkspaceProvider>

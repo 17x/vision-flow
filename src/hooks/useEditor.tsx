@@ -15,11 +15,11 @@ function useEditor(ref: RefObject<HTMLDivElement | null>, workspace, page) {
   const lastSavedHistoryId = useRef(0)
   const currentHistoryId = useRef(0)
   const needSaveLocal = useRef(false)
+  const editorRef = useRef<Editor | null>(null)
 
   useEffect(() => {
     if (!ref.current) return
     const container = ref.current
-
     const editor = new Editor({
       container,
       elements: workspace.elements,
@@ -87,8 +87,12 @@ function useEditor(ref: RefObject<HTMLDivElement | null>, workspace, page) {
       },
     })
 
+    editorRef.current = editor
+
     return () => editor.destroy()
   }, [ref, workspace])
+
+  return editorRef
 }
 
 export default useEditor

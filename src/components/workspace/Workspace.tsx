@@ -58,7 +58,7 @@ const Workspace: FC<{
   }
 
   useGesture(containerRef, executeAction, state.worldScale, state.currentTool)
-  useFocus(containerRef)
+  useFocus(contextRootRef)
 
   return <EditorContext.Provider value={{executeAction}}>
 

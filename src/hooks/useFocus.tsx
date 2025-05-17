@@ -6,6 +6,9 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
 
   const checkInside = useCallback((e: MouseEvent) => {
     if (ref.current) {
+      console.log(
+        ref.current.contains(e.target as Node)
+      )
       dispatch({type: 'SET_FOCUSED', payload: ref.current.contains(e.target as Node)})
     }
   }, [])
@@ -24,7 +27,7 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
     if (!ref.current) return
 
     const element = ref.current
-    console.log('start')
+
     window.addEventListener('mouseup', checkInside)
     element.addEventListener('focus', handleFocus)
     element.addEventListener('blur', handleBlur)

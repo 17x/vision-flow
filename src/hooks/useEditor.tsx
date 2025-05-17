@@ -3,6 +3,7 @@ import {RefObject, useContext, useEffect, useRef, useState} from 'react'
 import {useUI} from '../contexts/UIContext/UIContext.tsx'
 import EditorContext from '../contexts/editorContext/EditorContext.tsx'
 import {Editor} from '@lite-u/editor'
+import {ElementInstance} from '@lite-u/editor/types'
 
 // import FileContext from '../contexts/fileContext/FileContext.tsx'
 
@@ -66,15 +67,15 @@ function useEditor(ref: RefObject<HTMLDivElement | null>, workspace, page) {
           dispatch({type: 'SET_SELECTED_MODULES', payload: Array.from(selected)})
           dispatch({type: 'SET_SELECTED_PROPS', payload: props})
         },
-/*        onViewportUpdated: (viewportInfo) => {
-          dispatch({type: 'SET_VIEWPORT', payload: viewportInfo})
-        },*/
+        /*        onViewportUpdated: (viewportInfo) => {
+                  dispatch({type: 'SET_VIEWPORT', payload: viewportInfo})
+                },*/
         onWorldMouseMove: (point) => {
           // dispatch({type: 'SET_WORLD_POINT', payload: point})
           // worldPoint.current = point
-         /* if (worldPointRef.current) {
-            worldPointRef.current.set(point)
-          }*/
+          /* if (worldPointRef.current) {
+             worldPointRef.current.set(point)
+           }*/
         },
         onContextMenu: (position) => {
           setShowContextMenu(true)

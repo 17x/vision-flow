@@ -1,7 +1,6 @@
 import {createContext, useContext} from 'react'
-import {DPR} from '@lite-u/editor/type.ts'
 
-const UIContext = createContext<{ dpr: DPR }>({
+const UIContext = createContext<{ dpr: number }>({
   dpr: 2,
 })
 

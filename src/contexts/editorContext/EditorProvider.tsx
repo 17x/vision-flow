@@ -54,10 +54,22 @@ const EditorProvider: FC<{
 
   useZoom({
     ref: containerRef,
-    onZoom: () => {
-      console.log(state.worldScale)
-      for (let i = ZOOM_LEVELS.length - 1; i >= 0; i--) {
-        console.log(i)
+    onZoom: (zoomIn) => {
+      const curr = state.worldScale
+      let nextScale = null
+      let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
+
+      if (zoomIn) {
+        nextScale = filtered.reverse().find(z => z.value > curr)
+      } else {
+        nextScale = filtered.find(z => z.value < curr)
+      }
+
+      if (nextScale) {
+        executeAction('world-zoom', {
+          zoomTo: true,
+          zoomFactor: nextScale.value,
+        })
       }
     },
     onScroll: (x, y) => {

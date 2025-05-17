@@ -191,7 +191,6 @@ const EditorProvider: FC<{
         },
         onScroll: (x, y) => {
           executeAction('world-shift', {x, y})
-          console.log('scroll:', x, y)
         },
       })
       editor = new Editor({

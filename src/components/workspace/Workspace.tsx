@@ -9,10 +9,11 @@ import PropPanel from '../propPanel/PropPanel.tsx'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
 import WorkspaceProvider from '../../contexts/workspaceContext/WorkspaceProvider.tsx'
-import {ReactNode, RefObject, useContext, useRef, useState} from 'react'
+import {FC, RefObject, useContext, useRef, useState} from 'react'
 import useEditor from '../../hooks/useEditor.tsx'
 import useZoom from '../../hooks/useZoom.tsx'
 import AppContext, {VisionWorkspace} from '../../contexts/appContext/AppContext.tsx'
+import {Editor} from '@lite-u/editor'
 
 const Workspace: FC<{
   ref: RefObject<Editor>,

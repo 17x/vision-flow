@@ -53,7 +53,7 @@ const Workspace: FC<{
       return
     }
 
-    editorRef.current!.execute(type as K, data)
+    editorRef.current!.execute(type, data)
   }
 
   useZoom(containerRef, state.worldScale, executeAction)

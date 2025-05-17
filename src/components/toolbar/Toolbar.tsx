@@ -1,9 +1,9 @@
 import React, {useContext} from 'react'
 import {Col, Con, IconButton, Tooltip} from '@lite-u/ui'
-import FileContext from '../../contexts/fileContext/FileContext.tsx'
 import {ToolName} from '@lite-u/editor/types'
 import {LuCircle, LuHand, LuPencilLine, LuRectangleHorizontal, LuZoomIn} from 'react-icons/lu'
 import {lineSeg, mousePointer} from '../../assets/svg/icons.tsx'
+import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 
 const toolList = [
   {
@@ -49,7 +49,8 @@ const toolList = [
 ]
 
 const Toolbar: React.FC<{ tool: ToolName }> = ({tool}) => {
-  const {executeAction} = useContext(FileContext)
+  // const {executeAction} = useContext(FileContext)
+  const {state, dispatch} = useContext(WorkspaceContext)
 
   return <Col fh center flex={0} w={50} style={{
     borderRight: '1px solid #e4e4e4',
@@ -69,7 +70,7 @@ const Toolbar: React.FC<{ tool: ToolName }> = ({tool}) => {
               outline: 'none',
             }}
                         onClick={() => {
-                          executeAction('switch-tool', toolName)
+                          dispatch({type: 'SET_CURRENT_TOOL', payload: toolName})
                         }}>{icon}</IconButton>
           </Con>
         </Tooltip>

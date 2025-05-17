@@ -58,7 +58,7 @@ export type WorkspaceAction =
   | { type: 'SET_WORLD_SCALE'; payload: number }
   | { type: 'SET_CURRENT_TOOL'; payload: ToolName };
 
-export const EditorReducer = (state: WorkSpaceStateType, action: WorkspaceAction) => {
+export const WorkspaceReducer = (state: WorkSpaceStateType, action: WorkspaceAction) => {
   switch (action.type) {
     case 'SET_ID':
       return {

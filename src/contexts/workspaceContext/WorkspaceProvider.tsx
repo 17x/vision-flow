@@ -1,9 +1,9 @@
 import {FC, ReactNode, useEffect, useMemo, useReducer} from 'react'
 import WorkspaceContext from './WorkspaceContext.tsx'
-import {EditorReducer, initialWorkspaceState} from './reducer/reducer.ts'
+import {WorkspaceReducer, initialWorkspaceState} from './reducer/reducer.ts'
 
 const WorkspaceProvider: FC<{ children: ReactNode }> = ({children}) => {
-  const [state, dispatch] = useReducer(EditorReducer, initialWorkspaceState)
+  const [state, dispatch] = useReducer(WorkspaceReducer, initialWorkspaceState)
 
   const contextValue = useMemo(() => ({
     state,

@@ -3,7 +3,8 @@ export interface ZoomOptions {
   mouse?: true,
   touchpad?: true,
   mouseScrollModifier?: 'alt' | 'ctrl'
-  onZoom?: (zoomIn: boolean) => void
+  onZoom?: (zoomIn: boolean, event: WheelEvent) => void
+  onScroll?: (offsetX: number, offsetY: number, event: WheelEvent) => void
 }
 
 class Zoom {
@@ -12,6 +13,7 @@ class Zoom {
   protected touchpad: boolean
   protected eventsController: AbortController
   protected onZoom: ZoomOptions['onZoom']
+  protected onScroll: ZoomOptions['onScroll']
   protected mouseScrollModifier: 'alt' | 'ctrl' | 'shift' | 'meta'
   _timer: number | undefined
   DELAY = 200
@@ -26,6 +28,7 @@ class Zoom {
                 touchpad = true,
                 mouseScrollModifier = 'alt',
                 onZoom,
+                onScroll,
               }: ZoomOptions) {
     this.dom = dom
     this.mouse = mouse
@@ -103,7 +106,6 @@ class Zoom {
      *      y === -0
      */
     if (this.gestureLock) {
-      // console.log('hit')
       // zoomFactor = deltaY > 0 ? -zoomSpeedA : zoomSpeedA
       zoomIn = deltaY <= 0
       _zooming = true
@@ -122,18 +124,18 @@ class Zoom {
     ) {
       // Vertical scrolling
       // console.log('ver scrolling', deltaX)
-      if (altKey) {
-        // zoomFactor = deltaY < 0 ? zoomSpeedA : -zoomSpeedA
+      if (_zooming) {
+        zoomIn = deltaY < 0
       } else {
         scrolling = true
         translateY = -deltaY
       }
     } else if (Zoom.isUInt(deltaX) && Zoom.isUInt(deltaY)) {
       // panning
-      if (altKey) {
-        // const max = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY
+      if (zoomIn) {
+        const max = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY
 
-        // zoomFactor = max < 0 ? zoomSpeedA : -zoomSpeedA
+        zoomIn = max < 0
       } else {
         // console.log('panning')
         // panning = true
@@ -142,10 +144,11 @@ class Zoom {
       }
     }
 
-    if (zooming && altKey) {
-      zoomFactor = zoomFactor < 0 ? -zoomSpeedB : zoomSpeedB
+    if (_zooming) {
+      this.onZoom && this.onZoom(zoomIn, event)
+    } else if (scrolling) {
+      this.onScroll && this.onScroll(translateX, translateY, event)
     }
-
     /*
         _timer = setTimeout(() => {
           gestureLock = false
@@ -159,15 +162,15 @@ class Zoom {
         }, DELAY)
     */
 
-    this.onZoom && this.onZoom({
-      trackpad,
-      zooming,
-      panning,
-      scrolling,
-      zoomFactor,
-      translateX,
-      translateY,
-    })
+    /*   this.onZoom && this.onZoom({
+         trackpad,
+         zooming,
+         panning,
+         scrolling,
+         zoomFactor,
+         translateX,
+         translateY,
+       })*/
   }
 
   static isUInt(v: number) { return !Zoom.isFloat(v) }

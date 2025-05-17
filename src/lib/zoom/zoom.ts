@@ -50,9 +50,7 @@ class Zoom {
     this.mouseScrollModifier = mouseScrollModifier
     this.onZoom = onZoom
     this.onScroll = onScroll
-    window.addEventListener('touchstart', e => {
-      console.log('touchstart')
-    })
+
     this.dom.addEventListener('wheel', this.handleWheel.bind(this), {
       signal: this.eventsController.signal,
       passive: false,

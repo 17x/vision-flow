@@ -1,12 +1,11 @@
 import React, {createContext} from 'react'
-import Editor from '@lite-u/editor/engine/editor.ts'
-import {HistoryNode} from '@lite-u/editor/engine/history/DoublyLinkedList.ts'
-import {VisionEventData, VisionEventType} from '@lite-u/editor/engine/actions/type'
-import {EditorStateType, initialEditorState} from './reducer/reducer.ts'
+import {Editor} from '@lite-u/editor'
+import {HistoryNode, VisionEventData, VisionEventType} from '@lite-u/editor/types'
+import {EditorAction, EditorStateType, initialEditorState} from './reducer/reducer.ts'
 
 interface EditorContextType {
   state: EditorStateType
-  dispatch: VoidFunction
+  dispatch: React.Dispatch<EditorAction>;
 
   editorRef: React.RefObject<Editor | null>
   applyHistoryNode: (node: HistoryNode) => void

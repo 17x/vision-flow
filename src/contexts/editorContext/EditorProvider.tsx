@@ -63,26 +63,7 @@ const EditorProvider: FC<{
     applyHistoryNode,
     executeAction,
   }), [state, applyHistoryNode, executeAction])
-  /*
-    const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
-      const curr = state.worldScale
-      let nextScale = null
-      let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
 
-      if (zoomIn) {
-        nextScale = filtered.reverse().find(z => z.value > curr)
-      } else {
-        nextScale = filtered.find(z => z.value < curr)
-      }
-
-      if (nextScale) {
-        executeAction('world-zoom', {
-          zoomTo: true,
-          zoomFactor: nextScale.value,
-          physicalPoint: p,
-        })
-      }
-    }*/
   useImperativeHandle(ref, () => {
     return editorRef.current
   }, [editorRef.current])

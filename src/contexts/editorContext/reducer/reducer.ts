@@ -43,7 +43,7 @@ export const initialEditorState: EditorStateType = {
   },
 }
 
-type EditorAction =
+export type EditorAction =
   { type: 'SET_ID'; payload: UID }
   | { type: 'SET_HISTORY_STATUS'; payload: { id: number; hasPrev: boolean; hasNext: boolean } }
   | { type: 'SET_FOCUSED'; payload: boolean }

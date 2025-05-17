@@ -5,7 +5,7 @@ import {Row} from '@lite-u/ui'
 import {WorkspaceExecuteAction} from '../workspace/Workspace.tsx'
 
 export interface PointRef {
-  set: (point: Point) => void
+  set: (point: { x: number, y: number }) => void
 }
 
 type PointRefType = Ref<PointRef>
@@ -19,7 +19,7 @@ export const StatusBar: FC<{ ref: PointRefType | null, executeAction: WorkspaceE
 
   useImperativeHandle(ref, () => {
     return {
-      set(point: Point) {
+      set(point: { x: number, y: number }) {
         setWorldPoint(point)
       },
     }

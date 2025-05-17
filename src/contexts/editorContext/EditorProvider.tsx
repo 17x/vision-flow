@@ -190,6 +190,7 @@ const EditorProvider: FC<{
           console.log('zoomIn:', zoomIn)
         },
         onScroll: (x, y) => {
+          executeAction('world-shift', {x, y})
           console.log('scroll:', x, y)
         },
       })

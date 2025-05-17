@@ -12,8 +12,6 @@ function useZoom(ref: RefObject<HTMLElement | null>, executeAction) {
     let nextScale = null
     let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
 
-    console.log(curr)
-
     if (zoomIn) {
       nextScale = filtered.reverse().find(z => z.value > curr)
     } else {
@@ -35,7 +33,7 @@ function useZoom(ref: RefObject<HTMLElement | null>, executeAction) {
 
     const zoomPlugin = new Zoom({
       dom: ref.current,
-      onZoom: throttle(handleZoom, 200),
+      onZoom: throttle(handleZoom, 17),
       onScroll: (x, y) => {
         executeAction('world-shift', {x, y})
       },

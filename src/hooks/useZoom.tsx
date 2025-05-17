@@ -1,10 +1,10 @@
-import {useContext, useEffect} from 'react'
+import {RefObject, useContext, useEffect} from 'react'
 import Zoom from '../lib/zoom/zoom.ts'
 import throttle from '../utilities/throttle.ts'
 import ZOOM_LEVELS from '../constants/zoomLevels.ts'
 import EditorContext from '../contexts/editorContext/EditorContext.tsx'
 
-function useZoom(element: HTMLElement) {
+function useZoom(ref: RefObject<HTMLElement | null>) {
   const {state, dispatch, executeAction} = useContext(EditorContext)
 
   const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
@@ -28,10 +28,10 @@ function useZoom(element: HTMLElement) {
   }
 
   useEffect(() => {
-    if (!element) return
+    if (!ref.current) return
 
     const zoomPlugin = new Zoom({
-      dom: element,
+      dom: ref.current,
       onZoom: throttle(handleZoom, 200),
       onScroll: (x, y) => {
         executeAction('world-shift', {x, y})
@@ -41,7 +41,7 @@ function useZoom(element: HTMLElement) {
     return () => {
       zoomPlugin.destroy()
     }
-  }, [element])
+  }, [ref])
 }
 
 export default useZoom

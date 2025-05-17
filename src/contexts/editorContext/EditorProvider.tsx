@@ -16,7 +16,6 @@ import readImageHelper from './readImageHelper.ts'
 import {useTranslation} from 'react-i18next'
 import Toolbar from '../../components/toolbar/Toolbar.tsx'
 import useZoom from '../../hooks/useZoom.tsx'
-import ZOOM_LEVELS from '../../constants/zoomLevels.ts'
 import useEditor from '../../hooks/useEditor.tsx'
 
 const EditorProvider: FC<{
@@ -30,6 +29,7 @@ const EditorProvider: FC<{
         fileId,
         page,
       }) => {
+  console.log(page)
   const {focusedFileId, startCreateFile, closeFile, saveFileToLocal} = useContext(FileContext)
   const [state, dispatch] = useReducer(EditorReducer, initialEditorState)
   const editorRef = useRef<Editor>(null)
@@ -48,7 +48,6 @@ const EditorProvider: FC<{
   }
 
   const executeAction = <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => {
-    // console.log(type)
 
     if (type === 'newFile') {
       startCreateFile()
@@ -65,43 +64,42 @@ const EditorProvider: FC<{
 
   const contextValue = useMemo(() => ({
     state,
+    dispatch,
     editorRef,
     applyHistoryNode,
     executeAction,
   }), [state, applyHistoryNode, executeAction])
-/*
-  const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
-    const curr = state.worldScale
-    let nextScale = null
-    let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
+  /*
+    const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
+      const curr = state.worldScale
+      let nextScale = null
+      let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
 
-    if (zoomIn) {
-      nextScale = filtered.reverse().find(z => z.value > curr)
-    } else {
-      nextScale = filtered.find(z => z.value < curr)
-    }
+      if (zoomIn) {
+        nextScale = filtered.reverse().find(z => z.value > curr)
+      } else {
+        nextScale = filtered.find(z => z.value < curr)
+      }
 
-    if (nextScale) {
-      executeAction('world-zoom', {
-        zoomTo: true,
-        zoomFactor: nextScale.value,
-        physicalPoint: p,
-      })
-    }
-  }*/
-
-  useZoom({
-    ref: containerRef
-  })
-
+      if (nextScale) {
+        executeAction('world-zoom', {
+          zoomTo: true,
+          zoomFactor: nextScale.value,
+          physicalPoint: p,
+        })
+      }
+    }*/
   useImperativeHandle(ref, () => {
     return editorRef.current
   }, [editorRef.current])
 
-  useEditor(containerRef.current)
+
+  useEditor(containerRef,workspace,page)
+  useZoom(containerRef)
+
 
   useEffect(() => {
-
+    console.log(containerRef)
   }, [])
 
   return <EditorContext.Provider value={contextValue}>
@@ -158,7 +156,7 @@ const EditorProvider: FC<{
         </Col>
         <Col fh stretch flex={'none'} w={260} style={{borderLeft: '1px solid #dfdfdf'}}>
           <PropPanel props={state.selectedProps!}/>
-          <LayerPanel data={sortedModules}/>
+          <LayerPanel data={[]}/>
           <HistoryPanel/>
         </Col>
       </Row>

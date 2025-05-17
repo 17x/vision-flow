@@ -1,11 +1,12 @@
 // useEditorInstance.ts
-import {useContext, useEffect, useRef, useState} from 'react'
+import {RefObject, useContext, useEffect, useRef, useState} from 'react'
 import {useUI} from '../contexts/UIContext/UIContext.tsx'
 import EditorContext from '../contexts/editorContext/EditorContext.tsx'
+import {Editor} from '@lite-u/editor'
 
 // import FileContext from '../contexts/fileContext/FileContext.tsx'
 
-function useEditor(container: HTMLDivElement | null) {
+function useEditor(ref: RefObject<HTMLDivElement | null>, workspace, page) {
   const {dpr} = useUI()
   const [sortedModules, setSortedModules] = useState<ElementInstance[]>([])
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
@@ -15,10 +16,11 @@ function useEditor(container: HTMLDivElement | null) {
   const needSaveLocal = useRef(false)
 
   useEffect(() => {
-    if (!container) return
+    if (!ref.current) return
+    const container = ref.current
 
     const editor = new Editor({
-      container: containerRef!.current,
+      container,
       elements: workspace.elements,
       assets: workspace.assets,
       config: {
@@ -88,7 +90,7 @@ function useEditor(container: HTMLDivElement | null) {
     })
 
     return () => editor.destroy()
-  }, [container])
+  }, [ref, workspace])
 }
 
 export default useEditor

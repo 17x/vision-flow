@@ -35,7 +35,7 @@ function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, execu
 
     const zoomPlugin = new Zoom({
       dom: ref.current,
-      onZoom: throttle(handleZoom, 17),
+      onZoom: handleZoom,
       onScroll: (x, y) => {
         executeAction('world-shift', {x, y})
       },

@@ -31,6 +31,7 @@ function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, execu
     setLocalScale(currentScale)
 
     if (!ref.current) return
+
     if (!pluginRef.current) {
       pluginRef.current = new Zoom({
         dom: ref.current,

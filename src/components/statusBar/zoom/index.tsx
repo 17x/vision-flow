@@ -1,5 +1,5 @@
-import React, {useEffect, useRef, useState} from "react"
-import {LuChevronDown, LuChevronUp} from "react-icons/lu"
+import React, {useEffect, useRef, useState} from 'react'
+import {LuChevronDown, LuChevronUp} from 'react-icons/lu'
 
 export type ZoomLevels = {
   label: string,
@@ -23,16 +23,23 @@ const resolveNumber = (value: string): number | false => {
 
 const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit') => void }> = ({scale, onChange}) => {
   const zoomLevels: ZoomLevels[] = [
-    {label: '400%', value: 4},
-    {label: '300%', value: 3},
-    {label: '200%', value: 2},
-    {label: '150%', value: 1.5},
-    {label: '125%', value: 1.25},
-    {label: '100%', value: 1},
-    {label: '75%', value: 0.75},
-    {label: '50%', value: 0.5},
-    {label: '25%', value: 0.25},
-    {label: 'Fit window', value: 'fit'}
+    {label: '64000%', value: 64000},
+    {label: '3200%', value: 3200},
+    {label: '1600%', value: 1600},
+    {label: '800%', value: 800},
+    {label: '400%', value: 400},
+    {label: '200%', value: 200},
+    {label: '150%', value: 150},
+    {label: '100%', value: 100},
+    {label: '66.67%', value: 66.67},
+    {label: '50%', value: 50},
+    {label: '33.33%', value: 33.33},
+    {label: '25%', value: 25},
+    {label: '12.5%', value: 12.5},
+    {label: '6.25%', value: 6.25},
+    {label: '3.13%', value: 3.13},
+    {label: '1.56% (Min)', 'value': 1.56},
+    {label: 'Fit window', value: 'fit'},
   ]
   // const {zoom} = useSelector((state: RootState) => state.statusBar)
   // const dispatch = useDispatch<AppDispatch>()
@@ -51,7 +58,7 @@ const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit')
   }, [scale])
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       const v = resolveNumber((e.target as HTMLInputElement).value)
 
       if (v !== false) {

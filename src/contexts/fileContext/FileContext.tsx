@@ -65,7 +65,20 @@ const dFile = {
       'name': 'workspace-1',
       'elements': [{
         id: 'hello',
-
+        type: 'rectangle',
+        cx: 100,
+        cy: 100,
+        width: 100,
+        height: 100,
+        stroke: {
+          weight: 3,
+          enable: true,
+          color: '#000000',
+          enabled: true,
+          cap: 'butt',
+          join: 'miter',
+          dashed: false,
+        },
       }],
     },
   ],

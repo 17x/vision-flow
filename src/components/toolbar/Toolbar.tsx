@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import {Col, Con, IconButton, Tooltip} from '@lite-u/ui'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {ToolName} from '@lite-u/editor/types'
-import {LuCircle, LuHand, LuPencilLine, LuRectangleHorizontal} from 'react-icons/lu'
+import {LuCircle, LuHand, LuPencilLine, LuRectangleHorizontal, LuZoomIn} from 'react-icons/lu'
 import {lineSeg, mousePointer} from '../../assets/svg/icons.tsx'
 
 const toolList = [
@@ -40,6 +40,11 @@ const toolList = [
     name: 'Hand',
     icon: <LuHand/>,
     toolName: 'panning',
+  },
+  {
+    name: 'Zoom',
+    icon: <LuZoomIn/>,
+    toolName: 'zoomIn',
   },
 ]
 

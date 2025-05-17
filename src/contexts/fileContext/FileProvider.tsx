@@ -3,13 +3,12 @@ import {useApp, VisionFileType, VisionWorkspace} from '../appContext/AppContext.
 import FileContext from './FileContext.tsx'
 import {Con, Drop, useNotification} from '@lite-u/ui'
 import EditorProvider from '../editorContext/EditorProvider.tsx'
-import {VisionEventData, VisionEventType} from '@lite-u/editor/engine/actions/type'
+import {UID, VisionEventData, VisionEventType} from '@lite-u/editor/types'
 import {Print} from '../../components/print/print.tsx'
-import Editor from '@lite-u/editor/engine/editor.ts'
+import {Editor} from '@lite-u/editor'
 import saveFileHelper from './saveFileHelper.ts'
 import readFileHelper from './readFileHelper.ts'
 import {useTranslation} from 'react-i18next'
-// import {useUI} from '../UIContext/UIContext.tsx'
 
 const FileProvider: FC<{ file: VisionFileType }> = ({file}) => {
   // const {workspaceList, pageConfig} = useWorkspace()

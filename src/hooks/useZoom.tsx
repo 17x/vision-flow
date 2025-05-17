@@ -12,6 +12,8 @@ function useZoom(ref: RefObject<HTMLElement | null>, executeAction) {
     let nextScale = null
     let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
 
+    console.log(curr)
+
     if (zoomIn) {
       nextScale = filtered.reverse().find(z => z.value > curr)
     } else {
@@ -19,6 +21,7 @@ function useZoom(ref: RefObject<HTMLElement | null>, executeAction) {
     }
 
     if (nextScale) {
+      dispatch({type: 'SET_WORLD_SCALE', payload: nextScale.value})
       executeAction('world-zoom', {
         zoomTo: true,
         zoomFactor: nextScale.value,

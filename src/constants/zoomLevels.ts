@@ -1,4 +1,4 @@
-const ZOOM_LEVELS: { label: string, value: number | 'fit' }[] = [
+const ZOOM_LEVELS = [
   {label: '64000%', value: 640},
   {label: '3200%', value: 32},
   {label: '1600%', value: 16},
@@ -16,6 +16,6 @@ const ZOOM_LEVELS: { label: string, value: number | 'fit' }[] = [
   {label: '3.13%', value: 0.0313},
   {label: '1.56%', value: 0.0156},
   {label: 'Fit window', value: 'fit'},
-]
+] as const
 
 export default ZOOM_LEVELS

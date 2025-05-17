@@ -15,7 +15,7 @@ export interface EditorStateType {
   currentTool: ToolName
   lastSavedHistoryId: number
   copiedItems: ModuleProps[]
-  viewport: ViewportInfo | null
+  // viewport: ViewportInfo | null
 }
 
 export const initialEditorState: EditorStateType = {
@@ -23,7 +23,6 @@ export const initialEditorState: EditorStateType = {
   focused: false,
   selectedProps: null,
   selectedModules: [],
-  viewport: null,
   lastSavedHistoryId: -1,
   needSave: false,
   worldPoint: {x: 0, y: 0},
@@ -36,6 +35,7 @@ export const initialEditorState: EditorStateType = {
   // currentTool: 'text',
   // currentTool: 'lineSegment',
   // currentTool: 'pencil',
+  // viewport: null,
   historyStatus: {
     id: 0,
     hasPrev: false,

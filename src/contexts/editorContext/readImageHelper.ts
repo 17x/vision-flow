@@ -1,5 +1,5 @@
 import {nid} from '@editor'
-import {VisionEditorAssetType} from '@editor/types'
+import {VisionEditorAssetType} from '@lite-u/editor/types'
 
 const readImageHelper = (file: File): Promise<VisionEditorAssetType> => {
   return new Promise<VisionEditorAssetType>(async (resolve, reject) => {

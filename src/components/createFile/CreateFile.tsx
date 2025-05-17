@@ -4,7 +4,7 @@ import {useFile, VisionFileType} from '../../contexts/fileContext/FileContext.ts
 import {Button, Con, Flex, Input, MenuItem, Modal, P, Panel, Select, SelectItem, Title} from '@lite-u/ui'
 import {PAGE_PRESETS} from './pagePresets.ts'
 import {useTranslation} from 'react-i18next'
-import {UnitType} from '@editor/types'
+import {UnitType} from '@lite-u/editor/types'
 import {convertUnit} from '@editor'
 import {VISION_VERSION} from '../../constants'
 import {nid} from '@editor'

@@ -1,6 +1,6 @@
 import {createContext, useContext} from 'react'
 import {VisionWorkspace} from '../fileContext/FileContext.tsx'
-import {UID, UnitType, VisionEventData, VisionEventType} from '@editor/types'
+import {UID, UnitType, VisionEventData, VisionEventType} from '@lite-u/editor/types'
 import {Unit} from '@editor'
 
 interface WorkspaceContextType {

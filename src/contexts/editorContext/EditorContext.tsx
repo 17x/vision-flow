@@ -1,23 +1,11 @@
 import React, {createContext} from 'react'
-import Editor from '@editor/engine/editor.ts'
-import {HistoryNode} from '@editor/engine/history/DoublyLinkedList.ts'
-// import {ViewportInfo} from '../../engine/editor/type'
-import {VisionEventData, VisionEventType} from '@editor/engine/actions/type'
+import Editor from '@lite-u/editor/engine/editor.ts'
+import {HistoryNode} from '@lite-u/editor/engine/history/DoublyLinkedList.ts'
+import {VisionEventData, VisionEventType} from '@lite-u/editor/engine/actions/type'
 import {EditorStateType, initialEditorState} from './reducer/reducer.ts'
 
 interface EditorContextType {
   state: EditorStateType
-  /*focused: boolean
-  historyArray: HistoryNode[]
-  historyStatus: {
-    id: number
-    hasPrev: boolean
-    hasNext: boolean
-  },
-  needSave: boolean
-  selectedModules: UID[]
-  selectedProps: ModuleProps
-  copiedItems: selectedProps[],*/
   editorRef: React.RefObject<Editor | null>
   applyHistoryNode: (node: HistoryNode) => void
   // executeAction: <K extends EditorEventType>(type: K, data?: EditorEventData<K>) => void
@@ -27,34 +15,9 @@ interface EditorContextType {
 
 const EditorContext = createContext<EditorContextType>({
   state: initialEditorState,
-  /*focused: false,
-  historyArray: [] as HistoryNode[],
-  historyStatus: {
-    id: 0,
-    hasPrev: false,
-    hasNext: false,
-  },
-  selectedModules: [],
-  selectedProps: {},
-  copiedItems: [],
-  needSave: false,*/
   editorRef: {} as React.RefObject<Editor>,
-  applyHistoryNode: () => {
-
-  },
-  executeAction: () => {
-
-  },
-  /*viewport: {
-    width: 0,
-    height: 0,
-    offsetX: 0,
-    offsetY: 0,
-    scale: 1,
-    dx: 0,
-    dy: 0,
-    status: '',
-  },*/
+  applyHistoryNode: () => {},
+  executeAction: () => {},
 })
 
 export default EditorContext

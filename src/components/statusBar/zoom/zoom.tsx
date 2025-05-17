@@ -51,10 +51,11 @@ const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit')
   }
 
   return <Row w={20} h={30} ml={5} js center rela>
-    <Select s onSelectChange={v => {
-      setIsOpen(false)
-      onChange(v as number | 'fit')
-    }}>
+    <Select s defaultValue={scale}
+            onSelectChange={v => {
+              setIsOpen(false)
+              onChange(v as number | 'fit')
+            }}>
       {
         ZOOM_LEVELS.map(({label, value}) => <SelectItem key={value} value={value}>{label}</SelectItem>)
       }

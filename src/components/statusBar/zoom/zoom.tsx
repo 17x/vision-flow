@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from 'react'
-import {LuChevronDown, LuChevronUp} from 'react-icons/lu'
 import ZOOM_LEVELS from '../../../constants/zoomLevels.ts'
 import {Row, Select, SelectItem} from '@lite-u/ui'
 
@@ -52,8 +51,6 @@ const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit')
     e.stopPropagation()
   }
 
-  /*<div
-    className="w-17 h-5 ml-2 flex justify-start items-center relative  focus:ring-blue-500 focus:ring-1">*/
   return <Row w={20} h={30} ml={5} js center rela>
     <Select onSelectChange={v => {
 
@@ -75,40 +72,6 @@ const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit')
       className="w-20 h-5 text-sm bg-gray-100 text-center overflow-hidden "
       placeholder="Enter zoom %"
     />
-
-    <button
-      onClick={() => setIsOpen(!isOpen)}
-      className="text-gray-800 flex trasition items-center cursor-pointer"
-    >
-      {
-        isOpen ? <LuChevronUp className="w-5 h-5"/> : <LuChevronDown className="w-5 h-5"/>
-      }
-    </button>
-    {
-      isOpen && <div className={'fixed w-full h-full'} onClick={() => {
-        setIsOpen(false)
-      }}></div>
-    }
-    {isOpen && <div
-        className="absolute w-20 cursor-pointer py-2 left-0 bottom-5 bg-white shadow-lg max-h-40v overflow-y-auto z-10">
-      {
-
-      }
-      {
-        ZOOM_LEVELS.map(({label, value}) => (
-          <div
-            key={value}
-            onClick={() => {
-              setIsOpen(false)
-              onChange(value)
-            }}
-            className="text-sm align-middle p-1 text-center hover:bg-blue-500 hover:text-white transition"
-          >
-            {label}
-          </div>
-        ))
-      }
-    </div>}
   </Row>
 
   // </div>

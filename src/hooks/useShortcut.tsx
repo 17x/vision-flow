@@ -5,7 +5,6 @@ import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 
 const UseShortcut = (executeAction: EditorExecutor) => {
   const {state: {focused}} = useContext(WorkspaceContext)
-  // const {executeAction} = useContext(EditorContext)
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (!focused) return

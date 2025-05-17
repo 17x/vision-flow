@@ -46,7 +46,7 @@ const toolList = [
     icon: <LuZoomIn/>,
     toolName: 'zoomIn',
   },
-]
+] as const
 
 const Toolbar: React.FC<{ tool: ToolName, setTool: (t: ToolName) => void }> = ({tool, setTool}) => {
   // const {executeAction} = useContext(FileContext)
@@ -70,8 +70,8 @@ const Toolbar: React.FC<{ tool: ToolName, setTool: (t: ToolName) => void }> = ({
               outline: 'none',
             }}
                         onClick={() => {
-                          setTool(toolName)
                           dispatch({type: 'SET_CURRENT_TOOL', payload: toolName})
+                          setTool(toolName)
                         }}>{icon}</IconButton>
           </Con>
         </Tooltip>

@@ -1,4 +1,4 @@
-import {RefObject, useContext, useEffect, useState} from 'react'
+import {RefObject, useContext, useEffect, useRef, useState} from 'react'
 import Zoom from '../lib/zoom/zoom.ts'
 import ZOOM_LEVELS from '../constants/zoomLevels.ts'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
@@ -6,7 +6,7 @@ import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, executeAction) {
   const {dispatch} = useContext(WorkspaceContext)
   const [localScale, setLocalScale] = useState(currentScale)
-
+  const pluginRef = useRef<Zoom | null>(null)
   const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
     let nextScale = null
     let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
@@ -19,7 +19,6 @@ function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, execu
 
     if (nextScale) {
       dispatch({type: 'SET_WORLD_SCALE', payload: nextScale.value})
-      // onScale
       executeAction('world-zoom', {
         zoomTo: true,
         zoomFactor: nextScale.value,
@@ -32,17 +31,19 @@ function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, execu
     setLocalScale(currentScale)
 
     if (!ref.current) return
-
-    const zoomPlugin = new Zoom({
-      dom: ref.current,
-      onZoom: handleZoom,
-      onScroll: (x, y) => {
-        executeAction('world-shift', {x, y})
-      },
-    })
+    if (!pluginRef.current) {
+      pluginRef.current = new Zoom({
+        dom: ref.current,
+        onZoom: handleZoom,
+        onScroll: (x, y) => {
+          executeAction('world-shift', {x, y})
+        },
+      })
+    }
 
     return () => {
-      zoomPlugin.destroy()
+      pluginRef.current?.destroy()
+      pluginRef.current = null
     }
   }, [ref, currentScale])
 }

@@ -45,11 +45,6 @@ function useEditor(ref: RefObject<HTMLDivElement | null>, workspace, page) {
               hasNext: !!historyTree.current.next,
             }
             const newNeedSaveValue = newHistoryStatus.id !== lastSavedHistoryId.current
-            // console.log(state.historyStatus)
-
-            // console.log(state.needSave)
-            // console.log(newHistoryStatus.id, lastSavedHistoryId.current)
-            // console.log(newHistoryStatus.id !== lastSavedHistoryId.current)
 
             currentHistoryId.current = newHistoryStatus.id
             dispatch({type: 'SET_HISTORY_STATUS', payload: newHistoryStatus})

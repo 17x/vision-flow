@@ -40,11 +40,26 @@ class Zoom {
   }
 
   handleWheel(event: WheelEvent) {
-    const {EVENT_BUFFER} = this
+    const {EVENT_BUFFER, mouseScrollModifier: modifier} = this
     const {deltaX, deltaY, altKey, ctrlKey, shiftKey} = event
     let zoomFactor = .1
+    let translateX = 0
+    let translateY = 0
+    let zoomIn = false
+    // let zoomOut = false
+    let scrolling = false
+    let _zooming = false
+
     event.preventDefault()
     event.stopPropagation()
+
+    if (modifier) {
+      _zooming = (modifier === 'alt' && altKey) ||
+        (modifier === 'ctrl' && ctrlKey) ||
+        (modifier === 'shift' && shiftKey)
+    } else {
+      return
+    }
 
     if (this._timer) {
       clearTimeout(this._timer)
@@ -56,23 +71,9 @@ class Zoom {
       EVENT_BUFFER.push(event)
     }
 
-    let translateX = 0
-    let translateY = 0
-    let zoomIn = false
-    let zoomOut = false
-    let scrolling = false
-    let _zooming = false
-
-    if (altKey) {
-      _zooming = true
-      // zoomFactor = ~~deltaY < 0 ? -.1 : .1
-    }
-
     if (EVENT_BUFFER.length >= this.ACTION_THRESHOLD) {
       // detect zooming
-      const allXAreMinusZero = EVENT_BUFFER.every((e) =>
-        Zoom.isNegativeZero(e.deltaX),
-      )
+      const allXAreMinusZero = EVENT_BUFFER.every((e) => Zoom.isNegativeZero(e.deltaX))
       const allYAreFloat = EVENT_BUFFER.every((e) => Zoom.isFloat(e.deltaY))
       const absBiggerThan4 = EVENT_BUFFER.every((e) => Math.abs(e.deltaY) > 4)
 
@@ -81,10 +82,6 @@ class Zoom {
       if (allXAreMinusZero && allYAreFloat && !absBiggerThan4) {
         this.gestureLock = true
         this.trackpad = true
-        // console.log('touchpadZoomingLock')
-        // console.log([...EVENT_BUFFER])
-        // zoomFactor = deltaY > 0 ? -.1 : .1
-        // zooming = true
       }
     }
 
@@ -108,12 +105,12 @@ class Zoom {
     if (this.gestureLock) {
       // console.log('hit')
       // zoomFactor = deltaY > 0 ? -zoomSpeedA : zoomSpeedA
-      zooming = true
+      zoomIn = deltaY <= 0
+      _zooming = true
     } else if (Math.abs(deltaX) >= 40 && Zoom.isNegativeZero(deltaY)) {
       // Mouse horizontal scrolling
-      // console.log('hor scroll', deltaX)
-      if (altKey) {
-        // zoomFactor = deltaX < 0 ? zoomSpeedB : -zoomSpeedB
+      if (_zooming) {
+        zoomIn = deltaX < 0
       } else {
         scrolling = true
         translateX = -deltaX
@@ -175,7 +172,7 @@ class Zoom {
 
   static isUInt(v: number) { return !Zoom.isFloat(v) }
 
-  static isNegativeZero(x: number) {return x === 0 && (1 / x) === -Infinity}
+  static isNegativeZero(n: number) {return n === 0 && (1 / n) === -Infinity}
 
   static isFloat(v: number) { return Math.abs(v) % 1 !== 0 }
 

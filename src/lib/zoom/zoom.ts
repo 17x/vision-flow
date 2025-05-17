@@ -124,7 +124,7 @@ class Zoom {
         translateY = -deltaY
       }
     } else if (Zoom.isUInt(deltaX) && Zoom.isUInt(deltaY)) {
-      if (zoomIn) {
+      if (_zooming) {
         const max = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY
 
         zoomIn = max < 0

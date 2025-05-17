@@ -1,36 +1,47 @@
-import {useEffect} from 'react'
+import {useContext, useEffect} from 'react'
 import Zoom from '../lib/zoom/zoom.ts'
 import throttle from '../utilities/throttle.ts'
+import ZOOM_LEVELS from '../constants/zoomLevels.ts'
+import EditorContext from '../contexts/editorContext/EditorContext.tsx'
 
-function useZoom(
-  params: {
-    ref: React.RefObject<HTMLElement | null>,
-    onZoom?: (zoomIn: boolean, point: { x: number, y: number }) => void,
-    onScroll?: (x: number, y: number) => void
-  },
-) {
-  const {ref, onZoom, onScroll} = params
+function useZoom(element: HTMLElement) {
+  const {state, dispatch, executeAction} = useContext(EditorContext)
+
+  const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
+    const curr = state.worldScale
+    let nextScale = null
+    let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
+
+    if (zoomIn) {
+      nextScale = filtered.reverse().find(z => z.value > curr)
+    } else {
+      nextScale = filtered.find(z => z.value < curr)
+    }
+
+    if (nextScale) {
+      executeAction('world-zoom', {
+        zoomTo: true,
+        zoomFactor: nextScale.value,
+        physicalPoint: p,
+      })
+    }
+  }
 
   useEffect(() => {
-    if (!ref.current) return
+    if (!element) return
 
     const zoomPlugin = new Zoom({
-      dom: ref.current,
-      onZoom: throttle((zoomIn: boolean, event: { x: number, y: number }) => {
-        onZoom && onZoom(zoomIn, {
-          x: event.x,
-          y: event.y,
-        })
-      }, 200),
+      dom: element,
+      onZoom: throttle(handleZoom, 200),
       onScroll: (x, y) => {
-        onScroll && onScroll(x, y)
+        executeAction('world-shift', {x, y})
       },
     })
 
     return () => {
       zoomPlugin.destroy()
     }
-  }, [params])
+  }, [element])
 }
 
 export default useZoom

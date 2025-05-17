@@ -6,6 +6,8 @@ import {EditorStateType, initialEditorState} from './reducer/reducer.ts'
 
 interface EditorContextType {
   state: EditorStateType
+  dispatch: VoidFunction
+
   editorRef: React.RefObject<Editor | null>
   applyHistoryNode: (node: HistoryNode) => void
   // executeAction: <K extends EditorEventType>(type: K, data?: EditorEventData<K>) => void
@@ -15,6 +17,7 @@ interface EditorContextType {
 
 const EditorContext = createContext<EditorContextType>({
   state: initialEditorState,
+  dispatch: () => {},
   editorRef: {} as React.RefObject<Editor>,
   applyHistoryNode: () => {},
   executeAction: () => {},

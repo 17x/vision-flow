@@ -1,12 +1,19 @@
 // useEditorInstance.ts
-import EditorContext from './EditorContext'
-import {useContext, useEffect, useRef} from 'react'
+import {useContext, useEffect, useRef, useState} from 'react'
+import {useUI} from '../contexts/UIContext/UIContext.tsx'
+import EditorContext from '../contexts/editorContext/EditorContext.tsx'
+
+// import FileContext from '../contexts/fileContext/FileContext.tsx'
 
 function useEditor(container: HTMLDivElement | null) {
+  const {dpr} = useUI()
+  const [sortedModules, setSortedModules] = useState<ElementInstance[]>([])
+  const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const {state, dispatch, executeAction} = useContext(EditorContext)
   const lastSavedHistoryId = useRef(0)
   const currentHistoryId = useRef(0)
   const needSaveLocal = useRef(false)
+
   useEffect(() => {
     if (!container) return
 
@@ -50,6 +57,7 @@ function useEditor(container: HTMLDivElement | null) {
         onModulesUpdated: (moduleMap) => {
           const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
 
+          console.log(arr)
           setSortedModules(arr)
         },
         onSelectionUpdated: (selected, props) => {

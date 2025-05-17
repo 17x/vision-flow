@@ -1,19 +1,8 @@
-import {
-  FC,
-  RefObject,
-  useCallback,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from 'react'
+import {FC, RefObject, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState} from 'react'
 import {Editor} from '@lite-u/editor'
 import ShortcutListener from '../../components/ShortcutListener.tsx'
 import {PointRef, StatusBar} from '../../components/statusBar/StatusBar.tsx'
-import {HistoryNode} from '@lite-u/editor/DoublyLinkedList.ts'
+import {HistoryNode, VisionEventData, VisionEventType} from '@lite-u/editor/types'
 import {LayerPanel} from '../../components/layerPanel/LayerPanel.tsx'
 import Header from '../../components/header/Header.tsx'
 import {HistoryPanel} from '../../components/historyPanel/HistoryPanel.tsx'
@@ -21,16 +10,14 @@ import FileContext, {VisionWorkspace} from '../fileContext/FileContext.tsx'
 import EditorContext from './EditorContext.tsx'
 import PropPanel from '../../components/propPanel/PropPanel.tsx'
 import {ContextMenu} from '../../components/contextMenu/ContextMenu.tsx'
-import {VisionEventData, VisionEventType} from '@lite-u/editor/types'
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
-import {useUI} from '../UIContext/UIContext.tsx'
 import {Col, Con, Drop, Row, useNotification} from '@lite-u/ui'
 import readImageHelper from './readImageHelper.ts'
 import {useTranslation} from 'react-i18next'
 import Toolbar from '../../components/toolbar/Toolbar.tsx'
-import Zoom from '../../lib/zoom/zoom.ts'
 import useZoom from '../../hooks/useZoom.tsx'
 import ZOOM_LEVELS from '../../constants/zoomLevels.ts'
+import useEditor from '../../hooks/useEditor.tsx'
 
 const EditorProvider: FC<{
   ref: RefObject<Editor>,
@@ -43,25 +30,17 @@ const EditorProvider: FC<{
         fileId,
         page,
       }) => {
+  const {focusedFileId, startCreateFile, closeFile, saveFileToLocal} = useContext(FileContext)
   const [state, dispatch] = useReducer(EditorReducer, initialEditorState)
   const editorRef = useRef<Editor>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const worldPointRef = useRef<PointRef | null>(null)
-  // const [worldPoint, setWorldPoint] = useState<Point>({x: 0, y: 0})
-  const [sortedModules, setSortedModules] = useState<ElementInstance[]>([])
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
-  const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const contextRootRef = useRef<HTMLDivElement>(null)
-  const {focusedFileId, startCreateFile, closeFile, saveFileToLocal} = useContext(FileContext)
-  const lastSavedHistoryId = useRef(0)
-  const currentHistoryId = useRef(0)
-  const needSaveLocal = useRef(false)
   const [showDropNotice, setShowDropNotice] = useState(false)
   const [dropNoticeColor, setDropNoticeColor] = useState('green')
-  const {dpr} = useUI()
   const {add} = useNotification()
   const {t} = useTranslation()
-  const zoomPluginRef = useRef<Zoom | null>(null)
   const applyHistoryNode = (node: HistoryNode) => {
     if (editorRef.current) {
       editorRef.current.execute('history-pick', node)
@@ -81,21 +60,6 @@ const EditorProvider: FC<{
       return
     }
 
-    if (type === 'saveFile') {
-      // console.log('state.needSave', state.needSave)
-      // console.log(lastSavedHistoryId.current, currentHistoryId.current)
-      /*   if (needSaveLocal.current) {
-           const editorData = editorRef.current!.export()
-
-           console.log(editorData)
-           editorData.name = data.name
-           saveFileToLocal(editorData)
-           lastSavedHistoryId.current = currentHistoryId.current
-           dispatch({type: 'SET_NEED_SAVE', payload: false})
-         }*/
-
-    }
-
     editorRef.current!.execute(type as K, data)
   }
 
@@ -105,6 +69,7 @@ const EditorProvider: FC<{
     applyHistoryNode,
     executeAction,
   }), [state, applyHistoryNode, executeAction])
+/*
   const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
     const curr = state.worldScale
     let nextScale = null
@@ -123,57 +88,20 @@ const EditorProvider: FC<{
         physicalPoint: p,
       })
     }
-  }
+  }*/
 
   useZoom({
-    ref: containerRef,
-    onZoom: handleZoom,
-    onScroll: (x, y) => {
-      executeAction('world-shift', {x, y})
-    },
+    ref: containerRef
   })
 
   useImperativeHandle(ref, () => {
     return editorRef.current
   }, [editorRef.current])
 
-
-
+  useEditor(containerRef.current)
 
   useEffect(() => {
-    let editor: InstanceType<Editor>
 
-    if (containerRef.current && !editorRef.current) {
-
-
-      editorRef.current = editor
-      dispatch({type: 'SET_ID', payload: workspace.id})
-
-    }
-
-    const element = contextRootRef.current
-
-    if (element) {
-      window.addEventListener('mouseup', checkInside)
-      element.addEventListener('focus', handleFocus)
-      element.addEventListener('blur', handleBlur)
-    }
-
-    return () => {
-      if (element) {
-        window.removeEventListener('mouseup', checkInside)
-        element.removeEventListener('focus', handleFocus)
-        element.removeEventListener('blur', handleBlur)
-      }
-
-      if (editor) {
-        editor.destroy()
-      }
-
-      if (zoomPluginRef.current) {
-        zoomPluginRef.current.destroy()
-      }
-    }
   }, [])
 
   return <EditorContext.Provider value={contextValue}>

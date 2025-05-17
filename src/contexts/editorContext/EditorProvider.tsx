@@ -19,12 +19,6 @@ import readImageHelper from './readImageHelper.ts'
 import {useTranslation} from 'react-i18next'
 import Toolbar from '../../components/toolbar/Toolbar.tsx'
 import Zoom from '../../lib/zoom/zoom.ts'
-import {
-  ContextMenuHandler,
-  SelectionUpdatedHandler,
-  ViewportUpdatedHandler,
-  WorldMouseMoveUpdatedHandler,
-} from '@lite-u/editor/types'
 
 const EditorProvider: FC<{
   ref: RefObject<Editor>,
@@ -61,75 +55,17 @@ const EditorProvider: FC<{
     return editorRef.current
   }, [editorRef.current])
 
-  /*  const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
-      dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})
-
-      if (historyTree.current) {
-        const newHistoryStatus = {
-          id: historyTree.current.id,
-          hasPrev: !!historyTree.current.prev,
-          hasNext: !!historyTree.current.next,
-        }
-        const newNeedSaveValue = newHistoryStatus.id !== lastSavedHistoryId.current
-        // console.log(state.historyStatus)
-
-        // console.log(state.needSave)
-        // console.log(newHistoryStatus.id, lastSavedHistoryId.current)
-        // console.log(newHistoryStatus.id !== lastSavedHistoryId.current)
-
-        currentHistoryId.current = newHistoryStatus.id
-        dispatch({type: 'SET_HISTORY_STATUS', payload: newHistoryStatus})
-        dispatch({type: 'SET_NEED_SAVE', payload: newNeedSaveValue})
-        needSaveLocal.current = newNeedSaveValue
-      }
-    }*/
-  // console.log(state)
-  const onModulesUpdated: ModulesUpdatedHandler = (moduleMap) => {
-    const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
-
-    setSortedModules(arr)
-  }
-
-  const onSelectionUpdated: SelectionUpdatedHandler = (selected, props) => {
-    dispatch({type: 'SET_SELECTED_MODULES', payload: Array.from(selected)})
-    dispatch({type: 'SET_SELECTED_PROPS', payload: props})
-  }
-
-  const onViewportUpdated: ViewportUpdatedHandler = (viewportInfo) => {
-    dispatch({type: 'SET_VIEWPORT', payload: viewportInfo})
-  }
-
-  const onWorldMouseMove: WorldMouseMoveUpdatedHandler = (point) => {
-    // dispatch({type: 'SET_WORLD_POINT', payload: point})
-    // worldPoint.current = point
-    if (worldPointRef.current) {
-      worldPointRef.current.set(point)
-    }
-  }
-
-  const onContextMenu: ContextMenuHandler = (position) => {
-    setShowContextMenu(true)
-    setContextMenuPosition(position)
-  }
-
-  const onModuleCopied: ModuleCopiedHandler = (items) => {
-    dispatch({type: 'SET_COPIED_ITEMS', payload: items})
-  }
-
   const checkInside = (e: MouseEvent) => {
     if (contextRootRef.current) {
       dispatch({type: 'SET_FOCUSED', payload: contextRootRef!.current?.contains(e.target as Node)})
     }
   }
 
-  const onSwitchTool: SwitchToolHandler = (toolName) => {
-    dispatch({type: 'SET_CURRENT_TOOL', payload: toolName})
-  }
-
   const handleFocus = () => {
     console.log('focus')
     dispatch({type: 'SET_FOCUSED', payload: true})
   }
+
   const handleBlur = () => {
     console.log('blurred')
     dispatch({type: 'SET_FOCUSED', payload: false})
@@ -174,12 +110,7 @@ const EditorProvider: FC<{
 
   useEffect(() => {
     let editor: Editor
-    /*    window.onbeforeunload = (event)=>{
-          // alert(999)
-          event.preventDefault();
-          // return false;
-        }*/
-    // console.log(workspace)
+
     if (containerRef.current && !editorRef.current) {
       zoomPluginRef.current = new Zoom({
         dom: containerRef.current,
@@ -190,44 +121,6 @@ const EditorProvider: FC<{
           executeAction('world-shift', {x, y})
         },
       })
-      const events = {
-        onInitialized: () => {
-          editor.execute('switch-tool', state.currentTool)
-        },
-        onHistoryUpdated: (historyTree) => {
-          dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})
-
-          if (historyTree.current) {
-            const newHistoryStatus = {
-              id: historyTree.current.id,
-              hasPrev: !!historyTree.current.prev,
-              hasNext: !!historyTree.current.next,
-            }
-            const newNeedSaveValue = newHistoryStatus.id !== lastSavedHistoryId.current
-            // console.log(state.historyStatus)
-
-            // console.log(state.needSave)
-            // console.log(newHistoryStatus.id, lastSavedHistoryId.current)
-            // console.log(newHistoryStatus.id !== lastSavedHistoryId.current)
-
-            currentHistoryId.current = newHistoryStatus.id
-            dispatch({type: 'SET_HISTORY_STATUS', payload: newHistoryStatus})
-            dispatch({type: 'SET_NEED_SAVE', payload: newNeedSaveValue})
-            needSaveLocal.current = newNeedSaveValue
-          }
-        },
-        onModulesUpdated: (moduleMap) => {
-          const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
-
-          setSortedModules(arr)
-        },
-        onSelectionUpdated,
-        onViewportUpdated,
-        onWorldMouseMove,
-        onContextMenu,
-        onModuleCopied,
-        onSwitchTool,
-      }
 
       editor = new Editor({
         container: containerRef!.current,
@@ -237,7 +130,62 @@ const EditorProvider: FC<{
           dpr,
           page,
         },
-        events,
+        events: {
+          onInitialized: () => {
+            editor.execute('switch-tool', state.currentTool)
+          },
+          onHistoryUpdated: (historyTree) => {
+            dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})
+
+            if (historyTree.current) {
+              const newHistoryStatus = {
+                id: historyTree.current.id,
+                hasPrev: !!historyTree.current.prev,
+                hasNext: !!historyTree.current.next,
+              }
+              const newNeedSaveValue = newHistoryStatus.id !== lastSavedHistoryId.current
+              // console.log(state.historyStatus)
+
+              // console.log(state.needSave)
+              // console.log(newHistoryStatus.id, lastSavedHistoryId.current)
+              // console.log(newHistoryStatus.id !== lastSavedHistoryId.current)
+
+              currentHistoryId.current = newHistoryStatus.id
+              dispatch({type: 'SET_HISTORY_STATUS', payload: newHistoryStatus})
+              dispatch({type: 'SET_NEED_SAVE', payload: newNeedSaveValue})
+              needSaveLocal.current = newNeedSaveValue
+            }
+          },
+          onModulesUpdated: (moduleMap) => {
+            const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
+
+            setSortedModules(arr)
+          },
+          onSelectionUpdated: (selected, props) => {
+            dispatch({type: 'SET_SELECTED_MODULES', payload: Array.from(selected)})
+            dispatch({type: 'SET_SELECTED_PROPS', payload: props})
+          },
+          onViewportUpdated: (viewportInfo) => {
+            dispatch({type: 'SET_VIEWPORT', payload: viewportInfo})
+          },
+          onWorldMouseMove: (point) => {
+            // dispatch({type: 'SET_WORLD_POINT', payload: point})
+            // worldPoint.current = point
+            if (worldPointRef.current) {
+              worldPointRef.current.set(point)
+            }
+          },
+          onContextMenu: (position) => {
+            setShowContextMenu(true)
+            setContextMenuPosition(position)
+          },
+          onModuleCopied: (items) => {
+            dispatch({type: 'SET_COPIED_ITEMS', payload: items})
+          },
+          onSwitchTool: (toolName) => {
+            dispatch({type: 'SET_CURRENT_TOOL', payload: toolName})
+          },
+        },
       })
 
       editorRef.current = editor

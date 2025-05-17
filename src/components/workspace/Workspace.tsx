@@ -10,7 +10,7 @@ import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
 import {FC, RefObject, useContext, useRef, useState} from 'react'
 import useEditor from '../../hooks/useEditor.tsx'
-import useZoom from '../../hooks/useZoom.tsx'
+import useGesture from '../../hooks/useGesture.tsx'
 import AppContext, {VisionWorkspace} from '../../contexts/appContext/AppContext.tsx'
 import {Editor} from '@lite-u/editor'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
@@ -56,7 +56,7 @@ const Workspace: FC<{
     editorRef.current!.execute(type, data)
   }
 
-  useZoom(containerRef, state.worldScale, executeAction)
+  useGesture(containerRef, state.worldScale, executeAction)
 
   return <EditorContext.Provider value={{executeAction}}>
 

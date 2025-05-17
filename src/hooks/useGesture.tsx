@@ -4,8 +4,8 @@ import ZOOM_LEVELS from '../constants/zoomLevels.ts'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 
-function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, executeAction: EditorExecutor) {
-  const {dispatch} = useContext(WorkspaceContext)
+function useGesture(ref: RefObject<HTMLElement | null>, currentScale: number, executeAction: EditorExecutor) {
+  const {state, dispatch} = useContext(WorkspaceContext)
   const pluginRef = useRef<Zoom | null>(null)
   const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
     let nextScale = null
@@ -40,11 +40,18 @@ function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, execu
       })
     }
 
+    const handleClick = (e) => {
+      console.log(e)
+    }
+
+    ref.current.addEventListener('click', handleClick)
+
     return () => {
+      ref.current?.removeEventListener('click', handleClick)
       pluginRef.current?.destroy()
       pluginRef.current = null
     }
   }, [ref, currentScale])
 }
 
-export default useZoom
+export default useGesture

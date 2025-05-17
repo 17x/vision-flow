@@ -1,4 +1,15 @@
-import {FC, RefObject, useContext, useEffect, useImperativeHandle, useReducer, useRef, useState} from 'react'
+import {
+  FC,
+  RefObject,
+  useCallback,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react'
 import {Editor} from '@lite-u/editor'
 import ShortcutListener from '../../components/ShortcutListener.tsx'
 import {PointRef, StatusBar} from '../../components/statusBar/StatusBar.tsx'
@@ -51,52 +62,6 @@ const EditorProvider: FC<{
   const {add} = useNotification()
   const {t} = useTranslation()
   const zoomPluginRef = useRef<Zoom | null>(null)
-  const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
-    const curr = state.worldScale
-    let nextScale = null
-    let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
-
-    if (zoomIn) {
-      nextScale = filtered.reverse().find(z => z.value > curr)
-    } else {
-      nextScale = filtered.find(z => z.value < curr)
-    }
-
-    if (nextScale) {
-      executeAction('world-zoom', {
-        zoomTo: true,
-        zoomFactor: nextScale.value,
-        physicalPoint: p,
-      })
-    }
-  }
-
-  useZoom({
-    ref: containerRef,
-    onZoom: handleZoom,
-    onScroll: (x, y) => {
-      executeAction('world-shift', {x, y})
-    },
-  })
-
-  useImperativeHandle(ref, () => {
-    return editorRef.current
-  }, [editorRef.current])
-
-  const checkInside = (e: MouseEvent) => {
-    if (contextRootRef.current) {
-      dispatch({type: 'SET_FOCUSED', payload: contextRootRef!.current?.contains(e.target as Node)})
-    }
-  }
-
-  const handleFocus = () => {
-    dispatch({type: 'SET_FOCUSED', payload: true})
-  }
-
-  const handleBlur = () => {
-    dispatch({type: 'SET_FOCUSED', payload: false})
-  }
-
   const applyHistoryNode = (node: HistoryNode) => {
     if (editorRef.current) {
       editorRef.current.execute('history-pick', node)
@@ -132,6 +97,58 @@ const EditorProvider: FC<{
     }
 
     editorRef.current!.execute(type as K, data)
+  }
+
+  const contextValue = useMemo(() => ({
+    state,
+    editorRef,
+    applyHistoryNode,
+    executeAction,
+  }), [state, applyHistoryNode, executeAction])
+  const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
+    const curr = state.worldScale
+    let nextScale = null
+    let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
+
+    if (zoomIn) {
+      nextScale = filtered.reverse().find(z => z.value > curr)
+    } else {
+      nextScale = filtered.find(z => z.value < curr)
+    }
+
+    if (nextScale) {
+      executeAction('world-zoom', {
+        zoomTo: true,
+        zoomFactor: nextScale.value,
+        physicalPoint: p,
+      })
+    }
+  }
+
+  useZoom({
+    ref: containerRef,
+    onZoom: handleZoom,
+    onScroll: (x, y) => {
+      executeAction('world-shift', {x, y})
+    },
+  })
+
+  useImperativeHandle(ref, () => {
+    return editorRef.current
+  }, [editorRef.current])
+
+  const checkInside = useCallback((e: MouseEvent) => {
+    if (contextRootRef.current) {
+      dispatch({type: 'SET_FOCUSED', payload: contextRootRef!.current?.contains(e.target as Node)})
+    }
+  }, [])
+
+  const handleFocus = () => {
+    dispatch({type: 'SET_FOCUSED', payload: true})
+  }
+
+  const handleBlur = () => {
+    dispatch({type: 'SET_FOCUSED', payload: false})
   }
 
   useEffect(() => {
@@ -238,13 +255,7 @@ const EditorProvider: FC<{
     }
   }, [])
 
-  return <EditorContext.Provider value={{
-    state,
-    // dispatch,
-    editorRef,
-    applyHistoryNode,
-    executeAction,
-  }}>
+  return <EditorContext.Provider value={contextValue}>
     <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}
          tabIndex={0}
          className={'outline-0'}>

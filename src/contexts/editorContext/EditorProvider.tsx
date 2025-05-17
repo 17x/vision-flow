@@ -61,12 +61,10 @@ const EditorProvider: FC<{
   }
 
   const handleFocus = () => {
-    console.log('focus')
     dispatch({type: 'SET_FOCUSED', payload: true})
   }
 
   const handleBlur = () => {
-    console.log('blurred')
     dispatch({type: 'SET_FOCUSED', payload: false})
   }
 
@@ -265,13 +263,9 @@ const EditorProvider: FC<{
             ></div>
 
             {
-              showDropNotice && <Con fw fh style={{
+              showDropNotice && <Con fw fh abs t={0} l={0} borderColor={dropNoticeColor} style={{
                 border: '5px solid',
-                borderColor: dropNoticeColor,
                 pointerEvents: 'none',
-                position: 'absolute',
-                top: 0,
-                left: 0,
               }}></Con>
             }
           </Drop>

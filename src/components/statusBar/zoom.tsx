@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react'
 import ZOOM_LEVELS from '../../constants/zoomLevels.ts'
-import {Row, Select, SelectItem} from '../../../../@lite-u/ui/src'
+import {Row, Select, SelectItem} from '@lite-u/ui'
 
 export type ZoomLevels = {
   label: string,

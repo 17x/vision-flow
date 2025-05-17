@@ -1,6 +1,6 @@
 import ShortcutListener from '../ShortcutListener.tsx'
 import Header from '../header/Header.tsx'
-import {Col, Row} from '../../../../@lite-u/ui/src'
+import {Col, Row} from '@lite-u/ui'
 import Toolbar from '../toolbar/Toolbar.tsx'
 import FileReceiver from '../fileReceiver.tsx'
 import {PointRef, StatusBar} from '../statusBar/StatusBar.tsx'

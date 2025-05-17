@@ -2,11 +2,11 @@ import {RefObject, useCallback, useContext, useEffect} from 'react'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
 const useFocus = (ref: RefObject<HTMLElement | null>) => {
-  const {state, dispatch, executeAction} = useContext(WorkspaceContext)
+  const {dispatch} = useContext(WorkspaceContext)
 
   const checkInside = useCallback((e: MouseEvent) => {
-    if (element) {
-      dispatch({type: 'SET_FOCUSED', payload: element.contains(e.target as Node)})
+    if (ref.current) {
+      dispatch({type: 'SET_FOCUSED', payload: ref.current.contains(e.target as Node)})
     }
   }, [])
 

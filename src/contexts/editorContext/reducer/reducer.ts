@@ -55,6 +55,7 @@ type EditorAction =
   | { type: 'SET_COPIED_ITEMS'; payload: ModuleProps[] }
   | { type: 'SET_VIEWPORT'; payload: ViewportInfo | null }
   | { type: 'SET_WORLD_POINT'; payload: Point }
+  | { type: 'SET_WORLD_SCALE'; payload: number }
   | { type: 'SET_CURRENT_TOOL'; payload: ToolName };
 
 export const EditorReducer = (state: EditorStateType, action: EditorAction) => {
@@ -117,6 +118,11 @@ export const EditorReducer = (state: EditorStateType, action: EditorAction) => {
       return {
         ...state,
         worldPoint: action.payload,
+      }
+    case 'SET_WORLD_SCALE':
+      return {
+        ...state,
+        worldScale: action.payload,
       }
 
     case 'SET_CURRENT_TOOL':

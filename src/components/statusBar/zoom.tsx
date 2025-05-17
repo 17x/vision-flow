@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react'
-import ZOOM_LEVELS from '../../../constants/zoomLevels.ts'
-import {Row, Select, SelectItem} from '@lite-u/ui'
+import ZOOM_LEVELS from '../../constants/zoomLevels.ts'
+import {Row, Select, SelectItem} from '../../../../@lite-u/ui/src'
 
 export type ZoomLevels = {
   label: string,
@@ -24,7 +24,6 @@ const resolveNumber = (value: string): number | false => {
 
 const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit') => void }> = ({scale, onChange}) => {
   const [inputValue, setInputValue] = useState<string>(fixNumber(1))
-  const [isOpen, setIsOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -49,11 +48,11 @@ const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit')
 
     e.stopPropagation()
   }
-
+  // console.log(scale)
   return <Row w={20} h={30} ml={5} js center rela>
-    <Select s defaultValue={scale}
+    <Select s
+            defaultValue={scale}
             onSelectChange={v => {
-              setIsOpen(false)
               onChange(v as number | 'fit')
             }}>
       {

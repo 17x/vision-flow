@@ -1,4 +1,4 @@
-import ZoomSelect from './zoom/zoom.tsx'
+import ZoomSelect from './zoom.tsx'
 import {FC, Ref, useContext, useImperativeHandle, useState} from 'react'
 import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
 import {Row} from '@lite-u/ui'
@@ -20,7 +20,6 @@ export const StatusBar: FC<{ ref: PointRefType | null }> = ({ref}) => {
       }
     }
   }, [])
-
   return <Row between center fw h={30} style={{borderTop: '1px solid #dfdfdf'}}>
     <ZoomSelect scale={worldScale} onChange={(newScale) => {
       if (newScale === 'fit') {

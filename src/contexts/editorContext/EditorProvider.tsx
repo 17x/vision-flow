@@ -18,7 +18,7 @@ import readImageHelper from './readImageHelper.ts'
 import {useTranslation} from 'react-i18next'
 import Toolbar from '../../components/toolbar/Toolbar.tsx'
 import Zoom from '../../lib/zoom/zoom.ts'
-import ZOOM_LEVELS from '../../constants/zoomLevels.ts'
+import useZoom from '../../hooks/useZoom.tsx'
 
 const EditorProvider: FC<{
   ref: RefObject<Editor>,
@@ -51,6 +51,15 @@ const EditorProvider: FC<{
   const {t} = useTranslation()
   const zoomPluginRef = useRef<Zoom | null>(null)
 
+  useZoom(
+    containerRef,
+    () => {
+      console.log(state.worldScale)
+    },
+    (x, y) => {
+      executeAction('world-shift', {x, y})
+    },
+  )
   useImperativeHandle(ref, () => {
     return editorRef.current
   }, [editorRef.current])
@@ -74,7 +83,9 @@ const EditorProvider: FC<{
       editorRef.current.execute('history-pick', node)
     }
   }
-
+  const handleZoom = () => {
+    console.log(state.worldScale)
+  }
   const executeAction = <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => {
     // console.log(type)
 
@@ -110,18 +121,6 @@ const EditorProvider: FC<{
     let editor: InstanceType<Editor>
 
     if (containerRef.current && !editorRef.current) {
-      zoomPluginRef.current = new Zoom({
-        dom: containerRef.current,
-        onZoom: (zoomIn) => {
-          console.log('zoomIn:', zoomIn)
-          for (let i = ZOOM_LEVELS.length - 1; i >= 0; i--) {
-            console.log(worldScale)
-          }
-        },
-        onScroll: (x, y) => {
-          executeAction('world-shift', {x, y})
-        },
-      })
 
       editor = new Editor({
         container: containerRef!.current,
@@ -134,6 +133,9 @@ const EditorProvider: FC<{
         events: {
           onInitialized: () => {
             editor.execute('switch-tool', state.currentTool)
+          },
+          onZoomed: (scale) => {
+            dispatch({type: 'SET_WORLD_SCALE', payload: scale})
           },
           onHistoryUpdated: (historyTree) => {
             dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})

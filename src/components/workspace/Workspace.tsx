@@ -59,7 +59,9 @@ const Workspace: FC<{
     editorRef.current!.execute(type as K, data)
   }
 
-  useZoom(containerRef, executeAction)
+  useZoom(containerRef, state.worldScale, (a, b) => {
+    editorRef.current!.execute(a, b)
+  })
 
   return <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}
               tabIndex={0}

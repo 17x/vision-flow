@@ -4,23 +4,23 @@ import throttle from '../utilities/throttle.ts'
 import ZOOM_LEVELS from '../constants/zoomLevels.ts'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
-function useZoom(ref: RefObject<HTMLElement | null>, executeAction) {
-  const {state, dispatch} = useContext(WorkspaceContext)
+function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, onScale) {
+  const {dispatch} = useContext(WorkspaceContext)
 
   const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
-    const curr = state.worldScale
     let nextScale = null
     let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
 
     if (zoomIn) {
-      nextScale = filtered.reverse().find(z => z.value > curr)
+      nextScale = filtered.reverse().find(z => z.value > currentScale)
     } else {
-      nextScale = filtered.find(z => z.value < curr)
+      nextScale = filtered.find(z => z.value < currentScale)
     }
 
     if (nextScale) {
       dispatch({type: 'SET_WORLD_SCALE', payload: nextScale.value})
-      executeAction('world-zoom', {
+      // onScale
+      onScale('world-zoom', {
         zoomTo: true,
         zoomFactor: nextScale.value,
         physicalPoint: p,

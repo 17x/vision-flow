@@ -16,7 +16,7 @@ import {Editor} from '@lite-u/editor'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {VisionEventData, VisionEventType} from '@lite-u/editor/types'
 
-export type  WorkspaceExecuteAction = <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => void
+export type  EditorExecutor = <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => void
 const Workspace: FC<{
   ref: RefObject<Editor>,
   workspace: VisionWorkspace,
@@ -41,7 +41,7 @@ const Workspace: FC<{
       return editorRef.current
     }, [editorRef.current])
   */
-  const executeAction: WorkspaceExecuteAction = (type, data) => {
+  const executeAction: EditorExecutor = (type, data) => {
     if (type === 'newFile') {
       startCreateFile()
       return

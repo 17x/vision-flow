@@ -2,9 +2,9 @@ import {RefObject, useContext, useEffect, useRef} from 'react'
 import Zoom from '../lib/zoom/zoom.ts'
 import ZOOM_LEVELS from '../constants/zoomLevels.ts'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
-import {WorkspaceExecuteAction} from '../components/workspace/Workspace.tsx'
+import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 
-function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, executeAction: WorkspaceExecuteAction) {
+function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, executeAction: EditorExecutor) {
   const {dispatch} = useContext(WorkspaceContext)
   const pluginRef = useRef<Zoom | null>(null)
   const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {

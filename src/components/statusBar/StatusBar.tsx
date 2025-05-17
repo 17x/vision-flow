@@ -2,7 +2,7 @@ import ZoomSelect from './ZoomSelect.tsx'
 import {FC, Ref, useContext, useImperativeHandle, useState} from 'react'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {Row} from '@lite-u/ui'
-import {WorkspaceExecuteAction} from '../workspace/Workspace.tsx'
+import {EditorExecutor} from '../workspace/Workspace.tsx'
 
 export interface PointRef {
   set: (point: { x: number, y: number }) => void
@@ -10,7 +10,7 @@ export interface PointRef {
 
 type PointRefType = Ref<PointRef>
 
-export const StatusBar: FC<{ ref: PointRefType | null, executeAction: WorkspaceExecuteAction }> = ({
+export const StatusBar: FC<{ ref: PointRefType | null, executeAction: EditorExecutor }> = ({
                                                                                                      ref,
                                                                                                      executeAction,
                                                                                                    }) => {

@@ -78,7 +78,7 @@ const Workspace: FC<{
           ></div>
         </FileReceiver>
 
-        <StatusBar setScale={() => {
+        <StatusBar setScale={(newScale) => {
 
         }} ref={worldPointRef}/>
 

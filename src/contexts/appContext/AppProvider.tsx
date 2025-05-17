@@ -2,7 +2,7 @@ import {FC, useEffect, useState} from 'react'
 import CreateFile from '../../components/createFile/CreateFile.tsx'
 import AppContext, {useApp, VisionFileType} from './AppContext.tsx'
 // import MOCK_FILE_MAP from '../../mock.ts'
-import Files from '../../components/files/Files.tsx'
+import FilesTab from '../../components/file/FilesTab.tsx'
 import LanguageSwitcher from '../../components/language/languageSwitcher.tsx'
 import {EditorExportFileType} from '@lite-u/editor/engine/type'
 import FileProvider from '../fileContext/FileProvider.tsx'
@@ -122,7 +122,7 @@ const AppProvider: FC = () => {
     }}>
       <div className={'w-full h-full flex flex-col select-none'}>
         <div className={'flex justify-between'}>
-          <Files/>
+          <FilesTab/>
           <LanguageSwitcher/>
         </div>
 

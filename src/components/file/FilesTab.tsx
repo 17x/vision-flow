@@ -2,7 +2,7 @@ import {useContext} from "react"
 import AppContext from "../../contexts/appContext/AppContext.tsx"
 import {LuPlus} from "react-icons/lu"
 
-const Files: React.FC = () => {
+const FilesTab: React.FC = () => {
   const basicTabClasses = ' group py-2 px-6 relative transition flex items-center">'
   const activeTabClasses = ' bg-gray-200'
   const unActiveTabClasses = ' hover:bg-gray-200'
@@ -40,4 +40,4 @@ const Files: React.FC = () => {
   </div>
 }
 
-export default Files
+export default FilesTab

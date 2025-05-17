@@ -1,28 +1,19 @@
-import {FC, RefObject, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState} from 'react'
+import {FC, ReactNode, RefObject, useContext, useEffect, useMemo, useReducer, useRef, useState} from 'react'
 import {Editor} from '@lite-u/editor'
-import ShortcutListener from '../../components/ShortcutListener.tsx'
-import {PointRef, StatusBar} from '../../components/statusBar/StatusBar.tsx'
-import {HistoryNode, VisionEventData, VisionEventType} from '@lite-u/editor/types'
-import {LayerPanel} from '../../components/layerPanel/LayerPanel.tsx'
-import Header from '../../components/header/Header.tsx'
-import {HistoryPanel} from '../../components/historyPanel/HistoryPanel.tsx'
+import {VisionEventData, VisionEventType} from '@lite-u/editor/types'
 import AppContext, {VisionWorkspace} from '../appContext/AppContext.tsx'
 import WorkspaceContext from './WorkspaceContext.tsx'
-import PropPanel from '../../components/propPanel/PropPanel.tsx'
-import {ContextMenu} from '../../components/contextMenu/ContextMenu.tsx'
 import {EditorReducer, initialWorkspaceState} from './reducer/reducer.ts'
-import {Col, Row} from '@lite-u/ui'
-import Toolbar from '../../components/toolbar/Toolbar.tsx'
-import useZoom from '../../hooks/useZoom.tsx'
-import useEditor from '../../hooks/useEditor.tsx'
-import FileReceiver from '../../components/fileReceiver.tsx'
+import Workspace from '../../components/workspace/Workspace.tsx'
 
 const WorkspaceProvider: FC<{
   ref: RefObject<Editor>,
   workspace: VisionWorkspace,
   fileId: UID,
   page: EditorConfig['page']
+  children: ReactNode
 }> = ({
+        children,
         ref,
         workspace,
         fileId,
@@ -31,15 +22,7 @@ const WorkspaceProvider: FC<{
   const {focusedFileId, startCreateFile, closeFile} = useContext(AppContext)
   const [state, dispatch] = useReducer(EditorReducer, initialWorkspaceState)
   const editorRef = useRef<Editor>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const worldPointRef = useRef<PointRef | null>(null)
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
-  const contextRootRef = useRef<HTMLDivElement>(null)
-  const applyHistoryNode = (node: HistoryNode) => {
-    if (editorRef.current) {
-      editorRef.current.execute('history-pick', node)
-    }
-  }
 
   const executeAction = <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => {
     if (type === 'newFile') {
@@ -59,57 +42,14 @@ const WorkspaceProvider: FC<{
     state,
     dispatch,
     editorRef,
-    applyHistoryNode,
     executeAction,
-  }), [state, applyHistoryNode, executeAction])
-
-  useImperativeHandle(ref, () => {
-    return editorRef.current
-  }, [editorRef.current])
-
-  useEditor(containerRef, workspace, page)
-  useZoom(containerRef)
+  }), [state, executeAction])
 
   useEffect(() => {
-    console.log(containerRef)
-  }, [])
+   }, [])
 
   return <WorkspaceContext.Provider value={contextValue}>
-    <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}
-         tabIndex={0}
-         className={'outline-0'}>
-      {focusedFileId === workspace.id && <ShortcutListener/>}
-
-      <Header/>
-
-      <Row ovh fh>
-        <Toolbar tool={state.currentTool}/>
-        <Col fw fh ovh rela flex={1}>
-          <FileReceiver>
-            <div ref={containerRef}
-                 editor-container={'true'}
-                 className={'relative overflow-hidden flex w-full h-full'}
-            ></div>
-          </FileReceiver>
-
-          <StatusBar ref={worldPointRef}/>
-
-          {
-            showContextMenu &&
-              <ContextMenu position={contextMenuPosition}
-                           onClose={() => {
-                             setShowContextMenu(false)
-                           }}/>
-          }
-        </Col>
-        <Col fh stretch flex={'none'} w={260} style={{borderLeft: '1px solid #dfdfdf'}}>
-          <PropPanel props={state.selectedProps!}/>
-          <LayerPanel data={[]}/>
-          <HistoryPanel/>
-        </Col>
-      </Row>
-    </Col>
-
+    <Workspace/>
   </WorkspaceContext.Provider>
 }
 

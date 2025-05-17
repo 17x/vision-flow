@@ -138,24 +138,23 @@ const FileProvider: FC<{ file: VisionFileType }> = ({file}) => {
     handleCreating,
   }}>
     <Con fw fh>
-      <Drop
-        accepts={['application/zip']}
-        onDragIsOver={(v) => {
-          setDropNoticeColor(v ? 'green' : 'red')
-          setShowDropNotice(true)
-        }}
-        onDragIsLeave={() => {
-          setShowDropNotice(false)
-        }}
-        onDrop={(e) => {
-          setShowDropNotice(false)
-          setReadingFile(true)
-          readFileHelper(e.dataTransfer.files[0]).then(newFile => {
-            openFile(newFile)
-          }).catch(() => {
-            add(t('misc.fileResolveFailed'), 'info')
-          })
-        }}>
+      <Drop accepts={['application/zip']}
+            onDragIsOver={(v) => {
+              setDropNoticeColor(v ? 'green' : 'red')
+              setShowDropNotice(true)
+            }}
+            onDragIsLeave={() => {
+              setShowDropNotice(false)
+            }}
+            onDrop={(e) => {
+              setShowDropNotice(false)
+              setReadingFile(true)
+              readFileHelper(e.dataTransfer.files[0]).then(newFile => {
+                openFile(newFile)
+              }).catch(() => {
+                add(t('misc.fileResolveFailed'), 'info')
+              })
+            }}>
         {
           workspace.map((ws, index) => {
             return <WorkspaceProvider ref={(ref) => {

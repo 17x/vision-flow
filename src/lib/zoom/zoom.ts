@@ -8,6 +8,7 @@ class Zoom {
   dom: HTMLElement
   mouse: boolean
   touchpad: boolean
+  eventsController: AbortController
 
   constructor({
                 dom,
@@ -17,6 +18,11 @@ class Zoom {
     this.dom = dom
     this.mouse = mouse
     this.touchpad = touchpad
+    this.eventsController = new AbortController()
+  }
+
+  static(this: Zoom) {
+
   }
 
   destroy() {

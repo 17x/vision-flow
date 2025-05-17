@@ -1,3 +1,21 @@
+/**
+ * Wheel deltaX deltaY
+ * 1. touchpad
+ *  panning
+ *    x: UInt
+ *    y: UInt
+ *  zoom
+ *    x equal to -0
+ *    y: Float
+ * 2. mouse scroll
+ *    2.1 vertical scroll
+ *      x equal to -0
+ *      y: Float, abs(value) > 4, and increasing
+ *    2.2 horizontal scroll
+ *      x: UInt, increasing and abs(v) > 40
+ *      y equal to -0
+ */
+
 export interface ZoomOptions {
   dom: HTMLElement
   mouse?: true,
@@ -19,7 +37,7 @@ class Zoom {
   DELAY = 200
   ACTION_THRESHOLD = 3
   EVENT_BUFFER: WheelEvent[] = []
-  gestureLock = false
+  zoomLock = false
   trackpad = false
 
   constructor({
@@ -31,8 +49,8 @@ class Zoom {
                 onScroll,
               }: ZoomOptions) {
     this.dom = dom
-    this.mouse = mouse
-    this.touchpad = touchpad
+    // this.mouse = mouse
+    // this.touchpad = touchpad
     this.eventsController = new AbortController()
     this.mouseScrollModifier = mouseScrollModifier
     this.onZoom = onZoom
@@ -51,6 +69,8 @@ class Zoom {
     let zoomIn = false
     let scrolling = false
     let _zooming = false
+    let touchpad = false
+    // let mouse = false
 
     event.preventDefault()
     event.stopPropagation()
@@ -61,52 +81,31 @@ class Zoom {
         (modifier === 'shift' && shiftKey)
     }
 
-    if (this._timer) {
-      clearTimeout(this._timer)
-    }
-
-    if (this.gestureLock) {
+    if (this.zoomLock) {
       EVENT_BUFFER.length = 0
     } else {
       EVENT_BUFFER.push(event)
     }
 
     if (EVENT_BUFFER.length >= this.ACTION_THRESHOLD) {
-      // detect zooming
       const allXAreMinusZero = EVENT_BUFFER.every((e) => Zoom.isNegativeZero(e.deltaX))
       const allYAreFloat = EVENT_BUFFER.every((e) => Zoom.isFloat(e.deltaY))
       const absBiggerThan4 = EVENT_BUFFER.every((e) => Math.abs(e.deltaY) > 4)
 
       if (allXAreMinusZero && allYAreFloat && !absBiggerThan4) {
-        this.gestureLock = true
-        this.trackpad = true
-        console.log('trackpad')
+        this.zoomLock = true
+        touchpad = true
       }
     }
 
-    /**
-     * Wheel deltaX deltaY
-     * 1. touchpad
-     *  panning
-     *    x: UInt
-     *    y: UInt
-     *  zoom
-     *    x equal to -0
-     *    y: Float
-     * 2. mouse scroll
-     *    2.1 vertical scroll
-     *      x equal to -0
-     *      y: Float, abs(value) > 4, and increasing
-     *    2.2 horizontal scroll
-     *      x: UInt, increasing and abs(v) > 40
-     *      y equal to -0
-     */
-    if (this.gestureLock) {
+    if (this.zoomLock) {
       zoomIn = deltaY <= 0
       _zooming = true
+      touchpad = true
+
     } else if (Math.abs(deltaX) >= 40 && Zoom.isNegativeZero(deltaY)) {
-      console.log('Mouse horizontal scrolling')
       // Mouse horizontal scrolling
+      // mouse = true
       if (_zooming) {
         zoomIn = deltaX < 0
       } else {
@@ -115,7 +114,7 @@ class Zoom {
       }
     } else if (Zoom.isNegativeZero(deltaX) && Zoom.isFloat(deltaY) && Math.abs(deltaY) > 4) {
       // Vertical scrolling
-      // console.log('ver scrolling', deltaX)
+      // mouse = true
       if (_zooming) {
         zoomIn = deltaY < 0
       } else {
@@ -139,28 +138,6 @@ class Zoom {
     } else if (scrolling) {
       this.onScroll && this.onScroll(translateX, translateY, event)
     }
-    /*
-        _timer = setTimeout(() => {
-          gestureLock = false
-          zooming = false
-          panning = false
-          scrolling = false
-          zoomFactor = 0
-          translateX = 0
-          translateY = 0
-          EVENT_BUFFER.length = 0
-        }, DELAY)
-    */
-
-    /*   this.onZoom && this.onZoom({
-         trackpad,
-         zooming,
-         panning,
-         scrolling,
-         zoomFactor,
-         translateX,
-         translateY,
-       })*/
   }
 
   static isUInt(v: number) { return !Zoom.isFloat(v) }

@@ -16,6 +16,7 @@ import {Editor} from '@lite-u/editor'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {VisionEventData, VisionEventType} from '@lite-u/editor/types'
 import EditorContext from '../../contexts/EditorContext/EditorContext.tsx'
+import useFocus from '../../hooks/useFocus.tsx'
 
 export type  EditorExecutor = <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => void
 const Workspace: FC<{
@@ -57,7 +58,7 @@ const Workspace: FC<{
   }
 
   useGesture(containerRef, executeAction, state.worldScale, state.currentTool)
-
+  useFocus(containerRef)
   return <EditorContext.Provider value={{executeAction}}>
 
     <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}

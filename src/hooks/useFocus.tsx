@@ -1,7 +1,7 @@
-import {useCallback, useContext, useEffect} from 'react'
+import {RefObject, useCallback, useContext, useEffect} from 'react'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
-const useFocus = (element: HTMLElement | null) => {
+const useFocus = (ref: RefObject<HTMLElement | null>) => {
   const {state, dispatch, executeAction} = useContext(WorkspaceContext)
 
   const checkInside = useCallback((e: MouseEvent) => {
@@ -17,8 +17,11 @@ const useFocus = (element: HTMLElement | null) => {
   const handleBlur = () => {
     dispatch({type: 'SET_FOCUSED', payload: false})
   }
+
   useEffect(() => {
-    if (!element) return
+    if (!ref.current) return
+
+    const element = ref.current
 
     window.addEventListener('mouseup', checkInside)
     element.addEventListener('focus', handleFocus)
@@ -29,7 +32,7 @@ const useFocus = (element: HTMLElement | null) => {
       element.removeEventListener('focus', handleFocus)
       element.removeEventListener('blur', handleBlur)
     }
-  }, [element])
+  }, [ref])
 
 }
 export default useFocus

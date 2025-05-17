@@ -1,10 +1,12 @@
-import React, {memo, useContext, useEffect, useReducer} from 'react'
+import React, {useContext, useEffect} from 'react'
 import {ModuleMoveDirection} from '../editor/engine/type'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 import {VisionEventMap, VisionEventType} from '../editor/engine/actions/type'
+import EditorContext from '../contexts/EditorContext/EditorContext.tsx'
 
 const ShortcutListener: React.FC = () => {
-  const {state: {focused}, executeAction} = useContext(WorkspaceContext)
+  const {state: {focused}} = useContext(WorkspaceContext)
+  const {executeAction} = useContext(EditorContext)
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (!focused) return
@@ -37,11 +39,9 @@ const ShortcutListener: React.FC = () => {
     if (key.toLowerCase() === 'w' && (ctrlKey || metaKey)) {
       shortcutCode = 'closeFile'
 
-
-
       window.confirm('000')
       alert(9)
-      e.preventDefault();
+      e.preventDefault()
       e.stopPropagation()
       return false
 

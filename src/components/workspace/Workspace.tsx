@@ -56,7 +56,7 @@ const Workspace: FC<{
     editorRef.current!.execute(type, data)
   }
 
-  useGesture(containerRef, state.worldScale, executeAction)
+  useGesture(containerRef, executeAction, state.worldScale, state.currentTool)
 
   return <EditorContext.Provider value={{executeAction}}>
 

@@ -4,7 +4,7 @@ import ZOOM_LEVELS from '../constants/zoomLevels.ts'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 
-function useGesture(ref: RefObject<HTMLElement | null>, currentScale: number, executeAction: EditorExecutor) {
+function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExecutor, currentScale: number, currentTool: ToolName) {
   const {state, dispatch} = useContext(WorkspaceContext)
   const pluginRef = useRef<Zoom | null>(null)
   const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
@@ -42,6 +42,7 @@ function useGesture(ref: RefObject<HTMLElement | null>, currentScale: number, ex
 
     const handleClick = (e) => {
       console.log(e)
+      console.log(currentTool)
     }
 
     ref.current.addEventListener('click', handleClick)
@@ -51,7 +52,7 @@ function useGesture(ref: RefObject<HTMLElement | null>, currentScale: number, ex
       pluginRef.current?.destroy()
       pluginRef.current = null
     }
-  }, [ref, currentScale])
+  }, [ref, currentScale, currentTool])
 }
 
 export default useGesture

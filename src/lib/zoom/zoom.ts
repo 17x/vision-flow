@@ -102,7 +102,6 @@ class Zoom {
      *      y === -0
      */
     if (this.gestureLock) {
-      // zoomFactor = deltaY > 0 ? -zoomSpeedA : zoomSpeedA
       zoomIn = deltaY <= 0
       _zooming = true
     } else if (Math.abs(deltaX) >= 40 && Zoom.isNegativeZero(deltaY)) {

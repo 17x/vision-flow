@@ -117,11 +117,7 @@ class Zoom {
         scrolling = true
         translateX = -deltaX
       }
-    } else if (
-      Zoom.isNegativeZero(deltaX) &&
-      Zoom.isFloat(deltaY) &&
-      Math.abs(deltaY) > 4
-    ) {
+    } else if (Zoom.isNegativeZero(deltaX) && Zoom.isFloat(deltaY) && Math.abs(deltaY) > 4) {
       // Vertical scrolling
       // console.log('ver scrolling', deltaX)
       if (_zooming) {

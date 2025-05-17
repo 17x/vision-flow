@@ -1,5 +1,3 @@
-import {log} from 'node:util'
-
 export interface ZoomOptions {
   dom: HTMLElement
   mouse?: true,
@@ -126,13 +124,12 @@ class Zoom {
         translateY = -deltaY
       }
     } else if (Zoom.isUInt(deltaX) && Zoom.isUInt(deltaY)) {
-      // panning
       if (zoomIn) {
         const max = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY
 
         zoomIn = max < 0
       } else {
-        // console.log('panning')
+        scrolling = true
         translateX = -deltaX
         translateY = -deltaY
       }
@@ -141,7 +138,6 @@ class Zoom {
     if (_zooming) {
       this.onZoom && this.onZoom(zoomIn, event)
     } else if (scrolling) {
-      console.log('scrolling')
       this.onScroll && this.onScroll(translateX, translateY, event)
     }
     /*

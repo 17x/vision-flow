@@ -1,4 +1,4 @@
-import ZoomSelect from './zoom.tsx'
+import ZoomSelect from './ZoomSelect.tsx'
 import {FC, Ref, useContext, useImperativeHandle, useState} from 'react'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {Row} from '@lite-u/ui'

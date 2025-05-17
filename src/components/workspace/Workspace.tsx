@@ -15,6 +15,7 @@ import AppContext, {VisionWorkspace} from '../../contexts/appContext/AppContext.
 import {Editor} from '@lite-u/editor'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {VisionEventData, VisionEventType} from '@lite-u/editor/types'
+import EditorContext from '../../contexts/EditorContext/EditorContext.tsx'
 
 export type  EditorExecutor = <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => void
 const Workspace: FC<{
@@ -57,47 +58,50 @@ const Workspace: FC<{
 
   useZoom(containerRef, state.worldScale, executeAction)
 
-  return <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}
-              tabIndex={0}
-              className={'outline-0'}>
-    {focusedFileId === workspace.id && <ShortcutListener/>}
+  return <EditorContext.Provider value={{run: executeAction}}>
 
-    <Header/>
+    <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}
+         tabIndex={0}
+         className={'outline-0'}>
+      {focusedFileId === workspace.id && <ShortcutListener/>}
 
-    <Row ovh fh>
-      <Toolbar tool={state.currentTool} setTool={(toolName) => {
-        executeAction('switch-tool', toolName)
-      }}/>
-      <Col fw fh ovh rela flex={1}>
-        <FileReceiver>
-          <div ref={containerRef}
-               editor-container={'true'}
-               className={'relative overflow-hidden flex w-full h-full'}
-          ></div>
-        </FileReceiver>
+      <Header/>
 
-        <StatusBar executeAction={executeAction} ref={worldPointRef}/>
-
-        {
-          showContextMenu &&
-            <ContextMenu position={contextMenuPosition}
-                         onClose={() => {
-                           setShowContextMenu(false)
-                         }}/>
-        }
-      </Col>
-
-      <Col fh stretch flex={'none'} w={260} style={{borderLeft: '1px solid #dfdfdf'}}>
-        <PropPanel props={state.selectedProps!}/>
-        <LayerPanel data={[]}/>
-        <HistoryPanel pickHistory={(node) => {
-          if (editorRef.current) {
-            editorRef.current.execute('history-pick', node)
-          }
+      <Row ovh fh>
+        <Toolbar tool={state.currentTool} setTool={(toolName) => {
+          executeAction('switch-tool', toolName)
         }}/>
-      </Col>
-    </Row>
-  </Col>
+        <Col fw fh ovh rela flex={1}>
+          <FileReceiver>
+            <div ref={containerRef}
+                 editor-container={'true'}
+                 className={'relative overflow-hidden flex w-full h-full'}
+            ></div>
+          </FileReceiver>
+
+          <StatusBar executeAction={executeAction} ref={worldPointRef}/>
+
+          {
+            showContextMenu &&
+              <ContextMenu position={contextMenuPosition}
+                           onClose={() => {
+                             setShowContextMenu(false)
+                           }}/>
+          }
+        </Col>
+
+        <Col fh stretch flex={'none'} w={260} style={{borderLeft: '1px solid #dfdfdf'}}>
+          <PropPanel props={state.selectedProps!}/>
+          <LayerPanel data={[]}/>
+          <HistoryPanel pickHistory={(node) => {
+            if (editorRef.current) {
+              editorRef.current.execute('history-pick', node)
+            }
+          }}/>
+        </Col>
+      </Row>
+    </Col>
+  </EditorContext.Provider>
 }
 
 export default Workspace

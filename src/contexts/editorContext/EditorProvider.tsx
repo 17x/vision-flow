@@ -11,8 +11,7 @@ import EditorContext from './EditorContext.tsx'
 import PropPanel from '../../components/propPanel/PropPanel.tsx'
 import {ContextMenu} from '../../components/contextMenu/ContextMenu.tsx'
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
-import {Col, Row, useNotification} from '@lite-u/ui'
-import {useTranslation} from 'react-i18next'
+import {Col, Row} from '@lite-u/ui'
 import Toolbar from '../../components/toolbar/Toolbar.tsx'
 import useZoom from '../../hooks/useZoom.tsx'
 import useEditor from '../../hooks/useEditor.tsx'
@@ -36,8 +35,6 @@ const EditorProvider: FC<{
   const worldPointRef = useRef<PointRef | null>(null)
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const contextRootRef = useRef<HTMLDivElement>(null)
-  const {add} = useNotification()
-  const {t} = useTranslation()
   const applyHistoryNode = (node: HistoryNode) => {
     if (editorRef.current) {
       editorRef.current.execute('history-pick', node)

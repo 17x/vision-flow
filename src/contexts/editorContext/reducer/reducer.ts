@@ -80,6 +80,7 @@ export const EditorReducer = (state: EditorStateType, action: EditorAction) => {
         focused: action.payload,
       }
     case 'SET_HISTORY_ARRAY':
+      console.log(state)
       return {
         ...state,
         historyArray: action.payload,

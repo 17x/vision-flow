@@ -43,6 +43,9 @@ function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExe
     const handleClick = (e) => {
       console.log(e)
       console.log(currentTool)
+      if (currentTool === 'zoomIn' || currentTool === 'zoomOut') {
+        handleZoom(currentTool === 'zoomIn', e)
+      }
     }
 
     ref.current.addEventListener('click', handleClick)

@@ -1,12 +1,12 @@
 import {useContext} from "react"
-import FileContext from "../../contexts/fileContext/FileContext.tsx"
+import AppContext from "../../contexts/appContext/AppContext.tsx"
 import {LuPlus} from "react-icons/lu"
 
 const Files: React.FC = () => {
   const basicTabClasses = ' group py-2 px-6 relative transition flex items-center">'
   const activeTabClasses = ' bg-gray-200'
   const unActiveTabClasses = ' hover:bg-gray-200'
-  const {fileList, focusedFileId, closeFile, focusOnFile, handleCreating} = useContext(FileContext)
+  const {fileList, focusedFileId, closeFile, focusOnFile, handleCreating} = useContext(AppContext)
 
   return <div className="flex flex-row items-center text-sm select-none">
     {

@@ -1,13 +1,13 @@
 import './components/comp.css'
 import './i18n/config.ts'
-import FileProvider from './contexts/fileContext/FileProvider.tsx'
+import AppProvider from './contexts/appContext/AppProvider.tsx'
 import UIProvider from './contexts/UIContext/UIProvider.tsx'
 import LiteUIProvider from '@lite-u/ui/LiteUIProvider'
 
 function App() {
   return <LiteUIProvider>
     <UIProvider>
-      <FileProvider/>
+      <AppProvider/>
     </UIProvider>
   </LiteUIProvider>
 }

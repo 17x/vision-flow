@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'
 import {Col, Con, IconButton, Tooltip} from '@lite-u/ui'
-import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
+import FileContext from '../../contexts/fileContext/FileContext.tsx'
 import {ToolName} from '@lite-u/editor/types'
 import {LuCircle, LuHand, LuPencilLine, LuRectangleHorizontal, LuZoomIn} from 'react-icons/lu'
 import {lineSeg, mousePointer} from '../../assets/svg/icons.tsx'
@@ -49,7 +49,7 @@ const toolList = [
 ]
 
 const Toolbar: React.FC<{ tool: ToolName }> = ({tool}) => {
-  const {executeAction} = useContext(WorkspaceContext)
+  const {executeAction} = useContext(FileContext)
 
   return <Col fh center flex={0} w={50} style={{
     borderRight: '1px solid #e4e4e4',

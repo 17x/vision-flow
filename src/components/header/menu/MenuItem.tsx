@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import EditorContext from '../../../contexts/editorContext/EditorContext.tsx'
 import {LuChevronRight} from 'react-icons/lu'
-import {useWorkspace} from '../../../contexts/workspaceContext/WorkspaceContext.tsx'
+import {useFile} from '../../../contexts/fileContext/FileContext.tsx'
 /*
 interface MenuItemProps {
   menu: NestedActions
@@ -13,7 +13,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
                                            }) => {
   const {t} = useTranslation()
   const [subOpen, setSubOpen] = useState<boolean>(false)
-  const {executeAction} = useWorkspace()
+  const {executeAction} = useFile()
 
   const handleClick = () => {
     // console.log(menu)

@@ -1,6 +1,6 @@
 import {FC, FormEvent, useRef, useState} from 'react'
 import uid from '../../utilities/Uid.ts'
-import {useFile, VisionFileType} from '../../contexts/fileContext/FileContext.tsx'
+import {useApp, VisionFileType} from '../../contexts/appContext/AppContext.tsx'
 import {Button, Con, Flex, Input, MenuItem, Modal, P, Panel, Select, SelectItem, Title} from '@lite-u/ui'
 import {PAGE_PRESETS} from './pagePresets.ts'
 import {useTranslation} from 'react-i18next'
@@ -12,7 +12,7 @@ import {nid} from '@editor'
 const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#00000066', onBgClick}) => {
   const formRef = useRef<HTMLFormElement>(null)
   const {t} = useTranslation()
-  const {createFile, handleCreating} = useFile()
+  const {createFile, handleCreating} = useApp()
   const [currentPageSet, setCurrentPageSet] = useState({...PAGE_PRESETS[0]})
   const [dpi, setDpi] = useState(72)
   const [error, setError] = useState('')

@@ -6,7 +6,7 @@ import {HistoryNode, VisionEventData, VisionEventType} from '@lite-u/editor/type
 import {LayerPanel} from '../../components/layerPanel/LayerPanel.tsx'
 import Header from '../../components/header/Header.tsx'
 import {HistoryPanel} from '../../components/historyPanel/HistoryPanel.tsx'
-import FileContext, {VisionWorkspace} from '../fileContext/FileContext.tsx'
+import AppContext, {VisionWorkspace} from '../appContext/AppContext.tsx'
 import EditorContext from './EditorContext.tsx'
 import PropPanel from '../../components/propPanel/PropPanel.tsx'
 import {ContextMenu} from '../../components/contextMenu/ContextMenu.tsx'
@@ -29,7 +29,7 @@ const EditorProvider: FC<{
         fileId,
         page,
       }) => {
-  const {focusedFileId, startCreateFile, closeFile, saveFileToLocal} = useContext(FileContext)
+  const {focusedFileId, startCreateFile, closeFile} = useContext(AppContext)
   const [state, dispatch] = useReducer(EditorReducer, initialEditorState)
   const editorRef = useRef<Editor>(null)
   const containerRef = useRef<HTMLDivElement>(null)

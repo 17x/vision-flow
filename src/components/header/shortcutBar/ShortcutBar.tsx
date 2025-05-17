@@ -5,13 +5,13 @@ import {NamedIcon} from '../../lib/icon/icon.tsx'
 import {t} from 'i18next'
 import {I18nHistoryDataItem} from '../../../i18n/type'
 // import {MenuItemType} from '../menu/type'
-import {useWorkspace} from '../../../contexts/workspaceContext/WorkspaceContext.tsx'
+import {useFile} from '../../../contexts/fileContext/FileContext.tsx'
 
 const IconSize = 20
 const IconColor = 'text-black'
 
 const ShortcutBar: React.FC = () => {
-  const {saveFile} = useWorkspace()
+  const {saveFile} = useFile()
   const {state: {needSave, historyStatus, selectedModules}, executeAction} = useContext(EditorContext)
   const hasSelectedModules = selectedModules.length > 0
 

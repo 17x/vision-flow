@@ -1,86 +1,76 @@
-import {FC, useEffect, useState} from 'react'
-import CreateFile from '../../components/createFile/CreateFile.tsx'
-import FileContext, {useFile, VisionFileType} from './FileContext.tsx'
-// import MOCK_FILE_MAP from '../../mock.ts'
-import Files from '../../components/files/Files.tsx'
-import LanguageSwitcher from '../../components/language/languageSwitcher.tsx'
-import {EditorExportFileType} from '@lite-u/editor/engine/type'
-import WorkspaceProvider from '../workspaceContext/WorkspaceProvider.tsx'
-import {useNotification} from '@lite-u/ui'
+import {FC, useEffect, useRef, useState} from 'react'
+import {useApp, VisionFileType, VisionWorkspace} from '../appContext/AppContext.tsx'
+import FileContext from './FileContext.tsx'
+import {Con, Drop, useNotification} from '@lite-u/ui'
+import EditorProvider from '../editorContext/EditorProvider.tsx'
+import {VisionEventData, VisionEventType} from '@lite-u/editor/engine/actions/type'
+import {Print} from '../../components/print/print.tsx'
+import Editor from '@lite-u/editor/engine/editor.ts'
+import saveFileHelper from './saveFileHelper.ts'
+import readFileHelper from './readFileHelper.ts'
 import {useTranslation} from 'react-i18next'
+// import {useUI} from '../UIContext/UIContext.tsx'
 
-const FileProvider: FC = () => {
-  const {fileMap} = useFile()
-  const [fileList, setFileList] = useState<VisionFileType[]>([])
+const FileProvider: FC<{ file: VisionFileType }> = ({file}) => {
+  // const {workspaceList, pageConfig} = useWorkspace()
+  const {openFile} = useApp()
+  const workspaceRef = useRef(new Map())
   const [creating, setCreating] = useState<boolean>(false)
-  const [focusedFileId, setFocusedFileId] = useState<UID>('')
-  const fileLen = fileMap.size
-  const showCreateFile = fileLen === 0 || creating
-  const STORAGE_ID = 'VISION_FLOW_FILE_MAP'
+  const [focusedId, setFocusedId] = useState<UID>('')
+  const [workspace, setWorkspace] = useState<VisionWorkspace[]>([])
+  const editorMapRef = useRef<Map<string, Editor>>(new Map())
+  // const {dpr} = useUI()
+  const [currentWS, setCurrentWS] = useState<string>(file.workspace[0].id)
+  const [showPrint, setShowPrint] = useState(false)
+  const [showDropNotice, setShowDropNotice] = useState(false)
+  const [dropNoticeColor, setDropNoticeColor] = useState('green')
+  const [readingFile, setReadingFile] = useState(false)
   const {add} = useNotification()
   const {t} = useTranslation()
 
   useEffect(() => {
-    updateFileList()
-  }, [fileMap])
+    setWorkspace(file.workspace)
+  }, [])
 
-  const openFile = (file: VisionFileType) => {
-    if (fileMap.get(file.id)) {
-      add(t('misc.fileOpenRepeat'), 'info')
-    } else {
-      fileMap.set(file.id, file)
-      updateFileList()
-    }
+  const focusOnWorkspace = (id: UID) => {
+    setFocusedId(id)
   }
 
-  const updateFileList = () => {
-    const arr = Array.from(fileMap.values())
+  const closeWorkspace = (deletingId: UID) => {
+    let ws = workspaceRef.current.get(deletingId)
 
-    setFileList(arr)
-
-    if (!focusedFileId) {
-      if (arr[0]) {
-        focusOnFile(arr[0].id)
-      }
-    }
-  }
-
-  const focusOnFile = (id: UID) => {
-    // console.log(fileList)
-    setFocusedFileId(id)
-
-  }
-
-  const closeFile = (deletingId: UID) => {
-    const deletingFileIndex = fileList.findIndex(file => file.id === deletingId)
-    let len = fileList.length
-
-    if (deletingFileIndex === -1) return
+    workspaceRef.current.delete(deletingId)
+    console.log(ws)
+    // const deletingFileIndex = workspaceList.findIndex(file => file.id === deletingId)
+    // let len = workspaceList.length
+    //
+    // if (deletingFileIndex === -1) return
 
     // deleteFileFromLocal(deletingId)
-    fileMap.delete(deletingId)
-    updateFileList()
-    fileList.splice(deletingFileIndex, 1)
-    len--
+    // fileMap.current.delete(deletingId)
+    // updateFileList()
+    // workspaceList.splice(deletingFileIndex, 1)
+    // len--
+    /*
+        if (focusedId === deletingId && len > 0) {
+          let newOpenFileIndex: number = deletingFileIndex + 1
 
-    if (focusedFileId === deletingId && len > 0) {
-      let newOpenFileIndex: number = deletingFileIndex + 1
+          if (deletingFileIndex === 0) {
+            newOpenFileIndex = 0
+          }
+          if (newOpenFileIndex > len) {
+            newOpenFileIndex = len - 1
+          }
 
-      if (deletingFileIndex === 0) {
-        newOpenFileIndex = 0
-      }
-      if (newOpenFileIndex > len) {
-        newOpenFileIndex = len - 1
-      }
-
-      setFocusedFileId(fileList[newOpenFileIndex].id)
-    }
+          setFocusedId(workspaceList[newOpenFileIndex].id)
+        }*/
   }
 
-  const createFile = (file: VisionFileType) => {
-    fileMap.set(file.id, file)
-    updateFileList()
-    focusOnFile(file.id)
+  const createWorkspace = (ws: VisionWorkspace) => {
+    // fileMap.current.set(file.id, file)
+    // updateFileList()
+    focusOnWorkspace(file.id)
+    // setCurrentFileId(file.id)
   }
 
   const startCreateFile = () => {
@@ -91,67 +81,107 @@ const FileProvider: FC = () => {
     setCreating(v)
   }
 
-  const saveFileToLocal = (file: EditorExportFileType) => {
-    let item = localStorage.getItem(STORAGE_ID)
-    let savedFileMap = JSON.parse(item!)
-    const fileId = file.id
+  const saveFile = () => {
+    const workspaceList: VisionWorkspace[] = []
 
-    if (!savedFileMap) {
-      savedFileMap = {}
-    }
+    workspace.map(WS => {
+      const e = editorMapRef.current.get(WS.id)
+      const data = e?.export()
 
-    savedFileMap[file.id] = fileId
-    localStorage.setItem(STORAGE_ID, JSON.stringify(savedFileMap))
-    localStorage.setItem(fileId, JSON.stringify(file))
-    // console.log('saved')
+      workspaceList.push({
+        ...WS,
+        ...data,
+      })
+    })
+
+    saveFileHelper(file, workspaceList)
   }
 
-  return (
-    <FileContext.Provider value={{
-      fileMap,
-      fileList,
-      creating,
-      focusedFileId,
-      focusOnFile,
-      openFile,
-      closeFile,
-      createFile,
-      startCreateFile,
-      saveFileToLocal,
-      handleCreating,
-    }}>
-      <div className={'w-full h-full flex flex-col select-none'}>
-        <div className={'flex justify-between'}>
-          <Files/>
-          <LanguageSwitcher/>
-        </div>
+  const executeAction = <K extends (VisionEventType & WorkspaceAction)>(type: K, data?: VisionEventData<K>) => {
+    // console.log(type)
 
-        <div className={'flex-1 overflow-hidden min-h-[600px] relative'}>
-          {
-            fileList.map(file => <div key={file.id}
-                                      data-file-id={file.id}
-                                      className={'flex top-0 bg-white left-0 absolute outline-0 w-full h-full flex-col'}
-                                      style={{
-                                        zIndex: file.id === focusedFileId ? 200 : 100,
-                                      }}>
-              <WorkspaceProvider file={file}/>
-            </div>)
-          }
-        </div>
+    if (type === 'print') {
+      setShowPrint(true)
+      return
+    }
 
+    if (type === 'newFile') {
+      startCreateFile()
+      return
+    }
+
+    if (type === 'closeFile') {
+      closeFile(data.id)
+      return
+    }
+
+    if (type === 'saveFile') {
+      console.log(9)
+    }
+    const currentWSEditor = editorMapRef.current.get(currentWS)
+
+    if (currentWSEditor) {
+      // console.log(currentWS, editorMapRef)
+      // console.log(currentWSEditor)
+      // console.log(editorMapRef.current.get(currentWS).current)
+      currentWSEditor.execute(type as K, data)
+    }
+  }
+
+  return <FileContext.Provider value={{
+    creating,
+    focused: focusedId,
+    // closeFile,
+    executeAction,
+    saveFile,
+    create: createWorkspace,
+    startCreateFile,
+    handleCreating,
+  }}>
+    <Con fw fh>
+      <Drop
+        accepts={['application/zip']}
+        onDragIsOver={(v) => {
+          setDropNoticeColor(v ? 'green' : 'red')
+          setShowDropNotice(true)
+        }}
+        onDragIsLeave={() => {
+          setShowDropNotice(false)
+        }}
+        onDrop={(e) => {
+          setShowDropNotice(false)
+          setReadingFile(true)
+          readFileHelper(e.dataTransfer.files[0]).then(newFile => {
+            openFile(newFile)
+          }).catch(() => {
+            add(t('misc.fileResolveFailed'), 'info')
+          })
+        }}>
         {
-          showCreateFile &&
-            <CreateFile bg={fileLen ? '#00000080' : '#fff'}
-                        onBgClick={() => {
-                          if (fileLen) {
-                            setCreating(false)
-                          }
-                        }
-                        }/>
+          workspace.map((ws, index) => {
+            return <EditorProvider ref={(ref) => {
+              editorMapRef.current.set(ws.id, ref)
+            }} workspace={ws} fileId={file.id} page={file.config.page} key={index}/>
+          })
         }
-      </div>
-    </FileContext.Provider>
-  )
+      </Drop>
+    </Con>
+
+    {showPrint && <Print editorRef={editorRef} onClose={() => {
+      setShowPrint(false)
+    }}/>}
+
+    {
+      showDropNotice && <Con fw fh style={{
+        border: '5px solid',
+        borderColor: dropNoticeColor,
+        pointerEvents: 'none',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+      }}></Con>
+    }
+  </FileContext.Provider>
 }
 
 export default FileProvider

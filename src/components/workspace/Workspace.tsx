@@ -73,6 +73,7 @@ const Workspace: FC<{
 
       <Row ovh fh>
         <Toolbar tool={state.currentTool}/>
+
         <Col fw fh ovh rela flex={1}>
           <FileReceiver>
             <div ref={containerRef}
@@ -91,6 +92,7 @@ const Workspace: FC<{
                            }}/>
           }
         </Col>
+
         <Col fh stretch flex={'none'} w={260} style={{borderLeft: '1px solid #dfdfdf'}}>
           <PropPanel props={state.selectedProps!}/>
           <LayerPanel data={[]}/>

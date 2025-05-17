@@ -4,7 +4,7 @@ import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
 import {Row} from '@lite-u/ui'
 
 export interface PointRef {
-  set: (point: Point) => void;
+  set: (point: Point) => void
 }
 
 type PointRefType = Ref<PointRef>
@@ -17,7 +17,7 @@ export const StatusBar: FC<{ ref: PointRefType | null }> = ({ref}) => {
     return {
       set(point: Point) {
         setWorldPoint(point)
-      },
+      }
     }
   }, [])
 

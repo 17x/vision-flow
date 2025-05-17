@@ -48,9 +48,9 @@ const toolList = [
   },
 ]
 
-const Toolbar: React.FC<{ tool: ToolName }> = ({tool}) => {
+const Toolbar: React.FC<{ tool: ToolName, setTool: (t: ToolName) => void }> = ({tool, setTool}) => {
   // const {executeAction} = useContext(FileContext)
-  const {state, dispatch} = useContext(WorkspaceContext)
+  const {dispatch} = useContext(WorkspaceContext)
 
   return <Col fh center flex={0} w={50} style={{
     borderRight: '1px solid #e4e4e4',
@@ -70,6 +70,7 @@ const Toolbar: React.FC<{ tool: ToolName }> = ({tool}) => {
               outline: 'none',
             }}
                         onClick={() => {
+                          setTool(toolName)
                           dispatch({type: 'SET_CURRENT_TOOL', payload: toolName})
                         }}>{icon}</IconButton>
           </Con>

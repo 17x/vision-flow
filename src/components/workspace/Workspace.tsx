@@ -69,7 +69,9 @@ const Workspace: FC<{
     <Header/>
 
     <Row ovh fh>
-      <Toolbar tool={state.currentTool}/>
+      <Toolbar tool={state.currentTool} setTool={(toolName) => {
+        executeAction('switch-tool', toolName)
+      }}/>
       <Col fw fh ovh rela flex={1}>
         <FileReceiver>
           <div ref={containerRef}

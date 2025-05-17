@@ -23,22 +23,22 @@ const resolveNumber = (value: string): number | false => {
 
 const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit') => void }> = ({scale, onChange}) => {
   const zoomLevels: ZoomLevels[] = [
-    {label: '64000%', value: 64000},
-    {label: '3200%', value: 3200},
-    {label: '1600%', value: 1600},
-    {label: '800%', value: 800},
-    {label: '400%', value: 400},
-    {label: '200%', value: 200},
-    {label: '150%', value: 150},
-    {label: '100%', value: 100},
-    {label: '66.67%', value: 66.67},
-    {label: '50%', value: 50},
-    {label: '33.33%', value: 33.33},
-    {label: '25%', value: 25},
-    {label: '12.5%', value: 12.5},
-    {label: '6.25%', value: 6.25},
-    {label: '3.13%', value: 3.13},
-    {label: '1.56% (Min)', 'value': 1.56},
+    { label: '64000%', value: 640 },
+    { label: '3200%', value: 32 },
+    { label: '1600%', value: 16 },
+    { label: '800%', value: 8 },
+    { label: '400%', value: 4 },
+    { label: '200%', value: 2 },
+    { label: '150%', value: 1.5 },
+    { label: '100%', value: 1 },
+    { label: '66.67%', value: 0.6667 },
+    { label: '50%', value: 0.5 },
+    { label: '33.33%', value: 0.3333 },
+    { label: '25%', value: 0.25 },
+    { label: '12.5%', value: 0.125 },
+    { label: '6.25%', value: 0.0625 },
+    { label: '3.13%', value: 0.0313 },
+    { label: '1.56%', value: 0.0156 },
     {label: 'Fit window', value: 'fit'},
   ]
   // const {zoom} = useSelector((state: RootState) => state.statusBar)
@@ -113,7 +113,7 @@ const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit')
                 }}
                 className="text-sm align-middle p-1 text-center hover:bg-blue-500 hover:text-white transition"
               >
-                {value === 'fit' ? label : `${value * 100}%`}
+                {label}
               </div>
             ))
           }

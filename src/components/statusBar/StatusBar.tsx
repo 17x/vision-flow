@@ -1,4 +1,4 @@
-import ZoomSelect from './zoom'
+import ZoomSelect from './zoom/zoom.tsx'
 import {FC, Ref, useContext, useImperativeHandle, useState} from 'react'
 import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
 

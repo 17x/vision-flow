@@ -2,6 +2,7 @@ import {useContext, useEffect, useState} from 'react'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {ProtectedInput} from './protectedInput.tsx'
 import {Con, Panel} from '@lite-u/ui'
+import EditorContext from '../../contexts/EditorContext/EditorContext.tsx'
 
 interface PropPanelProps {props?: ModuleProps}
 
@@ -28,7 +29,7 @@ const PropPanel = ({props}: PropPanelProps) => {
 export default PropPanel
 
 const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
-  const {executeAction} = useContext(WorkspaceContext)
+  const {executeAction} = useContext(EditorContext)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const keyName = e.target.name as keyof ModuleProps
     let newValue: string | number = e.target.value

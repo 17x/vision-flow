@@ -58,7 +58,7 @@ const Workspace: FC<{
 
   useZoom(containerRef, state.worldScale, executeAction)
 
-  return <EditorContext.Provider value={{run: executeAction}}>
+  return <EditorContext.Provider value={{executeAction}}>
 
     <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}
          tabIndex={0}

@@ -2,11 +2,11 @@ import {createContext} from 'react'
 import {EditorExecutor} from '../../components/workspace/Workspace.tsx'
 
 interface EditorContextType {
-  run: EditorExecutor
+  executeAction: EditorExecutor
 }
 
 const EditorContext = createContext<EditorContextType>({
-  run: () => {},
+  executeAction: () => {},
 })
 
 export default EditorContext

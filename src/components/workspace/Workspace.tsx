@@ -73,7 +73,6 @@ const Workspace: FC<{
 
       <Row ovh fh>
         <Toolbar tool={state.currentTool}/>
-
         <Col fw fh ovh rela flex={1}>
           <FileReceiver>
             <div ref={containerRef}

@@ -6,9 +6,6 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
 
   const checkInside = useCallback((e: MouseEvent) => {
     if (ref.current) {
-      console.log(
-        ref.current.contains(e.target as Node)
-      )
       dispatch({type: 'SET_FOCUSED', payload: ref.current.contains(e.target as Node)})
     }
   }, [])

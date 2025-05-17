@@ -1,16 +1,14 @@
-import React, {useContext, useEffect} from 'react'
-import {ModuleMoveDirection} from '../editor/engine/type'
+import {useContext, useEffect} from 'react'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
-import {VisionEventMap, VisionEventType} from '../editor/engine/actions/type'
+import {ModuleMoveDirection, VisionEventMap, VisionEventType} from '@lite-u/editor/types'
 import EditorContext from '../contexts/EditorContext/EditorContext.tsx'
 
-const ShortcutListener: React.FC = () => {
+const UseShortcut = () => {
   const {state: {focused}} = useContext(WorkspaceContext)
   const {executeAction} = useContext(EditorContext)
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (!focused) return
-
     let shortcutCode: VisionEventType | null = null
     const {key, ctrlKey, metaKey, shiftKey} = e
     const arrowKeys: { [key: string]: ModuleMoveDirection } = {
@@ -124,8 +122,6 @@ const ShortcutListener: React.FC = () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [focused])
-
-  return null
 }
 
-export default ShortcutListener
+export default UseShortcut

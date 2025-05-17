@@ -1,4 +1,3 @@
-import ShortcutListener from '../ShortcutListener.tsx'
 import Header from '../header/Header.tsx'
 import {Col, Row} from '@lite-u/ui'
 import Toolbar from '../toolbar/Toolbar.tsx'
@@ -14,11 +13,13 @@ import useGesture from '../../hooks/useGesture.tsx'
 import AppContext, {VisionWorkspace} from '../../contexts/appContext/AppContext.tsx'
 import {Editor} from '@lite-u/editor'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
-import {VisionEventData, VisionEventType} from '@lite-u/editor/types'
+import {UID, VisionEventData, VisionEventType} from '@lite-u/editor/types'
 import EditorContext from '../../contexts/EditorContext/EditorContext.tsx'
 import useFocus from '../../hooks/useFocus.tsx'
+import useShortcut from '../../hooks/useShortcut.tsx'
 
 export type  EditorExecutor = <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => void
+
 const Workspace: FC<{
   ref: RefObject<Editor>,
   workspace: VisionWorkspace,
@@ -54,18 +55,20 @@ const Workspace: FC<{
       return
     }
 
+    console.log(type)
     editorRef.current!.execute(type, data)
   }
 
   useGesture(containerRef, executeAction, state.worldScale, state.currentTool)
   useFocus(contextRootRef)
+  useShortcut()
 
   return <EditorContext.Provider value={{executeAction}}>
 
     <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}
          tabIndex={0}
          className={'outline-0'}>
-      {focusedFileId === workspace.id && <ShortcutListener/>}
+      {/*{focusedFileId === workspace.id && <UseShortcut/>}*/}
 
       <Header/>
 

@@ -12,7 +12,7 @@ const PropPanel = ({props}: PropPanelProps) => {
     setLocalProps(props)
   }, [props])
 
-  return <Con p={10} h={300}>
+  return <Con p={10} h={'33.33%'}>
     <Panel xs head={'Properties'}
            contentStyle={{
              overflow: 'hidden',

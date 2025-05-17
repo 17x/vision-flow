@@ -1,5 +1,5 @@
 import {FC, RefObject, useContext, useEffect, useImperativeHandle, useReducer, useRef, useState} from 'react'
-import {Editor} from '@editor'
+import {Editor} from '@lite-u/editor'
 import ShortcutListener from '../../components/ShortcutListener.tsx'
 import {PointRef, StatusBar} from '../../components/statusBar/StatusBar.tsx'
 import {HistoryNode} from '@editor/engine/history/DoublyLinkedList.ts'
@@ -36,7 +36,7 @@ const EditorProvider: FC<{
   const containerRef = useRef<HTMLDivElement>(null)
   const worldPointRef = useRef<PointRef | null>(null)
   // const [worldPoint, setWorldPoint] = useState<Point>({x: 0, y: 0})
-  const [sortedModules, setSortedModules] = useState<ModuleInstance[]>([])
+  const [sortedModules, setSortedModules] = useState<ElementInstance[]>([])
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const contextRootRef = useRef<HTMLDivElement>(null)
@@ -192,6 +192,7 @@ const EditorProvider: FC<{
       dispatch({type: 'SET_ID', payload: workspace.id})
 
     }
+
     const element = contextRootRef.current
 
     if (element) {

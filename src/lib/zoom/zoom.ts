@@ -50,6 +50,9 @@ class Zoom {
     this.mouseScrollModifier = mouseScrollModifier
     this.onZoom = onZoom
     this.onScroll = onScroll
+    window.addEventListener('touchstart', e => {
+      console.log('touchstart')
+    })
     this.dom.addEventListener('wheel', this.handleWheel.bind(this), {
       signal: this.eventsController.signal,
       passive: false,
@@ -57,6 +60,7 @@ class Zoom {
   }
 
   handleWheel(event: WheelEvent) {
+    // console.log(event)
     const {/*EVENT_BUFFER,*/ mouseScrollModifier: modifier} = this
     const {deltaX, deltaY, altKey, ctrlKey, shiftKey} = event
     let translateX = 0

@@ -1,10 +1,11 @@
 import {useEffect} from 'react'
 import Zoom from '../lib/zoom/zoom.ts'
+import throttle from '../utilities/throttle.ts'
 
 function useZoom(
   params: {
     ref: React.RefObject<HTMLElement | null>,
-    onZoom?: (zoomIn: boolean) => void,
+    onZoom?: (zoomIn: boolean, point: { x: number, y: number }) => void,
     onScroll?: (x: number, y: number) => void
   },
 ) {
@@ -15,9 +16,12 @@ function useZoom(
 
     const zoomPlugin = new Zoom({
       dom: ref.current,
-      onZoom: (zoomIn) => {
-        onZoom && onZoom(zoomIn)
-      },
+      onZoom: throttle((zoomIn, event) => {
+        onZoom && onZoom(zoomIn, {
+          x: event.x,
+          y: event.y,
+        })
+      }, 200),
       onScroll: (x, y) => {
         onScroll && onScroll(x, y)
       },

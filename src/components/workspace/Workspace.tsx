@@ -59,6 +59,7 @@ const Workspace: FC<{
 
   useGesture(containerRef, executeAction, state.worldScale, state.currentTool)
   useFocus(containerRef)
+
   return <EditorContext.Provider value={{executeAction}}>
 
     <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}

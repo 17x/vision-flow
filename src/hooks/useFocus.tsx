@@ -11,10 +11,12 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
   }, [])
 
   const handleFocus = () => {
+    console.log('Focus')
     dispatch({type: 'SET_FOCUSED', payload: true})
   }
 
   const handleBlur = () => {
+    console.log('eBlur')
     dispatch({type: 'SET_FOCUSED', payload: false})
   }
 
@@ -22,7 +24,7 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
     if (!ref.current) return
 
     const element = ref.current
-
+    console.log('start')
     window.addEventListener('mouseup', checkInside)
     element.addEventListener('focus', handleFocus)
     element.addEventListener('blur', handleBlur)

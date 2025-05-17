@@ -27,31 +27,25 @@ export interface ZoomOptions {
 
 class Zoom {
   protected dom: HTMLElement
-  protected mouse: boolean
-  protected touchpad: boolean
   protected eventsController: AbortController
   protected onZoom: ZoomOptions['onZoom']
   protected onScroll: ZoomOptions['onScroll']
   protected mouseScrollModifier: 'alt' | 'ctrl' | 'shift' | 'meta'
   _timer: number | undefined
-  DELAY = 400
-  ACTION_THRESHOLD = 3
-  EVENT_BUFFER: WheelEvent[] = []
-  // zoomLock for touchpad zoom
   zoomLock = false
-  trackpad = false
+  DELAY = 400
+  // ACTION_THRESHOLD = 3
+  // EVENT_BUFFER: WheelEvent[] = []
+  // zoomLock for touchpad zoom
+  // trackpad = false
 
   constructor({
                 dom,
-                mouse = true,
-                touchpad = true,
                 mouseScrollModifier = 'alt',
                 onZoom,
                 onScroll,
               }: ZoomOptions) {
     this.dom = dom
-    // this.mouse = mouse
-    // this.touchpad = touchpad
     this.eventsController = new AbortController()
     this.mouseScrollModifier = mouseScrollModifier
     this.onZoom = onZoom
@@ -63,7 +57,7 @@ class Zoom {
   }
 
   handleWheel(event: WheelEvent) {
-    const {EVENT_BUFFER, mouseScrollModifier: modifier} = this
+    const {/*EVENT_BUFFER,*/ mouseScrollModifier: modifier} = this
     const {deltaX, deltaY, altKey, ctrlKey, shiftKey} = event
     let translateX = 0
     let translateY = 0
@@ -161,10 +155,11 @@ class Zoom {
     clearTimeout(this._timer)
     this._timer = null!
     this.dom = null!
-    this.mouse = null!
-    this.touchpad = null!
     this.eventsController.abort()
     this.eventsController = null!
+    this.onZoom = null!
+    this.onScroll = null!
+    this.mouseScrollModifier = null!
   }
 }
 

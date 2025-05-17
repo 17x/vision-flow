@@ -12,9 +12,9 @@ function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, execu
     let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
 
     if (zoomIn) {
-      nextScale = filtered.reverse().find(z => z.value > localScale)
+      nextScale = filtered.reverse().find(z => z.value > currentScale)
     } else {
-      nextScale = filtered.find(z => z.value < localScale)
+      nextScale = filtered.find(z => z.value < currentScale)
     }
 
     if (nextScale) {
@@ -28,8 +28,6 @@ function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, execu
   }
 
   useEffect(() => {
-    setLocalScale(currentScale)
-
     if (!ref.current) return
 
     if (!pluginRef.current) {

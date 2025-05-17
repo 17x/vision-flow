@@ -51,7 +51,7 @@ const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit')
   }
 
   return <Row w={20} h={30} ml={5} js center rela>
-    <Select onSelectChange={v => {
+    <Select s onSelectChange={v => {
       setIsOpen(false)
       onChange(v as number | 'fit')
     }}>

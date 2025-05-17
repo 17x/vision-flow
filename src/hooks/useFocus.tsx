@@ -10,15 +10,15 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
     }
   }, [])
 
-  const handleFocus = () => {
+  const handleFocus = useCallback(() => {
     console.log('Focus')
     dispatch({type: 'SET_FOCUSED', payload: true})
-  }
+  }, [])
 
-  const handleBlur = () => {
+  const handleBlur = useCallback(() => {
     console.log('eBlur')
     dispatch({type: 'SET_FOCUSED', payload: false})
-  }
+  }, [])
 
   useEffect(() => {
     if (!ref.current) return
@@ -26,14 +26,14 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
     const element = ref.current
 
     window.addEventListener('mouseup', checkInside)
-    element.addEventListener('mouseenter', handleFocus)
+    element.addEventListener('mouseover', handleFocus)
     element.addEventListener('mouseleave', handleBlur)
     // element.addEventListener('focus', handleFocus)
     // element.addEventListener('blur', handleBlur)
 
     return () => {
       window.removeEventListener('mouseup', checkInside)
-      element.removeEventListener('mouseenter', handleFocus)
+      element.removeEventListener('mouseover', handleFocus)
       element.removeEventListener('mouseleave', handleBlur)
       // element.removeEventListener('focus', handleFocus)
       // element.removeEventListener('blur', handleBlur)

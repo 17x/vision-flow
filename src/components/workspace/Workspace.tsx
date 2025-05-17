@@ -9,10 +9,10 @@ import PropPanel from '../propPanel/PropPanel.tsx'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
 import WorkspaceProvider from '../../contexts/workspaceContext/WorkspaceProvider.tsx'
-import {ReactNode, RefObject, useRef} from 'react'
+import {ReactNode, RefObject, useContext, useRef, useState} from 'react'
 import useEditor from '../../hooks/useEditor.tsx'
 import useZoom from '../../hooks/useZoom.tsx'
-import {VisionWorkspace} from '../../contexts/appContext/AppContext.tsx'
+import AppContext, {VisionWorkspace} from '../../contexts/appContext/AppContext.tsx'
 
 const Workspace: FC<{
   ref: RefObject<Editor>,
@@ -25,9 +25,13 @@ const Workspace: FC<{
         fileId,
         page,
       }) => {
+  const {focusedFileId, startCreateFile, closeFile} = useContext(AppContext)
+
   const contextRootRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const worldPointRef = useRef<PointRef | null>(null)
+  const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
+
   const applyHistoryNode = (node: HistoryNode) => {
     if (editorRef.current) {
       editorRef.current.execute('history-pick', node)
@@ -39,6 +43,19 @@ const Workspace: FC<{
       return editorRef.current
     }, [editorRef.current])
   */
+  const executeAction = <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => {
+    if (type === 'newFile') {
+      startCreateFile()
+      return
+    }
+
+    if (type === 'closeFile') {
+      closeFile(data.id)
+      return
+    }
+
+    // editorRef.current!.execute(type as K, data)
+  }
 
   useEditor(containerRef, workspace, page)
   useZoom(containerRef)

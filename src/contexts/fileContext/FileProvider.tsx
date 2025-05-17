@@ -9,6 +9,7 @@ import {Editor} from '@lite-u/editor'
 import saveFileHelper from './saveFileHelper.ts'
 import readFileHelper from './readFileHelper.ts'
 import {useTranslation} from 'react-i18next'
+import Workspace from '../../components/workspace/Workspace.tsx'
 
 const FileProvider: FC<{ file: VisionFileType }> = ({file}) => {
   // const {workspaceList, pageConfig} = useWorkspace()
@@ -157,9 +158,11 @@ const FileProvider: FC<{ file: VisionFileType }> = ({file}) => {
             }}>
         {
           workspace.map((ws, index) => {
-            return <WorkspaceProvider ref={(ref) => {
-              editorMapRef.current.set(ws.id, ref)
-            }} workspace={ws} fileId={file.id} page={file.config.page} key={index}/>
+            return <WorkspaceProvider key={index}>
+              <Workspace ref={(ref) => {
+                editorMapRef.current.set(ws.id, ref)
+              }} workspace={ws} fileId={file.id} page={file.config.page} />
+            </WorkspaceProvider>
           })
         }
       </Drop>

@@ -2,31 +2,44 @@ export interface ZoomOptions {
   dom: HTMLElement
   mouse: true,
   touchpad: true,
+  mouseScrollModifier: 'alt' | 'ctrl'
 }
 
 class Zoom {
-  dom: HTMLElement
-  mouse: boolean
-  touchpad: boolean
-  eventsController: AbortController
+  protected dom: HTMLElement
+  protected mouse: boolean
+  protected touchpad: boolean
+  protected eventsController: AbortController
+  protected mouseScrollModifier: 'alt' | 'ctrl'
 
   constructor({
                 dom,
                 mouse = true,
                 touchpad = true,
+                mouseScrollModifier = 'alt',
               }: ZoomOptions) {
     this.dom = dom
     this.mouse = mouse
     this.touchpad = touchpad
     this.eventsController = new AbortController()
+    this.mouseScrollModifier = mouseScrollModifier
+
+    this.dom.addEventListener('wheel', this.handleWheel.bind(this), {
+      signal: this.eventsController.signal,
+      passive: false,
+    })
   }
 
-  static(this: Zoom) {
+  handleWheel() {
 
   }
 
   destroy() {
-
+    this.dom = null!
+    this.mouse = null!
+    this.touchpad = null!
+    this.eventsController.abort()
+    this.eventsController = null!
   }
 }
 

@@ -66,24 +66,22 @@ export const LayerPanel = ({data}: LayerPanelProps) => {
     }
   }
 
-  return (
-    <Con p={10}>
-      <Panel head={'Layer'}
-             xs
-             contentStyle={{
-               overflow: 'hidden',
-             }}>
-        <Con rela ovh>
-          <div ref={scrollRef}
-               onScroll={handleScroll}
-               className={'relative scrollbar-custom overflow-x-hidden overflow-y-auto p-2 border h-30 border-gray-200 select-none'}>
-            <div className={'absolute z-10 w-full top-0 left-0'} style={{
-              height: data.length * ITEM_HEIGHT,
-            }}></div>
-            <div className={'z-20 w-full sticky top-0 left-0'}>{arr}</div>
-          </div>
-        </Con>
-      </Panel>
-    </Con>
-  )
+  return <Con p={10} h={'33.33%'}>
+    <Panel head={'Layer'}
+           xs
+           contentStyle={{
+             overflow: 'hidden',
+           }}>
+      <Con rela ovh>
+        <div ref={scrollRef}
+             onScroll={handleScroll}
+             className={'relative scrollbar-custom overflow-x-hidden overflow-y-auto p-2 border h-30 border-gray-200 select-none'}>
+          <div className={'absolute z-10 w-full top-0 left-0'} style={{
+            height: data.length * ITEM_HEIGHT,
+          }}></div>
+          <div className={'z-20 w-full sticky top-0 left-0'}>{arr}</div>
+        </div>
+      </Con>
+    </Panel>
+  </Con>
 }

@@ -1,6 +1,6 @@
 import JSZip from 'jszip'
 import {VisionFileType} from '../fileContext/FileContext.tsx'
-import {waitImageSize} from '../editorContext/readImageHelper.ts'
+import {waitImageSize} from '../../utilities/readImageHelper.ts'
 
 const readFileHelper = (file: File): Promise<VisionFileType> => {
   return new Promise(async (resolve, reject) => {

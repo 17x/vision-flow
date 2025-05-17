@@ -11,12 +11,12 @@ import EditorContext from './EditorContext.tsx'
 import PropPanel from '../../components/propPanel/PropPanel.tsx'
 import {ContextMenu} from '../../components/contextMenu/ContextMenu.tsx'
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
-import {Col, Con, Drop, Row, useNotification} from '@lite-u/ui'
-import readImageHelper from './readImageHelper.ts'
+import {Col, Row, useNotification} from '@lite-u/ui'
 import {useTranslation} from 'react-i18next'
 import Toolbar from '../../components/toolbar/Toolbar.tsx'
 import useZoom from '../../hooks/useZoom.tsx'
 import useEditor from '../../hooks/useEditor.tsx'
+import FileReceiver from '../../components/fileReceiver.tsx'
 
 const EditorProvider: FC<{
   ref: RefObject<Editor>,
@@ -29,7 +29,6 @@ const EditorProvider: FC<{
         fileId,
         page,
       }) => {
-  console.log(page)
   const {focusedFileId, startCreateFile, closeFile, saveFileToLocal} = useContext(FileContext)
   const [state, dispatch] = useReducer(EditorReducer, initialEditorState)
   const editorRef = useRef<Editor>(null)
@@ -37,8 +36,6 @@ const EditorProvider: FC<{
   const worldPointRef = useRef<PointRef | null>(null)
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const contextRootRef = useRef<HTMLDivElement>(null)
-  const [showDropNotice, setShowDropNotice] = useState(false)
-  const [dropNoticeColor, setDropNoticeColor] = useState('green')
   const {add} = useNotification()
   const {t} = useTranslation()
   const applyHistoryNode = (node: HistoryNode) => {
@@ -93,10 +90,8 @@ const EditorProvider: FC<{
     return editorRef.current
   }, [editorRef.current])
 
-
-  useEditor(containerRef,workspace,page)
+  useEditor(containerRef, workspace, page)
   useZoom(containerRef)
-
 
   useEffect(() => {
     console.log(containerRef)
@@ -113,36 +108,12 @@ const EditorProvider: FC<{
       <Row ovh fh>
         <Toolbar tool={state.currentTool}/>
         <Col fw fh ovh rela flex={1}>
-          <Drop accepts={['image/*']}
-                style={{position: 'relative'}}
-                onDragIsOver={(v) => {
-                  setDropNoticeColor(v ? 'green' : 'red')
-                  setShowDropNotice(true)
-                }}
-                onDragIsLeave={() => {
-                  setShowDropNotice(false)
-                }}
-                onDrop={(e) => {
-                  setShowDropNotice(false)
-
-                  readImageHelper(e.dataTransfer.files[0]).then(newAsset => {
-                    executeAction('drop-image', {position: {x: e.clientX, y: e.clientY}, assets: [newAsset]})
-                  }).catch(() => {
-                    add(t('misc.imageResolveFailed'), 'info')
-                  })
-                }}>
+          <FileReceiver>
             <div ref={containerRef}
                  editor-container={'true'}
                  className={'relative overflow-hidden flex w-full h-full'}
             ></div>
-
-            {
-              showDropNotice && <Con fw fh abs t={0} l={0} borderColor={dropNoticeColor} style={{
-                border: '5px solid',
-                pointerEvents: 'none',
-              }}></Con>
-            }
-          </Drop>
+          </FileReceiver>
 
           <StatusBar ref={worldPointRef}/>
 

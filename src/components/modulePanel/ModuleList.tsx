@@ -5,7 +5,7 @@ interface ModulePanelProps {
 
 }
 
-const modules: { className: string, props: Partial<ModuleProps> }[] = [
+const modules: { className: string, props: Partial<ElementProps> }[] = [
   {
     className: 'w-20 h-10',
     props: {
@@ -60,7 +60,7 @@ export const ModuleList: React.FC<ModulePanelProps> = () => {
                key={index}
 
                onClick={() => {
-                 const props = module.props as ModuleProps
+                 const props = module.props as ElementProps
 
                  if (props.type === 'rectangle') {
                    props.x = getRandomNumber(100)

@@ -11,10 +11,10 @@ export interface WorkSpaceStateType {
   worldScale: number,
   needSave: boolean
   selectedModules: UID[]
-  selectedProps: ModuleProps | null
+  selectedProps: ElementProps | null
   currentTool: ToolName
   lastSavedHistoryId: number
-  copiedItems: ModuleProps[]
+  copiedItems: ElementProps[]
   // viewport: ViewportInfo | null
 }
 
@@ -50,9 +50,9 @@ export type WorkspaceAction =
   | { type: 'SET_HISTORY_ARRAY'; payload: HistoryNode[] }
   | { type: 'SET_NEED_SAVE'; payload: boolean }
   | { type: 'SET_SELECTED_MODULES'; payload: UID[] }
-  | { type: 'SET_SELECTED_PROPS'; payload: ModuleProps | null }
+  | { type: 'SET_SELECTED_PROPS'; payload: ElementProps | null }
   | { type: 'SET_LAST_SAVED_HISTORY_ID'; payload: number }
-  | { type: 'SET_COPIED_ITEMS'; payload: ModuleProps[] }
+  | { type: 'SET_COPIED_ITEMS'; payload: ElementProps[] }
   | { type: 'SET_VIEWPORT'; payload: ViewportInfo | null }
   | { type: 'SET_WORLD_POINT'; payload: Point }
   | { type: 'SET_WORLD_SCALE'; payload: number }

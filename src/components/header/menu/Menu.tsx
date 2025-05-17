@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import MenuItem from './MenuItem.tsx'
-import MenuData from './MenuData.ts'
+import MenuData from './menuData.ts'
 
 const MenuBar: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false)

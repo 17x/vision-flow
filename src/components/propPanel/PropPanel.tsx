@@ -1,10 +1,10 @@
 import {useContext, useEffect, useState} from 'react'
-import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {ProtectedInput} from './protectedInput.tsx'
 import {Con, Panel} from '@lite-u/ui'
 import EditorContext from '../../contexts/EditorContext/EditorContext.tsx'
+import {ElementProps} from '@lite-u/editor/types'
 
-interface PropPanelProps {props?: ModuleProps}
+interface PropPanelProps {props?: ElementProps}
 
 const PropPanel = ({props}: PropPanelProps) => {
   const [localProps, setLocalProps] = useState(props)
@@ -28,18 +28,14 @@ const PropPanel = ({props}: PropPanelProps) => {
 
 export default PropPanel
 
-const ShapePropsPanel = ({props}: { props: ModuleProps }) => {
+const ShapePropsPanel = ({props}: { props: ElementProps }) => {
   const {executeAction} = useContext(EditorContext)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const keyName = e.target.name as keyof ModuleProps
+    const keyName = e.target.name as keyof ElementProps
     let newValue: string | number = e.target.value
 
-    if ([
-      'x',
-      'y',
-      'width',
-      'height',
-    ].includes(keyName)) {
+    // @ts-ignore
+    if (['x', 'y', 'width', 'height'].includes(keyName)) {
       newValue = Number(newValue)
     }
 

@@ -187,10 +187,10 @@ const EditorProvider: FC<{
       zoomPluginRef.current = new Zoom({
         dom: containerRef.current,
         onZoom: (zoomIn) => {
-          console.log('zoomIn:', zoomIn)
+          // console.log('zoomIn:', zoomIn)
         },
         onScroll: (x, y) => {
-          console.log('scroll:', x, y)
+          // console.log('scroll:', x, y)
         },
       })
       editor = new Editor({

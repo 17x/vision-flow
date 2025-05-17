@@ -37,6 +37,7 @@ class Zoom {
   DELAY = 200
   ACTION_THRESHOLD = 3
   EVENT_BUFFER: WheelEvent[] = []
+  // zoomLock for touchpad zoom
   zoomLock = false
   trackpad = false
 
@@ -69,9 +70,10 @@ class Zoom {
     let zoomIn = false
     let scrolling = false
     let _zooming = false
-    let touchpad = false
+    // let touchpad = false
     // let mouse = false
-
+    // console.log('event ',event)
+    console.log(deltaX, deltaY)
     event.preventDefault()
     event.stopPropagation()
 
@@ -82,27 +84,30 @@ class Zoom {
     }
 
     if (this.zoomLock) {
-      EVENT_BUFFER.length = 0
+      // EVENT_BUFFER.length = 0
     } else {
-      EVENT_BUFFER.push(event)
+      // EVENT_BUFFER.push(event)
     }
 
-    if (EVENT_BUFFER.length >= this.ACTION_THRESHOLD) {
-      const allXAreMinusZero = EVENT_BUFFER.every((e) => Zoom.isNegativeZero(e.deltaX))
-      const allYAreFloat = EVENT_BUFFER.every((e) => Zoom.isFloat(e.deltaY))
-      const absBiggerThan4 = EVENT_BUFFER.every((e) => Math.abs(e.deltaY) > 4)
-
-      if (allXAreMinusZero && allYAreFloat && !absBiggerThan4) {
-        this.zoomLock = true
-        touchpad = true
-      }
+    if (Math.abs(deltaY) > 4) {
+      this.zoomLock = true
     }
+
+    /*    if (EVENT_BUFFER.length >= this.ACTION_THRESHOLD) {
+          const allXAreMinusZero = EVENT_BUFFER.every((e) => Zoom.isNegativeZero(e.deltaX))
+          const allYAreFloat = EVENT_BUFFER.every((e) => Zoom.isFloat(e.deltaY))
+          const absBiggerThan4 = EVENT_BUFFER.every((e) => Math.abs(e.deltaY) > 4)
+
+          if (allXAreMinusZero && allYAreFloat && !absBiggerThan4) {
+            this.zoomLock = true
+            touchpad = true
+          }
+        }*/
 
     if (this.zoomLock) {
       zoomIn = deltaY <= 0
       _zooming = true
-      touchpad = true
-
+      // touchpad = true
     } else if (Math.abs(deltaX) >= 40 && Zoom.isNegativeZero(deltaY)) {
       // Mouse horizontal scrolling
       // mouse = true

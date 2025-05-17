@@ -10,18 +10,8 @@ import FileContext, {VisionWorkspace} from '../fileContext/FileContext.tsx'
 import EditorContext from './EditorContext.tsx'
 import PropPanel from '../../components/propPanel/PropPanel.tsx'
 import {ContextMenu} from '../../components/contextMenu/ContextMenu.tsx'
-import {VisionEventData, VisionEventType} from '@editor/engine/actions/type'
-import {
-  ContextMenuHandler,
-  EditorConfig,
-  HistoryUpdatedHandler,
-  ModuleCopiedHandler,
-  ModulesUpdatedHandler,
-  SelectionUpdatedHandler,
-  SwitchToolHandler,
-  ViewportUpdatedHandler,
-  WorldMouseMoveUpdatedHandler,
-} from '@editor/engine/type'
+import {VisionEventData, VisionEventType} from '@editor/main/actions/type'
+
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
 import {useUI} from '../UIContext/UIContext.tsx'
 import {Con, Drop, Flex, useNotification} from '@lite-u/ui'
@@ -29,6 +19,12 @@ import readImageHelper from './readImageHelper.ts'
 import {useTranslation} from 'react-i18next'
 import Toolbar from '../../components/toolbar/Toolbar.tsx'
 import Zoom from '../../lib/zoom/zoom.ts'
+import {
+  ContextMenuHandler,
+  SelectionUpdatedHandler,
+  ViewportUpdatedHandler,
+  WorldMouseMoveUpdatedHandler,
+} from '@lite-u/editor/types'
 
 const EditorProvider: FC<{
   ref: RefObject<Editor>,
@@ -60,32 +56,33 @@ const EditorProvider: FC<{
   const {add} = useNotification()
   const {t} = useTranslation()
   const zoomPluginRef = useRef<Zoom | null>(null)
+
   useImperativeHandle(ref, () => {
     return editorRef.current
   }, [editorRef.current])
 
-  const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
-    dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})
+  /*  const onHistoryUpdated: HistoryUpdatedHandler = (historyTree) => {
+      dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})
 
-    if (historyTree.current) {
-      const newHistoryStatus = {
-        id: historyTree.current.id,
-        hasPrev: !!historyTree.current.prev,
-        hasNext: !!historyTree.current.next,
+      if (historyTree.current) {
+        const newHistoryStatus = {
+          id: historyTree.current.id,
+          hasPrev: !!historyTree.current.prev,
+          hasNext: !!historyTree.current.next,
+        }
+        const newNeedSaveValue = newHistoryStatus.id !== lastSavedHistoryId.current
+        // console.log(state.historyStatus)
+
+        // console.log(state.needSave)
+        // console.log(newHistoryStatus.id, lastSavedHistoryId.current)
+        // console.log(newHistoryStatus.id !== lastSavedHistoryId.current)
+
+        currentHistoryId.current = newHistoryStatus.id
+        dispatch({type: 'SET_HISTORY_STATUS', payload: newHistoryStatus})
+        dispatch({type: 'SET_NEED_SAVE', payload: newNeedSaveValue})
+        needSaveLocal.current = newNeedSaveValue
       }
-      const newNeedSaveValue = newHistoryStatus.id !== lastSavedHistoryId.current
-      // console.log(state.historyStatus)
-
-      // console.log(state.needSave)
-      // console.log(newHistoryStatus.id, lastSavedHistoryId.current)
-      // console.log(newHistoryStatus.id !== lastSavedHistoryId.current)
-
-      currentHistoryId.current = newHistoryStatus.id
-      dispatch({type: 'SET_HISTORY_STATUS', payload: newHistoryStatus})
-      dispatch({type: 'SET_NEED_SAVE', payload: newNeedSaveValue})
-      needSaveLocal.current = newNeedSaveValue
-    }
-  }
+    }*/
   // console.log(state)
   const onModulesUpdated: ModulesUpdatedHandler = (moduleMap) => {
     const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
@@ -193,6 +190,45 @@ const EditorProvider: FC<{
           executeAction('world-shift', {x, y})
         },
       })
+      const events = {
+        onInitialized: () => {
+          editor.execute('switch-tool', state.currentTool)
+        },
+        onHistoryUpdated: (historyTree) => {
+          dispatch({type: 'SET_HISTORY_ARRAY', payload: historyTree!.toArray()})
+
+          if (historyTree.current) {
+            const newHistoryStatus = {
+              id: historyTree.current.id,
+              hasPrev: !!historyTree.current.prev,
+              hasNext: !!historyTree.current.next,
+            }
+            const newNeedSaveValue = newHistoryStatus.id !== lastSavedHistoryId.current
+            // console.log(state.historyStatus)
+
+            // console.log(state.needSave)
+            // console.log(newHistoryStatus.id, lastSavedHistoryId.current)
+            // console.log(newHistoryStatus.id !== lastSavedHistoryId.current)
+
+            currentHistoryId.current = newHistoryStatus.id
+            dispatch({type: 'SET_HISTORY_STATUS', payload: newHistoryStatus})
+            dispatch({type: 'SET_NEED_SAVE', payload: newNeedSaveValue})
+            needSaveLocal.current = newNeedSaveValue
+          }
+        },
+        onModulesUpdated: (moduleMap) => {
+          const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
+
+          setSortedModules(arr)
+        },
+        onSelectionUpdated,
+        onViewportUpdated,
+        onWorldMouseMove,
+        onContextMenu,
+        onModuleCopied,
+        onSwitchTool,
+      }
+
       editor = new Editor({
         container: containerRef!.current,
         elements: workspace.elements,
@@ -201,20 +237,9 @@ const EditorProvider: FC<{
           dpr,
           page,
         },
-        events: {
-          onInitialized: () => {
-            editor.execute('switch-tool', state.currentTool)
-          },
-          onHistoryUpdated,
-          onModulesUpdated,
-          onSelectionUpdated,
-          onViewportUpdated,
-          onWorldMouseMove,
-          onContextMenu,
-          onModuleCopied,
-          onSwitchTool,
-        },
+        events,
       })
+
       editorRef.current = editor
       dispatch({type: 'SET_ID', payload: workspace.id})
 
@@ -258,7 +283,6 @@ const EditorProvider: FC<{
       <Header/>
 
       <main className={'flex flex-row overflow-hidden h-full'}>
-        {/*<ModulePanel/>*/}
         <Toolbar tool={state.currentTool}/>
         <div className={'flex flex-col w-full h-full overflow-hidden relative'}>
           <Drop accepts={['image/*']}

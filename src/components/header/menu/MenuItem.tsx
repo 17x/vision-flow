@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import EditorContext from '../../../contexts/editorContext/EditorContext.tsx'
+import WorkspaceContext from '../../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {LuChevronRight} from 'react-icons/lu'
 import {useFile} from '../../../contexts/fileContext/FileContext.tsx'
 /*

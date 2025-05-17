@@ -1,4 +1,4 @@
-export interface EditorStateType {
+export interface WorkSpaceStateType {
   id: UID
   focused: boolean
   historyArray: HistoryNode[]
@@ -18,7 +18,7 @@ export interface EditorStateType {
   // viewport: ViewportInfo | null
 }
 
-export const initialEditorState: EditorStateType = {
+export const initialWorkspaceState: WorkSpaceStateType = {
   id: '',
   focused: false,
   selectedProps: null,
@@ -43,7 +43,7 @@ export const initialEditorState: EditorStateType = {
   },
 }
 
-export type EditorAction =
+export type WorkspaceAction =
   { type: 'SET_ID'; payload: UID }
   | { type: 'SET_HISTORY_STATUS'; payload: { id: number; hasPrev: boolean; hasNext: boolean } }
   | { type: 'SET_FOCUSED'; payload: boolean }
@@ -58,7 +58,7 @@ export type EditorAction =
   | { type: 'SET_WORLD_SCALE'; payload: number }
   | { type: 'SET_CURRENT_TOOL'; payload: ToolName };
 
-export const EditorReducer = (state: EditorStateType, action: EditorAction) => {
+export const EditorReducer = (state: WorkSpaceStateType, action: WorkspaceAction) => {
   switch (action.type) {
     case 'SET_ID':
       return {

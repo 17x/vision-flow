@@ -1,11 +1,11 @@
 import React, {createContext} from 'react'
 import {Editor} from '@lite-u/editor'
 import {HistoryNode, VisionEventData, VisionEventType} from '@lite-u/editor/types'
-import {EditorAction, EditorStateType, initialEditorState} from './reducer/reducer.ts'
+import {WorkspaceAction, WorkSpaceStateType, initialWorkspaceState} from './reducer/reducer.ts'
 
-interface EditorContextType {
-  state: EditorStateType
-  dispatch: React.Dispatch<EditorAction>;
+interface WorkspaceContextType {
+  state: WorkSpaceStateType
+  dispatch: React.Dispatch<WorkspaceAction>;
 
   editorRef: React.RefObject<Editor | null>
   applyHistoryNode: (node: HistoryNode) => void
@@ -14,12 +14,12 @@ interface EditorContextType {
   // viewport: ViewportInfo
 }
 
-const EditorContext = createContext<EditorContextType>({
-  state: initialEditorState,
+const WorkspaceContext = createContext<WorkspaceContextType>({
+  state: initialWorkspaceState,
   dispatch: () => {},
   editorRef: {} as React.RefObject<Editor>,
   applyHistoryNode: () => {},
   executeAction: () => {},
 })
 
-export default EditorContext
+export default WorkspaceContext

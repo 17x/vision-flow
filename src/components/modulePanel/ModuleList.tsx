@@ -1,5 +1,5 @@
 import {useContext, useEffect} from 'react'
-import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
+import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 
 interface ModulePanelProps {
 
@@ -47,7 +47,7 @@ const modules: { className: string, props: Partial<ModuleProps> }[] = [
 ]
 
 export const ModuleList: React.FC<ModulePanelProps> = () => {
-  const {executeAction} = useContext(EditorContext)
+  const {executeAction} = useContext(WorkspaceContext)
 
   useEffect(() => {
     // if (editorRef.current) { }

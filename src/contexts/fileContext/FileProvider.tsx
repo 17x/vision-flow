@@ -2,7 +2,7 @@ import {FC, useEffect, useRef, useState} from 'react'
 import {useApp, VisionFileType, VisionWorkspace} from '../appContext/AppContext.tsx'
 import FileContext from './FileContext.tsx'
 import {Con, Drop, useNotification} from '@lite-u/ui'
-import EditorProvider from '../editorContext/EditorProvider.tsx'
+import WorkspaceProvider from '../workspaceContext/WorkspaceProvider.tsx'
 import {UID, VisionEventData, VisionEventType} from '@lite-u/editor/types'
 import {Print} from '../../components/print/print.tsx'
 import {Editor} from '@lite-u/editor'
@@ -158,7 +158,7 @@ const FileProvider: FC<{ file: VisionFileType }> = ({file}) => {
         }}>
         {
           workspace.map((ws, index) => {
-            return <EditorProvider ref={(ref) => {
+            return <WorkspaceProvider ref={(ref) => {
               editorMapRef.current.set(ws.id, ref)
             }} workspace={ws} fileId={file.id} page={file.config.page} key={index}/>
           })

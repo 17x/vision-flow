@@ -1,7 +1,7 @@
 import {FC, memo, useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {I18nHistoryDataItem} from '../../i18n/type'
-import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
+import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {LuChevronRight} from 'react-icons/lu'
 import {MenuItemType} from '../header/menu/type'
 
@@ -13,7 +13,7 @@ export interface ContextMenuProps {
 
 export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
   const {t} = useTranslation()
-  const {state: {selectedModules, copiedItems, historyStatus}, executeAction} = useContext(EditorContext)
+  const {state: {selectedModules, copiedItems, historyStatus}, executeAction} = useContext(WorkspaceContext)
   const [menuItems, setMenuItems] = useState<MenuItemType[]>([])
   const groupClass = 'absolute bg-white shadow-lg rounded-md border border-gray-200 py-1 z-50'
 

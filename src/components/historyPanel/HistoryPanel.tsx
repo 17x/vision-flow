@@ -1,11 +1,11 @@
 import {useContext, useEffect, useRef} from 'react'
-import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
+import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {useTranslation} from 'react-i18next'
 import {I18nHistoryDataItem} from '../../i18n/type'
 import {Col, Con, MenuItem, Panel} from '@lite-u/ui'
 
 export const HistoryPanel = () => {
-  const {state: {historyArray, historyStatus}, applyHistoryNode} = useContext(EditorContext)
+  const {state: {historyArray, historyStatus}, applyHistoryNode} = useContext(WorkspaceContext)
   const {t} = useTranslation()
   const targetRef = useRef<HTMLDivElement>(null)
 

@@ -7,17 +7,17 @@ import {LayerPanel} from '../../components/layerPanel/LayerPanel.tsx'
 import Header from '../../components/header/Header.tsx'
 import {HistoryPanel} from '../../components/historyPanel/HistoryPanel.tsx'
 import AppContext, {VisionWorkspace} from '../appContext/AppContext.tsx'
-import EditorContext from './EditorContext.tsx'
+import WorkspaceContext from './WorkspaceContext.tsx'
 import PropPanel from '../../components/propPanel/PropPanel.tsx'
 import {ContextMenu} from '../../components/contextMenu/ContextMenu.tsx'
-import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
+import {EditorReducer, initialWorkspaceState} from './reducer/reducer.ts'
 import {Col, Row} from '@lite-u/ui'
 import Toolbar from '../../components/toolbar/Toolbar.tsx'
 import useZoom from '../../hooks/useZoom.tsx'
 import useEditor from '../../hooks/useEditor.tsx'
 import FileReceiver from '../../components/fileReceiver.tsx'
 
-const EditorProvider: FC<{
+const WorkspaceProvider: FC<{
   ref: RefObject<Editor>,
   workspace: VisionWorkspace,
   fileId: UID,
@@ -29,7 +29,7 @@ const EditorProvider: FC<{
         page,
       }) => {
   const {focusedFileId, startCreateFile, closeFile} = useContext(AppContext)
-  const [state, dispatch] = useReducer(EditorReducer, initialEditorState)
+  const [state, dispatch] = useReducer(EditorReducer, initialWorkspaceState)
   const editorRef = useRef<Editor>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const worldPointRef = useRef<PointRef | null>(null)
@@ -42,7 +42,6 @@ const EditorProvider: FC<{
   }
 
   const executeAction = <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => {
-
     if (type === 'newFile') {
       startCreateFile()
       return
@@ -75,7 +74,7 @@ const EditorProvider: FC<{
     console.log(containerRef)
   }, [])
 
-  return <EditorContext.Provider value={contextValue}>
+  return <WorkspaceContext.Provider value={contextValue}>
     <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}
          tabIndex={0}
          className={'outline-0'}>
@@ -111,7 +110,7 @@ const EditorProvider: FC<{
       </Row>
     </Col>
 
-  </EditorContext.Provider>
+  </WorkspaceContext.Provider>
 }
 
-export default EditorProvider
+export default WorkspaceProvider

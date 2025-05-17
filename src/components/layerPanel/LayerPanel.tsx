@@ -1,5 +1,5 @@
 import {useContext, useEffect, useRef, useState} from 'react'
-import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
+import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {Con, Panel} from '@lite-u/ui'
 
 interface LayerPanelProps {
@@ -12,7 +12,7 @@ export const LayerPanel = ({data}: LayerPanelProps) => {
   const targetRef = useRef<HTMLDivElement>(null)
   const [scrollTop, setScrollTop] = useState(0)
   const [indexRange, setIndexRange] = useState([0, 10])
-  const {state: {selectedModules}, executeAction} = useContext(EditorContext)
+  const {state: {selectedModules}, executeAction} = useContext(WorkspaceContext)
 
   useEffect(() => {
     /*  const closestOne = selected[selected.length - 1]

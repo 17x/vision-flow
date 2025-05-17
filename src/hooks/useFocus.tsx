@@ -1,8 +1,8 @@
 import {useCallback, useContext, useEffect} from 'react'
-import EditorContext from '../contexts/editorContext/EditorContext.tsx'
+import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
 const useFocus = (element: HTMLElement | null) => {
-  const {state, dispatch, executeAction} = useContext(EditorContext)
+  const {state, dispatch, executeAction} = useContext(WorkspaceContext)
 
   const checkInside = useCallback((e: MouseEvent) => {
     if (element) {

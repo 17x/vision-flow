@@ -1,6 +1,6 @@
 import ZoomSelect from './zoom.tsx'
 import {FC, Ref, useContext, useImperativeHandle, useState} from 'react'
-import EditorContext from '../../contexts/editorContext/EditorContext.tsx'
+import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {Row} from '@lite-u/ui'
 
 export interface PointRef {
@@ -10,7 +10,7 @@ export interface PointRef {
 type PointRefType = Ref<PointRef>
 
 export const StatusBar: FC<{ ref: PointRefType | null }> = ({ref}) => {
-  const {state: {worldScale}, executeAction} = useContext(EditorContext)
+  const {state: {worldScale}, executeAction} = useContext(WorkspaceContext)
   const [worldPoint, setWorldPoint] = useState({x: 0, y: 0})
 
   useImperativeHandle(ref, () => {

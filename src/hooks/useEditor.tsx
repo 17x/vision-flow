@@ -1,7 +1,7 @@
 // useEditorInstance.ts
 import {RefObject, useContext, useEffect, useRef, useState} from 'react'
 import {useUI} from '../contexts/UIContext/UIContext.tsx'
-import EditorContext from '../contexts/editorContext/EditorContext.tsx'
+import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 import {Editor} from '@lite-u/editor'
 import {ElementInstance} from '@lite-u/editor/types'
 
@@ -11,7 +11,7 @@ function useEditor(ref: RefObject<HTMLDivElement | null>, workspace, page) {
   const {dpr} = useUI()
   const [sortedModules, setSortedModules] = useState<ElementInstance[]>([])
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
-  const {state, dispatch, executeAction} = useContext(EditorContext)
+  const {state, dispatch, executeAction} = useContext(WorkspaceContext)
   const lastSavedHistoryId = useRef(0)
   const currentHistoryId = useRef(0)
   const needSaveLocal = useRef(false)

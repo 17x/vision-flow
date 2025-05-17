@@ -1,6 +1,6 @@
 import {LayerDown, LayerToBottom, LayerToTop, LayerUp} from './Icons/LayerIcons.tsx'
 import {Fragment, ReactNode, useContext} from 'react'
-import EditorContext from '../../../contexts/editorContext/EditorContext.tsx'
+import WorkspaceContext from '../../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {NamedIcon} from '../../lib/icon/icon.tsx'
 import {t} from 'i18next'
 import {I18nHistoryDataItem} from '../../../i18n/type'
@@ -12,7 +12,7 @@ const IconColor = 'text-black'
 
 const ShortcutBar: React.FC = () => {
   const {saveFile} = useFile()
-  const {state: {needSave, historyStatus, selectedModules}, executeAction} = useContext(EditorContext)
+  const {state: {needSave, historyStatus, selectedModules}, executeAction} = useContext(WorkspaceContext)
   const hasSelectedModules = selectedModules.length > 0
 
   const actions = [

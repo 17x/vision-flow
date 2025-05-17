@@ -14,6 +14,7 @@ import useZoom from '../../hooks/useZoom.tsx'
 import AppContext, {VisionWorkspace} from '../../contexts/appContext/AppContext.tsx'
 import {Editor} from '@lite-u/editor'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
+import {VisionEventData, VisionEventType} from '@lite-u/editor/types'
 
 const Workspace: FC<{
   ref: RefObject<Editor>,
@@ -33,12 +34,6 @@ const Workspace: FC<{
   const worldPointRef = useRef<PointRef | null>(null)
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const editorRef = useEditor(containerRef, workspace, page)
-
-  const applyHistoryNode = (node: HistoryNode) => {
-    if (editorRef.current) {
-      editorRef.current.execute('history-pick', node)
-    }
-  }
 
   /*
     useImperativeHandle(ref, () => {
@@ -98,7 +93,6 @@ const Workspace: FC<{
         <LayerPanel data={[]}/>
         <HistoryPanel pickHistory={(node) => {
           if (editorRef.current) {
-            console.log(9)
             editorRef.current.execute('history-pick', node)
           }
         }}/>

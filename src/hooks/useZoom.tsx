@@ -5,7 +5,6 @@ import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
 function useZoom(ref: RefObject<HTMLElement | null>, currentScale: number, executeAction) {
   const {dispatch} = useContext(WorkspaceContext)
-  const [localScale, setLocalScale] = useState(currentScale)
   const pluginRef = useRef<Zoom | null>(null)
   const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
     let nextScale = null

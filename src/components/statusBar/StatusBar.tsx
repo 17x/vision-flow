@@ -2,6 +2,7 @@ import ZoomSelect from './ZoomSelect.tsx'
 import {FC, Ref, useContext, useImperativeHandle, useState} from 'react'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {Row} from '@lite-u/ui'
+import {WorkspaceExecuteAction} from '../workspace/Workspace.tsx'
 
 export interface PointRef {
   set: (point: Point) => void
@@ -9,17 +10,21 @@ export interface PointRef {
 
 type PointRefType = Ref<PointRef>
 
-export const StatusBar: FC<{ ref: PointRefType | null }> = ({ref}) => {
-  const {state: {worldScale}, executeAction} = useContext(WorkspaceContext)
+export const StatusBar: FC<{ ref: PointRefType | null, executeAction: WorkspaceExecuteAction }> = ({
+                                                                                                     ref,
+                                                                                                     executeAction,
+                                                                                                   }) => {
+  const {state: {worldScale}} = useContext(WorkspaceContext)
   const [worldPoint, setWorldPoint] = useState({x: 0, y: 0})
 
   useImperativeHandle(ref, () => {
     return {
       set(point: Point) {
         setWorldPoint(point)
-      }
+      },
     }
   }, [])
+
   return <Row between center fw h={30} style={{borderTop: '1px solid #dfdfdf'}}>
     <ZoomSelect scale={worldScale} onChange={(newScale) => {
       if (newScale === 'fit') {

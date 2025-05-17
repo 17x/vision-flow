@@ -8,7 +8,6 @@ import {ContextMenu} from '../contextMenu/ContextMenu.tsx'
 import PropPanel from '../propPanel/PropPanel.tsx'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
-import WorkspaceProvider from '../../contexts/workspaceContext/WorkspaceProvider.tsx'
 import {FC, RefObject, useContext, useRef, useState} from 'react'
 import useEditor from '../../hooks/useEditor.tsx'
 import useZoom from '../../hooks/useZoom.tsx'
@@ -60,50 +59,48 @@ const Workspace: FC<{
     // editorRef.current!.execute(type as K, data)
   }
 
-  useZoom(containerRef)
+  useZoom(containerRef, executeAction)
 
-  return <WorkspaceProvider>
-    <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}
-         tabIndex={0}
-         className={'outline-0'}>
-      {focusedFileId === workspace.id && <ShortcutListener/>}
+  return <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}
+              tabIndex={0}
+              className={'outline-0'}>
+    {focusedFileId === workspace.id && <ShortcutListener/>}
 
-      <Header/>
+    <Header/>
 
-      <Row ovh fh>
-        <Toolbar tool={state.currentTool}/>
-        <Col fw fh ovh rela flex={1}>
-          <FileReceiver>
-            <div ref={containerRef}
-                 editor-container={'true'}
-                 className={'relative overflow-hidden flex w-full h-full'}
-            ></div>
-          </FileReceiver>
+    <Row ovh fh>
+      <Toolbar tool={state.currentTool}/>
+      <Col fw fh ovh rela flex={1}>
+        <FileReceiver>
+          <div ref={containerRef}
+               editor-container={'true'}
+               className={'relative overflow-hidden flex w-full h-full'}
+          ></div>
+        </FileReceiver>
 
-          <StatusBar ref={worldPointRef}/>
+        <StatusBar ref={worldPointRef}/>
 
-          {
-            showContextMenu &&
-              <ContextMenu position={contextMenuPosition}
-                           onClose={() => {
-                             setShowContextMenu(false)
-                           }}/>
+        {
+          showContextMenu &&
+            <ContextMenu position={contextMenuPosition}
+                         onClose={() => {
+                           setShowContextMenu(false)
+                         }}/>
+        }
+      </Col>
+
+      <Col fh stretch flex={'none'} w={260} style={{borderLeft: '1px solid #dfdfdf'}}>
+        <PropPanel props={state.selectedProps!}/>
+        <LayerPanel data={[]}/>
+        <HistoryPanel pickHistory={(node) => {
+          if (editorRef.current) {
+            console.log(9)
+            editorRef.current.execute('history-pick', node)
           }
-        </Col>
-
-        <Col fh stretch flex={'none'} w={260} style={{borderLeft: '1px solid #dfdfdf'}}>
-          <PropPanel props={state.selectedProps!}/>
-          <LayerPanel data={[]}/>
-          <HistoryPanel pickHistory={(node) => {
-            if (editorRef.current) {
-              console.log(9)
-              editorRef.current.execute('history-pick', node)
-            }
-          }}/>
-        </Col>
-      </Row>
-    </Col>
-  </WorkspaceProvider>
+        }}/>
+      </Col>
+    </Row>
+  </Col>
 }
 
 export default Workspace

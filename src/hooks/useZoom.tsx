@@ -4,8 +4,8 @@ import throttle from '../utilities/throttle.ts'
 import ZOOM_LEVELS from '../constants/zoomLevels.ts'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
-function useZoom(ref: RefObject<HTMLElement | null>) {
-  const {state, dispatch, executeAction} = useContext(WorkspaceContext)
+function useZoom(ref: RefObject<HTMLElement | null>, executeAction) {
+  const {state, dispatch} = useContext(WorkspaceContext)
 
   const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
     const curr = state.worldScale

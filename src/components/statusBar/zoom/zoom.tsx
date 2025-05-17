@@ -1,5 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import {LuChevronDown, LuChevronUp} from 'react-icons/lu'
+import ZOOM_LEVELS from '../../../constants/zoomLevels.ts'
+import {Row, Select, SelectItem} from '@lite-u/ui'
 
 export type ZoomLevels = {
   label: string,
@@ -22,27 +24,6 @@ const resolveNumber = (value: string): number | false => {
 }
 
 const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit') => void }> = ({scale, onChange}) => {
-  const zoomLevels: ZoomLevels[] = [
-    { label: '64000%', value: 640 },
-    { label: '3200%', value: 32 },
-    { label: '1600%', value: 16 },
-    { label: '800%', value: 8 },
-    { label: '400%', value: 4 },
-    { label: '200%', value: 2 },
-    { label: '150%', value: 1.5 },
-    { label: '100%', value: 1 },
-    { label: '66.67%', value: 0.6667 },
-    { label: '50%', value: 0.5 },
-    { label: '33.33%', value: 0.3333 },
-    { label: '25%', value: 0.25 },
-    { label: '12.5%', value: 0.125 },
-    { label: '6.25%', value: 0.0625 },
-    { label: '3.13%', value: 0.0313 },
-    { label: '1.56%', value: 0.0156 },
-    {label: 'Fit window', value: 'fit'},
-  ]
-  // const {zoom} = useSelector((state: RootState) => state.statusBar)
-  // const dispatch = useDispatch<AppDispatch>()
   const [inputValue, setInputValue] = useState<string>(fixNumber(1))
   const [isOpen, setIsOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -71,56 +52,66 @@ const ZoomSelect: React.FC<{ scale: number, onChange: (newScale: number | 'fit')
     e.stopPropagation()
   }
 
-  return (
-    <div
-      className="w-17 h-5 ml-2 flex justify-start items-center relative  focus:ring-blue-500 focus:ring-1">
-      <input
-        type="text"
-        ref={inputRef}
-        onChange={void 0}
-        defaultValue={inputValue}
-        onKeyDown={onKeyDown}
-        className="w-20 h-5 text-sm bg-gray-100 text-center overflow-hidden "
-        placeholder="Enter zoom %"
-      />
+  /*<div
+    className="w-17 h-5 ml-2 flex justify-start items-center relative  focus:ring-blue-500 focus:ring-1">*/
+  return <Row w={20} h={30} ml={5} js center rela>
+    <Select onSelectChange={v => {
 
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="text-gray-800 flex trasition items-center cursor-pointer"
-      >
-        {
-          isOpen ? <LuChevronUp className="w-5 h-5"/> : <LuChevronDown className="w-5 h-5"/>
-        }
-      </button>
+      setIsOpen(false)
+      onChange(v)
+
+    }}>
       {
-        isOpen && <div className={'fixed w-full h-full'} onClick={() => {
-          setIsOpen(false)
-        }}></div>
+        ZOOM_LEVELS.map(({label, value}) => <SelectItem key={value} value={value}>{label}</SelectItem>)
       }
-      {isOpen && (
-        <div
-          className="absolute w-20 cursor-pointer py-2 left-0 bottom-5 bg-white shadow-lg max-h-40v overflow-y-auto z-10">
-          {
+    </Select>
 
-          }
-          {
-            zoomLevels.map(({label, value}) => (
-              <div
-                key={value}
-                onClick={() => {
-                  setIsOpen(false)
-                  onChange(value)
-                }}
-                className="text-sm align-middle p-1 text-center hover:bg-blue-500 hover:text-white transition"
-              >
-                {label}
-              </div>
-            ))
-          }
-        </div>
-      )}
-    </div>
-  )
+    <input
+      type="text"
+      ref={inputRef}
+      onChange={void 0}
+      defaultValue={inputValue}
+      onKeyDown={onKeyDown}
+      className="w-20 h-5 text-sm bg-gray-100 text-center overflow-hidden "
+      placeholder="Enter zoom %"
+    />
+
+    <button
+      onClick={() => setIsOpen(!isOpen)}
+      className="text-gray-800 flex trasition items-center cursor-pointer"
+    >
+      {
+        isOpen ? <LuChevronUp className="w-5 h-5"/> : <LuChevronDown className="w-5 h-5"/>
+      }
+    </button>
+    {
+      isOpen && <div className={'fixed w-full h-full'} onClick={() => {
+        setIsOpen(false)
+      }}></div>
+    }
+    {isOpen && <div
+        className="absolute w-20 cursor-pointer py-2 left-0 bottom-5 bg-white shadow-lg max-h-40v overflow-y-auto z-10">
+      {
+
+      }
+      {
+        ZOOM_LEVELS.map(({label, value}) => (
+          <div
+            key={value}
+            onClick={() => {
+              setIsOpen(false)
+              onChange(value)
+            }}
+            className="text-sm align-middle p-1 text-center hover:bg-blue-500 hover:text-white transition"
+          >
+            {label}
+          </div>
+        ))
+      }
+    </div>}
+  </Row>
+
+  // </div>
 }
 
 export default ZoomSelect

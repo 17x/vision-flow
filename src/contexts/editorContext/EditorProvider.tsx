@@ -11,7 +11,6 @@ import EditorContext from './EditorContext.tsx'
 import PropPanel from '../../components/propPanel/PropPanel.tsx'
 import {ContextMenu} from '../../components/contextMenu/ContextMenu.tsx'
 import {VisionEventData, VisionEventType} from '@editor/main/actions/type'
-
 import {EditorReducer, initialEditorState} from './reducer/reducer.ts'
 import {useUI} from '../UIContext/UIContext.tsx'
 import {Con, Drop, Flex, useNotification} from '@lite-u/ui'
@@ -109,7 +108,7 @@ const EditorProvider: FC<{
   }
 
   useEffect(() => {
-    let editor: Editor
+    let editor: InstanceType<Editor>
 
     if (containerRef.current && !editorRef.current) {
       zoomPluginRef.current = new Zoom({
@@ -203,7 +202,7 @@ const EditorProvider: FC<{
 
     return () => {
       if (element) {
-        window.removeEventListener('mousedown', checkInside)
+        window.removeEventListener('mouseup', checkInside)
         element.removeEventListener('focus', handleFocus)
         element.removeEventListener('blur', handleBlur)
       }
@@ -211,6 +210,7 @@ const EditorProvider: FC<{
       if (editor) {
         editor.destroy()
       }
+
       if (zoomPluginRef.current) {
         zoomPluginRef.current.destroy()
       }

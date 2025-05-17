@@ -1,11 +1,15 @@
-import {RefObject, useEffect} from 'react'
+import {useEffect} from 'react'
 import Zoom from '../lib/zoom/zoom.ts'
 
 function useZoom(
-  ref: RefObject<HTMLElement | null>,
-  onZoom?: (zoomIn: boolean) => void,
-  onScroll?: (x: number, y: number) => void,
+  params: {
+    ref: React.RefObject<HTMLElement | null>,
+    onZoom?: (zoomIn: boolean) => void,
+    onScroll?: (x: number, y: number) => void
+  },
 ) {
+  const {ref, onZoom, onScroll} = params
+
   useEffect(() => {
     if (!ref.current) return
 
@@ -22,7 +26,7 @@ function useZoom(
     return () => {
       zoomPlugin.destroy()
     }
-  }, [ref, onZoom, onScroll])
+  }, [params])
 }
 
 export default useZoom

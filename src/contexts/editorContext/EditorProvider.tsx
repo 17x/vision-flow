@@ -19,6 +19,7 @@ import {useTranslation} from 'react-i18next'
 import Toolbar from '../../components/toolbar/Toolbar.tsx'
 import Zoom from '../../lib/zoom/zoom.ts'
 import useZoom from '../../hooks/useZoom.tsx'
+import ZOOM_LEVELS from '../../constants/zoomLevels.ts'
 
 const EditorProvider: FC<{
   ref: RefObject<Editor>,
@@ -51,15 +52,18 @@ const EditorProvider: FC<{
   const {t} = useTranslation()
   const zoomPluginRef = useRef<Zoom | null>(null)
 
-  useZoom(
-    containerRef,
-    () => {
+  useZoom({
+    ref: containerRef,
+    onZoom: () => {
       console.log(state.worldScale)
+      for (let i = ZOOM_LEVELS.length - 1; i >= 0; i--) {
+        console.log(i)
+      }
     },
-    (x, y) => {
+    onScroll: (x, y) => {
       executeAction('world-shift', {x, y})
     },
-  )
+  })
   useImperativeHandle(ref, () => {
     return editorRef.current
   }, [editorRef.current])
@@ -83,9 +87,7 @@ const EditorProvider: FC<{
       editorRef.current.execute('history-pick', node)
     }
   }
-  const handleZoom = () => {
-    console.log(state.worldScale)
-  }
+
   const executeAction = <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => {
     // console.log(type)
 

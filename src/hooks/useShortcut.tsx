@@ -1,4 +1,4 @@
-import {useContext, useEffect, useMemo} from 'react'
+import {useContext, useEffect, useMemo, useRef} from 'react'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 import SHORTCUTS_DATA from '../constants/actions.ts'
 import Shortcut from '../lib/shortcut/shortcut.ts'
@@ -7,8 +7,8 @@ import deepClone from '../utilities/deepClone.ts'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
 const useShortcut = (executeAction: EditorExecutor) => {
-  const {state: {focused}} = useContext(WorkspaceContext)
-
+  const {state: {currentTool, focused}} = useContext(WorkspaceContext)
+  const lastToolRef = useRef<string>(null)
   const data = useMemo(() => {
     let arr = matchObject(deepClone(SHORTCUTS_DATA), (item) => !!item.shortcut) as {
       id: string,
@@ -24,8 +24,8 @@ const useShortcut = (executeAction: EditorExecutor) => {
       shortcuts: data,
       callback: (id: string) => {
         if (focused) {
-          if (id === 'toggleTool') {
-            console.log()
+          if (id === 'toggleTool' && lastToolRef.current !== currentTool) {
+            lastToolRef.current = currentTool
             executeAction('switch-tool', 'panning')
             return
           }
@@ -41,8 +41,12 @@ const useShortcut = (executeAction: EditorExecutor) => {
     const shortcut2 = new Shortcut({
       shortcuts: [{id: 'toggleTool', shortcut: 'space'}],
       upMode: true,
-      callback: (id: string) => {
-        console.log(id)
+      callback: () => {
+        if (lastToolRef.current) {
+          executeAction('switch-tool', lastToolRef.current)
+        }
+
+        lastToolRef.current = null
       },
     })
     console.log(100)

@@ -39,7 +39,6 @@ class Shortcut {
     const inputShortcut = parts.join('+')
 
     for (const {code, shortcut} of this.shortcuts) {
-
       const keys = shortcut.split(',').map(s => s.trim().toLowerCase())
       if (keys.includes(inputShortcut)) {
         event.preventDefault()

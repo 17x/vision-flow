@@ -1,9 +1,9 @@
-import {RefObject, useCallback, useContext, useEffect, useRef} from 'react'
+import {RefObject, useContext, useEffect, useRef} from 'react'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
 const useFocus = (ref: RefObject<HTMLElement | null>) => {
   const {dispatch} = useContext(WorkspaceContext)
-  const counter = useRef<number>(0)
+  const counterRef = useRef<number>(0)
   /*
     const checkInside = useCallback((e: MouseEvent) => {
       if (ref.current) {
@@ -11,15 +11,22 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
       }
     }, [])*/
 
-  const handleFocus = useCallback(() => {
-    console.log('Focus')
-    dispatch({type: 'SET_FOCUSED', payload: true})
-  }, [])
+  const handleEnter = () => {
+    counterRef.current++
 
-  const handleBlur = useCallback(() => {
-    console.log('eBlur')
-    dispatch({type: 'SET_FOCUSED', payload: false})
-  }, [])
+    if (counterRef.current === 1) {
+      console.log('enter')
+      dispatch({type: 'SET_FOCUSED', payload: true})
+    }
+  }
+
+  const handleLeave = () => {
+    counterRef.current--
+    if (counterRef.current === 0) {
+      console.log('Leave')
+      dispatch({type: 'SET_FOCUSED', payload: false})
+    }
+  }
 
   useEffect(() => {
     if (!ref.current) return
@@ -27,15 +34,15 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
     const element = ref.current
 
     // window.addEventListener('mouseup', checkInside)
-    element.addEventListener('mouseover', handleFocus)
-    element.addEventListener('mouseleave', handleBlur)
+    element.addEventListener('mouseenter', handleEnter)
+    element.addEventListener('mouseleave', handleLeave)
     // element.addEventListener('focus', handleFocus)
     // element.addEventListener('blur', handleBlur)
 
     return () => {
       // window.removeEventListener('mouseup', checkInside)
-      element.removeEventListener('mouseover', handleFocus)
-      element.removeEventListener('mouseleave', handleBlur)
+      element.removeEventListener('mouseover', handleEnter)
+      element.removeEventListener('mouseleave', handleLeave)
       // element.removeEventListener('focus', handleFocus)
       // element.removeEventListener('blur', handleBlur)
     }

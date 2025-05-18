@@ -15,6 +15,6 @@ const SHORTCUTS_DATA = [
   {code: 'elementMoveDown', shortcut: 'arrowdown'},
   {code: 'elementMoveLeft', shortcut: 'arrowleft'},
   {code: 'elementMoveRight', shortcut: 'arrowright'},
-] as const
+]
 
 export default SHORTCUTS_DATA

@@ -9,16 +9,27 @@ import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 const useShortcut = (executeAction: EditorExecutor) => {
   const {state: {focused}} = useContext(WorkspaceContext)
 
-  const data = useMemo(() => matchObject(deepClone(SHORTCUTS_DATA), (item) => !!item.shortcut) as {
-    id: string,
-    shortcut: string
-  }[], [])
+  const data = useMemo(() => {
+    let arr = matchObject(deepClone(SHORTCUTS_DATA), (item) => !!item.shortcut) as {
+      id: string,
+      shortcut: string
+    }[]
+
+    arr.push({id: 'toggleTool', shortcut: 'space'})
+    return arr
+  }, [])
 
   useEffect(() => {
     const shortcut1 = new Shortcut({
       shortcuts: data,
       callback: (id: string) => {
         if (focused) {
+          if (id === 'toggleTool') {
+            console.log()
+            executeAction('switch-tool', 'panning')
+            return
+          }
+
           const c = data.find(item => item.id === id)
           if (c.editorAction) {
             executeAction(c.editorAction)

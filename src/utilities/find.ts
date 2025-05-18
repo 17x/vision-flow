@@ -1,6 +1,7 @@
 import typeCheck from './typeCheck.ts'
 
-const matchObject = (o: unknown[] | { children?: unknown[] }, predictor: (...args: unknown[]) => boolean) => {
+type O = { children?: O[] }
+const matchObject = (o: O[] | O, predictor: (...args: unknown[]) => boolean) => {
   const result: unknown[] = []
 
   if (Array.isArray(o)) {

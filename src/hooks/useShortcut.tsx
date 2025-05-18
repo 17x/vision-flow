@@ -7,7 +7,9 @@ const useShortcut = (executeAction: EditorExecutor) => {
   const {state: {focused}} = useContext(WorkspaceContext)
   const arr = useMemo(() => {
     return [
-      {code: 'moveUp'},
+      {
+        code: 'moveUp', shortcuts: 'ctrl+up', action: () => { },
+      },
     ]
   }, [])
   const handleKeyPress = (e: KeyboardEvent) => {

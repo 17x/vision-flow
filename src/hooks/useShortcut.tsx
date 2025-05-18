@@ -1,6 +1,6 @@
 import {useContext, useEffect, useMemo, useRef} from 'react'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
-import SHORTCUTS_DATA from '../constants/actions.ts'
+import SHORTCUTS_DATA, {ActionItemType} from '../constants/actions.ts'
 import Shortcut from '../lib/shortcut/shortcut.ts'
 import matchObject from '../utilities/find.ts'
 import deepClone from '../utilities/deepClone.ts'
@@ -10,10 +10,7 @@ const useShortcut = (executeAction: EditorExecutor) => {
   const {state: {currentTool, focused}} = useContext(WorkspaceContext)
   const lastToolRef = useRef<string>(null)
   const data = useMemo(() => {
-    let arr = matchObject(deepClone(SHORTCUTS_DATA), (item) => !!item.shortcut) as {
-      id: string,
-      shortcut: string
-    }[]
+    let arr = matchObject(deepClone(SHORTCUTS_DATA), (item) => !!item.shortcut) as ActionItemType[]
 
     arr.push({id: 'toggleTool', shortcut: 'space'})
     return arr

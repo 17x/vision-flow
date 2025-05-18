@@ -26,7 +26,7 @@ class Shortcut {
   }
 
   handleKey(event: KeyboardEvent) {
-    const {code, altKey, ctrlKey, metaKey, shiftKey} = event
+    const {key, code, altKey, ctrlKey, metaKey, shiftKey} = event
     const parts: string[] = []
 
     if (ctrlKey) parts.push('ctrl')
@@ -34,7 +34,11 @@ class Shortcut {
     if (shiftKey) parts.push('shift')
     if (altKey) parts.push('alt')
 
-    parts.push(code.toLowerCase())
+    if (code.toLowerCase() === 'space') {
+      parts.push('space')
+    } else {
+      parts.push(key.toLowerCase())
+    }
 
     const inputShortcut = parts.join('+')
 

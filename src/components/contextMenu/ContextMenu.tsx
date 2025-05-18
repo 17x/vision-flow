@@ -1,9 +1,11 @@
-import {FC, memo, useContext, useEffect, useState} from 'react'
+import {FC, useContext, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {I18nHistoryDataItem} from '../../i18n/type'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {LuChevronRight} from 'react-icons/lu'
 import {MenuItemType} from '../header/menu/type'
+import deepClone from '../../utilities/deepClone.ts'
+import {EDIT} from '../../constants/actions.ts'
 
 export interface ContextMenuProps {
   position: Point
@@ -16,7 +18,15 @@ export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
   const {state: {selectedModules, copiedItems, historyStatus}, executeAction} = useContext(WorkspaceContext)
   const [menuItems, setMenuItems] = useState<MenuItemType[]>([])
   const groupClass = 'absolute bg-white shadow-lg rounded-md border border-gray-200 py-1 z-50'
+  const ITEMS = useMemo(() => {
+    let arr = deepClone(EDIT.children)
 
+    arr.forEach(item => {
+
+    })
+
+    return arr
+  }, [selectedModules, historyStatus])
   useEffect(() => {
     const noSelectedModule = selectedModules.length === 0
     const ITEMS: MenuItemType[] = [
@@ -28,16 +38,16 @@ export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
       // {id: 'ungroup', disabled: noSelectedModule},
       {id: 'undo', editorActionCode: 'history-undo', disabled: !historyStatus.hasPrev},
       {id: 'redo', editorActionCode: 'history-redo', disabled: !historyStatus.hasNext},
-     /* {
-        id: 'layer',
-        disabled: noSelectedModule,
-        children: [
-          {id: 'bringForward', editorActionCode: 'module-layer', editorActionData: 'up', disabled: noSelectedModule},
-          {id: 'sendBackward', editorActionCode: 'module-layer', editorActionData: 'down', disabled: noSelectedModule},
-          {id: 'bringToFront', editorActionCode: 'module-layer', editorActionData: 'top', disabled: noSelectedModule},
-          {id: 'sendToBack', editorActionCode: 'module-layer', editorActionData: 'bottom', disabled: noSelectedModule},
-        ],
-      },*/
+      /* {
+         id: 'layer',
+         disabled: noSelectedModule,
+         children: [
+           {id: 'bringForward', editorActionCode: 'module-layer', editorActionData: 'up', disabled: noSelectedModule},
+           {id: 'sendBackward', editorActionCode: 'module-layer', editorActionData: 'down', disabled: noSelectedModule},
+           {id: 'bringToFront', editorActionCode: 'module-layer', editorActionData: 'top', disabled: noSelectedModule},
+           {id: 'sendToBack', editorActionCode: 'module-layer', editorActionData: 'bottom', disabled: noSelectedModule},
+         ],
+       },*/
     ]
     // console.log(selectedModules)
     setMenuItems(ITEMS)

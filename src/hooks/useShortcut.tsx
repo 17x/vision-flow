@@ -34,6 +34,7 @@ const useShortcut = (executeAction: EditorExecutor, handleZoom: (b: boolean, e?:
             return
           } else if (c.id === 'zoomFit') {
             executeAction('world-zoom', 'fit')
+            return
           }
 
           if (c.editorAction) {

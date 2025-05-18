@@ -46,10 +46,8 @@ const useShortcut = (executeAction: EditorExecutor) => {
         lastToolRef.current = null
       },
     })
-    console.log(100)
 
     return () => {
-      console.log(101)
       shortcut1.destroy()
       shortcut2.destroy()
       // pluginRef.current?.destroy()

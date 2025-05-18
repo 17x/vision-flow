@@ -131,10 +131,9 @@ const useShortcut = (executeAction: EditorExecutor) => {
         },
       })
     }
-    window.addEventListener('keydown', handleShortcut)
 
     return () => {
-      window.removeEventListener('keydown', handleShortcut)
+      pluginRef.current.destroy()
     }
   }, [focused])
 }

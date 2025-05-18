@@ -4,14 +4,17 @@ import {useUI} from '../contexts/UIContext/UIContext.tsx'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 import {Editor} from '@lite-u/editor'
 import {ElementInstance} from '@lite-u/editor/types'
+import {PointRef} from '../components/statusBar/StatusBar.tsx'
 
 // import FileContext from '../contexts/fileContext/FileContext.tsx'
 
-function useEditor(ref: RefObject<HTMLDivElement | null>, workspace, page) {
+function useEditor(ref: RefObject<HTMLDivElement | null>, worldPointRef: RefObject<PointRef | null>, workspace, page, showContextMenu: (p: {
+  x: number,
+  y: number
+}) => void) {
   const {dpr} = useUI()
   const [sortedModules, setSortedModules] = useState<ElementInstance[]>([])
-  const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
-  const {state, dispatch, executeAction} = useContext(WorkspaceContext)
+  const {state, dispatch} = useContext(WorkspaceContext)
   const lastSavedHistoryId = useRef(0)
   const currentHistoryId = useRef(0)
   const needSaveLocal = useRef(false)
@@ -68,15 +71,14 @@ function useEditor(ref: RefObject<HTMLDivElement | null>, workspace, page) {
         onWorldMouseMove: (point) => {
           // dispatch({type: 'SET_WORLD_POINT', payload: point})
           // worldPoint.current = point
-          /* if (worldPointRef.current) {
-             worldPointRef.current.set(point)
-           }*/
+          if (worldPointRef.current) {
+            worldPointRef.current.set(point)
+          }
         },
         onContextMenu: (position) => {
-          setShowContextMenu(true)
+          showContextMenu(position)
           // dispatch({type: 'SET_SHOW_CONTEXT_MENU', payload: viewportInfo})
 
-          setContextMenuPosition(position)
         },
         onModuleCopied: (items) => {
           dispatch({type: 'SET_COPIED_ITEMS', payload: items})

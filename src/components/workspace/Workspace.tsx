@@ -33,9 +33,13 @@ const Workspace: FC<{
   const containerRef = useRef<HTMLDivElement>(null)
   const worldPointRef = useRef<PointRef | null>(null)
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
-  const editorRef = useEditor(containerRef, workspace, page)
+  const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const scaleRef = useRef(state.worldScale)
   const toolNameRef = useRef(state.currentTool)
+  const editorRef = useEditor(containerRef, worldPointRef, workspace, page, (p) => {
+    setShowContextMenu(true)
+    setContextMenuPosition(p)
+  })
   /*
     useImperativeHandle(ref, () => {
       return editorRef.current

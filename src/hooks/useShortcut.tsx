@@ -21,6 +21,9 @@ const useShortcut = (executeAction: EditorExecutor) => {
         shortcuts: data,
         callback: (code) => {
           if (focused) {
+            console.log(data)
+            const c = data.find(item => item.code === code)
+            console.log(c)
             executeAction(code)
           }
         },

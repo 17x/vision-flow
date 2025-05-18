@@ -13,12 +13,12 @@ const useShortcut = (executeAction: EditorExecutor, focused: boolean) => {
 
   const pluginRef = useRef<Shortcut | null>(null)
 
-    console.log(focused)
+    // console.log(focused)
   useEffect(() => {
 
     if (!pluginRef.current) {
       const callback = (id: string) => {
-        console.log(focused)
+        // console.log(focused)
 
         if (focused) {
           console.log(data)

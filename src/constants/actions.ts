@@ -1,6 +1,4 @@
-import {EditorAction} from '../editor/engine/type'
-
-const editorActions: EditorAction[] = [
+const ACTIONS = [
   {
     id: 'file',
     children: [
@@ -25,6 +23,10 @@ const editorActions: EditorAction[] = [
       {id: 'delete', editorAction: 'element-delete', shortcut: 'delete,backspace'},
       {id: 'duplicate', editorAction: 'element-duplicate', shortcut: 'ctrl+d,meta+d'},
       {id: 'selectAll', editorAction: 'selection-all', shortcut: 'ctrl+a,meta+a'},
+      {id: 'elementMoveUp', editorAction: 'world-zoom', shortcut: 'arrowup'},
+      {id: 'elementMoveDown', editorAction: 'world-zoom', shortcut: 'arrowdown'},
+      {id: 'elementMoveLeft', editorAction: 'world-zoom', shortcut: 'arrowleft'},
+      {id: 'elementMoveRight', editorAction: 'world-zoom', shortcut: 'arrowright'},
       // {id: 'findReplace', editorAction: 'history-redo', shortcut: 'ctrl+f'},
     ],
   },
@@ -66,4 +68,4 @@ const editorActions: EditorAction[] = [
   },
 ]
 
-export default editorActions
+export default ACTIONS

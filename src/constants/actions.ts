@@ -150,4 +150,5 @@ export const LAYER = {
     // {id: 'deleteLayer', editorAction: ''},
   ],
 }
+
 export default ACTIONS

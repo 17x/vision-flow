@@ -5,22 +5,9 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
   const {dispatch} = useContext(WorkspaceContext)
   const counterRef = useRef<number>(0)
 
-  const handleEnter = () => {
-    counterRef.current++
+  const handleMouseMove = (e: MouseEvent) => {
 
-    if (counterRef.current === 1) {
-      console.log(true)
-      dispatch({type: 'SET_FOCUSED', payload: true})
-    }
-  }
-
-  const handleLeave = () => {
-    counterRef.current--
-
-    if (counterRef.current === 0) {
-      console.log(false)
-      dispatch({type: 'SET_FOCUSED', payload: false})
-    }
+    dispatch({type: 'SET_FOCUSED', payload: ref.current!.contains(e.target?)})
   }
 
   useEffect(() => {
@@ -28,13 +15,13 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
 
     const element = ref.current
 
-    element.addEventListener('mouseenter', handleEnter)
-    element.addEventListener('mouseleave', handleLeave)
+    element.addEventListener('mousemove', handleMouseMove)
+    // element.addEventListener('mouseleave', handleMouseMove)
 
     return () => {
       counterRef.current = 0
-      element.removeEventListener('mouseover', handleEnter)
-      element.removeEventListener('mouseleave', handleLeave)
+      element.removeEventListener('mousemove', handleMouseMove)
+      // element.removeEventListener('mouseleave', handleMouseMove)
     }
   }, [ref])
 

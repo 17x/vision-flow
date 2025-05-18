@@ -20,6 +20,7 @@ const useShortcut = (executeAction: EditorExecutor) => {
       pluginRef.current = new Shortcut({
         shortcuts: data,
         callback: (code) => {
+          console.log(focused)
           executeAction(code)
         },
       })
@@ -29,7 +30,7 @@ const useShortcut = (executeAction: EditorExecutor) => {
       pluginRef.current?.destroy()
       pluginRef.current = null
     }
-  }, [])
+  }, [focused])
 }
 
 export default useShortcut

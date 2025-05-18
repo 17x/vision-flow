@@ -28,7 +28,7 @@ class Shortcut {
   handleKey(event: KeyboardEvent) {
     const {key, altKey, ctrlKey, metaKey, shiftKey} = event
     const parts: string[] = []
-    console.log(event)
+    // console.log(event)
     if (ctrlKey) parts.push('ctrl')
     if (metaKey) parts.push('meta')
     if (shiftKey) parts.push('shift')
@@ -42,7 +42,7 @@ class Shortcut {
       const keys = shortcut.split(',').map(s => s.trim().toLowerCase())
       if (keys.includes(inputShortcut)) {
         event.preventDefault()
-        // console.log(id)
+        console.log(id)
         this.callback?.(id, event as any)
         break
       }

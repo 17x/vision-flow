@@ -1,11 +1,13 @@
-import {useContext, useEffect} from 'react'
+import {useContext, useEffect, useRef} from 'react'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 import {ModuleMoveDirection, VisionEventMap, VisionEventType} from '@lite-u/editor/types'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 import SHORTCUTS_DATA from '../constants/shortcuts.ts'
+import Shortcut from '../lib/shortcut/shortcut.ts'
 
 const useShortcut = (executeAction: EditorExecutor) => {
   const {state: {focused}} = useContext(WorkspaceContext)
+  const pluginRef = useRef<Shortcut | null>(null)
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (!focused) return
@@ -120,6 +122,15 @@ const useShortcut = (executeAction: EditorExecutor) => {
   }
 
   useEffect(() => {
+
+    if (!pluginRef.current) {
+      pluginRef.current = new Shortcut({
+        shortcuts: SHORTCUTS_DATA,
+        callback: (code) => {
+          console.log(code)
+        },
+      })
+    }
     window.addEventListener('keydown', handleShortcut)
 
     return () => {

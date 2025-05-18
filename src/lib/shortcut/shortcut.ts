@@ -20,7 +20,7 @@ class Shortcut {
     this.callback = callback
 
     shortcuts.forEach(({code, shortcut}) => {
-
+      console.log(code, shortcut)
     })
 
     window.addEventListener(upMode ? 'keyup' : 'keydown', this.handleKey.bind(this), {

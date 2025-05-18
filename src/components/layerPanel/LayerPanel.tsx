@@ -14,7 +14,7 @@ export const LayerPanel = ({executeAction}: LayerPanelProps) => {
   const [scrollTop, setScrollTop] = useState(0)
   const [indexRange, setIndexRange] = useState([0, 10])
   const {state: {elements, selectedElements}} = useContext(WorkspaceContext)
-  console.log(selectedElements)
+  // console.log(selectedElements)
   useEffect(() => {
     /*  const closestOne = selected[selected.length - 1]
 

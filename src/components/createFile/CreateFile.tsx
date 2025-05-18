@@ -6,7 +6,7 @@ import {PAGE_PRESETS} from './pagePresets.ts'
 import {useTranslation} from 'react-i18next'
 import {UnitType} from '@lite-u/editor/types'
 import {convertUnit} from '@editor'
-import {VISION_VERSION} from '../../constants'
+import {VISION_VERSION} from '../../constants/version.ts'
 import {nid} from '@editor'
 
 const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#00000066', onBgClick}) => {

@@ -42,10 +42,9 @@ const Workspace: FC<{
     }, [editorRef.current])
   */
   const handleZoom = useCallback((zoomIn: boolean, p?: { x: number, y: number }) => {
+    const filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
     const currentScale = scaleRef.current
     let nextScale = null
-    let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
-    // console.log(state.currentTool, state.worldScale)
 
     if (zoomIn) {
       nextScale = filtered.reverse().find(z => z.value > currentScale)

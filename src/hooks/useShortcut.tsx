@@ -15,18 +15,16 @@ const useShortcut = (executeAction: EditorExecutor) => {
   }[], [])
 
   useEffect(() => {
-    const callback = (id: string) => {
-      if (focused) {
-        const c = data.find(item => item.id === id)
-        if (c.editorAction) {
-          executeAction(c.editorAction)
-        }
-      }
-    }
-
     const shortcut1 = new Shortcut({
       shortcuts: data,
-      callback,
+      callback: (id: string) => {
+        if (focused) {
+          const c = data.find(item => item.id === id)
+          if (c.editorAction) {
+            executeAction(c.editorAction)
+          }
+        }
+      },
     })
     const shortcut2 = new Shortcut({
       shortcuts: data,

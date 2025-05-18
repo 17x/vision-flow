@@ -50,7 +50,6 @@ class Shortcut {
   }
 
   destroy() {
-    console.log(this)
     this.eventsController.abort()
     this.eventsController = null!
     this.upMode = null!

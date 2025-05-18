@@ -3,6 +3,7 @@ import Zoom from '../lib/zoom/zoom.ts'
 import ZOOM_LEVELS from '../constants/zoomLevels.ts'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
+import { ToolName } from '@lite-u/editor/types'
 
 function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExecutor, currentScale: number, currentTool: ToolName) {
   const {dispatch} = useContext(WorkspaceContext)

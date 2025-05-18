@@ -16,6 +16,7 @@ const useShortcut = (executeAction: EditorExecutor, focused: boolean) => {
 
   useEffect(() => {
     if (!pluginRef.current) {
+        console.log(focused)
       const callback = (id: string) => {
         console.log(focused)
 

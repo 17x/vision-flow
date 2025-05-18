@@ -6,7 +6,7 @@ import matchObject from '../utilities/find.ts'
 import deepClone from '../utilities/deepClone.ts'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
-const useShortcut = (executeAction: EditorExecutor) => {
+const useShortcut = (executeAction: EditorExecutor, handleZoom) => {
   const {state: {currentTool, focused}, dispatch} = useContext(WorkspaceContext)
   const lastToolRef = useRef<string>(null)
   const data = useMemo(() => {
@@ -29,9 +29,14 @@ const useShortcut = (executeAction: EditorExecutor) => {
 
           const c = data.find(item => item.id === id)!
 
+          if (c.id === 'zoomIn' || c.id === 'zoomOut') {
+            handleZoom(c.id === 'zoomIn')
+            return
+          }
+
           if (c.editorAction) {
             executeAction(c.editorAction, c.editorActionData)
-              console.log(c.editorAction)
+            console.log(c.editorAction)
             if (c.editorAction === 'switch-tool') {
               dispatch({type: 'SET_CURRENT_TOOL', payload: c.editorActionData})
             }

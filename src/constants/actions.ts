@@ -58,7 +58,7 @@ export const VIEW = {
   id: 'view',
   disabled: false,
   children: [
-    {id: 'zoomIn', disabled: false, editorAction: 'world-zoom', shortcut: 'ctrl+=,meta+='},
+    {id: 'zoomIn', disabled: false, shortcut: 'ctrl+=,meta+='},
     {id: 'zoomOut', disabled: false, shortcut: 'ctrl+-,meta+-'},
     {id: 'fitToScreen', disabled: false},
     // {id: 'toggleGrid'},

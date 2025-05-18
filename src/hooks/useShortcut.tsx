@@ -26,10 +26,13 @@ const useShortcut = (executeAction: EditorExecutor) => {
         }
       },
     })
+
     const shortcut2 = new Shortcut({
       shortcuts: data,
       upMode: true,
-      callback,
+      callback: (id: string) => {
+        console.log(id)
+      },
     })
     // }
 

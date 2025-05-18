@@ -13,7 +13,7 @@ function useEditor(ref: RefObject<HTMLDivElement | null>, worldPointRef: RefObje
   y: number
 }) => void) {
   const {dpr} = useUI()
-  const [sortedModules, setSortedModules] = useState<ElementInstance[]>([])
+  const [sortedElements, setSortedElements] = useState<ElementInstance[]>([])
   const {state, dispatch} = useContext(WorkspaceContext)
   const lastSavedHistoryId = useRef(0)
   const currentHistoryId = useRef(0)
@@ -61,7 +61,7 @@ function useEditor(ref: RefObject<HTMLDivElement | null>, worldPointRef: RefObje
             name: item.type,
             show: item.show,
           }))
-          // setSortedModules(arr)
+          // setSortedElements(arr)
 
           // console.log(arr)
           dispatch({

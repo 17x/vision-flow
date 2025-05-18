@@ -36,8 +36,8 @@ class OptimizedDND {
     // ghostImg.innerHTML = 'HELLLOLEELEL'
     const draggingEle = null
 
-    this.data.forEach((module) => {
-      if (indexes.has(module.layer)) {
+    this.data.forEach((element) => {
+      if (indexes.has(element.layer)) {
         const ele = document.createElement("div")
 
         ele.draggable = true
@@ -63,7 +63,7 @@ class OptimizedDND {
           ele.style.left = 10 + 'px'
         }
         ele.className = 'relative cursor-grab hover:bg-gray-200'
-        ele.innerHTML = module.layer + module.type
+        ele.innerHTML = element.layer + element.type
         arr.push(ele)
       }
     })

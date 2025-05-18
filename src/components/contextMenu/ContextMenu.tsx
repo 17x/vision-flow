@@ -22,21 +22,21 @@ export const ContextMenu: FC<ContextMenuProps> = ({position,executeAction, onClo
   const groupClass = 'absolute bg-white shadow-lg rounded-md border border-gray-200 py-1 z-50'
   const ITEMS = useMemo(() => {
     let arr = deepClone(EDIT.children)
-    const noSelectedModule = selectedElements.length === 0
+    const noSelectedElement = selectedElements.length === 0
 
     arr.forEach(item => {
       switch (item.id) {
         case 'copy':
-          item.disabled = noSelectedModule
+          item.disabled = noSelectedElement
           break
         case 'paste':
           item.disabled = copiedItems.length === 0
           break
         case 'duplicate':
-          item.disabled = noSelectedModule
+          item.disabled = noSelectedElement
           break
         case 'delete':
-          item.disabled = noSelectedModule
+          item.disabled = noSelectedElement
           item.divide = true
           break
         case 'undo':
@@ -51,24 +51,24 @@ export const ContextMenu: FC<ContextMenuProps> = ({position,executeAction, onClo
     return arr
   }, [selectedElements, historyStatus, copiedItems])
   useEffect(() => {
-    const noSelectedModule = selectedElements.length === 0
+    const noSelectedElement = selectedElements.length === 0
     const ITEMS: MenuItemType[] = [
-      {id: 'copy', editorActionCode: 'element-copy', disabled: noSelectedModule},
+      {id: 'copy', editorActionCode: 'element-copy', disabled: noSelectedElement},
       {id: 'paste', editorActionCode: 'element-paste', disabled: copiedItems.length === 0},
-      {id: 'duplicate', editorActionCode: 'element-duplicate', disabled: noSelectedModule},
-      {id: 'delete', editorActionCode: 'element-delete', disabled: noSelectedModule, divide: true},
+      {id: 'duplicate', editorActionCode: 'element-duplicate', disabled: noSelectedElement},
+      {id: 'delete', editorActionCode: 'element-delete', disabled: noSelectedElement, divide: true},
       {id: 'undo', editorActionCode: 'history-undo', disabled: !historyStatus.hasPrev},
       {id: 'redo', editorActionCode: 'history-redo', disabled: !historyStatus.hasNext},
-      // {id: 'ungroup', disabled: noSelectedModule},
+      // {id: 'ungroup', disabled: noSelectedElement},
       // {id: 'group', disabled: selectedElements.size < 2},
       /* {
          id: 'layer',
-         disabled: noSelectedModule,
+         disabled: noSelectedElement,
          children: [
-           {id: 'bringForward', editorActionCode: 'module-layer', editorActionData: 'up', disabled: noSelectedModule},
-           {id: 'sendBackward', editorActionCode: 'module-layer', editorActionData: 'down', disabled: noSelectedModule},
-           {id: 'bringToFront', editorActionCode: 'module-layer', editorActionData: 'top', disabled: noSelectedModule},
-           {id: 'sendToBack', editorActionCode: 'module-layer', editorActionData: 'bottom', disabled: noSelectedModule},
+           {id: 'bringForward', editorActionCode: 'module-layer', editorActionData: 'up', disabled: noSelectedElement},
+           {id: 'sendBackward', editorActionCode: 'module-layer', editorActionData: 'down', disabled: noSelectedElement},
+           {id: 'bringToFront', editorActionCode: 'module-layer', editorActionData: 'top', disabled: noSelectedElement},
+           {id: 'sendToBack', editorActionCode: 'module-layer', editorActionData: 'bottom', disabled: noSelectedElement},
          ],
        },*/
     ]

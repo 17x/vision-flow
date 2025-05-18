@@ -4,12 +4,6 @@ import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 const useFocus = (ref: RefObject<HTMLElement | null>) => {
   const {dispatch} = useContext(WorkspaceContext)
   const counterRef = useRef<number>(0)
-  /*
-    const checkInside = useCallback((e: MouseEvent) => {
-      if (ref.current) {
-        dispatch({type: 'SET_FOCUSED', payload: ref.current.contains(e.target as Node)})
-      }
-    }, [])*/
 
   const handleEnter = () => {
     counterRef.current++

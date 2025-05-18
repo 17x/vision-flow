@@ -57,7 +57,7 @@ export type WorkspaceAction =
   | { type: 'SET_WORLD_POINT'; payload: Point }
   | { type: 'SET_WORLD_SCALE'; payload: number }
   | { type: 'SET_CURRENT_TOOL'; payload: ToolName }
-  | { type: 'SET_ELEMENTS'; payload: { id: UID, name: string } [] }
+  | { type: 'SET_ELEMENTS'; payload: { id: string, name: string } [] }
 
 export const WorkspaceReducer = (state: WorkSpaceStateType, action: WorkspaceAction) => {
   switch (action.type) {

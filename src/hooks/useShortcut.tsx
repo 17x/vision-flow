@@ -1,17 +1,12 @@
-import {useContext, useEffect, useMemo} from 'react'
+import {useContext, useEffect} from 'react'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 import {ModuleMoveDirection, VisionEventMap, VisionEventType} from '@lite-u/editor/types'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
+import SHORTCUTS_DATA from '../constants/shortcuts.ts'
 
 const useShortcut = (executeAction: EditorExecutor) => {
   const {state: {focused}} = useContext(WorkspaceContext)
-  const arr = useMemo(() => {
-    return [
-      {
-        code: 'moveUp', shortcuts: 'ctrl+up', action: () => { },
-      },
-    ]
-  }, [])
+
   const handleKeyPress = (e: KeyboardEvent) => {
     if (!focused) return
     let shortcutCode: VisionEventType | null = null
@@ -120,11 +115,15 @@ const useShortcut = (executeAction: EditorExecutor) => {
     e.preventDefault()
   }
 
+  const handleShortcut = (e: KeyboardEvent) => {
+    SHORTCUTS_DATA
+  }
+
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyPress)
+    window.addEventListener('keydown', handleShortcut)
 
     return () => {
-      window.removeEventListener('keydown', handleKeyPress)
+      window.removeEventListener('keydown', handleShortcut)
     }
   }, [focused])
 }

@@ -1,4 +1,4 @@
-const SHORTCUTS = [
+const SHORTCUTS_DATA = [
   {code: 'worldZoomIn', shortcut: 'meta+='},
   {code: 'worldZoomOut', shortcut: 'meta+-'},
   {code: 'closeFile', shortcut: 'ctrl+w,meta+w'},
@@ -16,3 +16,5 @@ const SHORTCUTS = [
   {code: 'elementMoveLeft', shortcut: 'arrowleft'},
   {code: 'elementMoveRight', shortcut: 'arrowright'},
 ] as const
+
+export default SHORTCUTS_DATA

@@ -35,7 +35,6 @@ const Workspace: FC<{
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const [contextMenuPosition, setContextMenuPosition] = useState({x: 0, y: 0})
   const scaleRef = useRef(state.worldScale)
-  const toolNameRef = useRef(state.currentTool)
   const editorRef = useEditor(containerRef, worldPointRef, workspace, page, (p) => {
     setShowContextMenu(true)
     setContextMenuPosition(p)
@@ -84,9 +83,8 @@ const Workspace: FC<{
   useGesture(containerRef, executeAction, state.currentTool, handleZoom)
   useFocus(contextRootRef)
   useShortcut(executeAction, handleZoom)
-  useEffect(() => {
-    scaleRef.current = state.worldScale
-  }, [state.worldScale])
+  useEffect(() => { scaleRef.current = state.worldScale }, [state.worldScale])
+
 
   return <EditorContext.Provider value={{executeAction}}>
 

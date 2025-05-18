@@ -10,7 +10,7 @@ export interface WorkSpaceStateType {
   worldPoint: Point,
   worldScale: number,
   needSave: boolean
-  selectedModules: UID[]
+  selectedElements: UID[]
   selectedProps: ElementProps | null
   currentTool: ToolName
   lastSavedHistoryId: number
@@ -22,7 +22,7 @@ export const initialWorkspaceState: WorkSpaceStateType = {
   id: '',
   focused: false,
   selectedProps: null,
-  selectedModules: [],
+  selectedElements: [],
   lastSavedHistoryId: -1,
   needSave: false,
   worldPoint: {x: 0, y: 0},

@@ -12,8 +12,8 @@ const IconColor = 'text-black'
 
 const ShortcutBar: React.FC = () => {
   const {saveFile} = useFile()
-  const {state: {needSave, historyStatus, selectedModules}, executeAction} = useContext(WorkspaceContext)
-  const hasSelectedModules = selectedModules.length > 0
+  const {state: {needSave, historyStatus, selectedElements}, executeAction} = useContext(WorkspaceContext)
+  const hasSelectedModules = selectedElements.length > 0
 
   const actions = [
     {id: 'save', action: 'saveFile', icon: 'save', disabled: !needSave, divide: true},

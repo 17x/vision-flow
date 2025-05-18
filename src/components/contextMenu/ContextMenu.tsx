@@ -15,12 +15,12 @@ export interface ContextMenuProps {
 
 export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
   const {t} = useTranslation()
-  const {state: {selectedModules, copiedItems, historyStatus}, executeAction} = useContext(WorkspaceContext)
+  const {state: {selectedElements, copiedItems, historyStatus}, executeAction} = useContext(WorkspaceContext)
   const [menuItems, setMenuItems] = useState<MenuItemType[]>([])
   const groupClass = 'absolute bg-white shadow-lg rounded-md border border-gray-200 py-1 z-50'
   const ITEMS = useMemo(() => {
     let arr = deepClone(EDIT.children)
-    const noSelectedModule = selectedModules.length === 0
+    const noSelectedModule = selectedElements.length === 0
 
     arr.forEach(item => {
       switch (item.id) {
@@ -47,9 +47,9 @@ export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
     })
 
     return arr
-  }, [selectedModules, historyStatus, copiedItems])
+  }, [selectedElements, historyStatus, copiedItems])
   useEffect(() => {
-    const noSelectedModule = selectedModules.length === 0
+    const noSelectedModule = selectedElements.length === 0
     const ITEMS: MenuItemType[] = [
       {id: 'copy', editorActionCode: 'element-copy', disabled: noSelectedModule},
       {id: 'paste', editorActionCode: 'element-paste', disabled: copiedItems.length === 0},
@@ -82,7 +82,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
     return () => {
       window.removeEventListener('click', remove)
     }
-  }, [selectedModules, position, copiedItems])
+  }, [selectedElements, position, copiedItems])
 
   // console.log(9)
   const handleContextAction = (item: MenuItemType) => {

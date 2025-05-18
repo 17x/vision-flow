@@ -59,6 +59,9 @@ function useEditor(ref: RefObject<HTMLDivElement | null>, worldPointRef: RefObje
           const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
 
           console.log(arr)
+          dispatch({
+            type: 'SET_S',
+          })
           setSortedModules(arr)
         },
         onSelectionUpdated: (selected, props) => {

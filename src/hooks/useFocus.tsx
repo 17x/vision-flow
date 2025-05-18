@@ -25,18 +25,12 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
 
     const element = ref.current
 
-    // window.addEventListener('mouseup', checkInside)
     element.addEventListener('mouseenter', handleEnter)
     element.addEventListener('mouseleave', handleLeave)
-    // element.addEventListener('focus', handleFocus)
-    // element.addEventListener('blur', handleBlur)
 
     return () => {
-      // window.removeEventListener('mouseup', checkInside)
       element.removeEventListener('mouseover', handleEnter)
       element.removeEventListener('mouseleave', handleLeave)
-      // element.removeEventListener('focus', handleFocus)
-      // element.removeEventListener('blur', handleBlur)
     }
   }, [ref])
 

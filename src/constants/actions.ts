@@ -1,3 +1,14 @@
+export interface ActionItemType {
+  id: string
+  action?: VisionEventType,
+  editorAction?: VisionEventType,
+  editorActionData?: 'up' | 'down' | 'top' | 'bottom',
+  disabled: boolean
+  icon?: string
+  divide?: boolean
+  children?: ActionItemType[]
+}
+
 export const FILE = {
   id: 'file',
   disabled: false,

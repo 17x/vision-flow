@@ -13,7 +13,7 @@ const useShortcut = (executeAction: EditorExecutor) => {
     if (!pluginRef.current) {
       const data = []
       const a = matchObject(SHORTCUTS_DATA, (item) => {
-        return item.shortcut
+        return !!item.shortcut
       })
 
       console.log(a)

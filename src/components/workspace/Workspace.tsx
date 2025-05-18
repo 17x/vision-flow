@@ -111,6 +111,7 @@ const Workspace: FC<{
           {
             showContextMenu &&
               <ContextMenu position={contextMenuPosition}
+                           executeAction={executeAction}
                            onClose={() => {
                              setShowContextMenu(false)
                            }}/>

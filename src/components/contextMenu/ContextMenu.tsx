@@ -6,16 +6,18 @@ import {LuChevronRight} from 'react-icons/lu'
 import {MenuItemType} from '../header/menu/type'
 import deepClone from '../../utilities/deepClone.ts'
 import {EDIT} from '../../constants/actions.ts'
+import {EditorExecutor} from '../workspace/Workspace.tsx'
 
 export interface ContextMenuProps {
   position: Point
   // onAction: (action: string) => void
   onClose: () => void
+  executeAction: EditorExecutor
 }
 
-export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
+export const ContextMenu: FC<ContextMenuProps> = ({position,executeAction, onClose}) => {
   const {t} = useTranslation()
-  const {state: {selectedElements, copiedItems, historyStatus}, executeAction} = useContext(WorkspaceContext)
+  const {state: {selectedElements, copiedItems, historyStatus}} = useContext(WorkspaceContext)
   const [menuItems, setMenuItems] = useState<MenuItemType[]>([])
   const groupClass = 'absolute bg-white shadow-lg rounded-md border border-gray-200 py-1 z-50'
   const ITEMS = useMemo(() => {

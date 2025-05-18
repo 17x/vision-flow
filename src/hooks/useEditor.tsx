@@ -88,7 +88,7 @@ function useEditor(ref: RefObject<HTMLDivElement | null>, worldPointRef: RefObje
           // dispatch({type: 'SET_SHOW_CONTEXT_MENU', payload: viewportInfo})
 
         },
-        onModuleCopied: (items) => {
+        onElementCopied: (items) => {
           dispatch({type: 'SET_COPIED_ITEMS', payload: items})
         },
         onSwitchTool: (toolName) => {

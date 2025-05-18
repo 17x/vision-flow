@@ -1,4 +1,4 @@
-import {useContext, useEffect, useMemo, useRef} from 'react'
+import {useContext, useEffect, useMemo} from 'react'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 import SHORTCUTS_DATA from '../constants/actions.ts'
 import Shortcut from '../lib/shortcut/shortcut.ts'
@@ -14,30 +14,32 @@ const useShortcut = (executeAction: EditorExecutor) => {
     shortcut: string
   }[], [])
 
-  const pluginRef = useRef<Shortcut | null>(null)
-
   useEffect(() => {
-    if (!pluginRef.current) {
-      const callback = (id: string) => {
-        if (focused) {
-          // console.log(data)
-          const c = data.find(item => item.id === id)
-          console.log(c)
-          if (c.editorAction) {
-            executeAction(c.editorAction)
-          }
+    const callback = (id: string) => {
+      if (focused) {
+        const c = data.find(item => item.id === id)
+        if (c.editorAction) {
+          executeAction(c.editorAction)
         }
       }
-
-      pluginRef.current = new Shortcut({
-        shortcuts: data,
-        callback,
-      })
     }
 
+    const shortcut1 = new Shortcut({
+      shortcuts: data,
+      callback,
+    })
+    const shortcut2 = new Shortcut({
+      shortcuts: data,
+      upMode: true,
+      callback,
+    })
+    // }
+
     return () => {
-      pluginRef.current?.destroy()
-      pluginRef.current = null
+      shortcut1.destroy()
+      shortcut2.destroy()
+      // pluginRef.current?.destroy()
+      // pluginRef.current = null
     }
   }, [focused])
 }

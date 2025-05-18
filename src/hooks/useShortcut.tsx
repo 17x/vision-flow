@@ -3,7 +3,7 @@ import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 import {ModuleMoveDirection, VisionEventMap, VisionEventType} from '@lite-u/editor/types'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 
-const UseShortcut = (executeAction: EditorExecutor) => {
+const useShortcut = (executeAction: EditorExecutor) => {
   const {state: {focused}} = useContext(WorkspaceContext)
 
   const handleKeyPress = (e: KeyboardEvent) => {
@@ -123,4 +123,4 @@ const UseShortcut = (executeAction: EditorExecutor) => {
   }, [focused])
 }
 
-export default UseShortcut
+export default useShortcut

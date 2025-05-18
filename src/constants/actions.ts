@@ -123,4 +123,31 @@ export const VIEW = {
   ],
 }
 
+export const TEXT = {
+  id: 'text',
+  disabled: false,
+  children: [
+    {id: 'addText', disabled: false},
+    {id: 'editText', disabled: false},
+    {id: 'changeFont', disabled: false},
+    {id: 'changeFontSize', disabled: false},
+    {id: 'changeFontColor', disabled: false},
+    {id: 'boldText', disabled: false, shortcut: 'ctrl+b,meta+b'},
+    {id: 'italicText', disabled: false, shortcut: 'ctrl+i,meta+i'},
+    {id: 'underlineText', disabled: false, shortcut: 'ctrl+u,meta+u'},
+    {id: 'alignText', disabled: false},
+  ],
+}
+export const LAYER = {
+  id: 'layer',
+  disabled: false,
+  children: [
+    {id: 'sendToBack', editorAction: ''},
+    {id: 'bringToFront', editorAction: ''},
+    {id: 'sendBackward', editorAction: '', shortcut: 'shift'},
+    {id: 'bringForward', editorAction: '', shortcut: 'shift'},
+    // {id: 'duplicateLayer', editorAction: ''},
+    // {id: 'deleteLayer', editorAction: ''},
+  ],
+}
 export default ACTIONS

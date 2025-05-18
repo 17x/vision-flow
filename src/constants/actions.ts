@@ -110,4 +110,4 @@ export const TOOLS = {
   ],
 }
 
-export default [FILE, EDIT, VIEW, TEXT, LAYER]
+export default [FILE, EDIT, VIEW, TEXT, LAYER, TOOLS]

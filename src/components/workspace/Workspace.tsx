@@ -45,9 +45,6 @@ const Workspace: FC<{
     }, [editorRef.current])
   */
   const executeAction: EditorExecutor = (code, data) => {
-    switch (code) {
-
-    }
 
     if (code === 'newFile') {
       startCreateFile()

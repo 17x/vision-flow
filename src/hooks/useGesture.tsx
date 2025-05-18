@@ -8,6 +8,7 @@ import { ToolName } from '@lite-u/editor/types'
 function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExecutor, currentScale: number, currentTool: ToolName) {
   const {dispatch} = useContext(WorkspaceContext)
   const pluginRef = useRef<Zoom | null>(null)
+
   const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
     let nextScale = null
     let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')

@@ -42,7 +42,6 @@ class Shortcut {
       const keys = shortcut.split(',').map(s => s.trim().toLowerCase())
       if (keys.includes(inputShortcut)) {
         event.preventDefault()
-        console.log(id)
         this.callback?.(id, event as any)
         break
       }

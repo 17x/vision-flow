@@ -7,6 +7,7 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
 
   const handleEnter = () => {
     counterRef.current++
+    console.log(true)
 
     if (counterRef.current === 1) {
       console.log(true)
@@ -16,6 +17,8 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
 
   const handleLeave = () => {
     counterRef.current--
+    console.log(false)
+
     if (counterRef.current === 0) {
       console.log(false)
       dispatch({type: 'SET_FOCUSED', payload: false})
@@ -31,6 +34,7 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
     element.addEventListener('mouseleave', handleLeave)
 
     return () => {
+      counterRef.current = 0
       element.removeEventListener('mouseover', handleEnter)
       element.removeEventListener('mouseleave', handleLeave)
     }

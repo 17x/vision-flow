@@ -22,7 +22,7 @@ const useShortcut = (executeAction: EditorExecutor) => {
         callback: (code) => {
           if (focused) {
             console.log(data)
-            const c = data.find(item => item.code === code)
+            const c = data.find(item => item.id === code)
             console.log(c)
             executeAction(code)
           }

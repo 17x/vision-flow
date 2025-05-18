@@ -9,19 +9,24 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
 
     const element = ref.current
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseEnter = (e: MouseEvent) => {
       const f = ref.current!.contains(e.target as Node)
 
-      if (f !== focused) {
+      if (!focused) {
         dispatch({type: 'SET_FOCUSED', payload: f})
       }
     }
 
-    element.addEventListener('mousemove', handleMouseMove)
-    // element.addEventListener('mouseleave', handleMouseMove)
+    const handleMouseOut = () => {
+      dispatch({type: 'SET_FOCUSED', payload: false})
+    }
+
+    element.addEventListener('mouseenter', handleMouseEnter)
+    element.addEventListener('mouseleave', handleMouseOut)
 
     return () => {
-      element.removeEventListener('mousemove', handleMouseMove)
+      element.removeEventListener('mouseenter', handleMouseEnter)
+      element.removeEventListener('mouseleave', handleMouseOut)
     }
   }, [ref, focused])
 

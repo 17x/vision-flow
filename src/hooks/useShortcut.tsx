@@ -1,11 +1,14 @@
-import {useEffect, useMemo, useRef} from 'react'
+import {useContext, useEffect, useMemo, useRef} from 'react'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 import SHORTCUTS_DATA from '../constants/actions.ts'
 import Shortcut from '../lib/shortcut/shortcut.ts'
 import matchObject from '../utilities/find.ts'
 import deepClone from '../utilities/deepClone.ts'
+import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
-const useShortcut = (executeAction: EditorExecutor, focused: boolean) => {
+const useShortcut = (executeAction: EditorExecutor) => {
+  const {state: {focused}, dispatch} = useContext(WorkspaceContext)
+
   const data = useMemo(() => matchObject(deepClone(SHORTCUTS_DATA), (item) => !!item.shortcut) as {
     id: string,
     shortcut: string
@@ -13,12 +16,12 @@ const useShortcut = (executeAction: EditorExecutor, focused: boolean) => {
 
   const pluginRef = useRef<Shortcut | null>(null)
 
-    // console.log(focused)
+  console.log('out, focused',focused)
   useEffect(() => {
 
     if (!pluginRef.current) {
       const callback = (id: string) => {
-        // console.log(focused)
+        console.log('focused', focused)
 
         if (focused) {
           console.log(data)

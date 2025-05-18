@@ -75,8 +75,8 @@ export const LAYER = {
   children: [
     {id: 'sendToBack', editorAction: ''},
     {id: 'bringToFront', editorAction: ''},
-    {id: 'sendBackward', editorAction: '', shortcut: 'shift'},
-    {id: 'bringForward', editorAction: '', shortcut: 'shift'},
+    {id: 'sendBackward', editorAction: '', shortcut: 'shift+meta+]'},
+    {id: 'bringForward', editorAction: '', shortcut: 'shift+meta+['},
     // {id: 'duplicateLayer', editorAction: ''},
     // {id: 'deleteLayer', editorAction: ''},
   ],

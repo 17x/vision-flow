@@ -61,7 +61,6 @@ export const VIEW = {
     {id: 'zoomIn', disabled: false, shortcut: 'ctrl+=,meta+='},
     {id: 'zoomOut', disabled: false, shortcut: 'ctrl+-,meta+-'},
     {id: 'zoomFit', disabled: false, shortcut: 'ctrl+0,meta+0'},
-    {id: 'fitToScreen', disabled: false},
     // {id: 'toggleGrid'},
     // {id: 'toggleGuides'},
     // {id: 'fullscreenMode', shortcut: 'F11'},

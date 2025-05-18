@@ -45,7 +45,7 @@ const Workspace: FC<{
     }, [editorRef.current])
   */
   const executeAction: EditorExecutor = (code, data) => {
-    switch (code){
+    switch (code) {
 
     }
 
@@ -64,7 +64,7 @@ const Workspace: FC<{
 
   useGesture(containerRef, executeAction, state.worldScale, state.currentTool)
   useFocus(contextRootRef)
-  useShortcut(executeAction)
+  useShortcut(executeAction, state.focused)
 
   return <EditorContext.Provider value={{executeAction}}>
 

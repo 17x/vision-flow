@@ -14,7 +14,6 @@ const matchObject = (o: unknown[] | { children?: unknown[] }, predictor: (...arg
 
     if (o.children) {
       o.children.forEach(child => {
-        // console.log(matchObject(child, predictor))
         result.push(...matchObject(child, predictor))
       })
     }

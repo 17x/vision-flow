@@ -68,4 +68,27 @@ const ACTIONS = [
   },
 ]
 
+const FILE = {
+  id: 'file',
+  disabled: false,
+  children: [
+    {id: 'newFile', disabled: false, shortcut: 'ctrl+n'},
+    {id: 'openFile', disabled: false, shortcut: 'ctrl+o'},
+    {id: 'importFile', disabled: false},
+    {id: 'saveFile', shortcut: 'ctrl+s,meta+s'},
+    {id: 'saveAs', disabled: false},
+    {
+      id: 'exportFile',
+      disabled: false,
+      children: [
+        {id: 'exportFile_png', disabled: false},
+        {id: 'exportFile_pdf', disabled: false},
+        {id: 'exportFile_csv', disabled: false},
+      ],
+    },
+    {id: 'print', disabled: false},
+    {id: 'closeFile', disabled: false},
+  ],
+}
+
 export default ACTIONS

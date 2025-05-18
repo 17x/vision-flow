@@ -60,7 +60,7 @@ const Workspace: FC<{
         physicalPoint: p,
       })
     }
-  }, [state.worldScale, state.currentTool])
+  }, [state.worldScale])
 
   const executeAction: EditorExecutor = (code, data) => {
 

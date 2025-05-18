@@ -11,12 +11,8 @@ const useShortcut = (executeAction: EditorExecutor) => {
 
   useEffect(() => {
     if (!pluginRef.current) {
-      const data = []
-      const a = matchObject(SHORTCUTS_DATA, (item) => {
-        return !!item.shortcut
-      })
-
-      console.log(a)
+      const data = matchObject(SHORTCUTS_DATA, (item) => !!item.shortcut)
+      console.log(data)
       /*SHORTCUTS_DATA.forEach((data) => {
         // console.log(data)
       })*/

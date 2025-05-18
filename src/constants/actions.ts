@@ -68,7 +68,7 @@ const ACTIONS = [
   },
 ]
 
-const FILE = {
+export const FILE = {
   id: 'file',
   disabled: false,
   children: [
@@ -88,6 +88,38 @@ const FILE = {
     },
     {id: 'print', disabled: false},
     {id: 'closeFile', disabled: false},
+  ],
+}
+
+export const EDIT = {
+  id: 'edit',
+  children: [
+    {id: 'undo', disabled: false, editorAction: 'history-undo', shortcut: 'ctrl+z,meta+z'},
+    {id: 'redo', disabled: false, editorAction: 'history-redo', shortcut: 'ctrl+shift+z,meta+shift+z'},
+    {id: 'cut', disabled: false, editorAction: 'element-cut', shortcut: 'ctrl+x,meta+x'},
+    {id: 'copy', disabled: false, editorAction: 'element-copy', shortcut: 'ctrl+c,meta+c'},
+    {id: 'paste', disabled: false, editorAction: 'element-paste', shortcut: 'ctrl+v,meta+v'},
+    {id: 'delete', disabled: false, editorAction: 'element-delete', shortcut: 'delete,backspace'},
+    {id: 'duplicate', disabled: false, editorAction: 'element-duplicate', shortcut: 'ctrl+d,meta+d'},
+    {id: 'selectAll', disabled: false, editorAction: 'selection-all', shortcut: 'ctrl+a,meta+a'},
+    {id: 'elementMoveUp', disabled: false, editorAction: 'world-zoom', shortcut: 'arrowup'},
+    {id: 'elementMoveDown', disabled: false, editorAction: 'world-zoom', shortcut: 'arrowdown'},
+    {id: 'elementMoveLeft', disabled: false, editorAction: 'world-zoom', shortcut: 'arrowleft'},
+    {id: 'elementMoveRight', disabled: false, editorAction: 'world-zoom', shortcut: 'arrowright'},
+    // {id: 'findReplace', editorAction: 'history-redo', shortcut: 'ctrl+f'},
+  ],
+}
+
+export const VIEW = {
+  id: 'view',
+  disabled: false,
+  children: [
+    {id: 'zoomIn', disabled: false, editorAction: 'history-redo', shortcut: 'ctrl+=,meta+='},
+    {id: 'zoomOut', disabled: false, shortcut: 'ctrl+-,meta+-'},
+    {id: 'fitToScreen', disabled: false},
+    // {id: 'toggleGrid'},
+    // {id: 'toggleGuides'},
+    // {id: 'fullscreenMode', shortcut: 'F11'},
   ],
 }
 

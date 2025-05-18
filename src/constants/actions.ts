@@ -5,7 +5,7 @@ export interface ActionItemType {
   // action?: VisionEventType,
   shortcut: string
   editorAction?: VisionEventType,
-  // editorActionData?: 'up' | 'down' | 'top' | 'bottom',
+  editorActionData?: string
   disabled?: boolean
   icon?: string
   divide?: boolean
@@ -93,6 +93,20 @@ export const LAYER = {
     {id: 'bringForward', editorAction: '', shortcut: 'shift+meta+['},
     // {id: 'duplicateLayer', editorAction: ''},
     // {id: 'deleteLayer', editorAction: ''},
+  ],
+}
+
+export const TOOLS = {
+  id: 'tools',
+  children: [
+    {id: 'selector', shortcut: 'v', editorAction: 'switch-tool', editorActionData: 'selector'},
+    {id: 'lineSegment', shortcut: 'l', editorAction: 'switch-tool', editorActionData: 'lineSegment'},
+    {id: 'rectangle', shortcut: 'r', editorAction: 'switch-tool', editorActionData: 'rectangle'},
+    {id: 'ellipse', shortcut: 'e', editorAction: 'switch-tool', editorActionData: 'ellipse'},
+    {id: 'text', shortcut: 't', editorAction: 'switch-tool', editorActionData: 'text'},
+    {id: 'pencil', shortcut: 'p', editorAction: 'switch-tool', editorActionData: 'pencil'},
+    {id: 'panning', shortcut: 'h', editorAction: 'switch-tool', editorActionData: 'panning'},
+    {id: 'zoomIn', shortcut: 'z', editorAction: 'switch-tool', editorActionData: 'zoomIn'},
   ],
 }
 

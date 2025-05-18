@@ -22,10 +22,12 @@ const useShortcut = (executeAction: EditorExecutor) => {
         console.log('focused', focused)
 
         if (focused) {
-          console.log(data)
+          // console.log(data)
           const c = data.find(item => item.id === id)
           console.log(c)
-          executeAction(id)
+          if (c.editorAction) {
+            executeAction(c.editorAction)
+          }
         }
       }
 

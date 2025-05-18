@@ -9,13 +9,7 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
 
     const element = ref.current
 
-    const handleMouseEnter = (e: MouseEvent) => {
-      if (!focused) {
-        dispatch({type: 'SET_FOCUSED', payload: true})
-      }
-    }
-
-    const handleMouseMove = () => {
+    const handleFocus = () => {
       if (!focused) {
         dispatch({type: 'SET_FOCUSED', payload: true})
       }
@@ -25,13 +19,13 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
       dispatch({type: 'SET_FOCUSED', payload: false})
     }
 
-    element.addEventListener('mousemove', handleMouseMove)
-    element.addEventListener('mouseenter', handleMouseEnter)
+    element.addEventListener('mousemove', handleFocus)
+    element.addEventListener('mouseenter', handleFocus)
     element.addEventListener('mouseleave', handleMouseOut)
 
     return () => {
-      element.removeEventListener('mousemove', handleMouseMove)
-      element.removeEventListener('mouseenter', handleMouseEnter)
+      element.removeEventListener('mousemove', handleFocus)
+      element.removeEventListener('mouseenter', handleFocus)
       element.removeEventListener('mouseleave', handleMouseOut)
     }
   }, [ref, focused])

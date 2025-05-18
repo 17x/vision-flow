@@ -28,7 +28,6 @@ class Shortcut {
   handleKey(event: KeyboardEvent) {
     const {key, code, altKey, ctrlKey, metaKey, shiftKey} = event
     const parts: string[] = []
-    // console.log(event)
     if (ctrlKey) parts.push('ctrl')
     if (metaKey) parts.push('meta')
     if (shiftKey) parts.push('shift')

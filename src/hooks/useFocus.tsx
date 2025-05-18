@@ -15,7 +15,6 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
     counterRef.current++
 
     if (counterRef.current === 1) {
-      console.log('enter')
       dispatch({type: 'SET_FOCUSED', payload: true})
     }
   }
@@ -23,7 +22,6 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
   const handleLeave = () => {
     counterRef.current--
     if (counterRef.current === 0) {
-      console.log('Leave')
       dispatch({type: 'SET_FOCUSED', payload: false})
     }
   }

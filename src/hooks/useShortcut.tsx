@@ -13,8 +13,7 @@ const useShortcut = (executeAction: EditorExecutor) => {
       pluginRef.current = new Shortcut({
         shortcuts: SHORTCUTS_DATA,
         callback: (code) => {
-          console.log(focused)
-          console.log(code)
+          executeAction(code)
         },
       })
     }

@@ -1,14 +1,14 @@
 export interface ShortcutOptions {
-  shortcuts: { code: string, shortcut: string }[],
+  shortcuts: { id: string, shortcut: string }[],
   upMode?: boolean
-  callback?: (code: string, event: WheelEvent) => void
+  callback?: (id: string, event: WheelEvent) => void
 }
 
 class Shortcut {
   protected eventsController: AbortController = new AbortController()
-  shortcuts: { code: string, shortcut: string }[]
+  shortcuts: { id: string, shortcut: string }[]
   upMode: boolean
-  callback?: (code: string, event: WheelEvent) => void
+  callback?: (id: string, event: WheelEvent) => void
 
   constructor({
                 shortcuts = [],
@@ -38,11 +38,12 @@ class Shortcut {
 
     const inputShortcut = parts.join('+')
 
-    for (const {code, shortcut} of this.shortcuts) {
+    for (const {id, shortcut} of this.shortcuts) {
       const keys = shortcut.split(',').map(s => s.trim().toLowerCase())
       if (keys.includes(inputShortcut)) {
         event.preventDefault()
-        this.callback?.(code, event as any)
+        console.log(id)
+        this.callback?.(id, event as any)
         break
       }
     }

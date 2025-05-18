@@ -44,19 +44,22 @@ const Workspace: FC<{
       return editorRef.current
     }, [editorRef.current])
   */
-  const executeAction: EditorExecutor = (type, data) => {
-    if (type === 'newFile') {
+  const executeAction: EditorExecutor = (code, data) => {
+    switch (code){
+
+    }
+
+    if (code === 'newFile') {
       startCreateFile()
       return
     }
 
-    if (type === 'closeFile') {
+    if (code === 'closeFile') {
       closeFile(data.id)
       return
     }
 
-    console.log(type)
-    editorRef.current!.execute(type, data)
+    editorRef.current!.execute(code, data)
   }
 
   useGesture(containerRef, executeAction, state.worldScale, state.currentTool)

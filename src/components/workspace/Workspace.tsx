@@ -7,7 +7,7 @@ import {ContextMenu} from '../contextMenu/ContextMenu.tsx'
 import PropPanel from '../propPanel/PropPanel.tsx'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
-import {FC, RefObject, useContext, useRef, useState} from 'react'
+import {FC, RefObject, useContext, useEffect, useRef, useState} from 'react'
 import useEditor from '../../hooks/useEditor.tsx'
 import useGesture from '../../hooks/useGesture.tsx'
 import AppContext, {VisionWorkspace} from '../../contexts/appContext/AppContext.tsx'
@@ -17,6 +17,7 @@ import {UID, VisionEventData, VisionEventType} from '@lite-u/editor/types'
 import EditorContext from '../../contexts/EditorContext/EditorContext.tsx'
 import useFocus from '../../hooks/useFocus.tsx'
 import useShortcut from '../../hooks/useShortcut.tsx'
+import ZOOM_LEVELS from '../../constants/zoomLevels.ts'
 
 export type  EditorExecutor = <K extends VisionEventType>(type: K, data?: VisionEventData<K>) => void
 
@@ -44,6 +45,28 @@ const Workspace: FC<{
       return editorRef.current
     }, [editorRef.current])
   */
+  const handleZoom = (p?: { x: number, y: number }) => {
+
+    let nextScale = null
+    let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
+    const zoomIn = state.currentTool === 'zoomIn'
+    console.log(state.currentTool, state.worldScale)
+    if (zoomIn) {
+      nextScale = filtered.reverse().find(z => z.value > state.worldScale)
+    } else {
+      nextScale = filtered.find(z => z.value < state.worldScale)
+    }
+
+    if (nextScale) {
+      dispatch({type: 'SET_WORLD_SCALE', payload: nextScale.value})
+      executeAction('world-zoom', {
+        zoomTo: true,
+        zoomFactor: nextScale.value,
+        physicalPoint: p,
+      })
+    }
+  }
+
   const executeAction: EditorExecutor = (code, data) => {
 
     if (code === 'newFile') {
@@ -59,10 +82,12 @@ const Workspace: FC<{
     editorRef.current!.execute(code, data)
   }
 
-  useGesture(containerRef, executeAction, state.worldScale, state.currentTool)
+  useGesture(containerRef, executeAction, handleZoom)
   useFocus(contextRootRef)
-  useShortcut(executeAction)
+  useShortcut(executeAction, handleZoom)
+  useEffect(() => {
 
+  }, [state.currentTool, state.worldScale])
   return <EditorContext.Provider value={{executeAction}}>
 
     <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}

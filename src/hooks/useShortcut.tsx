@@ -28,6 +28,7 @@ const useShortcut = (executeAction: EditorExecutor) => {
           }
 
           const c = data.find(item => item.id === id)!
+
           if (c.editorAction) {
             executeAction(c.editorAction, c.editorActionData)
               console.log(c.editorAction)

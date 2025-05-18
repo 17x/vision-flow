@@ -58,7 +58,7 @@ export const VIEW = {
   id: 'view',
   disabled: false,
   children: [
-    {id: 'zoomIn', disabled: false, editorAction: 'history-redo', shortcut: 'ctrl+=,meta+='},
+    {id: 'zoomIn', disabled: false, editorAction: 'world-zoom', shortcut: 'ctrl+=,meta+='},
     {id: 'zoomOut', disabled: false, shortcut: 'ctrl+-,meta+-'},
     {id: 'fitToScreen', disabled: false},
     // {id: 'toggleGrid'},
@@ -99,14 +99,14 @@ export const LAYER = {
 export const TOOLS = {
   id: 'tools',
   children: [
-    {id: 'selector', shortcut: 'v', editorAction: 'switch-tool', editorActionData: 'selector'},
-    {id: 'lineSegment', shortcut: 'l', editorAction: 'switch-tool', editorActionData: 'lineSegment'},
-    {id: 'rectangle', shortcut: 'r', editorAction: 'switch-tool', editorActionData: 'rectangle'},
-    {id: 'ellipse', shortcut: 'e', editorAction: 'switch-tool', editorActionData: 'ellipse'},
-    {id: 'text', shortcut: 't', editorAction: 'switch-tool', editorActionData: 'text'},
-    {id: 'pencil', shortcut: 'p', editorAction: 'switch-tool', editorActionData: 'pencil'},
-    {id: 'panning', shortcut: 'h', editorAction: 'switch-tool', editorActionData: 'panning'},
-    {id: 'zoomIn', shortcut: 'z', editorAction: 'switch-tool', editorActionData: 'zoomIn'},
+    {id: 'selectorTool', shortcut: 'v', editorAction: 'switch-tool', editorActionData: 'selector'},
+    {id: 'lineSegmentTool', shortcut: 'l', editorAction: 'switch-tool', editorActionData: 'lineSegment'},
+    {id: 'rectangleTool', shortcut: 'r', editorAction: 'switch-tool', editorActionData: 'rectangle'},
+    {id: 'ellipseTool', shortcut: 'e', editorAction: 'switch-tool', editorActionData: 'ellipse'},
+    {id: 'textTool', shortcut: 't', editorAction: 'switch-tool', editorActionData: 'text'},
+    {id: 'pencilTool', shortcut: 'p', editorAction: 'switch-tool', editorActionData: 'pencil'},
+    {id: 'panningTool', shortcut: 'h', editorAction: 'switch-tool', editorActionData: 'panning'},
+    {id: 'zoomInTool', shortcut: 'z', editorAction: 'switch-tool', editorActionData: 'zoomIn'},
   ],
 }
 

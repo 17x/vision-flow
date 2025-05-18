@@ -7,7 +7,7 @@ import {ContextMenu} from '../contextMenu/ContextMenu.tsx'
 import PropPanel from '../propPanel/PropPanel.tsx'
 import {LayerPanel} from '../layerPanel/LayerPanel.tsx'
 import {HistoryPanel} from '../historyPanel/HistoryPanel.tsx'
-import {FC, RefObject, useContext, useEffect, useRef, useState} from 'react'
+import {FC, RefObject, useCallback, useContext, useEffect, useRef, useState} from 'react'
 import useEditor from '../../hooks/useEditor.tsx'
 import useGesture from '../../hooks/useGesture.tsx'
 import AppContext, {VisionWorkspace} from '../../contexts/appContext/AppContext.tsx'
@@ -26,12 +26,7 @@ const Workspace: FC<{
   workspace: VisionWorkspace,
   fileId: UID,
   page: EditorConfig['page']
-}> = ({
-        ref,
-        workspace,
-        fileId,
-        page,
-      }) => {
+}> = ({ref, workspace, fileId, page}) => {
   const {focusedFileId, startCreateFile, closeFile} = useContext(AppContext)
   const {state, dispatch} = useContext(WorkspaceContext)
   const contextRootRef = useRef<HTMLDivElement>(null)
@@ -45,7 +40,7 @@ const Workspace: FC<{
       return editorRef.current
     }, [editorRef.current])
   */
-  const handleZoom = (zoomIn: boolean, p?: { x: number, y: number }) => {
+  const handleZoom = useCallback((zoomIn: boolean, p?: { x: number, y: number }) => {
     console.log('zoom')
     let nextScale = null
     let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
@@ -65,7 +60,7 @@ const Workspace: FC<{
         physicalPoint: p,
       })
     }
-  }
+  }, [state.worldScale, state.currentTool])
 
   const executeAction: EditorExecutor = (code, data) => {
 

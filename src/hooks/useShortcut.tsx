@@ -122,20 +122,21 @@ const useShortcut = (executeAction: EditorExecutor) => {
   }
 
   useEffect(() => {
-
     if (!pluginRef.current) {
       pluginRef.current = new Shortcut({
         shortcuts: SHORTCUTS_DATA,
         callback: (code) => {
+          console.log(focused)
           console.log(code)
         },
       })
     }
 
     return () => {
-      pluginRef.current.destroy()
+      pluginRef.current?.destroy()
+      pluginRef.current = null
     }
-  }, [focused])
+  }, [])
 }
 
 export default useShortcut

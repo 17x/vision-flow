@@ -7,7 +7,7 @@ import deepClone from '../utilities/deepClone.ts'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
 const useShortcut = (executeAction: EditorExecutor) => {
-  const {state: {currentTool, focused}} = useContext(WorkspaceContext)
+  const {state: {currentTool, focused}, dispatch} = useContext(WorkspaceContext)
   const lastToolRef = useRef<string>(null)
   const data = useMemo(() => {
     let arr = matchObject(deepClone(SHORTCUTS_DATA), (item) => !!item.shortcut) as ActionItemType[]
@@ -30,6 +30,10 @@ const useShortcut = (executeAction: EditorExecutor) => {
           const c = data.find(item => item.id === id)!
           if (c.editorAction) {
             executeAction(c.editorAction, c.editorActionData)
+              console.log(c.editorAction)
+            if (c.editorAction === 'switch-tool') {
+              dispatch({type: 'SET_CURRENT_TOOL', payload: c.editorActionData})
+            }
           }
         }
       },

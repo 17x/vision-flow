@@ -7,7 +7,7 @@ import deepClone from '../utilities/deepClone.ts'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
 const useShortcut = (executeAction: EditorExecutor) => {
-  const {state: {focused}, dispatch} = useContext(WorkspaceContext)
+  const {state: {focused}} = useContext(WorkspaceContext)
 
   const data = useMemo(() => matchObject(deepClone(SHORTCUTS_DATA), (item) => !!item.shortcut) as {
     id: string,
@@ -16,7 +16,7 @@ const useShortcut = (executeAction: EditorExecutor) => {
 
   const pluginRef = useRef<Shortcut | null>(null)
 
-  console.log('out, focused',focused)
+  console.log('out, focused', focused)
   useEffect(() => {
 
     if (!pluginRef.current) {

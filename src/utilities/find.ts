@@ -5,7 +5,6 @@ const matchObject = (o: unknown[] | { children?: unknown[] }, predictor: (...arg
 
   if (Array.isArray(o)) {
     o.forEach(item => {
-      console.log(item)
       if (predictor(item)) {
         result.push(item)
       }

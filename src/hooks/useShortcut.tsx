@@ -4,6 +4,7 @@ import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 import SHORTCUTS_DATA from '../constants/actions.ts'
 import Shortcut from '../lib/shortcut/shortcut.ts'
 import matchObject from '../utilities/find.ts'
+import deepClone from '../utilities/deepClone.ts'
 
 const useShortcut = (executeAction: EditorExecutor) => {
   const {state: {focused}} = useContext(WorkspaceContext)
@@ -11,11 +12,11 @@ const useShortcut = (executeAction: EditorExecutor) => {
 
   useEffect(() => {
     if (!pluginRef.current) {
-      const data = matchObject(SHORTCUTS_DATA, (item) => !!item.shortcut)
-      console.log(data)
-      /*SHORTCUTS_DATA.forEach((data) => {
-        // console.log(data)
-      })*/
+      const data = matchObject(deepClone(SHORTCUTS_DATA), (item) => !!item.shortcut) as {
+        id: string,
+        shortcut: string
+      }[]
+
       pluginRef.current = new Shortcut({
         shortcuts: data,
         callback: (code) => {

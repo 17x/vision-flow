@@ -7,7 +7,7 @@ const useFocus = (ref: RefObject<HTMLElement | null>) => {
 
   const handleMouseMove = (e: MouseEvent) => {
 
-    dispatch({type: 'SET_FOCUSED', payload: ref.current!.contains(e.target?)})
+    dispatch({type: 'SET_FOCUSED', payload: ref.current!.contains(e.target as Node)})
   }
 
   useEffect(() => {

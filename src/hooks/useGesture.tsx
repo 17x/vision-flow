@@ -8,26 +8,6 @@ function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExe
   const {dispatch} = useContext(WorkspaceContext)
   const pluginRef = useRef<Zoom | null>(null)
 
-  /* const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
-     let nextScale = null
-     let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
-
-     if (zoomIn) {
-       nextScale = filtered.reverse().find(z => z.value > currentScale)
-     } else {
-       nextScale = filtered.find(z => z.value < currentScale)
-     }
-
-     if (nextScale) {
-       dispatch({type: 'SET_WORLD_SCALE', payload: nextScale.value})
-       executeAction('world-zoom', {
-         zoomTo: true,
-         zoomFactor: nextScale.value,
-         physicalPoint: p,
-       })
-     }
-   }
- */
   useEffect(() => {
     if (!ref.current) return
 

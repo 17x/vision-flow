@@ -1,11 +1,9 @@
-import {RefObject, useContext, useEffect, useRef} from 'react'
+import {RefObject, useEffect, useRef} from 'react'
 import Zoom from '../lib/zoom/zoom.ts'
-import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 import {ToolName} from '@lite-u/editor/types'
 
 function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExecutor, currentTool: ToolName, handleZoom) {
-  const {dispatch} = useContext(WorkspaceContext)
   const pluginRef = useRef<Zoom | null>(null)
 
   useEffect(() => {

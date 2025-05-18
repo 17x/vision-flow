@@ -13,10 +13,10 @@ const useShortcut = (executeAction: EditorExecutor, focused: boolean) => {
 
   const pluginRef = useRef<Shortcut | null>(null)
 
-
+    console.log(focused)
   useEffect(() => {
+
     if (!pluginRef.current) {
-        console.log(focused)
       const callback = (id: string) => {
         console.log(focused)
 
@@ -27,7 +27,6 @@ const useShortcut = (executeAction: EditorExecutor, focused: boolean) => {
           executeAction(id)
         }
       }
-
 
       pluginRef.current = new Shortcut({
         shortcuts: data,

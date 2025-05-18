@@ -2,10 +2,9 @@ import {useContext, useEffect, useRef, useState} from 'react'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {Con, Panel} from '@lite-u/ui'
 import {EditorExecutor} from '../workspace/Workspace.tsx'
-import { ElementInstance } from '@lite-u/editor/types'
 
 interface LayerPanelProps {
-  executeAction:EditorExecutor
+  executeAction: EditorExecutor
 }
 
 const ITEM_HEIGHT = 28
@@ -14,7 +13,7 @@ export const LayerPanel = ({executeAction}: LayerPanelProps) => {
   const targetRef = useRef<HTMLDivElement>(null)
   const [scrollTop, setScrollTop] = useState(0)
   const [indexRange, setIndexRange] = useState([0, 10])
-  const {state: {elements,selectedElements}} = useContext(WorkspaceContext)
+  const {state: {elements, selectedElements}} = useContext(WorkspaceContext)
   console.log(selectedElements)
   useEffect(() => {
     /*  const closestOne = selected[selected.length - 1]

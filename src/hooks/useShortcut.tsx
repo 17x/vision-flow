@@ -6,7 +6,7 @@ import matchObject from '../utilities/find.ts'
 import deepClone from '../utilities/deepClone.ts'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 
-const useShortcut = (executeAction: EditorExecutor, handleZoom) => {
+const useShortcut = (executeAction: EditorExecutor, handleZoom: (b: boolean, e?: MouseEvent) => void) => {
   const {state: {currentTool, focused}, dispatch} = useContext(WorkspaceContext)
   const lastToolRef = useRef<string>(null)
   const data = useMemo(() => {

@@ -18,10 +18,11 @@ class Shortcut {
     this.eventsController = new AbortController()
     this.upMode = upMode
     this.callback = callback
-    // this.shortcuts = shortcuts
+
     shortcuts.forEach(({code, shortcut}) => {
 
     })
+
     window.addEventListener(upMode ? 'keyup' : 'keydown', this.handleKey.bind(this), {
       signal: this.eventsController.signal,
       passive: false,

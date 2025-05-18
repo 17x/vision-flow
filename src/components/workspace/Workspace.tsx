@@ -34,22 +34,25 @@ const Workspace: FC<{
   const worldPointRef = useRef<PointRef | null>(null)
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const editorRef = useEditor(containerRef, workspace, page)
-
+  const scaleRef = useRef(state.worldScale)
+  const toolNameRef = useRef(state.currentTool)
   /*
     useImperativeHandle(ref, () => {
       return editorRef.current
     }, [editorRef.current])
   */
   const handleZoom = useCallback((zoomIn: boolean, p?: { x: number, y: number }) => {
-    console.log('zoom')
+    const currentScale = scaleRef.current
+    console.log('worldScale', currentScale)
+    // const currentTool = toolNameRef.current
     let nextScale = null
     let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
-    console.log(state.currentTool, state.worldScale)
+    // console.log(state.currentTool, state.worldScale)
 
     if (zoomIn) {
-      nextScale = filtered.reverse().find(z => z.value > state.worldScale)
+      nextScale = filtered.reverse().find(z => z.value > currentScale)
     } else {
-      nextScale = filtered.find(z => z.value < state.worldScale)
+      nextScale = filtered.find(z => z.value < currentScale)
     }
 
     if (nextScale) {
@@ -60,7 +63,7 @@ const Workspace: FC<{
         physicalPoint: p,
       })
     }
-  }, [state.worldScale])
+  }, [scaleRef.current])
 
   const executeAction: EditorExecutor = (code, data) => {
 
@@ -81,7 +84,8 @@ const Workspace: FC<{
   useFocus(contextRootRef)
   useShortcut(executeAction, handleZoom)
   useEffect(() => {
-
+    scaleRef.current = state.worldScale
+    toolNameRef.current = state.currentTool
   }, [state.currentTool, state.worldScale])
   return <EditorContext.Provider value={{executeAction}}>
 

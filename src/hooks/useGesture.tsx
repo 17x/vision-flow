@@ -1,10 +1,33 @@
-import {RefObject, useEffect, useRef} from 'react'
+import {RefObject, useContext, useEffect, useRef} from 'react'
 import Zoom from '../lib/zoom/zoom.ts'
+import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
+import {ToolName} from '@lite-u/editor/types'
 
-function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExecutor, currentTool:string, handleZoom) {
+function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExecutor, currentTool: ToolName, handleZoom) {
+  const {dispatch} = useContext(WorkspaceContext)
   const pluginRef = useRef<Zoom | null>(null)
 
+  /* const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
+     let nextScale = null
+     let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
+
+     if (zoomIn) {
+       nextScale = filtered.reverse().find(z => z.value > currentScale)
+     } else {
+       nextScale = filtered.find(z => z.value < currentScale)
+     }
+
+     if (nextScale) {
+       dispatch({type: 'SET_WORLD_SCALE', payload: nextScale.value})
+       executeAction('world-zoom', {
+         zoomTo: true,
+         zoomFactor: nextScale.value,
+         physicalPoint: p,
+       })
+     }
+   }
+ */
   useEffect(() => {
     if (!ref.current) return
 
@@ -19,6 +42,7 @@ function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExe
     }
 
     const handleClick = (e: MouseEvent) => {
+      // handleZoom(e)
       if (currentTool === 'zoomIn' || currentTool === 'zoomOut') {
         handleZoom(currentTool === 'zoomIn', e)
       }
@@ -31,7 +55,7 @@ function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExe
       pluginRef.current?.destroy()
       pluginRef.current = null
     }
-  }, [ref /*currentScale, currentTool*/])
+  }, [ref, currentTool])
 }
 
 export default useGesture

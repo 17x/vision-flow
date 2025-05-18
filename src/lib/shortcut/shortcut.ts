@@ -1,6 +1,6 @@
 export interface ShortcutOptions {
   shortcuts: { code: string, shortcut: string }[],
-  upMode: boolean
+  upMode?: boolean
   callback?: (code: string, event: WheelEvent) => void
 }
 
@@ -11,14 +11,17 @@ class Shortcut {
   callback?: (code: string, event: WheelEvent) => void
 
   constructor({
-                shortcuts,
-                upMode = false,
+                shortcuts = [],
                 callback,
+                upMode = false,
               }: ShortcutOptions) {
     this.eventsController = new AbortController()
     this.upMode = upMode
     this.callback = callback
-    this.shortcuts = shortcuts
+    // this.shortcuts = shortcuts
+    shortcuts.forEach(({code, shortcut}) => {
+
+    })
     window.addEventListener(upMode ? 'keyup' : 'keydown', this.handleKey.bind(this), {
       signal: this.eventsController.signal,
       passive: false,

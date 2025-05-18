@@ -5,16 +5,7 @@ const matchObject = (o: unknown[] | { children?: unknown[] }, predictor: (...arg
 
   if (Array.isArray(o)) {
     o.forEach(item => {
-      if (predictor(item)) {
-        result.push(item)
-      }
-
-      if (item.children) {
-        item.children.forEach(child => {
-          console.log(matchObject(child, predictor))
-          result.push(...matchObject(child, predictor))
-        })
-      }
+      result.push(...matchObject(item, predictor))
     })
   } else if (typeCheck(o) === 'object') {
     if (predictor(o)) {
@@ -27,7 +18,6 @@ const matchObject = (o: unknown[] | { children?: unknown[] }, predictor: (...arg
         result.push(...matchObject(child, predictor))
       })
     }
-
   }
 
   return result

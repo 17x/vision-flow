@@ -11,6 +11,7 @@ const useShortcut = (executeAction: EditorExecutor) => {
   const pluginRef = useRef<Shortcut | null>(null)
 
   useEffect(() => {
+    console.log(9)
     if (!pluginRef.current) {
       const data = matchObject(deepClone(SHORTCUTS_DATA), (item) => !!item.shortcut) as {
         id: string,

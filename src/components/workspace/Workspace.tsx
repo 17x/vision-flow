@@ -40,11 +40,6 @@ const Workspace: FC<{
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const editorRef = useEditor(containerRef, workspace, page)
 
-  /*
-    useImperativeHandle(ref, () => {
-      return editorRef.current
-    }, [editorRef.current])
-  */
   const handleZoom = (zoomIn: boolean, p?: { x: number, y: number }) => {
     let nextScale = null
     let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')

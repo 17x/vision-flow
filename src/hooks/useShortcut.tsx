@@ -28,15 +28,16 @@ const useShortcut = (executeAction: EditorExecutor) => {
     })
 
     const shortcut2 = new Shortcut({
-      shortcuts: data,
+      shortcuts: [{id: 'toggleTool', shortcut: 'space'}],
       upMode: true,
       callback: (id: string) => {
         console.log(id)
       },
     })
-    // }
+    console.log(100)
 
     return () => {
+      console.log(101)
       shortcut1.destroy()
       shortcut2.destroy()
       // pluginRef.current?.destroy()

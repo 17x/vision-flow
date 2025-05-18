@@ -21,20 +21,20 @@ class Shortcut {
 
     window.addEventListener(upMode ? 'keyup' : 'keydown', this.handleKey.bind(this), {
       signal: this.eventsController.signal,
-      passive: false,
+      // passive: false,
     })
   }
 
   handleKey(event: KeyboardEvent) {
-    const {key, altKey, ctrlKey, metaKey, shiftKey} = event
+    const {code, altKey, ctrlKey, metaKey, shiftKey} = event
     const parts: string[] = []
-    // console.log(event)
+
     if (ctrlKey) parts.push('ctrl')
     if (metaKey) parts.push('meta')
     if (shiftKey) parts.push('shift')
     if (altKey) parts.push('alt')
 
-    parts.push(key.toLowerCase())
+    parts.push(code.toLowerCase())
 
     const inputShortcut = parts.join('+')
 

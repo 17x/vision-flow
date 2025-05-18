@@ -20,13 +20,34 @@ export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
   const groupClass = 'absolute bg-white shadow-lg rounded-md border border-gray-200 py-1 z-50'
   const ITEMS = useMemo(() => {
     let arr = deepClone(EDIT.children)
+    const noSelectedModule = selectedModules.length === 0
 
     arr.forEach(item => {
-
+      switch (item.id) {
+        case 'copy':
+          item.disabled = noSelectedModule
+          break
+        case 'paste':
+          item.disabled = copiedItems.length === 0
+          break
+        case 'duplicate':
+          item.disabled = noSelectedModule
+          break
+        case 'delete':
+          item.disabled = noSelectedModule
+          item.divide = true
+          break
+        case 'undo':
+          item.disabled = !historyStatus.hasPrev
+          break
+        case 'redo':
+          item.disabled = !historyStatus.hasNext
+          break
+      }
     })
 
     return arr
-  }, [selectedModules, historyStatus])
+  }, [selectedModules, historyStatus, copiedItems])
   useEffect(() => {
     const noSelectedModule = selectedModules.length === 0
     const ITEMS: MenuItemType[] = [
@@ -34,10 +55,10 @@ export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
       {id: 'paste', editorActionCode: 'element-paste', disabled: copiedItems.length === 0},
       {id: 'duplicate', editorActionCode: 'element-duplicate', disabled: noSelectedModule},
       {id: 'delete', editorActionCode: 'element-delete', disabled: noSelectedModule, divide: true},
-      // {id: 'group', disabled: selectedModules.size < 2},
-      // {id: 'ungroup', disabled: noSelectedModule},
       {id: 'undo', editorActionCode: 'history-undo', disabled: !historyStatus.hasPrev},
       {id: 'redo', editorActionCode: 'history-redo', disabled: !historyStatus.hasNext},
+      // {id: 'ungroup', disabled: noSelectedModule},
+      // {id: 'group', disabled: selectedModules.size < 2},
       /* {
          id: 'layer',
          disabled: noSelectedModule,

@@ -15,6 +15,7 @@ export interface WorkSpaceStateType {
   currentTool: ToolName
   lastSavedHistoryId: number
   copiedItems: ElementProps[]
+  elements: { id: string, name: string, show: boolean }[]
   // viewport: ViewportInfo | null
 }
 
@@ -41,6 +42,7 @@ export const initialWorkspaceState: WorkSpaceStateType = {
     hasPrev: false,
     hasNext: false,
   },
+  elements: [],
 }
 
 export type WorkspaceAction =
@@ -49,7 +51,7 @@ export type WorkspaceAction =
   | { type: 'SET_FOCUSED'; payload: boolean }
   | { type: 'SET_HISTORY_ARRAY'; payload: HistoryNode[] }
   | { type: 'SET_NEED_SAVE'; payload: boolean }
-  | { type: 'SET_SELECTED_MODULES'; payload: UID[] }
+  | { type: 'SET_SELECTED_ELEMENTS'; payload: UID[] }
   | { type: 'SET_SELECTED_PROPS'; payload: ElementProps | null }
   | { type: 'SET_LAST_SAVED_HISTORY_ID'; payload: number }
   | { type: 'SET_COPIED_ITEMS'; payload: ElementProps[] }
@@ -57,7 +59,7 @@ export type WorkspaceAction =
   | { type: 'SET_WORLD_POINT'; payload: Point }
   | { type: 'SET_WORLD_SCALE'; payload: number }
   | { type: 'SET_CURRENT_TOOL'; payload: ToolName }
-  | { type: 'SET_ELEMENTS'; payload: { id: string, name: string } [] }
+  | { type: 'SET_ELEMENTS'; payload: { id: string, name: string, show: boolean } [] }
 
 export const WorkspaceReducer = (state: WorkSpaceStateType, action: WorkspaceAction) => {
   switch (action.type) {
@@ -90,10 +92,10 @@ export const WorkspaceReducer = (state: WorkSpaceStateType, action: WorkspaceAct
         ...state,
         needSave: action.payload,
       }
-    case 'SET_SELECTED_MODULES':
+    case 'SET_SELECTED_ELEMENTS':
       return {
         ...state,
-        selectedModules: action.payload,
+        selectedElements: action.payload,
       }
     case 'SET_SELECTED_PROPS':
       return {

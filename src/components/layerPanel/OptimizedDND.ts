@@ -1,13 +1,13 @@
 interface OptimizedDNDProps {
   ele: HTMLDivElement
-  data: ModuleInstance[]
+  data: ElementInstance[]
 }
 
 const ITEM_HEIGHT = 25
 
 class OptimizedDND {
   readonly ele: HTMLDivElement
-  readonly data: ModuleInstance[]
+  readonly data: ElementInstance[]
   private height: number
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

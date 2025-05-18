@@ -85,7 +85,6 @@ const Workspace: FC<{
   useShortcut(executeAction, handleZoom)
   useEffect(() => { scaleRef.current = state.worldScale }, [state.worldScale])
 
-
   return <EditorContext.Provider value={{executeAction}}>
 
     <Col fw fh stretch ref={contextRootRef} data-focused={state.focused} autoFocus={true}
@@ -120,7 +119,7 @@ const Workspace: FC<{
 
         <Col fh stretch flex={'none'} w={260} style={{borderLeft: '1px solid #dfdfdf'}}>
           <PropPanel props={state.selectedProps!}/>
-          <LayerPanel data={[]}/>
+          <LayerPanel  executeAction={executeAction}/>
           <HistoryPanel pickHistory={(node) => {
             if (editorRef.current) {
               editorRef.current.execute('history-pick', node)

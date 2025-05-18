@@ -13,7 +13,7 @@ const IconColor = 'text-black'
 const ShortcutBar: React.FC = () => {
   const {saveFile} = useFile()
   const {state: {needSave, historyStatus, selectedElements}, executeAction} = useContext(WorkspaceContext)
-  const hasSelectedModules = selectedElements.length > 0
+  const hasselectedElements = selectedElements.length > 0
 
   const actions = [
     {id: 'save', action: 'saveFile', icon: 'save', disabled: !needSave, divide: true},
@@ -23,7 +23,7 @@ const ShortcutBar: React.FC = () => {
       id: 'delete',
       editorActionCode: 'element-delete',
       icon: 'trash',
-      disabled: !hasSelectedModules,
+      disabled: !hasselectedElements,
       divide: true,
     },
     // {id: 'add', icon: 'cross', disabled: false, divide: true},
@@ -32,28 +32,28 @@ const ShortcutBar: React.FC = () => {
       editorActionCode: 'element-layer',
       editorActionData: 'up',
       icon: 'layers',
-      disabled: !hasSelectedModules,
+      disabled: !hasselectedElements,
     },
     {
       id: 'layerDown',
       editorActionCode: 'element-layer',
       editorActionData: 'down',
       icon: 'layers',
-      disabled: !hasSelectedModules,
+      disabled: !hasselectedElements,
     },
     {
       id: 'layerTop',
       editorActionCode: 'element-layer',
       editorActionData: 'top',
       icon: 'layers',
-      disabled: !hasSelectedModules,
+      disabled: !hasselectedElements,
     },
     {
       id: 'layerBottom',
       editorActionCode: 'element-layer',
       editorActionData: 'bottom',
       icon: 'layers',
-      disabled: !hasSelectedModules,
+      disabled: !hasselectedElements,
       divide: true,
     },
     /*{id: 'group', icon: 'group', disabled: true},

@@ -58,7 +58,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
       {id: 'undo', editorActionCode: 'history-undo', disabled: !historyStatus.hasPrev},
       {id: 'redo', editorActionCode: 'history-redo', disabled: !historyStatus.hasNext},
       // {id: 'ungroup', disabled: noSelectedModule},
-      // {id: 'group', disabled: selectedModules.size < 2},
+      // {id: 'group', disabled: selectedElements.size < 2},
       /* {
          id: 'layer',
          disabled: noSelectedModule,
@@ -70,7 +70,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({position, onClose}) => {
          ],
        },*/
     ]
-    // console.log(selectedModules)
+    // console.log(selectedElements)
     setMenuItems(ITEMS)
 
     const remove = () => {

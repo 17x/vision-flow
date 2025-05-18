@@ -3,7 +3,7 @@ import {RefObject, useContext, useEffect, useRef, useState} from 'react'
 import {useUI} from '../contexts/UIContext/UIContext.tsx'
 import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 import {Editor} from '@lite-u/editor'
-import {ElementInstance} from '@lite-u/editor/types'
+import {ElementInstance, ElementProps} from '@lite-u/editor/types'
 import {PointRef} from '../components/statusBar/StatusBar.tsx'
 
 // import FileContext from '../contexts/fileContext/FileContext.tsx'
@@ -55,17 +55,22 @@ function useEditor(ref: RefObject<HTMLDivElement | null>, worldPointRef: RefObje
             needSaveLocal.current = newNeedSaveValue
           }
         },
-        onModulesUpdated: (moduleMap) => {
-          const arr = Array.from(moduleMap.values()).sort((a, b) => a.layer - b.layer)
+        onElementsUpdated: (elementMap) => {
+          const arr = Array.from(elementMap.values()).sort((a, b) => a.layer - b.layer).map((item) => ({
+            id: item.id,
+            name: item.type,
+            show: item.show,
+          }))
+          // setSortedModules(arr)
 
-          console.log(arr)
+          // console.log(arr)
           dispatch({
-            type: 'SET_S',
+            type: 'SET_ELEMENTS',
+            payload: arr,
           })
-          setSortedModules(arr)
         },
         onSelectionUpdated: (selected, props) => {
-          dispatch({type: 'SET_SELECTED_MODULES', payload: Array.from(selected)})
+          dispatch({type: 'SET_SELECTED_ELEMENTS', payload: Array.from(selected)})
           dispatch({type: 'SET_SELECTED_PROPS', payload: props})
         },
         /*        onViewportUpdated: (viewportInfo) => {

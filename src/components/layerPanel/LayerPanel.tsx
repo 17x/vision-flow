@@ -1,24 +1,26 @@
 import {useContext, useEffect, useRef, useState} from 'react'
 import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.tsx'
 import {Con, Panel} from '@lite-u/ui'
+import {EditorExecutor} from '../workspace/Workspace.tsx'
+import { ElementInstance } from '@lite-u/editor/types'
 
 interface LayerPanelProps {
-  data: ModuleInstance[]
+  executeAction:EditorExecutor
 }
 
 const ITEM_HEIGHT = 28
-export const LayerPanel = ({data}: LayerPanelProps) => {
+export const LayerPanel = ({executeAction}: LayerPanelProps) => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const targetRef = useRef<HTMLDivElement>(null)
   const [scrollTop, setScrollTop] = useState(0)
   const [indexRange, setIndexRange] = useState([0, 10])
-  const {state: {selectedElements}, executeAction} = useContext(WorkspaceContext)
-
+  const {state: {elements,selectedElements}} = useContext(WorkspaceContext)
+  console.log(selectedElements)
   useEffect(() => {
     /*  const closestOne = selected[selected.length - 1]
 
       if (closestOne) {
-        const idx = data.findIndex(x => x.id === closestOne)
+        const idx = elements.findIndex(x => x.id === closestOne)
 
         scrollRef.current?.scrollTo(0, idx * ITEM_HEIGHT)
         console.log(idx * ITEM_HEIGHT)
@@ -34,9 +36,9 @@ export const LayerPanel = ({data}: LayerPanelProps) => {
 
     // console.log(newScrollTop)
     if (scrollUp) {
-      if (indexRange[0] >= data.length - 1) return
+      if (indexRange[0] >= elements.length - 1) return
     } else {
-      if (indexRange[1] >= data.length - 1) return
+      if (indexRange[1] >= elements.length - 1) return
 
     }
 
@@ -47,7 +49,7 @@ export const LayerPanel = ({data}: LayerPanelProps) => {
   const arr = []
 
   for (let i = indexRange[0]; i < indexRange[1]; i++) {
-    const item = data[i]
+    const item = elements[i]
 
     if (item) {
       arr.push(
@@ -60,7 +62,7 @@ export const LayerPanel = ({data}: LayerPanelProps) => {
              id={`layer-element-${item.id}`}
              key={item.id}>
           {/*{item.id.match(/\d+$/)[0]}*/}
-          {item.type}
+          {item.name}
         </div>,
       )
     }
@@ -77,7 +79,7 @@ export const LayerPanel = ({data}: LayerPanelProps) => {
              onScroll={handleScroll}
              className={'relative scrollbar-custom overflow-x-hidden overflow-y-auto p-2 border h-30 border-gray-200 select-none'}>
           <div className={'absolute z-10 w-full top-0 left-0'} style={{
-            height: data.length * ITEM_HEIGHT,
+            height: elements.length * ITEM_HEIGHT,
           }}></div>
           <div className={'z-20 w-full sticky top-0 left-0'}>{arr}</div>
         </div>

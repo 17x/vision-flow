@@ -27,18 +27,19 @@ class Shortcut {
 
   handleKey(event: KeyboardEvent) {
     const {key, altKey, ctrlKey, metaKey, shiftKey} = event
-    console.log(altKey, ctrlKey, metaKey, shiftKey)
-    // Normalize the key combo into a string like "ctrl+shift+a"
     const parts: string[] = []
+
     if (ctrlKey) parts.push('ctrl')
     if (metaKey) parts.push('meta')
     if (shiftKey) parts.push('shift')
-    if (altKey) parts.push('alt') // ✅ add this line
+    if (altKey) parts.push('alt')
+
     parts.push(key.toLowerCase())
+
     const inputShortcut = parts.join('+')
 
     for (const {code, shortcut} of this.shortcuts) {
-      // Support multiple shortcuts separated by comma
+
       const keys = shortcut.split(',').map(s => s.trim().toLowerCase())
       if (keys.includes(inputShortcut)) {
         event.preventDefault()

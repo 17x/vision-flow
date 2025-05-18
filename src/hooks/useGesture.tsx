@@ -5,7 +5,7 @@ import WorkspaceContext from '../contexts/workspaceContext/WorkspaceContext.tsx'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 
 function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExecutor, currentScale: number, currentTool: ToolName) {
-  const {state, dispatch} = useContext(WorkspaceContext)
+  const {dispatch} = useContext(WorkspaceContext)
   const pluginRef = useRef<Zoom | null>(null)
   const handleZoom = (zoomIn: boolean, p: { x: number, y: number }) => {
     let nextScale = null

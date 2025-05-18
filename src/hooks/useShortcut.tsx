@@ -19,8 +19,6 @@ const useShortcut = (executeAction: EditorExecutor) => {
   useEffect(() => {
     if (!pluginRef.current) {
       const callback = (id: string) => {
-        console.log('focused', focused)
-
         if (focused) {
           // console.log(data)
           const c = data.find(item => item.id === id)

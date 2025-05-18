@@ -2,7 +2,7 @@ import {RefObject, useEffect, useRef} from 'react'
 import Zoom from '../lib/zoom/zoom.ts'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 
-function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExecutor, handleZoom) {
+function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExecutor, currentTool:string, handleZoom) {
   const pluginRef = useRef<Zoom | null>(null)
 
   useEffect(() => {
@@ -19,10 +19,9 @@ function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExe
     }
 
     const handleClick = (e: MouseEvent) => {
-      handleZoom(e)
-      /*if (currentTool === 'zoomIn' || currentTool === 'zoomOut') {
+      if (currentTool === 'zoomIn' || currentTool === 'zoomOut') {
         handleZoom(currentTool === 'zoomIn', e)
-      }*/
+      }
     }
 
     ref.current.addEventListener('click', handleClick)

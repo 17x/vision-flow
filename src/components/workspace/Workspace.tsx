@@ -45,12 +45,11 @@ const Workspace: FC<{
       return editorRef.current
     }, [editorRef.current])
   */
-  const handleZoom = (p?: { x: number, y: number }) => {
-
+  const handleZoom = (zoomIn: boolean, p?: { x: number, y: number }) => {
     let nextScale = null
     let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
-    const zoomIn = state.currentTool === 'zoomIn'
     console.log(state.currentTool, state.worldScale)
+
     if (zoomIn) {
       nextScale = filtered.reverse().find(z => z.value > state.worldScale)
     } else {
@@ -82,9 +81,9 @@ const Workspace: FC<{
     editorRef.current!.execute(code, data)
   }
 
-  useGesture(containerRef, executeAction, handleZoom)
+  useGesture(containerRef, executeAction, state.currentTool, handleZoom)
   useFocus(contextRootRef)
-  useShortcut(executeAction, handleZoom)
+  useShortcut(executeAction)
   useEffect(() => {
 
   }, [state.currentTool, state.worldScale])

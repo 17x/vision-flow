@@ -43,8 +43,6 @@ const Workspace: FC<{
   */
   const handleZoom = useCallback((zoomIn: boolean, p?: { x: number, y: number }) => {
     const currentScale = scaleRef.current
-    console.log('worldScale', currentScale)
-    // const currentTool = toolNameRef.current
     let nextScale = null
     let filtered = ZOOM_LEVELS.filter(z => typeof z.value === 'number')
     // console.log(state.currentTool, state.worldScale)

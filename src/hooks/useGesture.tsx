@@ -3,7 +3,7 @@ import Zoom from '../lib/zoom/zoom.ts'
 import {EditorExecutor} from '../components/workspace/Workspace.tsx'
 import {ToolName} from '@lite-u/editor/types'
 
-function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExecutor, currentTool: ToolName, handleZoom) {
+function useGesture(ref: RefObject<HTMLElement | null>, executeAction: EditorExecutor, currentTool: ToolName, handleZoom: (b: boolean, e: MouseEvent) => void) {
   const pluginRef = useRef<Zoom | null>(null)
 
   useEffect(() => {

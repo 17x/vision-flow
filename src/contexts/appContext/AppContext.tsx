@@ -105,6 +105,22 @@ const dFile = {
           cy: 100,
           width: 100,
           height: 100,
+          rotation:0,
+          stroke: {
+            enabled: false,
+          },
+          fill: {
+            enabled: true,
+            color: '#00d0ff',
+          },
+        },
+        {
+          id: 'hello4',
+          type: 'rectangle',
+          cx: 100,
+          cy: 100,
+          width: 100,
+          height: 100,
           rotation:10,
           stroke: {
             enabled: false,

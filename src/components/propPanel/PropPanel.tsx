@@ -35,10 +35,11 @@ const ShapePropsPanel = ({props}: { props: ElementProps }) => {
     let newValue: string | number = e.target.value
 
     // @ts-ignore
-    if (['x', 'y', 'width', 'height'].includes(keyName)) {
+    if (['x', 'y', 'width', 'height', 'rotation'].includes(keyName)) {
       newValue = Number(newValue)
     }
 
+    // console.log(keyName,newValue)
     executeAction('element-modify', [{
       id: props.id,
       props: {

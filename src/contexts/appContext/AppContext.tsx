@@ -64,7 +64,7 @@ const dFile = {
       'id': 'ile9lt',
       'name': 'workspace-1',
       'elements': [
-        {
+  /*      {
           id: 'hello',
           type: 'rectangle',
           cx: 100,
@@ -97,14 +97,15 @@ const dFile = {
             join: 'miter',
             dashed: false,
           },
-        },
+        },*/
         {
           id: 'hello3',
           type: 'rectangle',
-          cx: 0,
+          cx: 100,
           cy: 100,
           width: 100,
           height: 100,
+          rotation:10,
           stroke: {
             enabled: false,
           },

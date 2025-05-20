@@ -1,7 +1,7 @@
 import {createContext, useContext} from 'react'
 
 const UIContext = createContext<{ dpr: number }>({
-  dpr: 2,
+  dpr: 4,
 })
 
 export const useUI = () => useContext(UIContext)

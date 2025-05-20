@@ -106,16 +106,10 @@ const dFile = {
           width: 100,
           height: 100,
           stroke: {
-            weight: 1,
-            enable: true,
-            color: '#00d0ff',
-            enabled: true,
-            cap: 'butt',
-            join: 'miter',
-            dashed: false,
+            enabled: false,
           },
           fill: {
-            enable: true,
+            enabled: true,
             color: '#00d0ff',
           },
         },

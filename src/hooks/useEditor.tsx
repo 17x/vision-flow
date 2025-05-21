@@ -98,7 +98,7 @@ function useEditor(ref: RefObject<HTMLDivElement | null>, worldPointRef: RefObje
     })
 
     editorRef.current = editor
-
+    console.log(editorRef.current)
     return () => editor.destroy()
   }, [ref, workspace])
 

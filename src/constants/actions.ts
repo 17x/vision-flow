@@ -100,7 +100,7 @@ export const TOOLS = {
   id: 'tools',
   children: [
     {id: 'selectorTool', shortcut: 'v', editorAction: 'switch-tool', editorActionData: 'selector'},
-    {id: 'lineSegmentTool', shortcut: 'l', editorAction: 'switch-tool', editorActionData: 'lineSegment'},
+    {id: 'lineSegmentTool', shortcut: '\\', editorAction: 'switch-tool', editorActionData: 'lineSegment'},
     {id: 'rectangleTool', shortcut: 'r', editorAction: 'switch-tool', editorActionData: 'rectangle'},
     {id: 'ellipseTool', shortcut: 'e', editorAction: 'switch-tool', editorActionData: 'ellipse'},
     {id: 'textTool', shortcut: 't', editorAction: 'switch-tool', editorActionData: 'text'},

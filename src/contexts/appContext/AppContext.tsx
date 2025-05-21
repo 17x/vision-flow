@@ -44,6 +44,26 @@ interface AppContextType {
   startCreateFile: VoidFunction
 }
 
+const arr0 = [
+  {
+    id: 'hello3',
+    type: 'rectangle',
+    cx: 100,
+    cy: 100,
+    width: 100,
+    height: 100,
+    rotation: 10,
+    stroke: {
+      enabled: false,
+      weight: 1,
+      color:'#000000'
+    },
+    fill: {
+      enabled: true,
+      color: '#9ac6d1',
+    },
+  },
+]
 const arr = [
   {
     id: 'hello3',
@@ -3153,7 +3173,7 @@ const dFile = {
           rotation: 10,
 
         },*/
-        ...arr2,
+        ...arr0,
         /*{
           id: 'hello5',
           type: 'rectangle',

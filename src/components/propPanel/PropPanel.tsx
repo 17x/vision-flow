@@ -37,6 +37,8 @@ const ShapePropsPanel = ({props}: { props: ElementProps }) => {
     // @ts-ignore
     if (['x', 'y', 'width', 'height', 'rotation'].includes(keyName)) {
       newValue = Number(newValue)
+    } else if (['x', 'y', 'width', 'height', 'rotation'].includes(keyName)) {
+      newValue = Number(newValue)
     }
 
     // console.log(keyName,newValue)
@@ -137,8 +139,16 @@ const ShapePropsPanel = ({props}: { props: ElementProps }) => {
         <ProtectedInput
           type="checkbox"
           name="enableFill"
-          value={props.enableFill}
-          onChange={handleChange}
+          checked={props.fill.enabled}
+          onChange={(e) => {
+            // console.log(e.target.checked)
+            executeAction('element-modify', [{
+              id: props.id,
+              props: {
+                fill: {enabled: e.target.checked},
+              },
+            }])
+          }}
           className="ml-2"
         />
       </div>
@@ -147,11 +157,18 @@ const ShapePropsPanel = ({props}: { props: ElementProps }) => {
         <ProtectedInput
           type="color"
           name="fillColor"
-          value={props.fillColor}
-          onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
-            console.log(e)
+          value={props.fill.color}
+          // onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            // console.log(e)
+            executeAction('element-modify', [{
+              id: props.id,
+              props: {
+                fill: {color: e.target.value},
+              },
+            }])
           }}
-          onChange={handleChange}
+          // onChange={handleChange}
           className="w-10 h-10 p-1 rounded"
         />
       </div>
@@ -160,8 +177,15 @@ const ShapePropsPanel = ({props}: { props: ElementProps }) => {
         <ProtectedInput
           type="checkbox"
           name="enableLine"
-          defaultChecked={props.enableLine}
-          onChange={handleChange}
+          defaultChecked={props.stroke.enabled}
+          onChange={(e) => {
+            executeAction('element-modify', [{
+              id: props.id,
+              props: {
+                stroke: {enabled: e.target.checked},
+              },
+            }])
+          }}
           className="ml-2"
         />
       </div>
@@ -170,8 +194,15 @@ const ShapePropsPanel = ({props}: { props: ElementProps }) => {
         <ProtectedInput
           type="color"
           name="lineColor"
-          value={props.lineColor}
-          onChange={handleChange}
+          value={props.stroke.color}
+          onChange={(e) => {
+            executeAction('element-modify', [{
+              id: props.id,
+              props: {
+                stroke: {color: e.target.value},
+              },
+            }])
+          }}
           className="w-10 h-10 p-1 rounded"
         />
       </div>
@@ -180,8 +211,16 @@ const ShapePropsPanel = ({props}: { props: ElementProps }) => {
         <ProtectedInput
           type="number"
           name="lineWidth"
+          step={0.25}
           value={props.lineWidth}
-          onChange={handleChange}
+          onChange={(e)=>{
+            executeAction('element-modify', [{
+              id: props.id,
+              props: {
+                stroke: {weight: e.target.value},
+              },
+            }])
+          }}
           className="w-16  py-1 text-black rounded"
         />
       </div>

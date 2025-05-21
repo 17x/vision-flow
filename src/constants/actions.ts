@@ -101,8 +101,8 @@ export const TOOLS = {
   children: [
     {id: 'selectorTool', shortcut: 'v', editorAction: 'switch-tool', editorActionData: 'selector'},
     {id: 'lineSegmentTool', shortcut: '\\', editorAction: 'switch-tool', editorActionData: 'lineSegment'},
-    {id: 'rectangleTool', shortcut: 'r', editorAction: 'switch-tool', editorActionData: 'rectangle'},
-    {id: 'ellipseTool', shortcut: 'e', editorAction: 'switch-tool', editorActionData: 'ellipse'},
+    {id: 'rectangleTool', shortcut: 'm', editorAction: 'switch-tool', editorActionData: 'rectangle'},
+    {id: 'ellipseTool', shortcut: 'l', editorAction: 'switch-tool', editorActionData: 'ellipse'},
     {id: 'textTool', shortcut: 't', editorAction: 'switch-tool', editorActionData: 'text'},
     {id: 'pencilTool', shortcut: 'p', editorAction: 'switch-tool', editorActionData: 'pencil'},
     {id: 'panningTool', shortcut: 'h', editorAction: 'switch-tool', editorActionData: 'panning'},

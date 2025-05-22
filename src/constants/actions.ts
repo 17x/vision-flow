@@ -100,6 +100,7 @@ export const TOOLS = {
   id: 'tools',
   children: [
     {id: 'selectorTool', shortcut: 'v', editorAction: 'switch-tool', editorActionData: 'selector'},
+    {id: 'dSelectorTool', shortcut: 'a', editorAction: 'switch-tool', editorActionData: 'dselector'},
     {id: 'lineSegmentTool', shortcut: '\\', editorAction: 'switch-tool', editorActionData: 'lineSegment'},
     {id: 'rectangleTool', shortcut: 'm', editorAction: 'switch-tool', editorActionData: 'rectangle'},
     {id: 'ellipseTool', shortcut: 'l', editorAction: 'switch-tool', editorActionData: 'ellipse'},

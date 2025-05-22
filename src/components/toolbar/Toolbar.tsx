@@ -8,8 +8,13 @@ import WorkspaceContext from '../../contexts/workspaceContext/WorkspaceContext.t
 const toolList = [
   {
     name: 'Selector',
-    icon: mousePointer(),
+    icon: mousePointer(false),
     toolName: 'selector',
+  },
+  {
+    name: 'Direct Selector',
+    icon: mousePointer(),
+    toolName: 'dselector',
   },
   {
     name: 'Line Segment',

@@ -212,7 +212,7 @@ const ShapePropsPanel = ({props}: { props: ElementProps }) => {
           type="number"
           name="lineWidth"
           step={0.25}
-          value={props.lineWidth}
+          value={props.stroke.weight}
           onChange={(e)=>{
             executeAction('element-modify', [{
               id: props.id,

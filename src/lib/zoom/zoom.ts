@@ -33,7 +33,7 @@ class Zoom {
   protected mouseScrollModifier: 'alt' | 'ctrl' | 'shift' | 'meta'
   _timer: number | undefined
   zoomLock = false
-  DELAY = 400
+  DELAY = 200
   // ACTION_THRESHOLD = 3
   // EVENT_BUFFER: WheelEvent[] = []
   // zoomLock for touchpad zoom

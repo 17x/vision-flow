@@ -45,14 +45,14 @@ interface AppContextType {
   startCreateFile: VoidFunction
 }
 
-
-const ele0 ={
-  id:'rectangle',
-  type:'rectangle',
-  cx:100,
-  cy:100,
-  width:100,
-  height:100,
+const ele0 = {
+  id: 'rectangle',
+  type: 'rectangle',
+  cx: 100,
+  cy: 100,
+  width: 100,
+  height: 100,
+  rotation: 45,
 }
 const ele = {
   'type': 'path',
@@ -1229,18 +1229,7 @@ const ele = {
     'blendMode': 'normal',
     'enabled': false,
   },
-  'rotation': 0,
-  'transform': {
-    'cx': 0,
-    'cy': 0,
-    'rotation': 0,
-    'width': 0,
-    'height': 0,
-    'shear': {
-      'angle': 0,
-      'axis': 'horizontal',
-    },
-  },
+  'rotation': 45,
 }
 const arr1 = Array.from({length: 1}).fill(1).map((_, index) => {
   const dx = 10 * index
@@ -1302,7 +1291,28 @@ const dFile = {
       'id': 'ile9lt',
       'name': 'workspace-1',
       'elements': [
-        ...arr1,
+        {
+          id: 'rectangle',
+          type: 'rectangle',
+          cx: 100,
+          cy: 100,
+          width: 100,
+          height: 100,
+          rotation: 0,
+          stroke:{
+            enabled: true,
+            color: '#ff0000',
+            weight: 1,
+          }
+        }, {
+          id: 'rectangle1',
+          type: 'rectangle',
+          cx: 100,
+          cy: 100,
+          width: 100,
+          height: 100,
+          rotation: 45,
+        },
       ],
     },
   ],

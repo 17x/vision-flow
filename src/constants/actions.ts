@@ -108,6 +108,7 @@ export const TOOLS = {
     {id: 'pencilTool', shortcut: 'p', editorAction: 'switch-tool', editorActionData: 'pencil'},
     {id: 'panningTool', shortcut: 'h', editorAction: 'switch-tool', editorActionData: 'panning'},
     {id: 'zoomInTool', shortcut: 'z', editorAction: 'switch-tool', editorActionData: 'zoomIn'},
+    {id: 'escape', shortcut: 'escape', editorAction: 'escape-action'},
   ],
 }
 

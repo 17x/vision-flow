@@ -59,7 +59,7 @@ const MenuBar: React.FC = ({editorAction: EditorExecutor}) => {
                   {
                     menu.children?.map((child) => {
                       return <MenuItem key={child.id} menu={child} onClick={() => {
-                        console.log(child)
+                        // console.log(child)
                       }}/>
                     })
                   }</div>

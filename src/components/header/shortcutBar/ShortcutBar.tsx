@@ -9,11 +9,11 @@ import {useFile} from '../../../contexts/fileContext/FileContext.tsx'
 import {EditorExecutor} from '../../workspace/Workspace.tsx'
 
 const IconSize = 20
-const IconColor = 'text-black'
+// const IconColor = 'text-black'
 
-const ShortcutBar: React.FC<{editorAction:EditorExecutor}> = () => {
+const ShortcutBar: React.FC<{ editorAction: EditorExecutor }> = ({editorAction}) => {
   const {saveFile} = useFile()
-  const {state: {needSave, historyStatus, selectedElements}, executeAction} = useContext(WorkspaceContext)
+  const {state: {needSave, historyStatus, selectedElements}} = useContext(WorkspaceContext)
   const hasselectedElements = selectedElements.length > 0
 
   const actions = [
@@ -100,7 +100,7 @@ const ShortcutBar: React.FC<{editorAction:EditorExecutor}> = () => {
                         return
                       }
                       if (item.editorActionCode || item.action) {
-                        executeAction(item.editorActionCode || item.action)
+                        editorAction(item.editorActionCode || item.action)
                       }
                     }}
                     className={'relative ml-1 rounded-sm mr-1 flex items-center cursor-pointer justify-center w-6 h-6   hover:bg-gray-200  hover:opacity-100  disabled:hover:bg-transparent disabled:text-gray-200 disabled:cursor-default'}>

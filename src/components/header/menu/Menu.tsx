@@ -3,7 +3,7 @@ import {useTranslation} from 'react-i18next'
 import MenuItem from './MenuItem.tsx'
 import MenuData from './menuData.ts'
 
-const MenuBar: React.FC = () => {
+const MenuBar: React.FC = ({editorAction: EditorExecutor}) => {
   const [open, setOpen] = useState<boolean>(false)
   const [openId, setOpenId] = useState<string | null>(null)
   const {t} = useTranslation()
@@ -58,7 +58,9 @@ const MenuBar: React.FC = () => {
                 <div className={'absolute z-20 bg-white border border-gray-200'}>
                   {
                     menu.children?.map((child) => {
-                      return <MenuItem key={child.id} menu={child}/>
+                      return <MenuItem key={child.id} menu={child} onClick={() => {
+                        console.log(child)
+                      }}/>
                     })
                   }</div>
             }

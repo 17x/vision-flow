@@ -6,11 +6,12 @@ import {t} from 'i18next'
 import {I18nHistoryDataItem} from '../../../i18n/type'
 // import {MenuItemType} from '../menu/type'
 import {useFile} from '../../../contexts/fileContext/FileContext.tsx'
+import {EditorExecutor} from '../../workspace/Workspace.tsx'
 
 const IconSize = 20
 const IconColor = 'text-black'
 
-const ShortcutBar: React.FC = () => {
+const ShortcutBar: React.FC<{editorAction:EditorExecutor}> = () => {
   const {saveFile} = useFile()
   const {state: {needSave, historyStatus, selectedElements}, executeAction} = useContext(WorkspaceContext)
   const hasselectedElements = selectedElements.length > 0

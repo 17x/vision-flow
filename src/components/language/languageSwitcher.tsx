@@ -2,6 +2,7 @@ import {useTranslation} from 'react-i18next'
 import {useState} from 'react'
 import Select from '@lite-u/ui/select'
 import SelectItem from '@lite-u/ui/selectItem'
+import {Row} from '@lite-u/ui'
 
 type LanguageCode = 'en' | 'cn' | 'jp'
 
@@ -14,8 +15,10 @@ const LanguageSwitcher: React.FC = () => {
   }
 
   const {i18n} = useTranslation()
-  return <div className="flex flex-row items-center text-sm select-none">
-    <Select selectValue={language} onSelectChange={(langCode) => {
+
+  return <Row center je mr={30} className="text-sm select-none">
+    <span>🌐</span>
+    <Select style={{border:'none'}} selectValue={language} onSelectChange={(langCode) => {
       i18n.changeLanguage(langCode as LanguageCode)
       setLanguage(langCode as LanguageCode)
     }}>
@@ -25,18 +28,7 @@ const LanguageSwitcher: React.FC = () => {
         })
       }
     </Select>
-    {/*<Select1 defaultValue={languageRecord[language]}>
-      {
-        (Object.keys(languageRecord) as LanguageCode[]).map((langCode, index) =>
-          <div key={index} onClick={() => {
-            i18n.changeLanguage(langCode)
-            setLanguage(langCode)
-          }}>
-            {languageRecord[langCode]}
-          </div>)
-      }
-    </Select1>*/}
-  </div>
+  </Row>
 }
 
 export default LanguageSwitcher

@@ -92,7 +92,7 @@ const Workspace: FC<{
          className={'outline-0'}>
       {/*{focusedFileId === workspace.id && <UseShortcut/>}*/}
 
-      <Header/>
+      <Header editorAction={executeAction}/>
 
       <Row ovh fh>
         <Toolbar tool={state.currentTool} setTool={(toolName) => {

@@ -2615,14 +2615,27 @@ const ellipse1 = {
   "r1": 34.16600799560547,
   "r2": 48.99523162841797
 }
-const rect1 = {
+const rect0 = {
   "id": "TKhoBE",
   "layer": 0,
-  "cx": 150.90179500974773,
-  "cy": 135.2784234889823,
+  "cx": 55.90179500974773,
+  "cy": 67.2784234889823,
   "width": 61.023963928222656,
   "height": 64.6562728881836,
-  "type": "rectangle"
+  "type": "rectangle",
+  "rotation":45
+}
+const rect1 = {
+  ...rect0,
+  "id": "TKhoBF",
+  "cx": 150.90179500974773,
+  "cy": 135.2784234889823,
+}
+const rect2 = {
+  ...rect0,
+  "id": "TKhoBG",
+  "cx": 56.90179500974773,
+  "cy": 167.2784234889823,
 }
 const dFile = {
   'id': '29455cb7-8406-4512-98f4-61d5e1d840ec',
@@ -2709,8 +2722,10 @@ const dFile = {
         },*/
 
         // path0
-        ellipse1,
-        rect1
+        // ellipse1,
+        rect0,
+        rect1,
+        rect2,
       ],
     },
   ],

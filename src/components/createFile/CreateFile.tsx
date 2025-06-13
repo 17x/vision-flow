@@ -83,7 +83,7 @@ const CreateFile: FC<{ bg: string, onBgClick?: VoidFunction }> = ({bg = '#000000
     zIndex: 1000,
   }} onBackdropClick={() => onBgClick && onBgClick()}>
     <Flex col w={'90%'} h={'90%'} ovh className={'shadow-md rounded-sm shadow-gray-600 text-sm'}>
-      <Panel head={t('file.CreateTitle')}>
+      <Panel head={t('createTitle')}>
         <Flex alignItems={'stretch'} justifyContent={'center'} fh className={'p-4'}>
 
           <Con p={4} bg={'white'}>

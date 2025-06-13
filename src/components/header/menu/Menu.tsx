@@ -32,6 +32,8 @@ const MenuBar: React.FC = () => {
     <div ref={componentRef} className={'pl-2 h-full inline-flex'}>
       {
         actions.map((menu) => {
+          // console.log(menu.id)
+          console.log(t(menu.id + '.label'))
           return <div key={menu.id} className={'relative h-full'}>
             <div className={`h-full inline-flex items-center px-4 ${menu.id === openId ? 'bg-gray-200' : ''}`}
                  onMouseEnter={() => open && setOpenId(menu.id)}

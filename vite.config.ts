@@ -39,8 +39,8 @@ export default defineConfig(({mode}) => {
       },
     },
     esbuild: {
-      pure: false,
-      // pure: mode === 'production' ? ['console.log'] : [],
+      // pure: false,
+      pure: mode === 'production' ? ['console.log'] : [],
     },
     build: {
       // minify:'esbuild',

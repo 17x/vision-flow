@@ -20,31 +20,35 @@ const useShortcut = (executeAction: EditorExecutor, handleZoom: (b: boolean, e?:
     const shortcut1 = new Shortcut({
       shortcuts: data,
       callback: (id: string) => {
-        if (focused) {
-          if (id === 'toggleTool' && lastToolRef.current !== currentTool) {
+        if (!focused) return
+
+        if (id === 'toggleTool' && lastToolRef.current !== currentTool) {
+          console.log('currentTool',currentTool)
+          if (currentTool !== 'panning') {
             lastToolRef.current = currentTool
-            executeAction('switch-tool', 'panning')
-            return
           }
+          executeAction('switch-tool', 'panning')
+          return
+        }
 
-          const c = data.find(item => item.id === id)!
+        const c = data.find(item => item.id === id)!
 
-          if (c.id === 'zoomIn' || c.id === 'zoomOut') {
-            handleZoom(c.id === 'zoomIn')
-            return
-          } else if (c.id === 'zoomFit') {
-            executeAction('world-zoom', 'fit')
-            return
-          }
+        if (c.id === 'zoomIn' || c.id === 'zoomOut') {
+          handleZoom(c.id === 'zoomIn')
+          return
+        } else if (c.id === 'zoomFit') {
+          executeAction('world-zoom', 'fit')
+          return
+        }
 
-          if (c.editorAction) {
-            executeAction(c.editorAction, c.editorActionData)
-            console.log(c.editorAction)
-            if (c.editorAction === 'switch-tool') {
-              dispatch({type: 'SET_CURRENT_TOOL', payload: c.editorActionData})
-            }
+        if (c.editorAction) {
+          executeAction(c.editorAction, c.editorActionData)
+          // console.log(c.editorAction)
+          if (c.editorAction === 'switch-tool') {
+            dispatch({type: 'SET_CURRENT_TOOL', payload: c.editorActionData})
           }
         }
+
       },
     })
 

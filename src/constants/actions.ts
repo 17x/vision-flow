@@ -60,7 +60,7 @@ export const VIEW = {
   children: [
     {id: 'zoomIn', disabled: false, shortcut: 'ctrl+=,meta+='},
     {id: 'zoomOut', disabled: false, shortcut: 'ctrl+-,meta+-'},
-    {id: 'zoomFit', disabled: false, shortcut: 'ctrl+0,meta+0'},
+    {id: 'zoomFit', disabled: false, shortcut: 'f4,ctrl+0,meta+0'},
     // {id: 'toggleGrid'},
     // {id: 'toggleGuides'},
     // {id: 'fullscreenMode', shortcut: 'F11'},

@@ -18,11 +18,10 @@ const LanguageSwitcher: React.FC = () => {
 
   return <Row center je mr={30} className="text-sm select-none">
     <Con rela w={100}>
-      <Row fw fh abs center t={0} l={0} bg={'white'} style={{zIndex: 100, pointerEvents: 'none'}}>
-        <span>🌐</span>
-        <span>{languageRecord[language]}</span>
-      </Row>
-      <Select style={{border: 'none'}} selectValue={language} onSelectChange={(langCode) => {
+      <Select placeholderResolver={(value) => {
+        // console.log(value)
+        return '🌐' + languageRecord[value as string]
+      }} style={{border: 'none'}} selectValue={language} onSelectChange={(langCode) => {
         i18n.changeLanguage(langCode as LanguageCode)
         setLanguage(langCode as LanguageCode)
       }}>
